@@ -1,0 +1,293 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: HTML5 canvas graph library - About canvas color definitions</title>
+    
+    <meta name="keywords" content="rgraph html5 canvas graph docs color" />
+    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about canvas colors" />
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    
+    <script>
+        function HideTwitterDIV ()
+        {
+            document.getElementById("twitter_div").style.opacity = 0;
+            document.getElementById("twitter_div").style.display = 'none';
+        }
+
+
+        function ShowTwitterDIV (e)
+        {
+            var e   = RGraph.FixEventObject(document.all ? event : e);
+            var div = document.getElementById("twitter_div");
+            var img = document.getElementById("twitter_icon");
+
+            div.style.display = 'block';
+            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
+            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
+
+            /**
+            * Fade it in
+            */
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
+
+            e.stopPropagation();
+
+            return false;
+        }
+        
+        window.addEventListener('click', HideTwitterDIV, false);
+    </script>
+
+    <!-- The twitter DIV --> 
+    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
+        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
+        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
+    </div>
+
+    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+              document.getElementById("twitter_div").style.position = 'fixed';
+    
+            }
+        </script>
+    
+        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
+    
+    
+            <div id="social">
+                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
+                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
+                </a> 
+     
+                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
+                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
+                </a>
+    
+    
+                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
+                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+    
+                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
+                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
+                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
+                </a>
+    
+                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
+                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
+                </a>
+            </div>
+    </div>
+    <!-- /Social networking buttons -->
+
+    <div id="breadcrumb">
+        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        >
+        <a href="index.html">Documentation</a>
+        >
+        About canvas color definitions
+    </div>
+
+    <h1>RGraph: HTML5 canvas graph library - About canvas color definitions</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+
+    <p>
+        You will probably want to know the different ways you can define a color. There are a few
+        ways which you can use, all of which are quite straight-forward.
+    </p>
+
+    <ul id="colors">
+        <li><a href="#named">Named colors</a></li>
+        <li><a href="#hex">Hex values</a></li>
+        <li><a href="#rgb">RGB values</a></li>
+        <li><a href="#rgba">RGBA values</a></li>
+        <li><a href="#hsl">HSL values</a></li>
+        <li><a href="#hsla">HSLA values</a></li>
+        <li><a href="#lgradients">Linear gradients</a></li>
+        <li><a href="#rgradients">Radial gradients</a></li>
+        <li><a href="#functions">Functions as colors</a></li>
+        <li><a href="#info">More information</a></li>
+    </ul>
+    
+    <a name="named"></a>
+    <br />&nbsp;<br />
+    <h2>Named colors</h2>
+    
+    <p>
+        The first, and easiest, is to use named colors. This gives you a range of color values that have been predefined for you. Eg:
+    </p>
+    
+    <pre class="code">myObject.Set('chart.colors', ['red', 'blue']);</pre>
+
+    <a name="hex"></a>
+    <br />&nbsp;<br />
+    <h2>Hex values</h2>
+    
+    <p>
+        The next, is straight forward hex values like you can use in normal CSS. These consist of a hash sign,
+        followed by three or six hexadecimal characters. Eg:
+    </p>
+
+    <pre class="code">myObject.Set('chart.colors', ['#f00', '#0000ff']);</pre>
+    
+    <a name="rgb"></a>
+    <br />&nbsp;<br />
+    <h2>RGB values</h2>
+    
+    <p>
+        Also as used in CSS, RGB values are the same as what you can use in CSS. Eg:
+    </p>
+    
+    <pre class="code">myObject.Set('chart.colors', ['rgb(255,0,0)', 'rgb(0,0,255)']);</pre>
+
+    <a name="rgba"></a>
+    <br />&nbsp;<br />
+    <h2>RGBA values</h2>
+    
+    <p>
+        Probably new to most people, is rgba(). Similar to regular rgb() values, but with a fourth value that allows you to specify the
+        alpha value, which stipulates how transparent the color is. An alpha value of 0 is totally transparent, and a value of 1, is
+        totally opaque (ie. you can't see through it). With a value of 1, rgba() acts exactly like rgb(). This example gives you red
+        and blue colors that are semi-transparent:
+    </p>
+    
+    <pre class="code">myObject.Set('chart.colors', ['rgba(255,0,0,0.5)', 'rgba(0,0,255,0.5)']);</pre>
+
+    <a name="hsl"></a>
+    <br />&nbsp;<br />
+    <h2>HSL() values</h2>
+    
+    <p>
+        Also probably quite new to you, are hsl() values. Much like rgb(), but instead of red green and blue, it allows you to specify
+        the Hue, Saturation and Light values instead. For example:
+    </p>
+    
+    <pre class="code">myObject.Set('chart.colors', ['hsl(255, 100%, 50%)', 'hsl(169, 100%, 50%)']);</pre>
+
+    <a name="hsla"></a>
+    <br />&nbsp;<br />
+    <h2>HSLA() values</h2>
+
+    <p>
+        Much like rgb() and rgba(), hsl() has a corresponding hsla() version, which allows you to specify an alpha (transparency) value.
+        Eg:
+    </p>
+    
+    <pre class="code">myObject.Set('chart.colors', ['hsla(255, 100%, 50%, 0.5)', 'hsla(169, 100%, 50%, 0.5)']);</pre>
+
+    <a name="lgradients"></a>
+    <br />&nbsp;<br />
+    <h2>Linear gradients</h2>
+    
+    <p>
+        Gradients can be used in place of color values. You can create a linear gradient like so:
+    </p>
+    
+    <pre class="code">myGradient = myObject.context.createLinearGradient(0,0,0,250);
+myGradient.addColorStop(0, 'red');
+myGradient.addColorStop(1, 'blue');</pre>
+
+    <p>
+        This creates a gradient that goes from red to blue. The gradient starts at 0,0, and finishes at 0,250. ie A vertical
+        gradient. You may not see the whole gradient - that depends on the extent of the shape you're filling. You can use the gradient
+        in place of a regular color definition. Eg:
+    </p>
+    
+    <pre class="code">myObject.Set('chart.colors', [myGradient]);</pre>
+
+    <a name="rgradients"></a>
+    <br />&nbsp;<br />
+    <h2>Radial gradients</h2>
+
+    <p>
+        Radial gradients are much like their linear counterparts, but circular, as the name suggests. Eg:
+    </p>
+    
+    <pre class="code">myGradient = myObject.context.createRadialGradient(0,0,0,0,0,100);
+myGradient.addColorStop(0, 'red');
+myGradient.addColorStop(1, 'blue');
+</pre>
+    
+    <p>
+        Instead of four arguments, it takes six - the coordinates of the start point along with the radius, and the coordinates
+        of the end point, along with the radius. After it has been created, you can treat as you would a linear gradient:
+    </p>
+
+    <pre class="code">myObject.Set('chart.colors', [myGradient]);</pre>
+
+    <a name="functions"></a>
+    <br />&nbsp;<br />
+    <h2>Functions as colors</h2>
+    <p>
+        Colors (in RGraph), as well as strings and gradients, can also be functions. Such functions should accept two arguments - the graph
+        object and the index in the colors array. For example:
+    </p>
+    
+    <pre class="code">
+&lt;script&gt;
+    myObj.Set(chart.colors', getColor);
+&lt;/script&gt;
+</pre>
+
+<pre class="code">
+&lt;script&gt;
+    function getColor(obj, index)
+    {
+        return 'gray';
+    }
+&lt;/script&gt;
+</pre>
+    
+    <p>
+        The colors are resolved once at the start of the .Draw() method.
+    </p>
+
+    <a name="info"></a>
+    <br />&nbsp;<br />
+    <h2>More information</h2>
+    
+    <p>
+        You can read more about CSS3 color definitions  <a href="http://www.w3.org/TR/css3-color/" target="_blank" rel="nofollow">here</a>.
+    </p>
+</body>
+</html>

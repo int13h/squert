@@ -1,0 +1,15 @@
+color.edge=get_severity($fields[3],20,0xFFFFFF,0x000000)
+size.edge=$fields[3] if ($fields[3]<10)
+
+# Source
+shape.source=Mrecord
+color.source=lightgray
+
+# Event
+color.event=white
+shape.event="box"
+
+# Target
+color.target=white
+shape.target="egg"
+

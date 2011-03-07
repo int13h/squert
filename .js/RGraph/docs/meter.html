@@ -1,0 +1,329 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: HTML5 canvas graph library - meter documentation</title>
+    
+    <meta name="keywords" content="rgraph html5 canvas docs meter chart" />
+    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about the Meter chart" />
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    
+    <script>
+        function HideTwitterDIV ()
+        {
+            document.getElementById("twitter_div").style.opacity = 0;
+            document.getElementById("twitter_div").style.display = 'none';
+        }
+
+
+        function ShowTwitterDIV (e)
+        {
+            var e   = RGraph.FixEventObject(document.all ? event : e);
+            var div = document.getElementById("twitter_div");
+            var img = document.getElementById("twitter_icon");
+
+            div.style.display = 'block';
+            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
+            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
+
+            /**
+            * Fade it in
+            */
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
+
+            e.stopPropagation();
+
+            return false;
+        }
+        
+        window.addEventListener('click', HideTwitterDIV, false);
+    </script>
+
+    <!-- The twitter DIV --> 
+    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
+        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
+        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
+    </div>
+
+    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+              document.getElementById("twitter_div").style.position = 'fixed';
+    
+            }
+        </script>
+    
+        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
+    
+    
+            <div id="social">
+                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
+                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
+                </a> 
+     
+                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
+                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
+                </a>
+    
+    
+                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
+                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+    
+                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
+                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
+                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
+                </a>
+    
+                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
+                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
+                </a>
+            </div>
+    </div>
+    <!-- /Social networking buttons -->
+
+    <div id="breadcrumb">
+        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        >
+        <a href="index.html">Documentation</a>
+        >
+        Meter
+    </div>
+
+    <h1>RGraph: HTML5 canvas graph library - Meter documentation</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+
+    <p>
+        This is the Meter chart. Similar to half the Odometer. The difference is purely visual, but may well be more suited to
+        a control panel type application.
+    </p>
+    
+    <p>
+        The example file is <a href="../examples/meter.html">here</a>.
+    </p>
+    
+    <pre class="code">
+&lt;script&gt;
+    window.onload = function ()
+    {
+        var meter = new RGraph.Meter('myCanvas', 50, 100, 60);
+        meter.Set('chart.contextmenu', [
+                                        ['Show palette', RGraph.Showpalette],
+                                        ['Clear annotations', function () {RGraph.Clear(meter.canvas); meter.Draw();}],
+                                        null,
+                                        ['Cancel', function () {}]
+                                       ]);
+        meter.Set('chart.annotatable', true);
+        meter.Set('chart.label.position', 'inside');
+        meter.Set('chart.title', 'A sample measurement');
+        meter.Set('chart.title.vpos', 0.5);
+        meter.Set('chart.units.post', 'k');
+        meter.Set('chart.red.start', 0);
+        meter.Set('chart.red.end', 3);
+        meterSet('chart.yellow.start', 3);
+        meter.Set('chart.yellow.end', 6);
+        meter.Set('chart.green.start', 6);
+        meter.Set('chart.green.end', 10);
+        meter.Draw();
+    }
+&lt;/script&gt;
+</pre>
+    <h2>Properties</h2>
+    
+    <p>
+        You can use these properties to control how the Meter apears. You can set them by using the Set() method. Eg:
+    </p>
+    
+    <p>
+        <b>myMeter.Set('name', 'value');</b>
+    </p>
+
+    <ul>
+        <li><a href="#margins">Margins</a></li>
+        <li><a href="#colors">Colors</a></li>
+        <li><a href="#labels and text">Labels and text</a></li>
+        <li><a href="#titles">Titles</a></li>
+        <li><a href="#scale">Scale</a></li>
+        <li><a href="#interactive features">Interactive features</a></li>
+        <li><a href="#shadow">Shadow</a></li>
+        <li><a href="#zoom">Zoom</a></li>
+        <li><a href="#miscellaneous">Miscellaneous</a></li>
+    </ul>
+
+
+<a name="margins"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Margins</h3>            <a name="chart.gutter"></a>
+<b>chart.gutter</b><br />
+            The gutter of the graph. <br /><i>Default: 25</i><br /><br />
+<a name="colors"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Colors</h3>            <a name="chart.border.color"></a>
+<b>chart.border.color</b><br />
+            The color of the outline (including tickmarks).<br /><i>Default: black</i><br /><br />
+            <a name="chart.green.start"></a>
+<b>chart.green.start</b><br />
+            The value that the green area should begin at. <br /><i>Default: 35% of the maximum value</i><br /><br />
+            <a name="chart.green.end"></a>
+<b>chart.green.end</b><br />
+            The value that the green area should end at. <br /><i>Default: The maximum value</i><br /><br />
+            <a name="chart.green.color"></a>
+<b>chart.green.color</b><br />
+            The color of the green area, (can be any color).. <br /><i>Default: #207A20</i><br /><br />
+            <a name="chart.yellow.start"></a>
+<b>chart.yellow.start</b><br />
+            The value that the yellow area should begin at. <br /><i>Default: 10% of the maximum value</i><br /><br />
+            <a name="chart.yellow.end"></a>
+<b>chart.yellow.end</b><br />
+            The value that the yellow area should end at. <br /><i>Default: 35% of the maximum value</i><br /><br />
+            <a name="chart.green.color"></a>
+<b>chart.green.color</b><br />
+            The color of the yellow area, (can be any color).. <br /><i>Default: #D0AC41</i><br /><br />
+            <a name="chart.red.start"></a>
+<b>chart.red.start</b><br />
+            The value that the red area should begin at. <br /><i>Default: The minimum value</i><br /><br />
+            <a name="chart.red.end"></a>
+<b>chart.red.end</b><br />
+            The value that the red area should end at. <br /><i>Default: 10% of the maximum value</i><br /><br />
+            <a name="chart.red.color"></a>
+<b>chart.red.color</b><br />
+            The color of the red area, (can be any color).. <br /><i>Default: #9E1E1E</i><br /><br />
+<a name="labels and text"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Labels and text</h3>            <a name="chart.text.color"></a>
+<b>chart.text.color</b><br />
+            The color of the labels. <br /><i>Default: black</i><br /><br />
+            <a name="chart.text.size"></a>
+<b>chart.text.size</b><br />
+            The size (in points) of the labels. <br /><i>Default: 10</i><br /><br />
+            <a name="chart.text.font"></a>
+<b>chart.text.font</b><br />
+            The font used to render the text.<br /><i>Default: Verdana</i><br /><br />
+<a name="titles"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Titles</h3>            <a name="chart.title"></a>
+<b>chart.title</b><br />
+            The title of the graph, if any. <br /><i>Default: null</i><br /><br />
+            <a name="chart.title.color"></a>
+<b>chart.title.color</b><br />
+            The color of the title.<br /> <i>Default: black</i><br /><br />
+            <a name="chart.title.hpos"></a>
+<b>chart.title.hpos</b><br />
+            This allows you to completely override the horizontal positioning of the title. It should be a number between 0 and 1, and is multiplied with the whole width of the canvas and then used as the horizontal position. <br /><i>Default: null</i><br /><br />
+            <a name="chart.title.vpos"></a>
+<b>chart.title.vpos</b><br />
+            This allows you to completely override the vertical positioning of the title. It should be a number between 0 and 1, and is multiplied with the gutter and then used as the vertical position. It can be useful if you need to have a large gutter.<br /><i>Default: null</i><br /><br />
+<a name="scale"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Scale</h3>            <a name="chart.units.pre"></a>
+<b>chart.units.pre</b><br />
+            The units that the labels are measured in. This string is displayed BEFORE the actual number, allowing you to specify values such as "$50".<br /><i>Default: none</i><br /><br />
+            <a name="chart.units.post"></a>
+<b>chart.units.post</b><br />
+            The units that the labels are measured in. This string is displayed AFTER the actual number, allowing you to specify values such as "50ms".<br /><i>Default: none</i><br /><br />
+<a name="interactive features"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Interactive features</h3>            <a name="chart.contextmenu"></a>
+<b>chart.contextmenu</b><br />
+            An array of context menu items. More information on context menus is <a href="context.html">here</a>.<br /><i>Default: [] (An empty array)</i><br /><br />
+            <a name="chart.resizable"></a>
+<b>chart.resizable</b><br />
+            Defaulting to false, this determines whether your graph will be resizable. Because of the numerous event handlers this has to install code on, This feature is unlikely to work with other dynamic features (the context menu is fine however).<br /><i>Default: false</i><br /><br />
+            <a name="chart.annotatable"></a>
+<b>chart.annotatable</b><br />
+            Whether annotations are enabled for the chart (ie you can draw on the chart interactively).<br /><i>Default: false</i><br /><br />
+            <a name="chart.annotate.color"></a>
+<b>chart.annotate.color</b><br />
+            If you do not allow the use of the palette, then this will be the only color allowed for annotations.<br /><i>Default: black</i><br /><br />
+<a name="shadow"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Shadow</h3>            <a name="chart.shadow"></a>
+<b>chart.shadow</b><br />
+            If true a shadow will be applied to the meter.<br /><i>Default: false</i><br /><br />
+            <a name="chart.shadow.color"></a>
+<b>chart.shadow.color</b><br />
+            The color of the shadow. <br /><i>Default: rgba(0,0,0,0.5)</i><br /><br />
+            <a name="chart.shadow.offsetx"></a>
+<b>chart.shadow.offsetx</b><br />
+            The X offset in pixels for the shadow.<br /><i>Default: 3</i><br /><br />
+            <a name="chart.shadow.offsety"></a>
+<b>chart.shadow.offsety</b><br />
+            The Y offset in pixels for the shadow.<br /><i>Default: 3</i><br /><br />
+            <a name="chart.shadow.blur"></a>
+<b>chart.shadow.blur</b><br />
+            The severity of the shadow blurring effect.<br /><i>Default: 3</i><br /><br />
+<a name="zoom"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Zoom</h3>            <a name="chart.zoom.mode"></a>
+<b>chart.zoom.mode</b><br />
+            Can be used to control whether the zoom is in thumbnail or canvas mode. Possible values are: <i>thumbnail</i> and <i>canvas</i>.<br /><i>Default: canvas</i><br /><br />
+            <a name="chart.zoom.factor"></a>
+<b>chart.zoom.factor</b><br />
+            This is the factor that the graph will be zoomed by (bigger values means more zoom)<br /><i>Default: 1.5</i><br /><br />
+            <a name="chart.zoom.fade.in"></a>
+<b>chart.zoom.fade.in</b><br />
+            Whether the zoomed canvas fades in or not. This also can be used to control the fade in for the zoom in thumbnail mode.<br /><i>Default: true</i><br /><br />
+            <a name="chart.zoom.fade.out"></a>
+<b>chart.zoom.fade.out</b><br />
+            Whether the zoomed canvas fades out or not. This also can be used to control the fade in for the zoom in thumbnail mode.<br /><i>Default: true</i><br /><br />
+            <a name="chart.zoom.hdir"></a>
+<b>chart.zoom.hdir</b><br />
+            The horizontal direction of the zoom. Possible values are: <i>left</i>, <i>center</i>, <i>right</i><br /><i>Default: right</i><br /><br />
+            <a name="chart.zoom.vdir"></a>
+<b>chart.zoom.vdir</b><br />
+            The vertical direction of the zoom. Possible values are: <i>up</i>, <i>center</i>, <i>down</i><br /><i>Default: down</i><br /><br />
+            <a name="chart.zoom.delay"></a>
+<b>chart.zoom.delay</b><br />
+            The delay (in milliseconds) between frames.<br /><i>Default: 50</i><br /><br />
+            <a name="chart.zoom.frames"></a>
+<b>chart.zoom.frames</b><br />
+            The number of frames in the zoom animation.<br /><i>Default: 10</i><br /><br />
+            <a name="chart.zoom.shadow"></a>
+<b>chart.zoom.shadow</b><br />
+            Whether or not the zoomed canvas has a shadow or not.<br /><i>Default: true</i><br /><br />
+            <a name="chart.zoom.thumbnail.width"></a>
+<b>chart.zoom.thumbnail.width</b><br />
+            When the zoom is in thumbnail mode, this is the width (in pixels) of the thumbnail.<br /><i>Default: 75</i><br /><br />
+            <a name="chart.zoom.thumbnail.height"></a>
+<b>chart.zoom.thumbnail.height</b><br />
+            When the zoom is in thumbnail mode, this is the height (in pixels) of the thumbnail.<br /><i>Default: 75</i><br /><br />
+            <a name="chart.zoom.background"></a>
+<b>chart.zoom.background</b><br />
+            Defaulting to true, this determines whether the zoom has a dark, semi-opaque background that covers the entire web page.<br /><i>Default: true</i><br /><br />
+<a name="miscellaneous"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Miscellaneous</h3>            <a name="chart.linewidth"></a>
+<b>chart.linewidth</b><br />
+            The width of the outline of the Meter. <br /><i>Default: 2</i><br /><br />
+</div><!-- /DOCS --><br /><br />
+</body>
+</html>

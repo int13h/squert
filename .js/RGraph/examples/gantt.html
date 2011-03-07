@@ -1,0 +1,263 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: HTML5 canvas graph library - gantt chart</title>
+    
+    <meta name="keywords" content="rgraph html5 canvas example gantt chart" />
+    <meta name="description" content="RGraph: Gantt chart examples" />
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    <script src="../libraries/RGraph.common.context.js" ></script>
+    <script src="../libraries/RGraph.common.annotate.js" ></script>
+    <script src="../libraries/RGraph.common.tooltips.js" ></script>
+    <script src="../libraries/RGraph.common.zoom.js" ></script>
+    <script src="../libraries/RGraph.common.resizing.js" ></script>
+    <script src="../libraries/RGraph.gantt.js" ></script>
+    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+    
+    <style>
+        .RGraph_tooltip {
+            color: #00a ! important;
+        }
+        
+        .RGraph_tooltip b {
+            color: black ! important;
+        }
+    </style>
+
+    <script>
+        window.onload = function ()
+        {
+            var gantt1 = new RGraph.Gantt('gantt1');
+            gantt1.Set('chart.xmax', 122);
+            gantt1.Set('chart.gutter', 35);
+            gantt1.Set('chart.labels', ['January', 'February', 'March', 'April']);
+            gantt1.Set('chart.title', 'Work schedule for Xyz Ltd (tooltips, context, zoom)');
+            gantt1.Set('chart.defaultcolor', '#faa');
+            gantt1.Set('chart.background.grid', false);
+
+            if (!RGraph.isIE8()) {
+                gantt1.Set('chart.tooltips', ["<b>Richard Crenshaw</b><br />Working through adding something<br /> to the website.",
+                                              "<b>Fred Bloggs</b><br />Building a new drive",
+                                              "<b>Barney Rubble</b><br />Not started adding the new garden",
+                                              "<b>Gloria Honeyford</b><br />Just started dinner",
+                                              "<b>Paul O'Grady</b><br />Nearly finished the front garden",
+                                              "<b>Harry Secombe</b><br />Roughly half way through the bible reading",
+                                              "<b>Shane Ritchy</b><br />Funny man",
+                                              "<b>Barry McGuigan</b><br />Beating up the gardener",
+                                              "<b>Cynthia Frances</b><br />Not entirely sure what she's doing",
+                                              "<b>Mabel Mincy</b><br />Making more mince.",
+                                               "<b>Paul McKenna</b><br />Putting everyone off their work",
+                                               "<b>Kiffen Sausage Farmer</b><br />Farming sausages",
+                                               "<b>John Doe</b><br />A deer"]);
+                gantt1.Set('chart.tooltips.effect', 'expand');
+                gantt1.Set('chart.zoom.hdir', 'center');
+                gantt1.Set('chart.zoom.vdir', 'center');
+                gantt1.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom]]);
+            }
+
+            gantt1.Set('chart.events', [
+                                 [31, 28, 75, 'Richard'],
+                                 [12, 28, 67, 'Fred'],
+                                 [59, 14, 0, 'Barney'],
+                                 [59, 21, 5, 'Gloria'],
+                                 [46, 31, 92, 'Paul'],
+                                 [80, 21, 46, 'Harry'],
+                                 [94, 17, 84, 'Shane'],
+                                 [34, 14, 32, 'Barry'],
+                                 [64, 14, 28, 'Cynthia'],
+                                 [13, 61, 74, 'Mabel'],
+                                 [84, 31, 16, 'Paul'],
+                                 [100, 22, 45, 'Kiffen'],
+                                 [0, 365, 50, 'John']
+                                ]);
+            var color = 'rgba(192,255,192,0.5)';
+            gantt1.Set('chart.vbars', [
+                                       [0, 10, color],
+                                       [20, 10, color],
+                                       [40, 10, color],
+                                       [60, 10, color],
+                                       [80, 10, color],
+                                       [100, 10, color]
+                                      ]);
+            gantt1.Set('chart.borders', false);
+            gantt1.Draw();
+
+
+            var gantt3 = new RGraph.Gantt('gantt3');
+            gantt3.Set('chart.xmax', 365);
+            gantt3.Set('chart.title', 'Training completion (tooltips)');
+            gantt3.Set('chart.gutter', 35);
+            gantt3.Set('chart.color', '#fdd');
+            gantt3.Set('chart.defaultcolor', '#fdd');
+            gantt3.Set('chart.labels', ['Q1', 'Q2', 'Q3', 'Q4']);
+            gantt3.Set('chart.background.grid.autofit', true);
+            gantt3.Set('chart.events', [
+                                 [0, 98, 78, 'Richard'],
+                                 [30, 130, 50, 'Pete'],
+                                 [65, 114, 5, 'Gary'],
+                                 [88, 210, 97, 'Sean'],
+                                 [183, 75, 36, 'Michael', 'red']
+                                ]);
+
+            if (!RGraph.isIE8()) {
+                gantt3.Set('chart.tooltips', ['<b>Richard</b><br />Richard is a top geezer. Guvnor.', '<b>Pete</b><br />Pete likes going out clubbing', '<b>Gary</b><br />Gary is a top geezer too', '<b>Sean</b><br />Sean is very good at what he does.<br />Backgammon.', '<b>Michael</b><br />Michael is a secret ninja']);
+            }
+
+            gantt3.Draw();
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+    
+    <script>
+        function HideTwitterDIV ()
+        {
+            document.getElementById("twitter_div").style.opacity = 0;
+            document.getElementById("twitter_div").style.display = 'none';
+        }
+
+
+        function ShowTwitterDIV (e)
+        {
+            var e   = RGraph.FixEventObject(document.all ? event : e);
+            var div = document.getElementById("twitter_div");
+            var img = document.getElementById("twitter_icon");
+
+            div.style.display = 'block';
+            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
+            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
+
+            /**
+            * Fade it in
+            */
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
+
+            e.stopPropagation();
+
+            return false;
+        }
+        
+        window.addEventListener('click', HideTwitterDIV, false);
+    </script>
+
+    <!-- The twitter DIV --> 
+    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
+        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
+        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
+    </div>
+
+    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+              document.getElementById("twitter_div").style.position = 'fixed';
+    
+            }
+        </script>
+    
+        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
+    
+    
+            <div id="social">
+                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
+                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
+                </a> 
+     
+                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
+                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
+                </a>
+    
+    
+                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
+                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+    
+                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
+                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
+                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
+                </a>
+    
+                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
+                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
+                </a>
+            </div>
+    </div>
+    <!-- /Social networking buttons -->
+
+
+<div id="breadcrumb">
+    <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+    >
+    <a href="./index.html">Examples</a>
+    >
+    Gantt chart
+</div>
+
+    <h1>RGraph: HTML5 canvas graph library - Gantt chart</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+
+    <div>
+        <p>
+            A Gantt chart is used to show scheduling information. It is commonly used in project management but can also be used,
+            for example, to show holiday schedule information. In this case it would be easy to see when someone is unavailable.
+            The Gantt chart can have clickable bars  that can be used to provide more detail. It can also show vertical bars
+            that can be used to indicate events, or as in the cases below, can be decorative.
+        </p>
+        
+        <p>
+            The chart is made of "units", in this case 365. This represents days in a year. The labels are separate, being equally
+            spaced across the chart. This means you can use more meaningful labels, which are easier to comprehend. As in the
+            example charts.
+        </p>
+    </div>
+
+    <div>
+        <ul>
+            <li><a href="../docs/gantt.html">Gantt chart API documentation</a></li>
+        </ul>
+    </div>
+
+    <div style="text-align: center">
+        <canvas id="gantt1" width="700" height="300">[No canvas support]</canvas>
+        <canvas id="gantt3" width="700" height="200">[No canvas support]</canvas>
+    </div>
+
+</body>
+</html>

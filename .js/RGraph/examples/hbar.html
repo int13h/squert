@@ -1,0 +1,235 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: HTML5 canvas graph library - horizontal bar chart</title>
+    
+    <meta name="keywords" content="rgraph html5 canvas example horizontal bar chart" />
+    <meta name="description" content="RGraph: Horizontal Bar chart example" />
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    <script src="../libraries/RGraph.common.context.js" ></script>
+    <script src="../libraries/RGraph.common.annotate.js" ></script>
+    <script src="../libraries/RGraph.common.tooltips.js" ></script>
+    <script src="../libraries/RGraph.common.zoom.js" ></script>
+    <script src="../libraries/RGraph.common.resizing.js" ></script>
+    <script src="../libraries/RGraph.hbar.js" ></script>
+    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+
+    <script>
+        /**
+        * The onload function creates the graph
+        */
+        window.onload = function ()
+        {
+            var hbar1 = new RGraph.HBar('hbar1', [1000,1000,3000,4000,4000,3600,2000,750,1000,2000,3000,5000]);
+            
+            var grad = hbar1.context.createLinearGradient(0,0,450,0);
+            grad.addColorStop(0, 'white');
+            grad.addColorStop(1, 'red');
+            
+            hbar1.Set('chart.labels', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
+            hbar1.Set('chart.title', 'Results (annotatable, context, zoom)');
+            hbar1.Set('chart.title.xaxis', 'Sales');
+            hbar1.Set('chart.title.yaxis', 'Month');
+            hbar1.Set('chart.colors', [grad]);
+            hbar1.Set('chart.strokestyle', 'rgba(0,0,0,0)');
+            hbar1.Set('chart.units.pre', '$');
+            hbar1.Set('chart.units.post', 'k');
+            hbar1.Set('chart.background.barcolor1', 'white');
+            hbar1.Set('chart.background.barcolor2', 'white');
+            hbar1.Set('chart.background.grid.autofit', true);
+            hbar1.Set('chart.vmargin', 2);
+            hbar1.Set('chart.text.style', '#333');
+
+            if (!RGraph.isIE8()) {
+                hbar1.Set('chart.zoom.vdir', 'center');
+                hbar1.Set('chart.contextmenu', [['Get PNG', RGraph.showPNG], ['Zoom in', RGraph.Zoom], ['Clear', function () {RGraph.Clear(hbar1.canvas); hbar1.Draw();}]]);
+                hbar1.Set('chart.annotatable', true);
+            }
+
+            hbar1.Set('chart.grouping', 'grouped');
+            hbar1.Set('chart.gutter', 30);
+            hbar1.Set('chart.labels.above', true);
+            
+            var size = RGraph.getGutterSuggest(hbar1, hbar1.data) + 5;
+            hbar1.Set('chart.gutter', size);
+
+            hbar1.Draw();
+
+            var hbar3 = new RGraph.HBar('hbar3', [[3,2,3], [3,4,5], [5,6,7], [7,8,6], [9,10,9], [10,15,3]]);
+            hbar3.Set('chart.labels', ['Fred', 'Barney', 'Julia', 'Francis', 'Hoolio', 'Jemima']);
+            hbar3.Set('chart.labels.above', true);
+            hbar3.Set('chart.units.post', 'k');
+            hbar3.Set('chart.units.pre', '$');
+            hbar3.Set('chart.gutter', 40);
+            hbar3.Set('chart.colors', ['green', 'red', '#ccf']);
+            hbar3.Set('chart.shadow', false);
+            
+            hbar3.Set('chart.key', ['Monday', 'Tuesday', 'Wednesday']);
+            hbar3.Set('chart.key.shadow', true);
+            hbar3.Set('chart.key.shadow.blur', 15);
+            hbar3.Set('chart.key.shadow.offsetx', 0);
+            hbar3.Set('chart.key.shadow.offsety', 0);
+            hbar3.Set('chart.key.shadow.color', '#ccc');
+            
+            hbar3.Set('chart.shadow', true);
+            hbar3.Set('chart.shadow.offsety', 0);
+            hbar3.Set('chart.shadow.offsetx', 0);
+            hbar3.Set('chart.shadow.color', '#aaa');
+            hbar3.Set('chart.shadow.blur', 10);
+            hbar3.Set('chart.grouping', 'grouped');
+            hbar3.Set('chart.title', 'Drinks consumed last week (tooltips)');
+
+            hbar3.Set('chart.tooltips', [
+                                         'Fred on Monday', '...on Tuesday', '...on Wednesday',
+                                         'Barney on Monday', '...on Tuesday', '...on Wednesday',
+                                         'Julia on Monday', '...on Tuesday', '...on Wednesday',
+                                         'Francis on Monday', '...on Tuesday', '...on Wednesday',
+                                         'Hoolio on Monday', '...on Tuesday', '...on Wednesday',
+                                         'Jemima on Monday', '...on Tuesday', '...on Wednesday'
+                                        ]);
+
+            hbar3.Set('chart.strokestyle', 'black');
+            hbar3.Set('chart.background.grid.autofit', true);
+            hbar3.Draw();           
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+    
+    <script>
+        function HideTwitterDIV ()
+        {
+            document.getElementById("twitter_div").style.opacity = 0;
+            document.getElementById("twitter_div").style.display = 'none';
+        }
+
+
+        function ShowTwitterDIV (e)
+        {
+            var e   = RGraph.FixEventObject(document.all ? event : e);
+            var div = document.getElementById("twitter_div");
+            var img = document.getElementById("twitter_icon");
+
+            div.style.display = 'block';
+            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
+            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
+
+            /**
+            * Fade it in
+            */
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
+
+            e.stopPropagation();
+
+            return false;
+        }
+        
+        window.addEventListener('click', HideTwitterDIV, false);
+    </script>
+
+    <!-- The twitter DIV --> 
+    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
+        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
+        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
+    </div>
+
+    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+              document.getElementById("twitter_div").style.position = 'fixed';
+    
+            }
+        </script>
+    
+        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
+    
+    
+            <div id="social">
+                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
+                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
+                </a> 
+     
+                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
+                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
+                </a>
+    
+    
+                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
+                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+    
+                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
+                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
+                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
+                </a>
+    
+                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
+                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
+                </a>
+            </div>
+    </div>
+    <!-- /Social networking buttons -->
+
+    <div id="breadcrumb">
+        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        >
+        <a href="./index.html">Examples</a>
+        >
+        Horizontal Bar chart
+    </div>
+
+
+    <h1>RGraph: HTML5 canvas graph library - Horizontal bar chart</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+    
+    <p>
+        A horizontal bar chart can be useful when your labels are too big for a regular bar chart.
+    </p>
+    
+    <ul>
+        <li><a href="../docs/hbar.html">The API documentation</a></li>
+    </ul>
+
+    <canvas id="hbar1" width="450" height="400" style="border: 1px dashed gray">[No canvas support]</canvas>
+    <canvas id="hbar3" width="450" height="400">[No canvas support]</canvas>
+
+</body>
+</html>

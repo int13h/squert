@@ -1,0 +1,93 @@
+<?php
+
+// -- SQueRT Settings
+
+// DB Info.
+$dbHost = '127.0.0.1';
+$dbName = 'sguildb';
+$dbUser = 'readonly';
+$dbPass = 'readonly';
+
+// Where are the rules? If you have multiple dirs, separate each with: ||
+$rulePath = "/usr/local/www/console/squert/rules/snort_rules||/usr/local/www/console/squert/rules/et_rules";
+
+// Where is dot installed?
+$dotPath = "/usr/bin/dot";
+
+// DNS server to query
+$dns = "8.8.8.8";
+
+// Timezone offset. If you want UTC use the second option.
+$offset = date("Z");    // Option #1: Local Time
+//$offset = 0;          // Option #2: UTC
+
+// This is for the status drop-down box. Don't touch the indexes. You can change the naming though.
+$statusList = array(
+                     0 => "Unclassified||red||UN",
+                    11 => "Unauthorized Admin Access||#cc0000||C1",
+                    12 => "Unauthorized User Access||#FF6600||C2",
+                    13 => "Attempted Unauthorized Access||#FF9900||C3",
+                    14 => "Denial of Service Attack||#CC9900||C4",
+                    15 => "Policy Violation||#9999CC||C5",
+                    16 => "Reconnaissance||#FFCC00||C6",
+                    17 => "Malware||#CC66FF||C7",
+                    19 => "Escalated Event||pink||ES",
+                     1 => "Expired Event||lightblue||NA",
+                    42 => "--||--||--");
+
+//
+// You shouldnt need to change anything below this line. (you can though)
+//
+
+// Show query text
+//$debug = 'yes';
+$debug = 'no';
+
+// You should never have to load all of these. Use a filter!
+$recLimit = '5000';
+
+// Map foreground, background and line Colours
+$mapFGC = '#f9ffed';
+$mapBGC = '#bbccdd';
+$mapLNC = '#c7e4bc';
+
+// Map event start and end colours.
+$mapSC = '#f9ffed';
+$mapEC = '#267114';
+
+// Severity Start and end colours
+$startHex =     'ffffff'; //Examples: 60BB22  FFDE00 D5E1DD
+$endHex =       '000000'; //Examples: CC0000  CC0000 22335A
+
+// Cell mouseover colourgrid mouseover colour.
+$omoCol = '#e9e9e9';
+
+// Grid mouseover colour
+$ghCol = '#cc0000';
+
+$omOver = "onMouseOver=\"style.background='$omoCol'; style.color='#000000'; style.textDecoration='underline';\"";
+$omOut = "onMouseOut=\"style.background='#f4f4f4'; style.color='#000000'; style.textDecoration='none';\"";
+
+// ---- EDV Settings
+
+// Graphviz arguments. nColor=white
+$dotArgs = "-Goutputorder=edgesfirst -Gpad=1 -Gsplines=true";
+
+// Afterglow
+$glowPath = ".glow/afterglow.pl";
+$glowArgs = " -p0 -a";
+
+// Results Limit. 
+//$LIMIT = 'LIMIT 1000';
+$LIMIT = ''; // No limit.
+
+// Image scaling defaults.
+$width = 900;
+$height = 800;
+
+// Image location. You must chmod 777 this directory
+$baseDir = "images";
+
+// Debug. This will output the dot files and afterglows output to .debug
+$glowDebug = "no";
+?>

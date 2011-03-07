@@ -1,0 +1,14 @@
+color.edge=get_severity($fields[3],5);
+
+# Source
+shape.source=Mrecord
+color.source=white
+
+# Event
+color.event=hexcol(0x9CA7B8);
+shape.event="box"
+
+# Target
+color.target=hexcol(0xAFFF63);
+shape.target="egg"
+

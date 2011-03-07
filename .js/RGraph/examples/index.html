@@ -1,0 +1,162 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html>
+<!--
+    /**
+    * o------------------------------------------------------------------------------o
+    * | This file is part of the RGraph package - you can learn more at:             |
+    * |                                                                              |
+    * |                          http://www.rgraph.net                               |
+    * |                                                                              |
+    * | This package is licensed under the RGraph license. For all kinds of business |
+    * | purposes there is a small one-time licensing fee to pay and for non          |
+    * | commercial  purposes it is free to use. You can read the full license here:  |
+    * |                                                                              |
+    * |                      http://www.rgraph.net/LICENSE.txt                       |
+    * o------------------------------------------------------------------------------o
+    */
+-->
+<html>
+<head>
+    <title>RGraph: HTML5 canvas graph library - examples</title>
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <meta name="keywords" content="rgraph graph html5 javascript canvas" />
+    <meta name="description" content="RGraph: HTML5 canvas graph library - examples" />
+    
+    <script src="../libraries/RGraph.common.core.js" ></script>
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+    
+    <script>
+        function HideTwitterDIV ()
+        {
+            document.getElementById("twitter_div").style.opacity = 0;
+            document.getElementById("twitter_div").style.display = 'none';
+        }
+
+
+        function ShowTwitterDIV (e)
+        {
+            var e   = RGraph.FixEventObject(document.all ? event : e);
+            var div = document.getElementById("twitter_div");
+            var img = document.getElementById("twitter_icon");
+
+            div.style.display = 'block';
+            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
+            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
+
+            /**
+            * Fade it in
+            */
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
+
+            e.stopPropagation();
+
+            return false;
+        }
+        
+        window.addEventListener('click', HideTwitterDIV, false);
+    </script>
+
+    <!-- The twitter DIV --> 
+    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
+        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
+        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
+    </div>
+
+    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+              document.getElementById("twitter_div").style.position = 'fixed';
+    
+            }
+        </script>
+    
+        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
+    
+    
+            <div id="social">
+                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
+                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
+                </a> 
+     
+                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
+                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
+                </a>
+    
+    
+                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
+                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+    
+                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
+                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
+                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
+                </a>
+    
+                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
+                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
+                </a>
+            </div>
+    </div>
+    <!-- /Social networking buttons -->
+
+
+<div id="breadcrumb">
+    <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+    >
+    Examples
+</div>
+
+<h1>RGraph: HTML5 canvas graph library - Example pages</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+
+<p>
+    The following example pages are available:
+</p>
+
+<ul>
+    <li><a href="bar.html">Bar chart</a></li>
+    <li><a href="bipolar.html">Bi-polar chart</a></li>
+    <li><a href="donut.html">Donut chart</a></li>
+    <li><a href="funnel.html">Funnel chart</a></li>
+    <li><a href="gantt.html">Gantt chart</a></li>
+    <li><a href="hbar.html">Horizontal Bar chart</a></li>
+    <li><a href="hprogress.html">Horizontal progress bar</a></li>
+    <li><a href="led.html">LED grid</a></li>
+    <li><a href="line.html">Line chart</a></li>
+    <li><a href="meter.html">Meter</a></li>
+    <li><a href="odo.html">Odometer</a></li>
+    <li><a href="pie.html">Pie chart</a></li>
+    <li><a href="rscatter.html">Radial scatter chart</a></li>
+    <li><a href="rose.html">Rose chart</a></li>
+    <li><a href="scatter.html">Scatter graph</a></li>
+    <li><a href="tradar.html">Traditional radar chart</a></li>
+    <li><a href="vprogress.html">Vertical progress bar</a></li>
+</ul>
+
+<ul>
+    <li><a href="basic.html">A basic example (for implementation help)</a></li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: HTML5 canvas graph library - Adjusting your graphs interactively</title>
+    
+    <meta name="keywords" content="rgraph html5 canvas graph adjusting docs " />
+    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about adjusting your graphs" />
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+    
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    <script src="../libraries/RGraph.common.context.js" ></script>
+    <script src="../libraries/RGraph.common.adjusting.js" ></script>
+    <script src="../libraries/RGraph.common.tooltips.js" ></script>
+    <script src="../libraries/RGraph.common.zoom.js" ></script>
+    <script src="../libraries/RGraph.bar.js" ></script>
+    <script src="../libraries/RGraph.line.js" ></script>
+    <script src="../libraries/RGraph.hprogress.js" ></script>
+    <script src="../libraries/RGraph.rose.js" ></script>
+    <script src="../libraries/RGraph.tradar.js" ></script>
+    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Social networking buttons -->
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    
+    <script>
+        function HideTwitterDIV ()
+        {
+            document.getElementById("twitter_div").style.opacity = 0;
+            document.getElementById("twitter_div").style.display = 'none';
+        }
+
+
+        function ShowTwitterDIV (e)
+        {
+            var e   = RGraph.FixEventObject(document.all ? event : e);
+            var div = document.getElementById("twitter_div");
+            var img = document.getElementById("twitter_icon");
+
+            div.style.display = 'block';
+            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
+            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
+
+            /**
+            * Fade it in
+            */
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
+
+            e.stopPropagation();
+
+            return false;
+        }
+        
+        window.addEventListener('click', HideTwitterDIV, false);
+    </script>
+
+    <!-- The twitter DIV --> 
+    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
+        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
+        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
+    </div>
+
+    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+              document.getElementById("twitter_div").style.position = 'fixed';
+    
+            }
+        </script>
+    
+        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
+    
+    
+            <div id="social">
+                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
+                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
+                </a> 
+     
+                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
+                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
+                </a>
+    
+    
+                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
+                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+    
+                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
+                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
+                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
+                </a>
+    
+                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
+                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
+                </a>
+            </div>
+    </div>
+    <!-- /Social networking buttons -->
+
+    <div id="breadcrumb">
+        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        >
+        <a href="index.html">Documentation</a>
+        >
+        Adjusting graphs interactively
+    </div>
+
+    <h1>RGraph: HTML5 canvas graph library - Adjusting your graphs interactively</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+    
+    <canvas id="myc" width="600" height="250" style="float: right">[No canvas support]</canvas>
+    <canvas id="myc2" width="600" height="75" style="float: right">[No canvas support]</canvas>
+    <canvas id="myc3" width="600" height="450" style="float: right">[No canvas support]</canvas>
+    <canvas id="myc4" width="600" height="250" style="float: right">[No canvas support]</canvas>
+    <canvas id="myc5" width="400" height="400" style="float: right">[No canvas support]</canvas>
+
+    <script>
+        window.onload = function (e)
+        {
+            var line = new RGraph.Line('myc', [45,74,84,85,45,35,65,68,87,97,45,34,12], [15,14,12,16,18,19,14,12,74,84,95,65,35]);
+            line.Set('chart.labels', ['Kev','Matt','Rich','Dave','Iggy','Polly','Fiona','Fred','Pete','Lou','Fred','Bob']);
+            line.Set('chart.ylabels.inside', true);
+            line.Set('chart.linewidth', 2);
+            line.Set('chart.hmargin', 10);
+            line.Set('chart.shadow', true);
+            line.Set('chart.adjustable', true);
+            line.Set('chart.title', 'An adjustable line chart (adjustable, context)');
+            line.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom], null, ['Cancel', function () {}]]);
+            line.Set('chart.zoom.hdir', 'left');
+            line.Set('chart.zoom.vdir', 'center');
+            line.Draw();
+            
+            var grad = line.context.createLinearGradient(25, 0, 575, 0);
+            grad.addColorStop(0, 'green');
+            grad.addColorStop(1, 'white');
+
+            var hprogress = new RGraph.HProgress('myc2', 83, 100, 0);
+            hprogress.Set('chart.color', grad);
+            hprogress.Set('chart.adjustable', true);
+            hprogress.Set('chart.margin', 5);
+            hprogress.Set('chart.tickmarks.inner', true);
+            hprogress.Set('chart.label.inner', true);
+            hprogress.Set('chart.units.post', '%');
+            hprogress.Draw();
+
+            var rose = new RGraph.Rose('myc3',[4,3,5,6,2,1,4]);
+            rose.Set('chart.gutter', 25);
+            rose.Set('chart.colors.alpha', 0.5);
+            rose.Set('chart.adjustable', true);
+            rose.Set('chart.labels', ['Olga','Kev','Bob','Charlie','Pete','John','Fred']);
+            rose.Draw();
+
+            var bar = new RGraph.Bar('myc4', [[512,433],[653,477],[512,436],[533,564],[674,741],[266,453],[411,159],[458,741],[496,845]]);
+            bar.Set('chart.colors', ['blue', 'pink']);
+            bar.Set('chart.labels.above', true);
+            bar.Set('chart.shadow', true);
+            bar.Set('chart.shadow.color', '#aaa');
+            bar.Set('chart.strokecolor', 'rgba(0,0,0,0)');
+            bar.Set('chart.gutter', 30);
+            bar.Set('chart.adjustable', true);
+            bar.Set('chart.labels', ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008']);
+            bar.Draw();
+
+            var tradar = new RGraph.Tradar('myc5', [4,3,8,6,8,7,7,4,5]);
+            tradar.Set('chart.adjustable', true);
+            tradar.Set('chart.circle', 5);
+            tradar.Set('chart.circle.fill', 'rgba(255,0,0,0.5)');
+            tradar.Set('chart.color', 'rgba(0,255,0,0.5)');
+            tradar.Set('chart.labels', ['Hoolio', 'Godfrey', 'Albert', 'Jeff', 'Jack', 'Pete', 'Lou', 'Barney', 'Fred']);
+            tradar.Draw();
+        }
+    </script>
+    
+    <p>
+        Since 24th May 2010 you have had the ability to adjust your graphs interactively. Currently the Bar chart, Line chart,
+        Progress Bar, Rose chart and the Tradar have this facility. Some graph types use multiple event handlers and as such
+        are unlikely to work well with other dynamic features. The Line chart is an example of this, and whilst it does work
+        with the context menu (and so the full canvas zoom), it is unlikely to work with other dynamic features.
+    </p>
+
+
+    <p>
+        At the current time this feature on the Bar and Line charts don't work with X axis in the center.
+    </p>
+
+
+    <p>
+        If your intention is to make some sort of interactive console, new HTML5 input types may also be of interest (for example the new <i>range</i> input type
+        which gives you a "slider bar"). Eg (Chrome/Safari/Opera):
+    </p>
+
+    <p style="text-align: center">
+        <input type="range" min="0" max="100" value="76" onchange="document.getElementById('range_result').value = this.value"/>
+        <input type="text" id="range_result" size="3" value="76" />
+    </p>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: HTML5 canvas graph library - odometer</title>
+    
+    <meta name="keywords" content="rgraph html5 canvas example odometer chart" />
+    <meta name="description" content="RGraph: Odometer chart example" />
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    <script src="../libraries/RGraph.common.context.js" ></script>
+    <script src="../libraries/RGraph.common.annotate.js" ></script>
+    <script src="../libraries/RGraph.common.zoom.js" ></script>
+    <script src="../libraries/RGraph.odo.js" ></script>
+    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+
+    <script>
+        window.onload = function ()
+        {
+            // ID, MINIMUM, MAXIMUM, INDICATED VALUE
+            var odo1 = new RGraph.Odometer('odo1', 0, 12,9.5);
+            odo1.Set('chart.labels', ['12', '1','2','3','4','5','6','7','8','9','10','11']);
+            odo1.Set('chart.needle.thickness', 5);
+            odo1.Set('chart.needle.color', 'black');
+            odo1.Set('chart.needle.extra', [[30, 'black']]);
+            odo1.Set('chart.needle.head', false);
+            odo1.Set('chart.title', 'A clock-esque odometer (zoom)');
+            odo1.Set('chart.label.area', 40);
+            odo1.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom],['Cancel', function () {}]]);
+            odo1.Set('chart.shadow.outer', true);
+            odo1.Set('chart.needle.tail', false);
+            odo1.Set('chart.zoom.vdir', 'up');
+
+            odo1.Set('chart.green.color', 'gray');
+            odo1.Set('chart.yellow.color', 'gray');
+            odo1.Set('chart.red.color', 'gray');
+            
+            RGraph.AddCustomEventListener(odo1, 'ondraw',
+            function (obj)
+            {
+                var context = obj.context;
+                context.strokeStyle = 'black';
+                context.fillStyle = 'white';
+                context.beginPath();
+                    context.moveTo(obj.centerx, obj.centery);
+                    context.arc(obj.centerx, obj.centery, 10, 0, 6.28, 0);
+                context.stroke();
+                context.fill();
+            }
+            );
+
+            odo1.Draw();
+            
+            // ID, MINIMUM, MAXIMUM, INDICATED VALUE
+            var odo2 = new RGraph.Odometer('odo2', 0, 360, 56);
+            odo2.Set('chart.annotatable', true);
+            //odo2.Set('chart.needle.thickness', 6);
+            odo2.Set('chart.needle.color', 'black');
+            odo2.Set('chart.needle.tail', false);
+            //odo2.Set('chart.needle.type', 'triangle');
+            odo2.Set('chart.label.area', 35);
+            odo2.Set('chart.contextmenu', [['Clear', function () {RGraph.Clear(odo2.canvas); odo2.Draw();}]]);
+            odo2.Set('chart.border', document.all ? false : true);
+            odo2.Set('chart.title', 'A bordered compas');
+            //odo2.Set('chart.tickmarks.highlighted', true);
+            odo2.Set('chart.labels', ['N','NE','E','SE','S','SW','W','NW']);
+            odo2.Set('chart.red.min', 360);
+            odo2.Set('chart.red.color', 'gray');
+            odo2.Set('chart.value.text', true);
+            odo2.Set('chart.value.units.post', ' degrees');
+            odo2.Draw();
+            
+            
+            var odo3 = new RGraph.Odometer('odo3',0, 200, 160);
+            odo3.Set('chart.green.max', 150);
+            odo3.Set('chart.red.min', 175);
+            odo3.Set('chart.title', 'An odometer');
+            odo3.Set('chart.shadow.inner', true);
+            odo3.Set('chart.value.text', true);
+            odo3.Set('chart.value.units.post', ' litres');
+            odo3.Draw();
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+    
+    <script>
+        function HideTwitterDIV ()
+        {
+            document.getElementById("twitter_div").style.opacity = 0;
+            document.getElementById("twitter_div").style.display = 'none';
+        }
+
+
+        function ShowTwitterDIV (e)
+        {
+            var e   = RGraph.FixEventObject(document.all ? event : e);
+            var div = document.getElementById("twitter_div");
+            var img = document.getElementById("twitter_icon");
+
+            div.style.display = 'block';
+            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
+            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
+
+            /**
+            * Fade it in
+            */
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
+
+            e.stopPropagation();
+
+            return false;
+        }
+        
+        window.addEventListener('click', HideTwitterDIV, false);
+    </script>
+
+    <!-- The twitter DIV --> 
+    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
+        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
+        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
+    </div>
+
+    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+              document.getElementById("twitter_div").style.position = 'fixed';
+    
+            }
+        </script>
+    
+        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
+    
+    
+            <div id="social">
+                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
+                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
+                </a> 
+     
+                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
+                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
+                </a>
+    
+    
+                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
+                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+    
+                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
+                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
+                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
+                </a>
+    
+                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
+                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
+                </a>
+            </div>
+    </div>
+    <!-- /Social networking buttons -->
+
+
+<h1>RGraph: HTML5 canvas graph library - Odometer</h1>
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+
+
+    <div id="breadcrumb">
+        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        >
+        <a href="./index.html">Examples</a>
+        >
+        Odometer
+    </div>
+    
+    <div>
+        <p>
+            The Odometer can be used to provide an indication of a particular value. For example you could easily use it to
+            represent values for a control panel that shows information about a server. An Odometer indicating how much disk
+            space is used for example, would be more visual than a simple number.
+        </p>
+        
+        <p>
+            The green, yellow and red areas are configurable, allowing you to add some level of urgency into your figures. The
+            figures are also configurable, so it can go from 0-10, or from 0-100.
+        </p>
+    </div>
+
+    <div>
+        <ul>
+            <li><a href="../docs/odo.html">Odometer API documentation</a></li>
+        </ul>
+    </div>
+    
+    <canvas id="odo1" width="300" height="300"><div class="canvasfallback">[No canvas support]</div></canvas>
+    <canvas id="odo2" width="300" height="300"><div class="canvasfallback">[No canvas support]</div></canvas>
+    <canvas id="odo3" width="300" height="300"><div class="canvasfallback">[No canvas support]</div></canvas>
+</body>
+</html>

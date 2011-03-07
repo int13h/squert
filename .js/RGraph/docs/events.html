@@ -1,0 +1,294 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html >
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: HTML5 canvas graph library - Custom RGraph events</title>
+    
+    <meta name="keywords" content="rgraph html5 canvas graph docs custom events" />
+    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about the custom RGraph events" />
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../css/ModalDialog.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    
+    <script>
+        function HideTwitterDIV ()
+        {
+            document.getElementById("twitter_div").style.opacity = 0;
+            document.getElementById("twitter_div").style.display = 'none';
+        }
+
+
+        function ShowTwitterDIV (e)
+        {
+            var e   = RGraph.FixEventObject(document.all ? event : e);
+            var div = document.getElementById("twitter_div");
+            var img = document.getElementById("twitter_icon");
+
+            div.style.display = 'block';
+            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
+            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
+
+            /**
+            * Fade it in
+            */
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
+            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
+
+            e.stopPropagation();
+
+            return false;
+        }
+        
+        window.addEventListener('click', HideTwitterDIV, false);
+    </script>
+
+    <!-- The twitter DIV --> 
+    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
+        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
+        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
+    </div>
+
+    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+              document.getElementById("twitter_div").style.position = 'fixed';
+    
+            }
+        </script>
+    
+        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
+    
+    
+            <div id="social">
+                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
+                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
+                </a> 
+     
+                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
+                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
+                </a>
+    
+    
+                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
+                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+    
+                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
+                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
+                </a>
+    
+                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
+                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
+                </a>
+    
+                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
+                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
+                </a>
+            </div>
+    </div>
+    <!-- /Social networking buttons -->
+
+    <div id="breadcrumb">
+        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        >
+        <a href="index.html">Documentation</a>
+        >
+        Custom RGraph events
+    </div>
+
+    <h1>RGraph: HTML5 canvas graph library - Custom RGraph events</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+    
+    <ul>
+        <li><a href="#introduction">Introduction</a></li>
+        <li>
+            <a href="#available.events">Available events</a>
+            <ul>
+                <li><a href="#event.ontooltip">ontooltip</a></li>
+                <li><a href="#event.oncontextmenu">oncontextmenu</a></li>
+                <li><a href="#event.onbeforedraw">onbeforedraw</a></li>
+                <li><a href="#event.ondraw">ondraw</a></li>
+                <li><a href="#event.onzoom">onzoom</a></li>
+                <li><a href="#event.onmodaldialog">onmodaldialog</a></li>
+                <li><a href="#event.onresize">onresize</a></li>
+                <li><a href="#event.onadjust">onadjust</a></li>
+                <li><a href="#event.onannotatestart">onannotatestart</a></li>
+                <li><a href="#event.onannotate">onannotate</a></li>
+                <li><a href="#event.onannotateend">onannotateend</a></li>
+            </ul>
+        </li>
+    </ul>
+    
+    <a name="introduction"></a>
+    <h4>Introduction</h4>
+    
+    <p>
+        Custom events allow you to easily interact with and extend RGraph for your own purposes. The list of available events is below,
+        as is an example of how to make use of them with the <i>RGraph.AddCustomEventListener()</i> function. Event handler functions (ie your
+        functions) are passed a single parameter - the graph object. With this you can get references to the canvas and context. There's
+        an example of this below.
+    </p>
+
+<pre class="code">&lt;script&gt;
+    window.onload = function ()
+    {
+        var line = new RGraph.Line('myLine', [45,12,16,18,44,54,23,21,56]);
+        line.Set('chart.tooltips', ['Fred', 'Barney', 'Jay', 'Pete', 'Frank', 'Bob', 'Ted', 'Lou', 'Kev']);
+        line.Set('chart.labels', ['Fred', 'Barney', 'Jay', 'Pete', 'Frank', 'Bob', 'Ted', 'Lou', 'Kev']);
+        line.Set('chart.hmargin', 5);
+        line.Set('chart.tickmarks', 'dot');
+        line.Draw();
+
+        <span style="color: green">/**
+        * This is the call to the RGraph function that registers the event listener
+        * 
+        *      line: The graph object
+        * ontooltip: The name of the event
+        *    myFunc: The function that handles the event
+        */</span>
+        RGraph.AddCustomEventListener(line, 'ontooltip', myFunc);
+    }
+
+    <span style="color: green">/**
+    * The function that is called when the ontooltip event fires. It is  passed a single parameter - the graph object.
+    * With this you can get the ID and references to the canvas and context:
+    *  o obj.id
+    *  o obj.canvas
+    *  o obj.context
+    */</span>
+    function myFunc(obj)
+    {
+        var id      = obj.id;
+        var canvas  = obj.canvas;
+        var context = obj.context;
+
+        alert('This alert was triggered by the custom ontooltip event');
+    }
+&lt;/script&gt;
+</pre>
+    
+    <a name="available.events"></a>
+    <h4>Available events</h4>
+
+    <p>
+        <a name="event.ontooltip"></a>
+        <b>ontooltip</b><br />
+        This event fires immediately after a tooltip has been created. This event allows you to easily show graphs in your tooltips (tooltip
+        effects that involve moving the tooltip, eg. <i>contract</i>, <i>expand</i> &amp; <i>snap</i>, will not function). You
+        can find the tooltip object in the RGraph registry - <i>RGraph.Registry.Get('chart.tooltip')</i>. Note that if you're testing and
+        using a function that pauses execution (eg alert()), this will also pause any timers (for animation effects etc). If you want to
+        avoid this you should use a function that doesn't block execution, eg the Firebug/WebKit function, <i>console.log()</i> (you can use the
+        <i>cl()</i> shortcut in RGraph).
+    </p>
+
+    <p>
+        <a name="event.oncontextmenu"></a>
+        <b>oncontextmenu</b><br />
+        This event fires immediately after the RGraph context menu is shown. If you want it, you can get at the context menu in the
+        RGraph registry: <i>RGraph.Registry.Get('chart.contextmenu')</i> Like the <i>ontooltip</i> event, using <i>alert()</i> can
+        pause the fade in timers, so you should consider using the Firebug/Webkit <i>console.log</i> functions instead.
+    </p>
+
+    <p>
+        <a name="event.onbeforedraw"></a>
+        <b>onbeforedraw</b><br />
+        Much like the ondraw event, however this fires at the start of the .Draw() method, in effect "before" the method.
+    </p>
+
+    <p>
+        <a name="event.ondraw"></a>
+        <b>ondraw</b><br />
+        The ondraw event fires <i>after</i> the .Draw() method has run. Note that the interactive features of RGraph may call the .Draw()
+        method multiple times - the zoom in area mode is a prime example.
+        A graph with tooltips is also an example. In this case it would demonstrate that the .Draw() method is called twice (and
+        hence the ondraw event), whereas the ontooltip event only fires once.
+        
+        <br /><br />
+
+        <b>Note:</b> The <i>ondraw</i> event is not only fired by its own graph,
+        but (if you're using tooltips for example), can also be fired by other graphs on the page.
+    </p>
+
+    <p>
+        <a name="event.onzoom"></a>
+        <b>onzoom</b><br />
+        The onzoom event fires whenever the canvas is zoomed. When the zoom is in <i>area</i> and <i>canvas</i> modes this fires once,
+        but when in <i>thumbnail</i> mode this event is like the onmousemove event in that it fires whenever the mouse is moved.
+    </p>
+
+    <p>
+        <a name="event.onmodaldialog"></a>
+        <b>onmodaldialog</b><br />
+        The onmodaldialog event fires when the ModalDialog is shown. This event is easily replicated yourself, though using this event
+        may help you to keep your code tidy. This event is utilised slightly differently to the other events:
+        
+        <pre class="code">ModalDialog.AddCustomEventListener('onmodaldialog', function () {alert('Hello world!');});</pre>
+    </p>
+
+    <p>
+        <a name="event.onresize"></a>
+        <b>onresize</b><br />
+        The onresize event fires when a canvas is resized. It also fires when the canvas is reset to the original size.
+    </p>
+
+    <p>
+        <a name="event.onadjust"></a>
+        <b>onadjust</b><br />
+        The onadjust event fires whenever one of the supported graph types is adjusted. It usually fires in conjunction with the
+        onmousemove event, and can be blocked by alert(). You therefore may need to use a different function (eg console.log())
+        whilst debugging.
+    </p>
+
+    <p>
+        <a name="event.onannotatestart"></a>
+        <b>onannotatestart</b><br />
+        The onannotatestart event fires at the beginning of the annotating procedure (ie in a similar vein to the onmousedown event).
+    </p>
+
+    <p>
+        <a name="event.onannotate"></a>
+        <b>onannotate</b><br />
+        The onannotate event fires when the graph has been annotated. It fires during the annotate procedure.
+    </p>
+
+    <p>
+        <a name="event.onannotateend"></a>
+        <b>onannotateend</b><br />
+        The onannotateend event fires at the end of the annotating procedure (ie in a similar vein to the onmouseup event).
+    </p>
+</body>
+</html>
