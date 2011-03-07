@@ -25,6 +25,9 @@ function doWorld($sccQuery,$dccQuery) {
 
     $aHit = $bHit = $cHit = 'no';
 
+    // A => src, B=> dst,  C=> cumulative
+    $a1 = $a2 = $a3 = $b1 = $b2 = $b3 = array();
+
     while ($row = mysql_fetch_row($sccQuery)) {
         $a1[] =	$row[0];
         $a2[] =	$row[1];
