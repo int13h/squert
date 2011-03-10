@@ -121,14 +121,15 @@ function DoQueries($timeParts) {
     $startDate = $timeParts[4];
 
     // Report filters message
-    $rfText = '';
+    $tmpRf = $rfText = '';
 
     // Where 
     if (!"$wString") {
         $wType = 'x';
         $wString = '';
     } else {
-        $rfText .= "$wString<br>";
+        $tmpRf = htmlspecialchars($wString);
+        $rfText .= "$tmpRf<br>";
     }
 
     // And
@@ -136,7 +137,8 @@ function DoQueries($timeParts) {
         $aType = 'w';
         $aString = '';
     } else {
-        $rfText .= "$aString<br>";
+        $tmpRf = htmlspecialchars($aString);
+        $rfText .= "$tmpRf<br>";
     }
   
     // Country
@@ -158,7 +160,8 @@ function DoQueries($timeParts) {
         }
 
         $cFilter .= ")";
-        $rfText .= "$cString<br>";
+        $tmpRf = htmlspecialchars($cString);
+        $rfText .= "$tmpRf<br>";
 
     } else {
 
@@ -244,18 +247,20 @@ function DoQueries($timeParts) {
             $xFilter = '';
             $rfText .= "EXCLUDE: <span style=\"color: #cc0000;\">Syntax Error, no filter applied.</span><br>";
         } else {
-            $rfText .= "<b>EXCLUDE -></b> $xString<br>";
+            $tmpRf = htmlspecialchars($xString);
+            $rfText .= "<b>EXCLUDE -></b> $tmpRf<br>";
         }
     } else {
         $xFilter = '';
     }
-
+ 
     // Filters
     function getFilter($index,$theString,$theStatus,$theSID) {
 
         $toStrip = array("\"","'","`","^");
         $roundOne = str_replace($toStrip, "", $theString);
         $newString = str_replace('\\', '\\\\\\\\', $roundOne);
+        
  
         // Types are:  IP, Port, Signature, Signature ID.
         $theFilters = array(
