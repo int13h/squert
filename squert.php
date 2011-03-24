@@ -26,21 +26,33 @@ function sKill() {
     session_destroy();
     session_unset();
     header ("Location: login.php");
+    exit();
+}
+
+function sInt() {
+     header ("Location: login.php");
+     exit();
 }
 
 if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-    header ("Location: login.php");
+     sInt();
 }
 
 // Session variables
-if(!isset($_SESSION['sUser']))  { sKill(); }  else { $sUser  = $_SESSION['sUser'];}
-if(!isset($_SESSION['sEmail'])) { sKill(); }  else { $sEmail = $_SESSION['sEmail'];}
-if(!isset($_SESSION['sType']))  { sKill(); }  else { $sType  = $_SESSION['sType'];}
-if(!isset($_SESSION['sTime']))  { sKill(); }  else { $sTime  = $_SESSION['sTime'];}
+if (!isset($_SESSION['sUser']))  { sInt(); }  else { $sUser  = $_SESSION['sUser'];}
+if (!isset($_SESSION['sEmail'])) { sInt(); }  else { $sEmail = $_SESSION['sEmail'];}
+if (!isset($_SESSION['sType']))  { sInt(); }  else { $sType  = $_SESSION['sType'];}
+if (!isset($_SESSION['sTime']))  { sInt(); }  else { $sTime  = $_SESSION['sTime'];}
+if (!isset($_REQUEST['id']))     { $id = 0; } else { $id     = $_REQUEST['id'];}
+
+// Kill the session if the ids dont match.
+if ($id != $_SESSION['id']) {
+    sInt();
+}
 
 // Kill the session if timeout is exceeded.
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sTime)) {
-    sKill();
+    sInt();
 }
 
 // Kill the sesssion if the user requests it
@@ -733,7 +745,7 @@ if ($sType == "ADMIN") { $aNotif = "<span style=\"color: #A86565;\"> (admin)</sp
 </head>
 <body>
 
-<form id=squert method=post action="squert.php?x=42">
+<form id=squert method=post action="squert.php?id=<?php echo $id;?>">
 
 <table width=950 align=center cellpadding=1 cellspacing=0><tr>
 <td align=right style="padding-bottom: 5px; color: #545454a; font-size: .7em;">
@@ -871,7 +883,7 @@ Welcome <?php echo "$sUser$aNotif";?>
 &nbsp;&nbsp;
 
 <input onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" id=base name=base type="submit" value=submit class=rb>
-<input onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" type="button" value="reset" onClick="location.href='squert.php';" class=rb>
+<input onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" type="button" value="reset" onClick="location.href='squert.php?id=<?php echo $id;?>';" class=rb>
 </td>
 </tr>
 </table>
