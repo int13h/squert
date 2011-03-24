@@ -35,6 +35,9 @@ function cleanUp($string) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $username = $_REQUEST['username'];
     $password = $_REQUEST['password'];
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+    $ua .= rand(0,4200);
+    $id = md5($ua);
     $db = mysql_connect($dbHost,$dbUser,$dbPass);
     $link = mysql_select_db($dbName, $db);
 
@@ -77,7 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $_SESSION['sEmail']	= $userEmail;
                 $_SESSION['sType']      = $userType;
                 $_SESSION['sTime']	= $userTime;
-	        header ("Location: squert.php");
+                $_SESSION['id']         = $id;
+	        header ("Location: squert.php?id=$id");
             } else {
                 $err = 'Invalid Password';
                 $focus = 'password';
