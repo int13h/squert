@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $userType       = $row[5];
                 $userTime       = $row[6];
             }
-            // The first 2 chars are the the salt     
+            // The first 2 chars are the salt     
             $theSalt = substr($userHash, 0,2);
 
             // The remainder is the hash
