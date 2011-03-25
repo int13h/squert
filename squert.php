@@ -917,16 +917,18 @@ Welcome <?php echo "$sUser$aNotif";?>
 <input class=rb onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" id=incon name=base class=round type="submit" value=Submit>
 </td></tr>
 </table>
-<center>
 
-<?php if(!isset($_REQUEST['hViz'])) { $hViz = 0; } else { $hViz = $_REQUEST['hViz']; } ?>
+<?php 
+    if(!isset($_REQUEST['hViz'])) { $hViz = 0; } else { $hViz = $_REQUEST['hViz']; }
+    if(!isset($_REQUEST['hMap'])) { $hMap = 0; } else { $hMap = $_REQUEST['hMap']; } 
+?>
+
+<center>
 <input name=hViz id=hViz type=hidden maxlength=1 value="<?php echo $hViz;?>">
-<?php if(!isset($_REQUEST['hMap'])) { $hMap = 0; } else { $hMap = $_REQUEST['hMap']; } ?>
 <input name=hMap id=hMap type=hidden maxlength=1 value="<?php echo $hMap;?>">
 <input name=hCl id=hCl type=hidden maxlength=2 value="<?php echo $hCl;?>">
 </center>
 <?php
-if(!isset($_REQUEST['x'])) { $x = 0; } else { $x = $_REQUEST['x']; }
 if (isset($_POST['base'])) {
     switch ($_POST['base']) {
         case "update cloud":
