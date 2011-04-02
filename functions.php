@@ -47,7 +47,6 @@ function retSD($x) {
 }
 
 function cCheck() {
-
     if (file_exists('config.php')) {
         global $dbHost,$dbName,$dbUser,$dbPass;
         $link = mysql_connect($dbHost,$dbUser,$dbPass);
@@ -135,7 +134,6 @@ function mkSelect($items,$active) {
 
 // Sensor list
 function mkSensor($active) {
-
     global $dbHost,$dbName,$dbUser,$dbPass;
     $db = mysql_connect($dbHost,$dbUser,$dbPass) or die(mysql_error());
     mysql_select_db($dbName,$db) or die();
@@ -228,7 +226,6 @@ function mkSensor($active) {
             "</optgroup>\n";
         }
     }
-
 }
 
 // Protocols
@@ -252,7 +249,6 @@ function getProto($proto) {
 
 // Radio buttons
 function qButtons($id) {
-
     $typeList = "0:IP,1:Port,2:Signature,3:SigID";
     $pairs = explode(",",$typeList);
     $itemCount = (count($pairs) - 1);
@@ -286,12 +282,10 @@ function Segments($type) {
             echo "\r<input type=checkbox name=sig1 $style checked><input type=checkbox name=sig2 $style checked>";
             break;
     }
-
 }
 
 // Time Picker
 function qTime($type,$stop,$extra) {
-
     if(!isset($_REQUEST['sHour'])) { $sHour = $extra; } else { $sHour = $_REQUEST['sHour']; }
     if(!isset($_REQUEST['sMin'])) { $sMin = $extra; } else { $sMin = $_REQUEST['sMin']; }
     if(!isset($_REQUEST['sSec'])) { $sSec = $extra; } else { $sSec = $_REQUEST['sSec']; }
@@ -324,7 +318,6 @@ function qTime($type,$stop,$extra) {
     }
 
 for ($i = 0; $i <= $stop; $i++) {
-
         // Pad single digits
         if (strlen($i) < 2) {
             $option = "0$i";
@@ -345,34 +338,25 @@ for ($i = 0; $i <= $stop; $i++) {
 // Status. Colourizes the ST column based on Category or priority (RT's).
 
 function Status($status) {
-
     global $statusList;
-
     list ($long,$colour,$short) = explode("||",$statusList[$status]);
     return "<td class=sort style=\"background: $colour;\">$short</td>";
-            
 }
 
 function SignatureLine($_sigName,$rC) {
-    global $omOver, $omOut;
-
     $sigName = rtrim($_sigName);
     $rowID = "cm-sig-$rC";
-    $html = "<td class=sort name=$rowID id=$rowID style=\"padding: none; cursor: pointer;\" $omOver $omOut>$sigName</td>";
+    $html = "<td class=sort name=$rowID id=$rowID>$sigName</td>";
     return $html;
 }
 
 function SigidLine($sigID,$rC) {
-     global $omOver, $omOut;
-
      $rowID = "cm-sid-$rC";
-     $html = "<td class=sort name=$rowID id=$rowID style=\"padding: none; cursor: pointer;\" $omOver $omOut>$sigID</td>";
+     $html = "<td class=sort name=$rowID id=$rowID>$sigID</td>";
      return $html;
 }
 
 function IPLine($ip,$port,$type,$cc,$rC) {
-    global $omOver, $omOut;
-
     $rowID = "cm-${type}-$rC";
     $portID = "cm-${type[0]}port-$rC";
     $ccID = "cm-${type[0]}cc-$rC";
@@ -383,7 +367,7 @@ function IPLine($ip,$port,$type,$cc,$rC) {
         if ($port == '') {
             $phtml = "<td class=sort name=xxx id=xxx>--</td>";
         } else {
-            $phtml = "<td class=sort name=$portID id=$portID style=\"padding: none; cursor: pointer;\" $omOver $omOut>$port</td>";
+            $phtml = "<td class=sort name=$portID id=$portID>$port</td>";
         }
     }
 
@@ -397,22 +381,20 @@ function IPLine($ip,$port,$type,$cc,$rC) {
             $cc = 'LO';
             $cchtml = "<td class=sort style=\"padding: none; color: gray;\">$cc</td>";
         } else {
-            $cchtml = "<td class=sort name=$ccID id=$ccID style=\"padding: none; font-weight: bold; cursor: pointer;\" $omOver $omOut>$cc</td>";
+            $cchtml = "<td class=sort name=$ccID id=$ccID style=\"font-weight: bold;\">$cc</td>";
         }
     }
 
     $ipInt = sprintf("%u", ip2long($ip));
 
-    $html = "<td sorttable_customkey=\"$ipInt\" class=sort name=$rowID id=$rowID style=\"padding: none; cursor: pointer;\" $omOver $omOut>$ip</td>";
+    $html = "<td sorttable_customkey=\"$ipInt\" class=sort name=$rowID id=$rowID>$ip</td>";
     $html.= "$phtml";
     $html.= "$cchtml";
 
     return $html;
-
 }
 
 function getSeverity($value,$steps,$startHex,$endHex) {
-
     $x = round($value);
     $start = hexdec($startHex);
     $end = hexdec($endHex);
@@ -439,13 +421,11 @@ function getSeverity($value,$steps,$startHex,$endHex) {
 }
 
 function interpolate($pBegin, $pEnd, $pStep, $pMax) {
-
     if ($pBegin < $pEnd) {
       return (($pEnd - $pBegin) * ($pStep / $pMax)) + $pBegin;
     } else {
       return (($pBegin - $pEnd) * (1 - ($pStep / $pMax))) + $pEnd;
     }
-
 }
 
 function polar($colour) {
@@ -476,30 +456,6 @@ function rfc1918($ip) {
     } else {
         return 1;
     }
-}
-
-function mkLinks($date) {
-    $html = '';
-    $page = ltrim($_SERVER['PHP_SELF'],"/");
-    for ($n=9; $n > 0; $n--) {
-        $day = date('Y-m-d', strtotime("$date -$n day"));
-        $lbl = date('M d', strtotime($date));
-        $html .= "<a class=np href=\"$page?date=$day#pn\">${lbl}</a>";
-    }
-    for ($n=0; $n <=9; $n++) {
-        $day = date('Y-m-d', strtotime("$date +$n day"));
-        $lbl = date('M d', strtotime($day));
-        if ($day == $date) {
-            $lbl = date('D M d', strtotime($day));
-            $html .= "<span style=\"-moz-border-radius: 4px; background: #000000; border: 1pt solid black; color: #ffffff;font-weight: bold; padding: 2px;\">${lbl}</span>";
-        } elseif ($day > $today) {
-            $html .= "<span class=np style=\"color: #c9c9c9;\">${lbl}</span>";
-        } else {
-            $html .= "<a class=np href=\"$page?date=$day#pn\">${lbl}</a>";
-        }
-    }
- 
-    return $html;
 }
 
 function hextostr($x) {

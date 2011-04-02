@@ -21,7 +21,7 @@
 
 function doWorld($sccQuery,$dccQuery) {
 
-    global $mapFGC, $mapBGC, $mapLNC , $mapSC, $mapEC, $omOver, $omOut;
+    global $mapFGC, $mapBGC, $mapLNC , $mapSC, $mapEC;
 
     $aHit = $bHit = $cHit = 'no';
 
@@ -186,15 +186,15 @@ function doWorld($sccQuery,$dccQuery) {
 
             $cellCol = getSeverity($c1[$i],$wmThres,$mapSC,$mapEC);
 
-            echo "\r<tr><td class=sort name=cm-ccc-$i id=cm-ccc-$i style=\"cursor: pointer; border-left: none;\" $omOver $omOut>$country</td>
-                  \r<td width=20 class=sort style=\"background: $cellCol; border: none;border-left: 1pt solid #c4c4c4;\"></td>
-                  \r<td class=sort>$cc</td>
-                  \r<td class=sort><b>$acount</b></td>
-                  \r<td class=sort><b>$bcount</b></td>
-                  \r<td class=sort style=\"background: #d4d4d4;\"><b>$ccount</b></td></tr>";
+            echo "\r<tr><td class=sort name=cm-ccc-$i id=cm-ccc-$i>$country</td>
+                  \r<td width=10 class=tros style=\"border-bottom: none; background: $cellCol;\"></td>
+                  \r<td class=tros>$cc</td>
+                  \r<td class=tros><b>$acount</b></td>
+                  \r<td class=tros><b>$bcount</b></td>
+                  \r<td class=tros style=\"background: #d4d4d4;\"><b>$ccount</b></td></tr>";
         }
     } else {
-        echo "<tr><td class=sortc colspan=6>
+        echo "<tr><td class=tros colspan=6>
               No Result. If you were expecting to see something here try expanding the ip2c section
               and click the 'create mappings' button. When the mappings are complete, click on the main submit button again.
               </td></tr>";

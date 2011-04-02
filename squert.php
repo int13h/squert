@@ -52,7 +52,7 @@ if ($id != $_SESSION['id']) {
 
 // Kill the session if timeout is exceeded.
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sTime)) {
-    sInt();
+    sKill();
 }
 
 // Kill the sesssion if the user requests it
@@ -588,7 +588,7 @@ function DoQueries($timeParts) {
     echo "<table id=results style=\"border: 1pt solid gray;\" cellpadding=1 cellspacing=0 width=950 align=center class=sortable>\n";
 
     if ($numRows <= 0) {
-        echo "<tfoot><tr><td colspan=6 class=sort>Your query returned no data.</td></tr></tfoot></table></body></html>";
+        echo "<tfoot><tr><td colspan=6 class=tros>Your query returned no data.</td></tr></tfoot></table></body></html>";
         exit(0);
     } else {
 
@@ -644,13 +644,13 @@ function DoQueries($timeParts) {
                     $severity = getSeverity($count,$threshold,$startHex,$endHex);
 
                     echo "<td style=\"background: $severity; font-size: 0pt; color: $severity; border: none;\">$count</td>";
-                    echo "<td class=sort>$count</td>";
-                    echo "<td class=sort style=\"color: #555;\">$srcC</td>";
-                    echo "<td class=sort style=\"color: #555;\">$dstC</td>";
+                    echo "<td class=tros>$count</td>";
+                    echo "<td class=tros style=\"color: #555;\">$srcC</td>";
+                    echo "<td class=tros style=\"color: #555;\">$dstC</td>";
                     echo "$sigHTML";
                     echo "$sidHTML";
-                    echo "<td class=sort>$proto</td>";
-                    echo "<td class=sort style=\"font-size: 9px;\"><b>$time</b></td>\n";
+                    echo "<td class=tros>$proto</td>";
+                    echo "<td class=tros style=\"font-size: 9px;\"><b>$time</b></td>\n";
                     break;
 
                 case "q1":
@@ -670,8 +670,8 @@ function DoQueries($timeParts) {
                     $severity = getSeverity($count,$threshold,$startHex,$endHex);
 
                     echo "<td width=4 style=\"background: $severity; font-size: 0pt; color: $severity; border: none;\">$count</td>\n";
-                    echo "<td class=sort>$count</td>\n";
-                    echo "<td class=sort style=\"background: #e9e9e9; font-size: 9px;\"><b>$time</b></td>\n";
+                    echo "<td class=tros>$count</td>\n";
+                    echo "<td class=tros style=\"background: #e9e9e9; font-size: 9px;\"><b>$time</b></td>\n";
                     echo "$srcHTML\n";
                     echo "$dstHTML\n";
                     echo "$sigHTML\n";
@@ -697,7 +697,7 @@ function DoQueries($timeParts) {
                     $sidHTML = SigidLine($sigID,$rC);
 
                     echo "$status\n";
-                    echo "<td id=t-$rC class=sort style=\"cursor: pointer; font-weight: bold; font-size: .5em;\" $omOver $omOut onclick=\"window.open('packet.php?sid=$sid&cid=$cid','$cid','width=950,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes')\">$time</b></td>\n";
+                    echo "<td id=t-$rC class=sort style=\"font-weight: bold; font-size: .5em;\" onclick=\"window.open('packet.php?sid=$sid&cid=$cid','$cid','width=950,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes')\">$time</b></td>\n";
                     echo "$srcHTML\n";
                     echo "$dstHTML\n";
                     echo "$sigHTML\n";
@@ -899,20 +899,20 @@ Welcome <?php echo "$sUser$aNotif";?>
 </td>
 </tr>
 <tr>
-<td colspan=2 id=cmwhere class=cmenu <?php echo "$omOver $omOut";?> onclick="mClick('w')">add item to WHERE clause (0)</td>
+<td colspan=2 id=cmwhere class=cmenu onclick="mClick('w')">add item to WHERE clause (0)</td>
 </tr>
 <tr>
-<td colspan=2 id=cmand class=cmenu <?php echo "$omOver $omOut";?> onclick="mClick('a')">add item to AND clause (0)</td>
+<td colspan=2 id=cmand class=cmenu onclick="mClick('a')">add item to AND clause (0)</td>
 </tr>
 <tr>
-<td colspan=2 id=cmcc class=cmenu <?php echo "$omOver $omOut";?> onclick="mClick('c')">add item to COUNTRY clause (0)</td>
+<td colspan=2 id=cmcc class=cmenu onclick="mClick('c')">add item to COUNTRY clause (0)</td>
 </tr>
 <tr>
-<td colspan=2 id=cmex class=cmenu <?php echo "$omOver $omOut";?> onclick="mClick('x')">add item to EXCLUDE clause (0)</td>
+<td colspan=2 id=cmex class=cmenu onclick="mClick('x')">add item to EXCLUDE clause (0)</td>
 </tr>
-<tr><td colspan=2 id=cmsig class=cmenu <?php echo "$omOver $omOut";?> onclick="sigLU()" style="display: none;">lookup signature</td></tr>
-<tr><td colspan=2 id=cmlip class=cmenu <?php echo "$omOver $omOut";?> onclick="localLookup()" style="display: none;">lookup address</td></tr>
-<tr><td colspan=2 class=cmenu-foot style="border-bottom: none; padding: 5px 5px 5px 5px;"><b>View:</b>&nbsp;
+<tr><td colspan=2 id=cmsig class=cmenu onclick="sigLU()" style="display: none;">lookup signature</td></tr>
+<tr><td colspan=2 id=cmlip class=cmenu onclick="localLookup()" style="display: none;">lookup address</td></tr>
+<tr><td colspan=2 class=unemc style="border-bottom: none; padding: 5px 5px 5px 5px;"><b>View:</b>&nbsp;
 <select id=qLogic1 name=qLogic1 onchange="update()" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'><?php mkSelect($qList,$qLogic);?></select>
 <input class=rb onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" id=incon name=base class=round type="submit" value=Submit>
 </td></tr>

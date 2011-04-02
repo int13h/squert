@@ -162,8 +162,7 @@ Password<br>
 <tr><td class=boxes>
 <input id=logmein name=logmein class=rb type=submit name=login value=submit onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';"><br><br></td>
 <td class=err><?php echo $err;?></td></tr>
-</table>
-<div class=cp>&copy;2011 Paul Halliday</div>
+</table><div class=cp>&copy;2011 Paul Halliday</div>
 </form>
 <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>
 </body>

@@ -20,12 +20,13 @@
 //
 
 function createGrid($hdwmyQuery,$dHour,$startDate) {
-    global $offset, $startHex, $endHex, $ghCol;
+    global $offset, $startHex, $endHex;
     $count = $time = '';
     $threshold = 1;
     $hCol1 = "background: #000000; color: #f4f4f4;";
     $hCol2 = "background: #666666; color: #f4f4f4;";
     $hCol3 = "background: #e9e9e9; color: #000000;";
+    $ghCol = "#cc0000";
     $msg1 = "hover over a cell to see its value, click to view events";
     $msg2 = "click the cell again to go back";
     while ($row = mysql_fetch_row($hdwmyQuery)) {
