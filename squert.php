@@ -35,7 +35,7 @@ function sInt() {
 }
 
 if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-     sInt();
+     sKill();
 }
 
 // Session variables
@@ -47,7 +47,7 @@ if (!isset($_REQUEST['id']))     { $id = 0; } else { $id     = $_REQUEST['id'];}
 
 // Kill the session if the ids dont match.
 if ($id != $_SESSION['id']) {
-    sInt();
+    sKill();
 }
 
 // Kill the session if timeout is exceeded.
@@ -59,6 +59,12 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 
 if (isset($_POST['base']) && $_POST['base'] == "Log out") {
     sKill();
 }
+
+// We dont want anything cached
+header ("Expires: Sun, 11 Nov 1973 05:00:00 GMT");
+header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); 
+header ("Cache-Control: no-cache, must-revalidate");
+header ("Pragma: no-cache");
 
 include 'config.php';
 include 'functions.php';
@@ -627,7 +633,7 @@ function DoQueries($timeParts) {
                 $class = 'line2';
             }
 
-            echo "\n<tr name=row-$rC id=row-$rC>\n";
+            echo "\n<tr class=lines name=row-$rC id=row-$rC>\n";
 
             switch ("q".$qLogic) {
                 case "q0":
@@ -644,7 +650,7 @@ function DoQueries($timeParts) {
                     $severity = getSeverity($count,$threshold,$startHex,$endHex);
 
                     echo "<td style=\"background: $severity; font-size: 0pt; color: $severity; border: none;\">$count</td>";
-                    echo "<td class=tros>$count</td>";
+                    echo "<td onclick=\"mClick('w','cm-sig-$rC'); submit();\" class=sort>$count</td>";
                     echo "<td class=tros style=\"color: #555;\">$srcC</td>";
                     echo "<td class=tros style=\"color: #555;\">$dstC</td>";
                     echo "$sigHTML";
@@ -671,7 +677,7 @@ function DoQueries($timeParts) {
 
                     echo "<td width=4 style=\"background: $severity; font-size: 0pt; color: $severity; border: none;\">$count</td>\n";
                     echo "<td class=tros>$count</td>\n";
-                    echo "<td class=tros style=\"background: #e9e9e9; font-size: 9px;\"><b>$time</b></td>\n";
+                    echo "<td class=tros style=\"font-size: 9px;\"><b>$time</b></td>\n";
                     echo "$srcHTML\n";
                     echo "$dstHTML\n";
                     echo "$sigHTML\n";
@@ -888,7 +894,7 @@ Welcome <?php echo "$sUser$aNotif";?>
 </tr>
 </table>
 
-<br><br>
+<br>
 
 <table cellpadding=0 cellspacing=0 id=divContext style="background: #f4f4f4;border: 1pt solid gray; border-collapse: collapse; display: none; position: absolute;">
 <tr>
@@ -910,8 +916,18 @@ Welcome <?php echo "$sUser$aNotif";?>
 <tr>
 <td colspan=2 id=cmex class=cmenu onclick="mClick('x')">add item to EXCLUDE clause (0)</td>
 </tr>
-<tr><td colspan=2 id=cmsig class=cmenu onclick="sigLU()" style="display: none;">lookup signature</td></tr>
-<tr><td colspan=2 id=cmlip class=cmenu onclick="localLookup()" style="display: none;">lookup address</td></tr>
+<tr>
+<td colspan=2 id=cmsig class=cmenu onclick="sigLU()" style="display: none;">lookup signature</td>
+</tr>
+<tr>
+<td colspan=2 id=cmlip class=cmenu onclick="localLookup()" style="display: none;">lookup address</td>
+</tr>
+<tr>
+<td colspan=2 id=cmprofile class=cmenu onclick="profile()">profile this item</td>
+</tr>
+<tr>
+<td colspan=2 id=cmprofile class=cmenu onclick="profile()">profile this page</td>
+</tr>
 <tr><td colspan=2 class=unemc style="border-bottom: none; padding: 5px 5px 5px 5px;"><b>View:</b>&nbsp;
 <select id=qLogic1 name=qLogic1 onchange="update()" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'><?php mkSelect($qList,$qLogic);?></select>
 <input class=rb onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" id=incon name=base class=round type="submit" value=Submit>
