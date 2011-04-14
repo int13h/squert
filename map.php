@@ -27,7 +27,8 @@ function doWorld($sccQuery,$dccQuery) {
 
     // A => src, B=> dst,  C=> cumulative
     $a1 = $a2 = $a3 = $b1 = $b2 = $b3 = array();
-
+    $aSum = $bSum = $cSum = $cItems = 0;
+ 
     while ($row = mysql_fetch_row($sccQuery)) {
         $a1[] =	$row[0];
         $a2[] =	$row[1];
@@ -72,14 +73,17 @@ function doWorld($sccQuery,$dccQuery) {
         $aItems = count($a1);
         $aSum = array_sum($a1);
         array_multisort($a1, SORT_DESC, $a2, $a3);
-        $aBan = "<b>Source</b>: $aSum Events&nbsp;&nbsp;";
     }
+
+    $aBan = "<b>Source</b>: $aSum Events&nbsp;&nbsp;";
+
     if ($bHit == 'yes') {
         $bItems = count($b1);
         $bSum = array_sum($b1);
         array_multisort($b1, SORT_DESC, $b2, $b3);
-        $bBan = "<b>Destination</b>: $bSum Events&nbsp;&nbsp;";
     }
+
+    $bBan = "<b>Destination</b>: $bSum Events&nbsp;&nbsp;";
  
     if ($cHit == 'yes') {
         $cItems = count($c1);
@@ -87,14 +91,15 @@ function doWorld($sccQuery,$dccQuery) {
         array_multisort($c1, SORT_DESC, $c2, $c3);
         $th = $c1;
         $wmThres = ret95($th);
-        $cBan = "<b>Total</b>: $cSum Events, $cItems Countries.";
     }
+
+    $cBan = "<b>Total</b>: $cSum Events, $cItems Countries.";
 
    // Map Canvas
     echo "\r<center>
           \r<table width=910 border=0 cellpadding=1 cellspacing=0>
           \r<tr>
-          \r<td align=center colspan=2><b>Event Distribution by Country</b></td>
+          \r<td style=\"font-size: .8em;\" align=center colspan=2><b>Event Distribution by Country</b></td>
           \r</tr><tr>
           \r<td align=center colspan=2><canvas class=round style=\"border: 1pt solid gray;\" id=\"wm1\" width=\"910\" height=\"500\">[No canvas support]></canvas></td>
           \r</tr>
@@ -151,19 +156,19 @@ function doWorld($sccQuery,$dccQuery) {
           \r});
           \r</script>";
 
-    echo "\r<center>
-          \r<table width=910 border=0 cellpadding=1 cellspacing=0><tr>
-          \r<td align=center style=\"padding-top: 10px;\">$aBan $bBan $cBan</td>
-          \r</tr></table>
-          \r<table class=sortable width=910 border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
-          \r<thead><tr>
-          \r<th width=490 align=left class=sort>Country</th>
-          \r<th width=10  align=left class=sorttable_nosort></th>
-          \r<th width=100 align=left class=sort>Country Code</th>
-          \r<th width=100 aligh=left class=sort>Source</th>
-          \r<th width=100 aligh=left class=sort>Destination</th>
-          \r<th width=100 aligh=left class=sort>Total</th>
-          \r</tr></thead>";
+    echo "<center>
+          <table width=910 border=0 cellpadding=1 cellspacing=0><tr>
+          <td align=center style=\"font-size: .7em; padding-top: 10px;\">$aBan $bBan $cBan</td>
+          </tr></table>
+          <table class=sortable width=910 border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
+          <thead><tr>
+          <th class=sort width=39%>Country</th>
+          <th class=sorttable_nosort width=1%></th>
+          <th class=sort width=15%>Country Code</th>
+          <th class=sort width=15%>Source</th>
+          <th class=sort width=15%>Destination</th>
+          <th class=sort width=15%>Total</th>
+          </tr></thead>";
  
     if ($cHit == 'yes') {
 
@@ -186,12 +191,13 @@ function doWorld($sccQuery,$dccQuery) {
 
             $cellCol = getSeverity($c1[$i],$wmThres,$mapSC,$mapEC);
 
-            echo "\r<tr><td class=sort name=cm-ccc-$i id=cm-ccc-$i>$country</td>
-                  \r<td width=10 class=tros style=\"border-bottom: none; background: $cellCol;\"></td>
-                  \r<td class=tros>$cc</td>
-                  \r<td class=tros><b>$acount</b></td>
-                  \r<td class=tros><b>$bcount</b></td>
-                  \r<td class=tros style=\"background: #d4d4d4;\"><b>$ccount</b></td></tr>";
+            echo "<tr class=lines>
+                  <td class=sort name=cm-ccc-$i id=cm-ccc-$i>$country</td>
+                  <td class=tros style=\"border-bottom: none; background: $cellCol;\"></td>
+                  <td class=tros>$cc</td>
+                  <td class=tros><b>$acount</b></td>
+                  <td class=tros><b>$bcount</b></td>
+                  <td class=tros><b>$ccount</b></td></tr>";
         }
     } else {
         echo "<tr><td class=tros colspan=6>
