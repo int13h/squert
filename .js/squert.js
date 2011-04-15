@@ -207,7 +207,14 @@ function update() {
 
 // Manipulate input boxes and controls. Either through links, or the menu.
 function mClick(prefix,source) {
-    var x = gtarg.id;
+
+    if (source) {
+        var x = source;
+        qLogic.selectedIndex=1;
+    } else {
+        var x = gtarg.id;
+    }
+
     var y = document.getElementById(x).innerHTML;
     var object2 = prefix + "String";
 
@@ -299,6 +306,10 @@ function mClick(prefix,source) {
             $('cmcc').innerHTML="add item to COUNTRY clause ("+ ccC +")";
     }  else {
             $('cmcc').innerHTML="add item to COUNTRY clause (0)";
+    }
+
+    if (source) {
+        document.getElementById("base").click();
     }
 }
 

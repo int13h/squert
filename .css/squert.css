@@ -1,4 +1,7 @@
+div, td, th, h2, h3, h4 {font-family: verdana,sans-serif; font-size: x-small; voice-family: "\"}\""; voice-family: inherit; font-size: small; color: #333;}
+
 body {background: #ffffff; font-family: verdana, trebuchet ms, helvetica, sans; color: #000000; padding: 1em 20px 3em 20px; margin: 0;}
+
 div {font-size: .7em;}
 html {overflow-y: scroll;}
 table {empty-cells: show;}
