@@ -594,7 +594,7 @@ function DoQueries($timeParts) {
     echo "<table id=results style=\"border: 1pt solid gray;\" cellpadding=1 cellspacing=0 width=950 align=center class=sortable>\n";
 
     if ($numRows <= 0) {
-        echo "<tfoot><tr><td colspan=6 class=tros>Your query returned no data.</td></tr></tfoot></table></body></html>";
+        echo "<tfoot><tr><td colspan=6 class=msg>Your query returned no results.</td></tr></tfoot></table></body></html>";
         exit(0);
     } else {
 
@@ -853,7 +853,7 @@ Welcome <?php echo "$sUser$aNotif";?>
 <tr>
 <td colspan=2 align=right style="font-size: 10px; padding-top: 20px;">          
 <b>Start:</b>&nbsp;
-<input type="text" name=sDate id=sDate value="<?php echo $sDate; ?>" onchange="chk_date(0,0)" size="12" maxlength="10" readonly="readonly" class="w3em format-y-m-d split-date divider-dash no-transparency highlight-days-06 range-high-today" style="font-size: 10px; border: .5pt solid #c4c4c4; background: #ffffff;">
+<input type="text" name=sDate id=sDate value="<?php echo $sDate; ?>" onchange="chk_date(0,0)" size="12" maxlength="10" readonly="readonly" class="w3em format-y-m-d split-date divider-dash no-transparency highlight-days-06 range-high-today" style="font-size: x-small; border: .5pt solid #c4c4c4; background: #ffffff;">
 &nbsp;&nbsp;
 <SELECT name=sHour id=sHour onchange="chk_date(0,0)" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'>
 <?php qTime('sh',23,0);?>
