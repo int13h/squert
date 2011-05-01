@@ -23,6 +23,7 @@ include 'config.php';
 
 $username = $password = $err = '';
 $focus = 'username';
+session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
 
 function cleanUp($string) {
     if (get_magic_quotes_gpc()) {
