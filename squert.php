@@ -923,10 +923,10 @@ Welcome <?php echo "$sUser$aNotif";?>
 <td colspan=2 id=cmlip class=cmenu onclick="localLookup()" style="display: none;">lookup address</td>
 </tr>
 <tr>
-<td colspan=2 id=cmprofile class=cmenu onclick="profile()">profile this item</td>
+<td colspan=2 id=cmprofile class=cmenu onclick="profile()" style="display: none;">profile this item</td>
 </tr>
 <tr>
-<td colspan=2 id=cmprofile class=cmenu onclick="profile()">profile this page</td>
+<td colspan=2 id=cmprofile class=cmenu onclick="profile()" style="display: none;">profile this page</td>
 </tr>
 <tr><td colspan=2 class=unemc style="border-bottom: none; padding: 5px 5px 5px 5px;"><b>View:</b>&nbsp;
 <select id=qLogic1 name=qLogic1 onchange="update()" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'><?php mkSelect($qList,$qLogic);?></select>
