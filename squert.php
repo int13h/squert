@@ -734,7 +734,7 @@ if ($sType == "ADMIN") { $aNotif = "<span style=\"color: #A86565;\"> (admin)</sp
 
 <html>
 <head>
-<title>SQueRT 0.8.1</title>
+<title>SQueRT 0.8.2</title>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.hbar.js" ></script>
