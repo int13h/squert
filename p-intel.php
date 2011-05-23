@@ -49,7 +49,7 @@ include_once '.inc/tabs.php';
 <?php tabber("INTELLIGENCE",$id);?>
 <div id="main">
 <div id="contents" class="main">
-<?php include '.inc/charts/100_5day_scatter.php';?>
+<!--?php include '.inc/charts/100_5day_scatter.php';?-->
 </div>
 </div>
 </td>
