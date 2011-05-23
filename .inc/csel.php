@@ -36,7 +36,7 @@ function cSel($when, $hCl) {
                   LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
                   LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
                   WHERE $when 
-                  GROUP BY src_cc, dst_cc ORDER BY count DESC limit 20";
+                  GROUP BY src_cc, dst_cc";
 
         $results = mysql_query($query);
         
