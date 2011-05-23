@@ -59,11 +59,4 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 
 if (isset($_POST['base']) && $_POST['base'] == "Log out") {
     sKill();
 }
-
-// We dont want anything cached
-//header ("Expires: Sun, 11 Nov 1973 05:00:00 GMT");
-//header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-//header ("Cache-Control: no-cache, must-revalidate");
-//header ("Pragma: no-cache");
-
 ?>
