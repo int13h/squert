@@ -47,7 +47,7 @@ function retSD($x) {
 }
 
 function cCheck() {
-    if (file_exists('config.php')) {
+    if (file_exists('.inc/config.php')) {
         global $dbHost,$dbName,$dbUser,$dbPass;
         $link = mysql_connect($dbHost,$dbUser,$dbPass);
 
@@ -62,6 +62,31 @@ function cCheck() {
         }
 
         mysql_close($link);
+    } else {
+        echo "<center>
+              <b>Configuration file not found</b><br>
+              Edit 'config.php.sample' to taste and then rename it to 'config.php'
+              </center>";
+        die();
+    }
+
+}
+
+function dbC() {
+    if (file_exists('.inc/config.php')) {
+        include_once '.inc/config.php';
+        $link = mysql_connect($dbHost,$dbUser,$dbPass);
+
+        if (!$link) {
+            die('Connection failed: ' . mysql_error());
+        }
+
+        $db = mysql_select_db($dbName,$link);
+
+        if (!$db) {
+            die('Database selection failed: ' . mysql_error());
+        }
+
     } else {
         echo "<center>
               <b>Configuration file not found</b><br>

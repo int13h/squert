@@ -19,59 +19,13 @@
 //
 //
 
-// Session init
-session_start();
-
-function sKill() {
-    session_destroy();
-    session_unset();
-    header ("Location: login.php");
-    exit();
-}
-
-function sInt() {
-     header ("Location: login.php");
-     exit();
-}
-
-if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-     sKill();
-}
-
-// Session variables
-if (!isset($_SESSION['sUser']))  { sInt(); }  else { $sUser  = $_SESSION['sUser'];}
-if (!isset($_SESSION['sEmail'])) { sInt(); }  else { $sEmail = $_SESSION['sEmail'];}
-if (!isset($_SESSION['sType']))  { sInt(); }  else { $sType  = $_SESSION['sType'];}
-if (!isset($_SESSION['sTime']))  { sInt(); }  else { $sTime  = $_SESSION['sTime'];}
-if (!isset($_REQUEST['id']))     { $id = 0; } else { $id     = $_REQUEST['id'];}
-
-// Kill the session if the ids dont match.
-if ($id != $_SESSION['id']) {
-    sKill();
-}
-
-// Kill the session if timeout is exceeded.
-if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sTime)) {
-    sKill();
-}
-
-// Kill the sesssion if the user requests it
-if (isset($_POST['base']) && $_POST['base'] == "Log out") {
-    sKill();
-}
-
-// We dont want anything cached
-header ("Expires: Sun, 11 Nov 1973 05:00:00 GMT");
-header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); 
-header ("Cache-Control: no-cache, must-revalidate");
-header ("Pragma: no-cache");
-
-include 'config.php';
-include 'functions.php';
-include 'grid.php';
-include 'charts.php';
-include 'map.php';
-include 'csel.php';
+include_once 'session.php';
+include "config.php";
+include "functions.php";
+include "grid.php";
+include "charts.php";
+include "map.php";
+include "csel.php";
 
 asort($statusList);
 
@@ -104,11 +58,14 @@ if(!isset($_REQUEST['eMin'])) { $eMin = 59; } else { $eMin = $_REQUEST['eMin']; 
 if(!isset($_REQUEST['eSec'])) { $eSec = 59; } else { $eSec = $_REQUEST['eSec']; }
 $timeParts = fixTime($sDate,"$sHour:$sMin:$sSec",$eDate,"$eHour:$eMin:$eSec");
 
-$base = dirname(__FILE__);
+// Are we an admin?
+$aNotif = '';
+if ($sType == "ADMIN") { $aNotif = "<span style=\"color: #A86565;\"> (admin)</span>";}
 
 // Main Function
 function DoQueries($timeParts) {
 
+    global $id;
     include 'config.php';
 
     $wString =	$_REQUEST["wString"];
@@ -459,7 +416,7 @@ function DoQueries($timeParts) {
     if ($utc_last > 0) {
         $exs = "s";
         $ago = $utc_now - $utc_last;
-        if ($ago == 0) {
+        if ($ago <= 0) {
             $ago_time = "Now";
         } elseif ($ago < 60) {
             if ($ago == 1) { $exs = ''; }
@@ -485,10 +442,13 @@ function DoQueries($timeParts) {
         $theGrid = createGrid($hdwmyQuery,$dHour,$startDate);
         mysql_data_seek($hdwmyQuery,0);
         echo $theGrid;
+        $repBorder = " border-top: none;";
+    } else {
+        $repBorder = " border-top: 1pt solid gray;"; 
     }
 
     // Report Summary
-    echo "\r<table style=\"border-collapse: collapse; border: 1pt solid gray; border-bottom: none; background: #ffffff;\" cellpadding=3 cellspacing=0 width=950 align=center>
+    echo "\r<table style=\"border-collapse: collapse; border: 1pt solid gray; border-bottom: none;$repBorder background: #ffffff;\" cellpadding=3 cellspacing=0 width=100% align=center>
           \r<tr>
           \r<td width=15% align=right style=\"font-size: 8pt; padding-top: 20px;\"><b>Report Period:&nbsp;</b></td>
           \r<td style=\"font-size: 8pt; padding-top: 20px;\">$dispDate <i>($dDay day$ess)</i></td>
@@ -547,7 +507,7 @@ function DoQueries($timeParts) {
           \r&nbsp;
           \r<a class=vis id=map_yes style=\"display: $shMap[0];\" href=\"javascript:tab('map','yes');\">map &#9701</a>
           \r<a class=vis id=map_no style=\"display: $shMap[1]; color: black;\" href=\"javascript:tab('map','no');\">map &#9698</a>
-          \r&nbsp;
+          \r&nbsp; 
           \r<a class=vis id=links_yes style=\"display: '';\" href=\"javascript:tab('links','yes');\">create &#9701</a>
           \r<a class=vis id=links_no style=\"display: none; color: black;\" href=\"javascript:tab('links','no');\">create &#9698</a>
           \r&nbsp;
@@ -569,29 +529,29 @@ function DoQueries($timeParts) {
         doWorld($sccQuery,$dccQuery);
     } else {
         echo "<br><div align=center style=\"font-weight: bold; font-size: 10px;\">
-              <input class=rb onclick=\"poof('wrkn','yes');\" onMouseOver=\"style.backgroundColor='#ffffff';\" onMouseOut=\"style.backgroundColor='#DDDDDD';\" id=base name=base class=round type=submit value=\"create map\">
+              <input class=rb onclick=\"poof('wrkn','yes');\" id=base name=base class=round type=submit value=\"create map\">
               </div><br>
-              <center><span id=\"wrkn\" name=\"wrkn\" style=\"display: none;\"><img src=work.gif></span></center><br>";
+              <center><span id=\"wrkn\" name=\"wrkn\" style=\"display: none;\"><img src=.inc/work.gif></span></center><br>";
     }        
 
     echo "</td></tr>";
 
-    // #### SECTION: Link graphs ####
+    // #### SECTION: Link Graphs ####
     $qp = strtohex("$when $wFilter $aFilter $xFilter $cFilter");
-    echo "\r<tr id=links colspan=2 style=\"display:none;\"><td colspan=2>
-          \r<IFRAME id=\"links-frame\" name=\"links-frame\" src=\"edv.php?qp=$qp\" width=100% height=1000 frameborder=0 scrolling=no></IFRAME>
-          \r</td></tr>";
+    echo "\r<tr id=links style=\"display: none;\"><td colspan=2>
+    <IFRAME id=links-frame name=links-frame src=\".inc/edv.php?qp=$qp&id=$id\" width=100% height=1000 frameborder=0 scrolling=no></IFRAME>
+    </td></tr>";
 
     // #### SECTION: IP2C ####
     $qp = strtohex("$when $wFilter $aFilter");
     echo "\r<tr id=ip2c style=\"display: none;\"><td colspan=2>
-          \r<IFRAME id=\"ip2c-frame\" name=\"ip2c-frame\" src=\"ip2c.php?qp=$qp\" width=100% frameborder=0 scrolling=no></IFRAME>
+          \r<IFRAME id=\"ip2c-frame\" name=\"ip2c-frame\" src=\".inc/ip2c.php?qp=$qp&id=$id\" width=100% frameborder=0 scrolling=no></IFRAME>
           \r</td></tr>";
 
     echo "<tr><td colspan=2></td></tr></table>\n";
 
     // Start main table
-    echo "<table id=results style=\"border: 1pt solid gray;\" cellpadding=1 cellspacing=0 width=950 align=center class=sortable>\n";
+    echo "<table id=results style=\"border: 1pt solid gray;\" cellpadding=1 cellspacing=0 width=100% align=center class=sortable>\n";
 
     if ($numRows <= 0) {
         echo "<tfoot><tr><td colspan=6 class=msg>Your query returned no results.</td></tr></tfoot></table></body></html>";
@@ -703,7 +663,7 @@ function DoQueries($timeParts) {
                     $sidHTML = SigidLine($sigID,$rC);
 
                     echo "$status\n";
-                    echo "<td id=t-$rC class=sort style=\"font-weight: bold; font-size: .5em;\" onclick=\"window.open('packet.php?sid=$sid&cid=$cid','$cid','width=950,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes')\">$time</b></td>\n";
+                    echo "<td id=t-$rC class=sort style=\"font-weight: bold;\" onclick=\"window.open('.inc/packet.php?sid=$sid&cid=$cid','$cid','width=1000,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes')\">$time</b></td>\n";
                     echo "$srcHTML\n";
                     echo "$dstHTML\n";
                     echo "$sigHTML\n";
@@ -725,45 +685,18 @@ $lout = '';
 if(!isset($_REQUEST['hCl'])) { $hCl = 0; } else { $hCl = $_REQUEST['hCl']; }
 if ($hCl == 1) {$shCl = array('none','','');} else {$shCl = array('','none','none');}
 
-// Are we an admin?
-$aNotif = '';
-if ($sType == "ADMIN") { $aNotif = "<span style=\"color: #A86565;\"> (admin)</span>";}
-
-
 ?>
 
-<html>
-<head>
-<title>SQueRT 0.8.2</title>
-<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
-<script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
-<script type="text/javascript" src=".js/RGraph/libraries/RGraph.hbar.js" ></script>
-<script type="text/javascript" src=".js/RGraph/libraries/RGraph.scatter.js" ></script>
-<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.context.js" ></script>
-<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.tooltips.js"></script>
-<script type="text/javascript" src=".js/squert.js"></script>
-<script type="text/javascript" src=".js/sorttable.js"></script>
-<script type="text/javascript" src=".js/worldmap.js"></script>
-<style type="text/css" media="screen">@import ".css/squert.css";</style>
-<style type="text/css" media="screen">@import ".date/css/datepicker.css";</style>
-<script type="text/javascript" src=".date/js/datepicker.js"></script>
-<script type="text/javascript" src=".date/js/lang/en.js"></script>
-</head>
-<body>
+<!-- Controls start here -->
 
-<form id=squert method=post action="squert.php?id=<?php echo $id;?>">
 
-<table width=950 align=center cellpadding=1 cellspacing=0><tr>
-<td align=right style="padding-bottom: 5px; color: #545454a; font-size: .7em;">
-Welcome <?php echo "$sUser$aNotif";?>
-<span style="color: #a1a1a1;">
-|<input class=submit type=button id=set name=set value=Settings onMouseOver="style.color='#000000'" onMouseOut="style.color='#a1a1a1'" onClick="oC('settings');">|<input class=submit type=submit id=lout name=base value="Log out" onMouseOver="style.color='#000000'" onMouseOut="style.color='#a1a1a1'">
-</span></td>
-</tr></table>
+<form id=squert method=post action="p-query.php?id=<?php echo $id;?>">
+
 <center>
-<iframe id=settings name=settings src=settings.php?qp=$qp width=970 height=200 frameborder=0 scrolling=no style="display: none;"></iframe>
+<iframe id=settings name=settings src=.inc/settings.php?qp=$qp width=970 height=200 frameborder=0 scrolling=no style="display: none;"></iframe>
 </center>
-<table id=controls class=round width=950 border=0 align=center cellpadding=1 cellspacing=0 style="background: #f4f4f4; padding: 10px; border: 2pt solid #c4c4c4;">
+
+<table width=100% id=controls border=0 align=center cellpadding=1 cellspacing=0">
 <tr>
 <td align=right colspan=2 style="padding-left: 20px; font-size: 10px;"><b>WHERE: </b><?php qButtons('wType');?>
 <?php
@@ -824,24 +757,24 @@ Welcome <?php echo "$sUser$aNotif";?>
 </td>
 
 <td align=right style="font-size: 10px; padding-top: 20px;">
-<b>View:</b>
-<SELECT id=qLogic name=qLogic style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'>
+<b>VIEW:</b>
+<SELECT id=qLogic name=qLogic class=input>
 <?php
     if(!isset($_REQUEST['qLogic'])) { $qLogic = 0; } else { $qLogic = $_REQUEST['qLogic']; }
     mkSelect($qList,$qLogic);
 ?>
 </SELECT>
 &nbsp;&nbsp;
-<b>Sensor:</b>
-<SELECT id=qSID name=qSID style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'>
+<b>SENSOR:</b>
+<SELECT id=qSID name=qSID class=input>
 <?php 
     if(!isset($_REQUEST['qSID'])) { $qSID = 1024; } else { $qSID = $_REQUEST['qSID']; }
     mkSensor($qSID);
 ?>
 </SELECT>
 
-&nbsp;&nbsp;<b>Status:</b>
-<SELECT id=eStatus name=eStatus style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'>
+&nbsp;&nbsp;<b>STATUS:</b>
+<SELECT id=eStatus name=eStatus class=input>
 <?php
     if(!isset($_REQUEST['eStatus'])) { $eStatus = 42; } else { $eStatus = $_REQUEST['eStatus']; }
     mkSelect($statusList,$eStatus);
@@ -852,44 +785,44 @@ Welcome <?php echo "$sUser$aNotif";?>
    
 <tr>
 <td colspan=2 align=right style="font-size: 10px; padding-top: 20px;">          
-<b>Start:</b>&nbsp;
-<input type="text" name=sDate id=sDate value="<?php echo $sDate; ?>" onchange="chk_date(0,0)" size="12" maxlength="10" readonly="readonly" class="w3em format-y-m-d split-date divider-dash no-transparency highlight-days-06 range-high-today" style="font-size: x-small; border: .5pt solid #c4c4c4; background: #ffffff;">
+<b>START:</b>&nbsp;
+<input type="text" name=sDate id=sDate value="<?php echo $sDate; ?>" onchange="chk_date(0,0)" size="12" maxlength="10" readonly="readonly" class="w3em format-y-m-d split-date divider-dash no-transparency highlight-days-06 range-high-today" style="font-size: 10px; border: 1pt solid #c4c4c4; background: #f4f4f4;">
 &nbsp;&nbsp;
-<SELECT name=sHour id=sHour onchange="chk_date(0,0)" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'>
+<SELECT name=sHour id=sHour onchange="chk_date(0,0)" class=input>
 <?php qTime('sh',23,0);?>
 </SELECT>
 <b>:</b>
-<SELECT name=sMin id=sMin onchange="chk_date(0,0)" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'>
+<SELECT name=sMin id=sMin onchange="chk_date(0,0)" class=input>
 <?php qTime('sm',59,0);?>
 </SELECT>
 <b>:</b>
-<SELECT name=sSec id=sSec onchange="chk_date(0,0)" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'>
+<SELECT name=sSec id=sSec onchange="chk_date(0,0)" class=input>
 <?php qTime('ss',59,0);?>
 </SELECT>
       
 <a class="x" href="javascript:chk_date('1','<?php echo "$initSdate.$initStime"; ?>');">&#x21BA;</a>
 
-&nbsp;&nbsp;&nbsp;<b>End:</b>&nbsp;
-<input type="text" name=eDate id=eDate value="<?php echo $eDate; ?>" onchange="chk_date(0,0)" size="12" maxlength="10" readonly="readonly" class="w3em format-y-m-d split-date divider-dash no-transparency highlight-days-06 range-high-<?php echo $today;?>" style="font-size: 10px; border: .5pt solid #c4c4c4; background: #ffffff;">
+&nbsp;&nbsp;&nbsp;<b>END:</b>&nbsp;
+<input type="text" name=eDate id=eDate value="<?php echo $eDate; ?>" onchange="chk_date(0,0)" size="12" maxlength="10" readonly="readonly" class="w3em format-y-m-d split-date divider-dash no-transparency highlight-days-06 range-high-<?php echo $today;?>" style="font-size: 10px; border: 1pt solid #c4c4c4; background: #f4f4f4;">
 &nbsp;&nbsp;
  
-<SELECT name=eHour id=eHour onchange="chk_date(0,0)" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'>
+<SELECT name=eHour id=eHour onchange="chk_date(0,0)" class=input>
 <?php qTime('eh',23,23);?>
 </SELECT>
 <b>:</b>
-<SELECT name=eMin id=eMin onchange="chk_date(0,0)" style='background: #ffffff; font-size: 10px; border: 1px solid gray;'>
+<SELECT name=eMin id=eMin onchange="chk_date(0,0)" class=input>
 <?php qTime('em',59,59);?>
 </SELECT>
 <b>:</b>
-<SELECT name=eSec id=eSec onchange="chk_date(0,0)" style='background: #ffffff; font-size: 10px; border: 1px solid gray;'>
+<SELECT name=eSec id=eSec onchange="chk_date(0,0)" class=input>
 <?php qTime('es',59,59);?>
 </SELECT>
 
 <a class="x" href="javascript:chk_date('2','<?php echo "$initEdate.$initEtime"; ?>');">&#x21BA;</a>
 &nbsp;&nbsp;
 
-<input onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" id=base name=base type="submit" value=submit class=rb>
-<input onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" type="button" value="reset" onClick="location.href='squert.php?id=<?php echo $id;?>';" class=rb>
+<input id=base name=base type="submit" value=submit class=rb>
+<input type="button" value="reset" onClick="location.href='p-query.php?id=<?php echo $id;?>';" class=rb>
 </td>
 </tr>
 </table>
@@ -900,8 +833,8 @@ Welcome <?php echo "$sUser$aNotif";?>
 <tr>
 <td style="font-size: 10px; background: #c4c4c4; color: #000000; padding: 5px 5px 2px 10px; border-bottom: 1pt solid gray;"><b>Actions</b></td>
 <td align=right style="font-size: 10px; background: #c4c4c4; color: #000000; padding: 5px 5px 2px 10px; border-bottom: 1pt solid gray;"> 
-<input class=rb style="border: 1pt solid gray; font-size: .8em; font-family: verdana;" onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" id=cmtop type=button onClick="CloseContext(); self.scrollTo(0,0);" value=up>
-<input class=rb style="border: 1pt solid gray; font-size: .8em; font-family: verdana;" type=button value=X onClick="CloseContext()" onMouseOver="style.backgroundColor='#FFFFFF';" onMouseOut="style.backgroundColor='#DDDDDD';"></td></tr>
+<input class=rb style="border: 1pt solid gray; font-size: .8em; font-family: verdana; width: 30px;" id=cmtop type=button onClick="CloseContext(); self.scrollTo(0,0);" value=up>
+<input class=rb style="border: 1pt solid gray; font-size: .8em; font-family: verdana; width: 30px;" type=button value=X onClick="CloseContext()"></td></tr>
 </td>
 </tr>
 <tr>
@@ -930,7 +863,7 @@ Welcome <?php echo "$sUser$aNotif";?>
 </tr>
 <tr><td colspan=2 class=unemc style="border-bottom: none; padding: 5px 5px 5px 5px;"><b>View:</b>&nbsp;
 <select id=qLogic1 name=qLogic1 onchange="update()" style='background: #ffffff; font-size: 10px; border: 1px solid #c4c4c4;'><?php mkSelect($qList,$qLogic);?></select>
-<input class=rb onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';" id=incon name=base class=round type="submit" value=Submit>
+<input class=rb id=incon name=base class=round type="submit" value=submit>
 </td></tr>
 </table>
 
@@ -962,5 +895,4 @@ $_SESSION['LAST_ACTIVITY'] = time();
 ?>
 <script type="text/javascript" src=".js/menu.js"></script>
 </form>
-</body>
-</html>
+

@@ -1179,8 +1179,8 @@ sub get_severity {
     ($value, $steps, $start, $end) = @_;
 
     if (!$steps) { $steps = 10; }  # if number of steps is not defined, make it 10
-    if (!$start) { $start = 0x000000; }  # if not supplied, make it green
-    if (!$end) { $end = 0xFFFFFF; }  # if not supplied, make it red
+    if (!$start) { $start = 0xffffff; }  # if not supplied, make it green
+    if (!$end) { $end = 0x000000; }  # if not supplied, make it red
 
     # round the value
     $x = int($value + .5 * ($value <=> 0));

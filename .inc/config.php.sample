@@ -9,7 +9,7 @@ $dbUser = 'readonly';
 $dbPass = 'readonly';
 
 // Where are the rules? If you have multiple dirs, separate each with: ||
-$rulePath = "/usr/local/www/console/squert/rules/snort_rules||/usr/local/www/console/squert/rules/et_rules";
+$rulePath = "/rules/snort_rules||/rules/et_rules";
 
 // Where is dot installed?
 $dotPath = "/usr/bin/dot";
@@ -65,7 +65,7 @@ $endHex =       '000000'; //Examples: CC0000  CC0000 22335A
 $dotArgs = "-Goutputorder=edgesfirst -Gpad=1 -Gsplines=true";
 
 // Afterglow
-$glowPath = ".glow/afterglow.pl";
+$glowPath = "../.glow/afterglow.pl";
 $glowArgs = " -p0 -a";
 
 // Results Limit. 
@@ -77,7 +77,7 @@ $width = 900;
 $height = 800;
 
 // Image location. You must chmod 777 this directory
-$baseDir = "images";
+$baseDir = "../images";
 
 // Debug. This will output the dot files and afterglows output to .debug
 $glowDebug = "no";

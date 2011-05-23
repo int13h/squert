@@ -19,11 +19,7 @@
 //
 //
 
-session_start();
-if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-    header ("Location: login.php");
-}
-
+include_once 'session.php';
 include_once 'config.php';
 include_once 'functions.php';
 
@@ -58,6 +54,7 @@ while ($row = mysql_fetch_row($tmpQuery)) {
     $sigDesc =	$row[14];
     $sigID =	$row[15];
     $timeStamp = formatStamp($row[16],0);
+    $theDay = date(l, strtotime($timeStamp));
     $thePayload = '';
 }
 
@@ -132,7 +129,7 @@ echo "<table style=\"border-collapse: collapse; border: 1pt solid black; border-
       <td class=back align=center><b>Event ID</b></td>
       </tr>
       <tr>
-      <td class=datafill style=\"padding: 5px;\">$timeStamp</td>
+      <td class=datafill style=\"padding: 5px;\">$theDay <br>$timeStamp</td>
       <td class=datafill style=\"padding: 5px;\"><a class=blockB href=\"#\" onclick=\"window.open('rule.php?sigID=$sigID','','width=800,height=200,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes');\">$sigDesc</a></td>
       <td class=datafill style=\"padding: 5px;\">$sigID</td>
       <td class=datafill style=\"padding: 5px;\">$sid</td>
@@ -359,7 +356,7 @@ $cid = $_REQUEST['cid'];
 <html>
 <head>
 <TITLE>Event ID:<?php echo $cid;?></TITLE>
-<link href=".css/squert.css" rel="stylesheet" type="text/css">
+<link href="../.css/squert.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 

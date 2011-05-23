@@ -19,7 +19,8 @@
 //
 //
 
-include 'config.php';
+
+include '.inc/config.php';
 
 $username = $password = $err = '';
 $focus = 'username';
@@ -82,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $_SESSION['sType']      = $userType;
                 $_SESSION['sTime']	= $userTime;
                 $_SESSION['id']         = $id;
-	        header ("Location: squert.php?id=$id");
+	        header ("Location: p-intel.php?id=$id");
             } else {
                 $err = 'Invalid Password';
                 $focus = 'password';
@@ -101,6 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <head>
 <title>Please login to continue</title>
 <style>
+body {
+  background: #d8d8d8; font-family: verdana, trebuchet ms, helvetica, sans;
+}
+
 td.header {
   font-size: .9em;
   font-weight: bold;
@@ -129,6 +134,9 @@ table.boxes {
   height: 40;
   width: 100;
 }
+.rb:hover {
+  background: #ffffff;
+}
 .in {
   border: 1pt solid #c4c4c4;
   height: 30;
@@ -144,12 +152,12 @@ table.boxes {
   margin: 0 auto;
   width: 450px;
   text-align: right;
-  color: #bababa;
+  color: #545454;
 }
 </style>
 </head>
-<body style="background: #fafafa; font-family: verdana, trebuchet ms, helvetica, sans";>
-<form name=credcheck method=post action=login.php>
+<body>
+<form name=credcheck method=post action=p-login.php>
 <br><br><br><br><br>
 <table class=boxes width=450 align=center cellpadding=1 cellspacing=0>
 <tr><td colspan=2 class=header>
@@ -161,7 +169,7 @@ Username<br>
 Password<br>
 <input class=in type=password name=password value="" maxlength="32"></td></tr>
 <tr><td class=boxes>
-<input id=logmein name=logmein class=rb type=submit name=login value=submit onMouseOver="style.backgroundColor='#ffffff';" onMouseOut="style.backgroundColor='#DDDDDD';"><br><br></td>
+<input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
 <td class=err><?php echo $err;?></td></tr>
 </table><div class=cp>&copy;2011 Paul Halliday</div>
 </form>

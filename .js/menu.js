@@ -47,7 +47,7 @@ function ContextShow(event) {
 
     // we assume we have a standards compliant browser, but check if we have IE
     var target = event.target != null ? event.target : event.srcElement;
-
+        
     if (_replaceContext) {
 
         var _qValue =  target.textContent;

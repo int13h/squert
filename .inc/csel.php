@@ -21,8 +21,8 @@
 
 function cSel($when, $hCl) {
 
-    include 'config.php';
-    include 'countries.php';
+    include '.inc/config.php';
+    include '.inc/countries.php';
 
     $ecn = $scc = $dcc = ''; 
 
@@ -36,7 +36,7 @@ function cSel($when, $hCl) {
                   LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
                   LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
                   WHERE $when 
-                  GROUP BY src_cc, dst_cc";
+                  GROUP BY src_cc, dst_cc ORDER BY count DESC limit 20";
 
         $results = mysql_query($query);
         
@@ -51,8 +51,8 @@ function cSel($when, $hCl) {
     }
 
     // HTML
-    echo "<table align=center width=900 cellspacing=0 style=\"border-collapse: collapse;\">\n";
-    echo "<tr><td colspan=2 align=center style=\"padding-bottom: 10px;\"><input onMouseOver=\"style.backgroundColor='#ffffff';\" onMouseOut=\"style.backgroundColor='#DDDDDD';\" id=cloud name=base type=\"submit\" value=\"update cloud\" class=rb>";
+    echo "<table align=center width=100% cellspacing=0 style=\"border-collapse: collapse;\">\n";
+    echo "<tr><td colspan=2 align=center style=\"padding-bottom: 10px;\"><input class=rb id=cloud name=base type=submit value=\"update\">";
     echo "</td></tr>";
     $count = $h = $i = 0;
     $cSize = count($countries);

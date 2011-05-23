@@ -33,10 +33,10 @@ set workDir "[pwd]"
 set resultsFile "results.txt"
 
 ### Config
-set configFile "../../config.php"
+set configFile "../../.inc/config.php"
 
 ### Countries.
-set countryFile "../../countries.php"
+set countryFile "../../.inc/countries.php"
 
 ### Load extended tcl
 package require Tclx

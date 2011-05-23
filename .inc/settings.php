@@ -48,20 +48,7 @@ function getUser() {
 }
 ?>
 
-<html>
-<head>
-<title>Settings</title>
-<script type="text/javascript" src=".js/squert.js"></script>
-<style>
-body {font-family: verdana, calibri, trebuchet ms, helvetica, sans; font-size: 1em; margin-top: 0;}
-td.title {background: #000000; padding: 10px; color: #ffffff; font-weight: bold; font-size: .8em;}
-td.heading {background: #f4f4f4; padding: 5px; color: #000000; font-weight: bold; font-size: .6em;}
-td.content {background: #ffffff; padding: 5px; color: #000000; font-weight: normal; font-size: .6em;}
-table {border: 2pt solid #c4c4c4;}
-</style>
-</head>
-<body>
-<form id=options method=post action="settings.php">
+<form id=options method=post action=".inc/settings.php">
 <table class=table width=100% cellpadding=1 cellspacing=0>
 <tr><td class=title colspan=4>
 Account Settings
@@ -74,5 +61,3 @@ Account Settings
 </tr>
 <?php getUser();?>
 </table>
-</body>
-</html>

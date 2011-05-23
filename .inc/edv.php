@@ -19,11 +19,6 @@
 //
 //
 
-session_start();
-if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-    header ("Location: login.php");
-}
-
 function Links($string,$ofPre,$vType,$eLength,$vLabel,$lProps,$bgcolor,$mode) {
     include_once "config.php";
     include_once "functions.php";
@@ -55,8 +50,8 @@ function Links($string,$ofPre,$vType,$eLength,$vLabel,$lProps,$bgcolor,$mode) {
     $hit = "no";
 
     if ($glowDebug == "yes") {
-        $dotOut = "-o .debug/dot.txt";
-        $glowErr = ".debug/glow.txt";
+        $dotOut = "-o ../.debug/dot.txt";
+        $glowErr = "../.debug/glow.txt";
     } else {
         $dotOut = "-Tpng -o $baseDir/$outFile";
         $glowErr = "/dev/null";
@@ -88,7 +83,7 @@ function Links($string,$ofPre,$vType,$eLength,$vLabel,$lProps,$bgcolor,$mode) {
 
     // Start timing
     $gst = microtime(true);
-    $glowCmd = "$glowPath -c .props/$lProps $glowArgs -e $eLength -p $mode $dashN | $dotPath -K$vType -Gbgcolor=$bgcolor $dotArgs $dotOut";
+    $glowCmd = "$glowPath -c ../.props/$lProps $glowArgs -e $eLength -p $mode $dashN | $dotPath -K$vType -Gbgcolor=$bgcolor $dotArgs $dotOut";
     $dspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"),2 => array("file", "$glowErr", "a"));
     $process = proc_open($glowCmd, $dspec, $pipes);
 
@@ -184,13 +179,13 @@ function delImg($xyz) {
     $html = '';
     if ($xyz != "0") {
         $thumb = str_replace('.png','_thumb.png',$xyz);
-        if (file_exists("images/$xyz")) {
-            unlink("images/$xyz");
+        if (file_exists("../images/$xyz")) {
+            unlink("../images/$xyz");
         }
-        if (file_exists("images/$thumb")) {
-            unlink("images/$thumb");
+        if (file_exists("../images/$thumb")) {
+            unlink("../images/$thumb");
         }
-        if ((!file_exists("images/$xyz")) || (!file_exists("images/$thumb"))) {
+        if ((!file_exists("../images/$xyz")) || (!file_exists("../images/$thumb"))) {
             $html = "<table width=100% border=0 cellpadding=1 cellspacing=0>
                      \r<tr><td style=\"color: #cc0000\"><center><u>Deleted $xyz</u></center></td></tr>
                      \r</table>";
@@ -204,7 +199,7 @@ function delImg($xyz) {
 }
 
 function DirList($active) {
-    $files = scandir('images');
+    $files = scandir('../images');
     if ($files != false && count($files) > 2) {
         for ($i = 0, $fc = count($files) - 1; $i <= $fc; $i++) {
             if (($files[$i] != ".") && ($files[$i] != "..")) {
@@ -214,7 +209,7 @@ function DirList($active) {
                     } else {
                         $selected = '';
                     }
-                    $fShort = str_replace("images", "", $files[$i]);
+                    $fShort = str_replace("../images", "", $files[$i]);
                     echo "\r<option value=\"$files[$i]\" $selected>$fShort</option>";
                 }
             }
@@ -225,7 +220,7 @@ function DirList($active) {
 }
 
 function propList($active) {
-    $files = scandir('.props');
+    $files = scandir('../.props');
     if ($files != false && count($files) > 2) {
         for ($i = 0, $fc = count($files) - 1; $i <= $fc; $i++) {
             if (($files[$i] != ".") && ($files[$i] != "..")) {
@@ -234,7 +229,7 @@ function propList($active) {
                 } else {
                     $selected = '';
                 }
-                $fShort = str_replace(".props", "", $files[$i]);
+                $fShort = str_replace("../.props", "", $files[$i]);
                 echo "\r<option value=\"$files[$i]\" $selected>$fShort</option>";
             }
         }
@@ -273,18 +268,17 @@ function TheHTML($string,$fileName,$outFile,$vType,$eLength,$vLabel,$lProps,$bgc
                     "2" => "once per unique target||Null",
                     "3" => "once per unique source and target||Null");
 
-    $omo  = "onMouseOver=\"style.backgroundColor='#ffffff';\" onMouseOut=\"style.backgroundColor='#DDDDDD';\"";
     $omox = "onMouseOver=\"style.backgroundColor='#ff0000';\" onMouseOut=\"style.backgroundColor='#B80028';\"";
     echo "<html>
           \r<head>
-          \r<script type=\"text/javascript\" src=\".js/squert.js\"></script>
-          \r<style type=\"text/css\" media=\"screen\">@import \".css/squert.css\";</style>
+          \r<script type=\"text/javascript\" src=\"../.js/squert.js\"></script>
+          \r<style type=\"text/css\" media=\"screen\">@import \"../.css/squert.css\";</style>
           \r</head>
           \r<body style=\"background: #ffffff;\">
           \r<form id=edv method=post action=edv.php>
           \r<input type=hidden id=qText name=qText value=\"$string\">
           \r<center>
-          \r<table class=round width=100% border=0 cellpadding=1 cellspacing=0 style=\"background: #f4f4f4; padding: 5px; border: 2pt solid #c4c4c4;\">
+          \r<table width=100% border=0 cellpadding=1 cellspacing=0 style=\"border-bottom: 1pt dotted #c9c9c9; padding-bottom: 15px;\">
           \r<tr id=help style=\"display: none;\"><td colspan=2 align=left style=\"padding-top: 5px; font-size: 10px;\">
           \r<ul style=\"padding-left: 30px;\">
           \r<li>This still needs a lot of work.
@@ -301,25 +295,25 @@ function TheHTML($string,$fileName,$outFile,$vType,$eLength,$vLabel,$lProps,$bgc
           \r<li>Not all visuals are useful :)
           \r</ul>
           \r</td></tr>";
-    // From controls
+    // Form controls
     echo "<tr><td align=right style=\"padding-top: 15px; font-size: 10px;\">filter:</td>
           \r<td align=left style=\"padding-top: 15px; font-size: 10px;\">
-          \r&nbsp;<SELECT id=vType name=vType style=\"background: #ffffff; font-size: 9px; border: 1px solid #c4c4c4;\">";
+          \r&nbsp;<SELECT id=vType name=vType class=input>";
           mkSelect($vTypes,$vType);
     echo "</SELECT>&nbsp;&nbsp;
-          edge:&nbsp;<SELECT id=eLength name=eLength style=\"background: #ffffff; font-size: 9px; border: 1px solid #c4c4c4;\">";
+          edge:&nbsp;<SELECT id=eLength name=eLength class=input>";
           mkSelect($eLengths,$eLength);
     echo "</SELECT>&nbsp;&nbsp;
-          labels:&nbsp;<SELECT id=vLabel name=vLabel style=\"background: #ffffff; font-size: 9px; border: 1px solid #c4c4c4;\">";
+          labels:&nbsp;<SELECT id=vLabel name=vLabel class=input>";
           mkSelect($vLabels,$vLabel);
     echo "</SELECT>&nbsp;&nbsp;
-         \rproperties file:&nbsp;<SELECT name=lProps id=lProps style=\"font-size: 10px; border: 1px solid #c4c4c4;\">";
+         \rproperties file:&nbsp;<SELECT name=lProps id=lProps class=input>";
           propList($lProps);
     echo "</SELECT>&nbsp;&nbsp;
-          \rcanvas:&nbsp;<SELECT name=bgcolor id=bgcolor style=\"font-size: 10px; border: 1px solid #c4c4c4;\">";
+          \rcanvas:&nbsp;<SELECT name=bgcolor id=bgcolor class=input>";
           mkSelect($bgcolList,$bgcolor);
     echo "</SELECT>&nbsp;&nbsp;
-          \rmode:&nbsp;<SELECT name=mode id=mode style=\"font-size: 10px; border: 1px solid #c4c4c4;\">";
+          \rmode:&nbsp;<SELECT name=mode id=mode class=input>";
           mkSelect($modes,$mode);
     echo "</SELECT>      
           \r&nbsp;&nbsp;<a class=vis id=help_yes style=\"display: ''; font-size: 1em;\" href=\"javascript:poof('help','yes');\"><b>Help?</b></a>
@@ -327,19 +321,18 @@ function TheHTML($string,$fileName,$outFile,$vType,$eLength,$vLabel,$lProps,$bgc
           \r</td></tr>       
           \r<tr><td align=right style=\"padding-top: 15px; font-size: 10px;\">new:</td>
           \r<td align=left style=\"padding-top: 15px; font-size: 10px;\">
-          \r&nbsp;<input id=lgname name=lgname value=\"$outFile\" type=text size=30 maxlength=20 style=\"font-size: 9px; border: none; border: 1pt solid #c4c4c4;\">";
+          \r&nbsp;<input id=lgname name=lgname value=\"$outFile\" type=text size=30 maxlength=20 class=input>";
     echo "<span id=\"wrkn\" name=\"wrkn\" style=\"display: none;\">&nbsp;&nbsp;<img src=work.gif></span>
           \r</td>
           \r</tr>
           \r<tr><td align=right style=\"padding-top: 15px; font-size: 10px;\">existing:</td>
           \r<td align=left style=\"padding-top: 15px; font-size: 10px;\">
-          \r&nbsp;<SELECT name=lFiles id=lFiles style=\"font-size: 10px; border: 1px solid #c4c4c4;\">";
+          \r&nbsp;<SELECT name=lFiles id=lFiles class=input>";
           DirList($fileName);
-    echo "</SELECT>&nbsp;
-          \r</td></tr><td colspan=2 align=center style=\"padding-top: 15px; padding-bottom: 10px; font-size: 10px;\">
-          \r<input $omo id=lgraph name=lgraph type=submit value=\"create\" onclick=\"poof('wrkn','yes');\" class=rb style=\"width:50;\">
-          \r<input $omo id=view name=view type=submit value=view class=rb style=\"width:50;\">&nbsp;&nbsp;&nbsp;<span style=\"font-size: 1em; font-weight: bold;\">|</span>&nbsp;&nbsp;&nbsp;
-          \r<input $omox id=delete name=delete type=submit value=delete class=rb style=\"width:50; color: white; background: #B80028;\">
+    echo "</SELECT>&nbsp;&nbsp;&nbsp;
+          \r<input id=lgraph name=lgraph type=submit value=\"create\" onclick=\"poof('wrkn','yes');\" class=rb>
+          \r<input id=view name=view type=submit value=view class=rb>&nbsp;&nbsp;&nbsp;<span style=\"font-size: 1em; font-weight: bold;\">|</span>&nbsp;&nbsp;
+          \r<input $omox id=delete name=delete type=submit value=delete class=rb style=\"color: white; background: #B80028;\">
           \r</td></tr>
           \r</table>
           \r</center>

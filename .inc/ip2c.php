@@ -127,13 +127,13 @@ function TheHTML($string) {
 
     echo "\r<html>
           \r<head>
-          \r<script type=\"text/javascript\" src=\".js/squert.js\"></script>
-          \r<style type=\"text/css\" media=\"screen\">@import \".css/squert.css\";</style>
+          \r<script type=\"text/javascript\" src=\"../.js/squert.js\"></script>
+          \r<style type=\"text/css\" media=\"screen\">@import \"../.css/squert.css\";</style>
           \r</head>
           \r<body style=\"background: #ffffff;\">
           \r<form id=ip2c method=post action=ip2c.php>
           \r<center>          
-          \r<input class=rb onclick=\"poof('wrkn','yes');\" onMouseOver=\"style.backgroundColor='#ffffff';\" onMouseOut=\"style.backgroundColor='#DDDDDD';\" id=csync name=csync type=\"submit\" value=\"update mappings\">
+          \r<input class=rb onclick=\"poof('wrkn','yes');\" id=csync name=csync type=\"submit\" value=\"update\">
           \r<br><br><span id=\"wrkn\" name=\"wrkn\" style=\"display: none;\"><img src=work.gif></span>
           \r<input type=hidden id=qText name=qText value=\"$string\">
           \r</center>
@@ -155,11 +155,6 @@ if (isset($argc)) {
     }
 
 } else { 
-
-    session_start();
-    if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-        header ("Location: login.php");
-    }
 
     $html = '';
 

@@ -1,0 +1,138 @@
+#contents {
+	padding: 1.5em;
+	background: #ffffff;
+}
+
+#header {
+	position: relative;
+	width: 100%;
+	height: 3em;
+}
+
+#header ul#primary {
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	bottom: -1px;
+}
+
+#header ul#primary li  {
+	display: inline;
+	list-style: none;
+}
+
+#header ul#primary a,#header ul#primary span,#header ul#primary a.current {
+        border: none;
+	width: 75px;
+	display: block;
+	float: left;
+	padding: 6px;
+	margin: 1px 3px 0 0;
+	text-align: center;
+	font-family: calibri, trebuchet ms, sans-serif;
+        font-size: 11px;
+        font-weight: bold;       
+	text-decoration: none;
+}
+
+.right {
+    display: inherit;
+    position: top;
+    float: right;
+    text-align: right;
+    background: white;
+}
+
+div.page{
+  background-color: #fafafa;
+  width: 1000;
+  padding-bottom: 0;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-topleft: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;  
+}
+
+#main {
+        border: none;
+        clear: both;
+        background: #ffffff;
+        padding-top: 1em;
+}
+
+/* current tab */
+#header ul#primary span,#header ul#primary a.current,#header ul#primary a.current:hover {
+	border: none;
+	border-bottom: none;
+	background: #ffffff;
+	color: #000000;
+	padding-bottom: 8px;
+	margin-top: 0;
+        -moz-border-radius-topright: 5px;
+        -moz-border-radius-topleft: 5px;
+        -webkit-border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+}
+
+/* tab */
+#header ul#primary a {
+	background: #000000;
+	color: #f4f4f4;
+	border-bottom: none;
+        -moz-border-radius-topright: 5px;
+        -moz-border-radius-topleft: 5px;
+        -webkit-border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+}
+
+#header ul#primary a:hover {
+	margin-top: 0;
+	border-color: #000000;
+        color: #000000;
+        background: #ffffff;
+	padding-bottom: 7px;
+}
+
+#header ul#secondary {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	bottom: -1.4em;
+	left: 1px;
+	width: 50em;
+}
+
+#header ul#secondary li a,#header ul#secondary li span {
+	width: auto;
+	display: block;
+	float: left;
+	padding: 0 10px;
+	margin: 0;
+	text-align: auto;
+	border: none;
+	border-right: 1px dotted #AAA;
+	background: none;
+
+}
+
+#header ul#secondary li a {
+	color: #06C;
+	text-decoration: underline;
+}
+
+#header ul#secondary li a:hover {
+	color: #333;
+	background: transparent;
+	padding: 0 10px;
+	border: none;
+	border-right: 1px dotted #AAA;
+}
+
+#header ul#secondary li a:active {
+	color: #000;
+	background: transparent;
+}
+
+#header ul#secondary li:last-child a { 
+	border: none; 
+}

@@ -41,17 +41,17 @@ function createGrid($hdwmyQuery,$dHour,$startDate) {
     $threshold = ret95($th);
 
     // x and y labels
-    $html = "<table style=\"border: 1pt solid gray; border-bottom: none; background: #ffffff;\" cellpadding=0 cellspacing=0 width=950 align=center>
+    $html = "<br><br><table width=100% style=\"border: 1pt solid gray; border-bottom: none; background: #ffffff;\" cellpadding=0 cellspacing=0 align=center>
              \r<tr>
-             \r<td align=center width=4% style=\"font-size: .6em; font-weight: bold; border-right: 1pt solid gray; $hCol1\">M-D/H</td>";
+             \r<td align=center width=4% style=\"font-size: 10px; font-weight: bold; border-right: 1pt solid gray; $hCol1\">M-D/H</td>";
 
     for ($i = 0; $i <= 23; $i++) {
-            $html .= "\r<td align=center width=3.6% style=\"font-size: .6em; $hCol1\">$i</td>";
+            $html .= "\r<td align=center width=3.6% style=\"font-size: 10px; $hCol1\">$i</td>";
     }
 
     // Row Sum
-    $html .= "\r<td align=center width=5% style=\"font-size: .6em; font-weight: bold; $hCol1 border-left: 1pt solid gray;\">EVENTS</td>
-              \r<td align=center width=5% style=\"font-size: .6em; font-weight: bold; $hCol1 border-left: 1pt solid gray;\">%</td>";
+    $html .= "\r<td align=center width=5% style=\"font-size: 10px; font-weight: bold; $hCol1 border-left: 1pt solid gray;\">EVENTS</td>
+              \r<td align=center width=5% style=\"font-size: 10px; font-weight: bold; $hCol1 border-left: 1pt solid gray;\">%</td>";
     $html .= "\r</tr></table>";
 
     // How many rows do we need?
@@ -88,8 +88,8 @@ function createGrid($hdwmyQuery,$dHour,$startDate) {
             $extra = $hCol1;
         }
 
-        $html .= "\r<table style=\"border: 1pt solid gray; border-bottom: none; background: #ffffff;\" cellpadding=0 cellspacing=0 width=950 align=center>
-                  \r<tr name=$rd id=$rd><td align=center width=4% style=\"font-size: .6em; border-right: 1pt solid gray; $extra cursor: pointer;\" $yonClick onMouseOver=\"style.textDecoration='underline'; style.fontWeight='bold';\" onMouseOut=\"style.textDecoration='none'; style.fontWeight='normal'\">$rd</td>";
+        $html .= "\r<table width=100% style=\"border: 1pt solid gray; border-bottom: none; border-top: 1pt solid gray; background: #ffffff;\" cellpadding=0 cellspacing=0 align=center>
+                  \r<tr name=$rd id=$rd><td align=center width=4% style=\"font-size: 10px; border-right: 1pt solid gray; $extra cursor: pointer;\" $yonClick onMouseOver=\"style.textDecoration='underline'; style.fontWeight='bold';\" onMouseOut=\"style.textDecoration='none'; style.fontWeight='normal'\">$rd</td>";
 
         $eventSum = 0;
 
@@ -134,31 +134,31 @@ function createGrid($hdwmyQuery,$dHour,$startDate) {
                 if ($dHour > 1) {
                     $wMsg = $msg1;
                     $onClick = "onClick=chk_date('3','$slotsDate.$slotStart.00.00.$slotsDate.$slotStart.59.59')";
-                    $html .= "\r<td align=center width=3.6% style=\"font-size: .6em; background: $colour; cursor: pointer;\" $onClick onMouseOver=\"style.border='2pt solid $ghCol'; eeee.innerHTML='${timeSlot}:00 - $eventCount event(s)';\" onMouseOut=\"style.border='none'; eeee.innerHTML='$msg1';\"></td>";
+                    $html .= "\r<td align=center width=3.6% style=\"font-size: 9px; background: $colour; cursor: pointer;\" $onClick onMouseOver=\"style.border='2pt solid $ghCol'; eeee.innerHTML='${timeSlot}:00 - $eventCount event(s)';\" onMouseOut=\"style.border='none'; eeee.innerHTML='$msg1';\"></td>";
                 } else {
                     $wMsg = $msg2;
-                    $html .= "\r<td align=center width=3.6% style=\"font-size: .6em; background: $colour; cursor: pointer;\" onClick=\"history.go(-1)\" onMouseOver=\"style.border='2pt solid $ghCol';\" onMouseOut=\"style.border='none';\"></td>";
+                    $html .= "\r<td align=center width=3.6% style=\"font-size: 9px; background: $colour; cursor: pointer;\" onClick=\"history.go(-1)\" onMouseOver=\"style.border='2pt solid $ghCol';\" onMouseOut=\"style.border='none';\"></td>";
                 }
 
                 $cbit ++;
 
             } else {
 
-                $html .= "\r<td align=center width=3.6% style=\"font-size: .6em; background: #ffffff; color: #c9c9c9;\">-</td>";
+                $html .= "\r<td align=center width=3.6% style=\"font-size: 10px; background: #ffffff; color: #c9c9c9;\">-</td>";
 
             }
             
         }
         $ofTotal = round(($eventSum/$aSum) * 100, 2) . "%";
-        $html .= "\r<td align=right width=5% style=\"font-size: .5em; font-weight: bold; $hCol3 padding-right: 2px; border-left: 1pt solid gray;\">$eventSum</td>
-                  \r<td align=right width=5% style=\"font-size: .5em; font-weight: bold; $hCol3 padding-right: 2px; border-left: 1pt solid gray;\">$ofTotal</td>
+        $html .= "\r<td align=right width=5% style=\"font-size: 9px; font-weight: bold; $hCol3 padding-right: 2px; border-left: 1pt solid gray;\">$eventSum</td>
+                  \r<td align=right width=5% style=\"font-size: 9px; font-weight: bold; $hCol3 padding-right: 2px; border-left: 1pt solid gray;\">$ofTotal</td>
                   \r</tr></table>";
         $sc = $ec + 1;
         $ec = $sc + 23;
     }
-    $html .= "<table style=\"border-collapse: collapse; border: 1pt solid gray; border-bottom: none; background: #ffffff;\" cellpadding=0 cellspacing=0 width=950 align=center>
+    $html .= "<table width=100% style=\"border-top: 1pt solid gray;\" cellpadding=0 cellspacing=0 align=center>
               \r<tr>
-              \r<td id=eeee align=center style=\"font-size: .6em; font-weight: bold; background: #000000; color: #ffffff\">$wMsg</td>
+              \r<td id=eeee align=center style=\"border-left: 1pt solid gray; border-right: 1pt solid gray; font-size: 9px; font-weight: bold; background: #ffffff; color: #000000\">$wMsg</td>
               \r</tr></table>";
     return $html;
 }

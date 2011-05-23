@@ -97,11 +97,11 @@ function doWorld($sccQuery,$dccQuery) {
 
    // Map Canvas
     echo "\r<center>
-          \r<table width=910 border=0 cellpadding=1 cellspacing=0>
+          \r<table width=100% border=0 cellpadding=1 cellspacing=0>
           \r<tr>
           \r<td style=\"font-size: .8em;\" align=center colspan=2><b>Event Distribution by Country</b></td>
           \r</tr><tr>
-          \r<td align=center colspan=2><canvas class=round style=\"border: 1pt solid gray;\" id=\"wm1\" width=\"910\" height=\"500\">[No canvas support]></canvas></td>
+          \r<td align=center colspan=2><canvas class=round style=\"border: 1pt solid gray;\" id=\"wm1\" width=\"980\" height=\"500\">[No canvas support]></canvas></td>
           \r</tr>
           \r</table>
           \r</center>";
@@ -157,10 +157,10 @@ function doWorld($sccQuery,$dccQuery) {
           \r</script>";
 
     echo "<center>
-          <table width=910 border=0 cellpadding=1 cellspacing=0><tr>
+          <table width=100% border=0 cellpadding=1 cellspacing=0><tr>
           <td align=center style=\"font-size: .7em; padding-top: 10px;\">$aBan $bBan $cBan</td>
           </tr></table>
-          <table class=sortable width=910 border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
+          <table class=sortable width=100% border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
           <thead><tr>
           <th class=sort width=39%>Country</th>
           <th class=sorttable_nosort width=1%></th>

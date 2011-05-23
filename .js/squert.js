@@ -317,7 +317,7 @@ function mClick(prefix,source) {
 function sigLU() {
     var x = gtarg.id.replace("g", "d");
     var y = document.getElementById(x).innerHTML;
-    var z = "rule.php?sigID=" + y;
+    var z = ".inc/rule.php?sigID=" + y;
     window.open(z,'Lookup','width=800,height=200,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes');
     CloseContext();
 }
@@ -326,7 +326,7 @@ function sigLU() {
 function localLookup() {
     var x = gtarg.id;
     var y = document.getElementById(x).innerHTML;
-    var z = "lookup.php?ip=" + y;
+    var z = ".inc/lookup.php?ip=" + y;
     window.open(z,'','width=600,height=200,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes');
     CloseContext();
 }
