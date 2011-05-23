@@ -14,6 +14,10 @@ $rulePath = "/rules/snort_rules||/rules/et_rules";
 // Where is dot installed?
 $dotPath = "/usr/bin/dot";
 
+// Where do you want to land after you log in?
+// intel, sig, ip, query, settings
+$startPage = 'query';
+
 // DNS server to query
 $dns = "8.8.8.8";
 

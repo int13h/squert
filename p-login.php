@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $_SESSION['sType']      = $userType;
                 $_SESSION['sTime']	= $userTime;
                 $_SESSION['id']         = $id;
-	        header ("Location: p-intel.php?id=$id");
+	        header ("Location: p-${startPage}.php?id=$id");
             } else {
                 $err = 'Invalid Password';
                 $focus = 'password';
