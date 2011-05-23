@@ -19,45 +19,28 @@
 //
 //
 
-// Session init
-session_start();
-
 function getUser() {
-    function sKill() {
-        session_destroy();
-        session_unset();
-        header ("Location: login.php");
-    }
+    global $sUser, $sEmail, $sType, $sTime;
 
-    if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-        header ("Location: login.php");
-    }
-
-    // Session variables
-    if(!isset($_SESSION['sUser']))  { sKill(); }  else { $sUser  = $_SESSION['sUser'];}
-    if(!isset($_SESSION['sEmail'])) { sKill(); }  else { $sEmail = $_SESSION['sEmail'];}
-    if(!isset($_SESSION['sType']))  { sKill(); }  else { $sType  = $_SESSION['sType'];}
-    if(!isset($_SESSION['sTime']))  { sKill(); }  else { $sTime  = $_SESSION['sTime'];}
-    
     echo "<tr>
-          \r<td class=content width=20%>$sUser</td>
-          \r<td class=content width=20%>$sEmail</td>
-          \r<td class=content width=20%>$sType</td>
-          \r<td class=content width=20%>$sTime</td>
+          \r<td class=tros width=20%>$sUser</td>
+          \r<td class=tros width=20%>$sEmail</td>
+          \r<td class=tros width=20%>$sType</td>
+          \r<td class=tros width=20%>$sTime</td>
           \r</tr>";
 }
 ?>
 
 <form id=options method=post action=".inc/settings.php">
 <table class=table width=100% cellpadding=1 cellspacing=0>
-<tr><td class=title colspan=4>
-Account Settings
+<tr><td colspan=4 style="background: #000000; color: #ffffff; padding: 5px; font-weight: bold;">
+User Account(s)
 </td></tr>
 <tr>
-<td class=heading width=20%>Username</td>
-<td class=heading width=20%>Email</td>
-<td class=heading width=20%>Account Type</td>
-<td class=heading width=20%>Session Timeout</td>
+<th class=sort width=20%>Username</td>
+<th class=sort width=20%>Email</td>
+<th class=sort width=20%>Account Type</td>
+<th class=sort width=20%>Session Timeout</td>
 </tr>
 <?php getUser();?>
 </table>
