@@ -79,6 +79,7 @@ div.page{
 	background: #000000;
 	color: #f4f4f4;
 	border-bottom: none;
+        font-weight: bold;
         -moz-border-radius-topright: 5px;
         -moz-border-radius-topleft: 5px;
         -webkit-border-top-left-radius: 5px;

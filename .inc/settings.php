@@ -27,20 +27,22 @@ function getUser() {
           \r<td class=tros width=20%>$sEmail</td>
           \r<td class=tros width=20%>$sType</td>
           \r<td class=tros width=20%>$sTime</td>
+          \r<td class=tros width=20%><a href=\"#\">edit</a></td>
           \r</tr>";
 }
 ?>
 
 <form id=options method=post action=".inc/settings.php">
-<table class=table width=100% cellpadding=1 cellspacing=0>
-<tr><td colspan=4 style="background: #000000; color: #ffffff; padding: 5px; font-weight: bold;">
-User Account(s)
-</td></tr>
+<table  width=100% cellpadding=1 cellspacing=0 style="border: 1pt solid gray;">
+<thead>
+<tr><th class=tros colspan=5><h3>User Account(s)</h3></th></tr>
 <tr>
-<th class=sort width=20%>Username</td>
-<th class=sort width=20%>Email</td>
-<th class=sort width=20%>Account Type</td>
-<th class=sort width=20%>Session Timeout</td>
+<th class=sort width=20%>Username</th>
+<th class=sort width=20%>Email</th>
+<th class=sort width=20%>Account Type</th>
+<th class=sort width=20%>Session Timeout</th>
+<th class=sort width=20%>Modify</th>
 </tr>
+</thead>
 <?php getUser();?>
 </table>

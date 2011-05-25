@@ -151,8 +151,12 @@ table.boxes {
   font-size: .7em;
   margin: 0 auto;
   width: 450px;
-  text-align: right;
   color: #545454;
+  padding-left: 10px;
+}
+.cp span {
+  float: right;
+  padding-right: 10px;
 }
 </style>
 </head>
@@ -171,7 +175,8 @@ Password<br>
 <tr><td class=boxes>
 <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
 <td class=err><?php echo $err;?></td></tr>
-</table><div class=cp>&copy;2011 Paul Halliday</div>
+</table>
+<div class=cp>Version 0.9.0<span>&copy;2011 Paul Halliday</span></div>
 </form>
 <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>
 </body>

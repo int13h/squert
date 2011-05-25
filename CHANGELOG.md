@@ -1,6 +1,7 @@
 # Squert 0.9.0
 
 * tabbed interface
+* AND clause now accepts more than one object
 * CSS/JS fixes and cleanup
 
 

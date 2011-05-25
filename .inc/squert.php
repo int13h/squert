@@ -692,11 +692,7 @@ if ($hCl == 1) {$shCl = array('none','','');} else {$shCl = array('','none','non
 
 <form id=squert method=post action="p-query.php?id=<?php echo $id;?>">
 
-<center>
-<iframe id=settings name=settings src=.inc/settings.php?qp=$qp width=970 height=200 frameborder=0 scrolling=no style="display: none;"></iframe>
-</center>
-
-<table width=100% id=controls border=0 align=center cellpadding=1 cellspacing=0">
+<table width=100% id=controls border=0 align=center cellpadding=1 cellspacing=0>
 <tr>
 <td align=right colspan=2 style="padding-left: 20px; font-size: 10px;"><b>WHERE: </b><?php qButtons('wType');?>
 <?php
@@ -829,12 +825,12 @@ if ($hCl == 1) {$shCl = array('none','','');} else {$shCl = array('','none','non
 
 <br>
 
-<table cellpadding=0 cellspacing=0 id=divContext style="background: #f4f4f4;border: 1pt solid gray; border-collapse: collapse; display: none; position: absolute;">
+<table cellpadding=0 cellspacing=0 id=divContext style="background: #fafafa; border: 1pt solid gray; border-collapse: collapse; display: none; position: absolute;">
 <tr>
-<td style="font-size: 10px; background: #c4c4c4; color: #000000; padding: 5px 5px 2px 10px; border-bottom: 1pt solid gray;"><b>Actions</b></td>
-<td align=right style="font-size: 10px; background: #c4c4c4; color: #000000; padding: 5px 5px 2px 10px; border-bottom: 1pt solid gray;"> 
-<input class=rb style="border: 1pt solid gray; font-size: .8em; font-family: verdana; width: 30px;" id=cmtop type=button onClick="CloseContext(); self.scrollTo(0,0);" value=up>
-<input class=rb style="border: 1pt solid gray; font-size: .8em; font-family: verdana; width: 30px;" type=button value=X onClick="CloseContext()"></td></tr>
+<td style="font-size: 10px; background: #000000; color: #ffffff; padding: 7px 5px 7px 10px; border-bottom: 1pt solid gray;"><b>Actions</b></td>
+<td align=right style="font-size: 10px; background: #000000; color: #ffffff; padding: 7px 5px 7px 10px; border-bottom: 1pt solid gray;"> 
+<input class=rb style="font-size: .8em; font-family: verdana; width: 30px;" id=cmtop type=button onClick="CloseContext(); self.scrollTo(0,0);" value=up>
+<input class=rb style="font-size: .8em; font-family: verdana; width: 30px;" type=button value=X onClick="CloseContext()"></td></tr>
 </td>
 </tr>
 <tr>
