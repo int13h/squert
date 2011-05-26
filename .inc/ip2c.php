@@ -21,9 +21,8 @@
 
 function IP2C($string,$isCLI) {
 
-    $base = dirname(__FILE__);
-    include_once "$base/config.php";
-    include_once "$base/functions.php";
+    include_once "config.php";
+    include_once "functions.php";
 
     if ($isCLI == 'NO') {
         // Running from a browser
@@ -81,7 +80,6 @@ function IP2C($string,$isCLI) {
                             AND e.src_ip NOT BETWEEN 2886729728 AND 2886795263
                             AND e.src_ip NOT BETWEEN 3232235520 AND 3232301055
                             AND m.ip IS NULL");
-    $sipCount = mysql_num_rows($sipList);
 
     $dipList = mysql_query("SELECT DISTINCT(e.dst_ip) FROM event AS e LEFT JOIN mappings AS m ON e.dst_ip=m.ip
                             $when
@@ -89,10 +87,22 @@ function IP2C($string,$isCLI) {
                             AND e.dst_ip NOT BETWEEN 2886729728 AND 2886795263
                             AND e.dst_ip NOT BETWEEN 3232235520 AND 3232301055
                             AND m.ip IS NULL");
-    $dipCount = mysql_num_rows($dipList);
 
-    if ($sipCount > 0) {lookup($sipList);} else {$sipCount = 0;}
-    if ($dipCount > 0) {lookup($dipList);} else {$dipCount = 0;}
+    $sipCount = $dipCount = 0;
+
+    if ($sipList) {
+        $sipCount = mysql_num_rows($sipList);
+        if ($sipCount > 0) {
+            lookup($sipList);
+        }
+    }
+
+    if ($dipList) {
+        $dipCount = mysql_num_rows($dipList);
+        if ($dipCount > 0) {
+            lookup($dipList);
+        }
+    }
 
     $allRecs = mysql_query("SELECT COUNT(*) FROM mappings");
     $allCount = mysql_fetch_row($allRecs);
