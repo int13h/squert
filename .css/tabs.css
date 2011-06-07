@@ -54,7 +54,8 @@ div.page{
 }
 
 #main {
-        border: none;
+        text-align: center;
+        border: 1pt solid #c9c9c9;
         clear: both;
         background: #ffffff;
         padding-top: 1em;
@@ -62,7 +63,7 @@ div.page{
 
 /* current tab */
 #header ul#primary span,#header ul#primary a.current,#header ul#primary a.current:hover {
-	border: none;
+	border: 1pt solid #c9c9c9;
 	border-bottom: none;
 	background: #ffffff;
 	color: #000000;
@@ -78,6 +79,7 @@ div.page{
 #header ul#primary a {
 	background: #000000;
 	color: #f4f4f4;
+        border: 1pt solid #c9c9c9;
 	border-bottom: none;
         font-weight: bold;
         -moz-border-radius-topright: 5px;
@@ -88,9 +90,9 @@ div.page{
 
 #header ul#primary a:hover {
 	margin-top: 0;
-	border-color: #000000;
+	border-color: #c9c9c9;
         color: #000000;
-        background: #ffffff;
+        background: #e9e9e9;
 	padding-bottom: 7px;
 }
 
