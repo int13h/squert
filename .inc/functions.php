@@ -163,7 +163,7 @@ function mkSensor($active) {
     $db = mysql_connect($dbHost,$dbUser,$dbPass) or die(mysql_error());
     mysql_select_db($dbName,$db) or die();
     $query = "SELECT net_name,agent_type,hostname,sid FROM sensor 
-              WHERE agent_type = 'snort' OR agent_type = 'modsecurity' OR agent_type = 'ossec'
+              WHERE agent_type = 'snort' OR agent_type = 'modsecurity' OR agent_type = 'ossec' OR agent_type = 'httpry'
               ORDER BY hostname ASC";
     $sensors = mysql_query($query);
 
@@ -256,11 +256,12 @@ function mkSensor($active) {
 // Protocols
 function getProto($proto) {
     $types = array(
-        0 => "PP",
-        1 => "ICMP",
-        6 => "TCP",
-        17 => "UDP",
-        41 => "IPv6"
+        0   => "PP",
+        1   => "ICMP",
+        6   => "TCP",
+        17  => "UDP",
+        41  => "IPv6",
+        150 => "URL"
     );
 
     if (array_key_exists($proto, $types)) {
