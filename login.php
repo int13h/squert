@@ -84,11 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $_SESSION['id']         = $id;
 	        header ("Location: squert.php?id=$id");
             } else {
-                $err = 'Invalid Password';
-                $focus = 'password';
+                $err = 'Invalid User or Password';
+                $focus = 'username';
             }
         } else {   
-            $err = 'Invalid User';
+            $err = 'Invalid User or Password';
             $focus = 'username';     
         }
     } else {
