@@ -138,7 +138,7 @@ function mkSensor($active) {
     $db = mysql_connect($dbHost,$dbUser,$dbPass) or die(mysql_error());
     mysql_select_db($dbName,$db) or die();
     $query = "SELECT net_name,agent_type,hostname,sid FROM sensor 
-              WHERE agent_type = 'snort' OR agent_type = 'modsecurity' OR agent_type = 'ossec'
+              WHERE agent_type = 'snort' OR agent_type = 'modsecurity' OR agent_type = 'ossec' OR agent_type = 'httpry'
               ORDER BY hostname ASC";
     $sensors = mysql_query($query);
 

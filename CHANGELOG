@@ -1,3 +1,9 @@
+Version 0.8.3
+=============
+-- Changed login screen to not display error context
+-- Added httpry agent to sensor listing
+
+
 Version 0.8
 ===========
 -- country mappings can now be done in the background via cron
