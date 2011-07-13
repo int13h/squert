@@ -387,7 +387,7 @@ function IPLine($ip,$port,$type,$cc,$rC) {
     $portID = "cm-${type[0]}port-$rC";
     $ccID = "cm-${type[0]}cc-$rC";
  
-    if ($port == '0') {
+    if ($port == 'NA') {
         $phtml = '';
     } else {
         if ($port == '') {

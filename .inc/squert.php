@@ -58,10 +58,6 @@ if(!isset($_REQUEST['eMin'])) { $eMin = 59; } else { $eMin = $_REQUEST['eMin']; 
 if(!isset($_REQUEST['eSec'])) { $eSec = 59; } else { $eSec = $_REQUEST['eSec']; }
 $timeParts = fixTime($sDate,"$sHour:$sMin:$sSec",$eDate,"$eHour:$eMin:$eSec");
 
-// Are we an admin?
-$aNotif = '';
-if ($sType == "ADMIN") { $aNotif = "<span style=\"color: #A86565;\"> (admin)</span>";}
-
 // Main Function
 function DoQueries($timeParts) {
 
@@ -263,7 +259,7 @@ function DoQueries($timeParts) {
                  $aFilter
                  $xFilter
                  $cFilter
-                 GROUP BY signature,ip_proto
+                 GROUP BY signature, ip_proto
                  ORDER BY maxTime DESC
                  LIMIT $recLimit",
         "c0" =>  "Count,20||Src,20||Dst,20||Signature,709||SigID,20||Proto,20||Last Event,120",
@@ -543,7 +539,7 @@ function DoQueries($timeParts) {
     </td></tr>";
 
     // #### SECTION: IP2C ####
-    $qp = strtohex("$when $wFilter $aFilter");
+    $qp = strtohex($when);
     echo "\r<tr id=ip2c style=\"display: none;\"><td colspan=2>
           \r<IFRAME id=\"ip2c-frame\" name=\"ip2c-frame\" src=\".inc/ip2c.php?qp=$qp&id=$id\" width=100% frameborder=0 scrolling=no></IFRAME>
           \r</td></tr>";
@@ -628,8 +624,8 @@ function DoQueries($timeParts) {
                     $dstCC =	$row[5];
                     $sigName =	$row[6];
                     $sigID =	$row[7];
-                    $srcHTML = IPLine($srcIP,0,'src',$srcCC,$rC);
-                    $dstHTML = IPLine($dstIP,0,'dst',$dstCC,$rC);
+                    $srcHTML = IPLine($srcIP,'NA','src',$srcCC,$rC);
+                    $dstHTML = IPLine($dstIP,'NA','dst',$dstCC,$rC);
                     $_sigName = urlencode($sigName);
                     $sigHTML = SignatureLine($sigName,$rC);
                     $sidHTML = SigidLine($sigID,$rC);
@@ -872,6 +868,7 @@ if ($hCl == 1) {$shCl = array('none','','');} else {$shCl = array('','none','non
 <input name=hViz id=hViz type=hidden maxlength=1 value="<?php echo $hViz;?>">
 <input name=hMap id=hMap type=hidden maxlength=1 value="<?php echo $hMap;?>">
 <input name=hCl id=hCl type=hidden maxlength=2 value="<?php echo $hCl;?>">
+<input name=tP id=tP type=hidden maxlength=255 value="<?php $xyz = strtohex($timeParts[0]); echo $xyz;?>">
 </center>
 <?php
 if (isset($_POST['base'])) {
