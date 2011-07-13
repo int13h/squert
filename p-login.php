@@ -85,11 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $_SESSION['id']         = $id;
 	        header ("Location: p-${startPage}.php?id=$id");
             } else {
-                $err = 'Invalid Password';
-                $focus = 'password';
+                $err = 'The user name or password is incorrect.';
+                $focus = 'username';
             }
         } else {   
-            $err = 'Invalid User';
+            $err = 'The user name or password is incorrect.';
             $focus = 'username';     
         }
     } else {

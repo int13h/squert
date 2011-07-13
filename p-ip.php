@@ -21,28 +21,40 @@
 
 include_once '.inc/session.php';
 include_once '.inc/tabs.php';
+include_once '.inc/functions.php';
+
 ?>
 
-<!DOCTYPE html>
 <html>
 <head>
-<title>Query</title>
+<title>SQueRT</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <style type="text/css" media="screen">@import ".css/squert.css";</style>
 <style type="text/css" media="screen">@import ".css/tabs.css";</style>
+<script type="text/javascript" src=".js/squert.js"></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.hbar.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.line.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.scatter.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.context.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.tooltips.js"></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.zoom.js"></script>
 </head>
 
 <body>
-
-<!---- Navigation ---->
-
+<?php include_once '.inc/header.php';?>
 <table id=main-table width=1000 align=center cellpadding=0 cellspacing=0">
 <tr>
 <td>
-<?php tabber("IP",$id);?>
+<?php 
+  tabber("IP",$id);
+  dbC();
+?>
 <div id="main">
 <div id="contents" class="main">
-<!--?php include_once 'squert.php';?>
+<?php include_once '.inc/charts/ip.php';?>
+<?php include_once '.inc/charts/ip_scatter.php';?>
 </div>
 </div>
 </td>

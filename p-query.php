@@ -25,7 +25,10 @@ include_once '.inc/tabs.php';
 
 <html>
 <head>
-<title>Query</title>
+<title>SQueRT</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<head>
+<title>QUERY</title>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.hbar.js" ></script>
@@ -41,12 +44,15 @@ include_once '.inc/tabs.php';
 <script type="text/javascript" src=".date/js/datepicker.js"></script>
 <script type="text/javascript" src=".date/js/lang/en.js"></script>
 </head>
-<body>
 
+<body>
+<?php include_once '.inc/header.php';?>
 <table id=main-table width=1000 align=center cellpadding=0 cellspacing=0">
 <tr>
 <td>
-<?php tabber("QUERY",$id);?>
+<?php 
+  tabber("QUERY",$id);
+?>
 <div id="main">
 <div id="contents" class="main">
 <?php include '.inc/squert.php';?>
