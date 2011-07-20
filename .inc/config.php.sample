@@ -15,7 +15,7 @@ $rulePath = "/rules/snort_rules||/rules/et_rules";
 $dotPath = "/usr/bin/dot";
 
 // Where do you want to land after you log in?
-// intel, sig, ip, query, settings
+// sum, sig, ip, query
 $startPage = 'query';
 
 // DNS server to query
