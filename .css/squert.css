@@ -34,18 +34,17 @@ a:hover.vis {background: transparent; text-decoration: none;color: #000000;font-
 a.blockB {color: blue;text-decoration: underline;}
 a:hover.blockB {text-decoration: underline;color: red; background: none;}
 
-
 a.cloud {background: transparent; text-decoration: none; color: gray; font-size: 10px;}
 a:hover.cloud {background: transparent; text-decoration: underline; color:none;font-size: 10px;}
 
-
-td.datesel_cm {color: #ffffff; background: #6e6e6e; text-decoration: none; padding: 2px; padding-top: none; font-size: 9px;}
-td.datesel_am {color: #000000; background: #a6a6a6; text-decoration: none; padding: 2px; padding-top: none; font-size: 9px;}
+td.datesel_cm, td.datesel_am {padding-top: 10px;}
+td.datesel_cm {color: #ffffff; background: #6e6e6e; font-weight: bold; text-decoration: none; padding: 2px; font-size: 9px;}
+td.datesel_am {color: gray; background: #a6a6a6; text-decoration: none; padding: 2px; font-size: 9px;}
 a.datesel_m {background: transparent; text-decoration: none; color: #ffffff;}
 a:hover.datesel_m {background: transparent; text-decoration: underline; color: #000000;}
 
-td.datesel_cd {color: #c9c9c9; background: #f4f4f4; font-weight: normal; border-right: 2pt solid black; text-decoration: none; padding: 2px; font-size: 8px;}
-td.datesel_ad {color: #c9c9c9; background: #f4f4f4; font-weight: normal; text-decoration: none; padding: 2px; font-size: 8px;}
+td.datesel_cd {border-bottom: 1pt solid #6e6e6e; color: #000000; background: #f4f4f4; font-weight: normal; border-right: 2pt solid #cc0000; text-decoration: none; padding: 2px; font-size: 8px;}
+td.datesel_ad {border-bottom: 1pt solid #6e6e6e; color: #c9c9c9; background: #f4f4f4; font-weight: normal; text-decoration: none; padding: 2px; font-size: 8px;}
 a.datesel_d {background: transparent; text-decoration: none; color: #000000;}
 a:hover.datesel_d {background: transparent; text-decoration: underline; color: #000000;}
 
