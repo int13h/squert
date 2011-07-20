@@ -18,10 +18,14 @@
         * o------------------------------------------------------------------------------o
         */
     -->
-    <title>RGraph: HTML5 canvas graph library - horizontal progress bar</title>
+    <title>RGraph: Javascript charts and graph library - horizontal progress bar</title>
     
     <meta name="keywords" content="rgraph html5 canvas example horizontal progress bar" />
-    <meta name="description" content="RGraph: Horizontal Progress Bar example" />
+    <meta name="description" content="RGraph: Javascript charts and graph library -  Horizontal Progress Bar example" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
 
     <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
     <link rel="icon" type="image/png" href="../images/favicon.png">
@@ -31,22 +35,29 @@
     <script src="../libraries/RGraph.common.annotate.js" ></script>
     <script src="../libraries/RGraph.common.tooltips.js" ></script>
     <script src="../libraries/RGraph.common.zoom.js" ></script>
+    <script src="../libraries/RGraph.common.adjusting.js" ></script>
     <script src="../libraries/RGraph.common.resizing.js" ></script>
     <script src="../libraries/RGraph.hprogress.js"></script>
-    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+    <!--[if IE 8]><script src="../excanvas/excanvas.original.js"></script><![endif]-->
 
     <script>
         window.onload = function ()
         {
-            var progress1 = new RGraph.HProgress('progress1', 63, 100);
+            var progress1 = new RGraph.HProgress('progress1', 57, 100);
             progress1.Set('chart.tickmarks', true);
-            progress1.Set('chart.annotatable', true);
-            progress1.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom], ['Show the palette', RGraph.Showpalette], ['Clear', function () {RGraph.Clear(progress1.canvas, '#fff'); progress1.Draw();}]]);            
+            progress1.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom]]);
             progress1.Set('chart.margin', 3);
             progress1.Set('chart.tickmarks.inner', true);
             progress1.Set('chart.label.inner', true);
             progress1.Set('chart.units.post', '%');
+            progress1.Set('chart.min', 50);
+            progress1.Set('chart.tickmarks.zerostart', true);
+            //progress1.Set('chart.annotatable', true);
             progress1.Draw();
+            
+            //RGraph.AddCustomEventListener(progress1, 'onannotatestart', function () {cl('start');})
+            //RGraph.AddCustomEventListener(progress1, 'onannotate', function () {cl('annotate');})
+            //RGraph.AddCustomEventListener(progress1, 'onannotateend', function () {cl('end');})
 
             var progress2 = new RGraph.HProgress('progress2', [41,22], 100);
             progress2.Set('chart.colors', ['red', 'yellow']);
@@ -58,118 +69,66 @@
             progress2.Set('chart.margin', 3);
             progress2.Set('chart.title', 'Disk usage (tooltips)');
             progress2.Set('chart.units.post', 'Gb');
-            progress2.Set('chart.tooltips', ['<b>Warning!</b><br />Disk usage is high. It might be time to delete<br /> some of your files',
-                                             'Second tooltip'
-                                            ]);
+            progress2.Set('chart.tooltips', ['<b>Warning!</b><br />Disk usage is high. It might be time to delete<br /> some of your files','Second tooltip']);
             progress2.Set('chart.tickmarks', false);
             progress2.Set('chart.tickmarks.inner', true);
             progress2.Set('chart.numticks.inner', 25);
             progress2.Draw();
+
+            progress2 = new RGraph.HProgress('browser_share', [59.65, 22.96, 7.98, 5.27, 4.09], 100);
+            progress2.Set('chart.colors', ['blue', 'red', 'yellow', 'green','black']);
+            progress2.Set('chart.key', ['Microsoft Internet Explorer (59.65%)', 'Mozilla Firefox (22.96%)', 'Google Chrome (7.98%)', 'Apple Safari (5.27%)','Other (4.09%)']);
+            progress2.Set('chart.tooltips', ['Microsoft Internet Explorer (59.65%)', 'Mozilla Firefox (22.96%)', 'Google Chrome (7.98%)', 'Apple Safari (5.27%)','Other (4.09%)']);
+            progress2.Set('chart.units.post', '%');
+            progress2.Set('chart.tickmarks.zerostart', true);
+            progress2.Draw();
         }
+    </script>
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
     </script>
 </head>
 <body>
 
-    <!-- Social networking buttons -->
     
-    <script>
-        function HideTwitterDIV ()
-        {
-            document.getElementById("twitter_div").style.opacity = 0;
-            document.getElementById("twitter_div").style.display = 'none';
-        }
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
 
-
-        function ShowTwitterDIV (e)
-        {
-            var e   = RGraph.FixEventObject(document.all ? event : e);
-            var div = document.getElementById("twitter_div");
-            var img = document.getElementById("twitter_icon");
-
-            div.style.display = 'block';
-            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
-            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
-
-            /**
-            * Fade it in
-            */
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
-
-            e.stopPropagation();
-
-            return false;
-        }
-        
-        window.addEventListener('click', HideTwitterDIV, false);
-    </script>
-
-    <!-- The twitter DIV --> 
-    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
-        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
-        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
-    </div>
-
-    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
         <script>
             // Opera fix
             if (navigator.userAgent.indexOf('Opera') == -1) {
               document.getElementById("social_icons").style.position = 'fixed';
-              document.getElementById("twitter_div").style.position = 'fixed';
-    
             }
         </script>
-    
-        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
-    
-    
-            <div id="social">
-                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
-                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
-                </a> 
-     
-                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
-                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
-                </a>
-    
-    
-                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
-                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-    
-                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
-                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
-                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
-                </a>
-    
-                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
-                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
-                </a>
-            </div>
-    </div>
-    <!-- /Social networking buttons -->
+    <!-- Social networking buttons -->
 
 
 <div id="breadcrumb">
-    <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+    <a href="../index.html">RGraph: Javascript charts and graph library</a>
     >
     <a href="./index.html">Examples</a>
     >
     Horizontal Progress bar
 </div>
 
-    <h1>RGraph: HTML5 canvas graph library - Horizontal Progress bar</h1>
+    <h1>RGraph: Javascript charts and graph library - Horizontal Progress bar</h1>
 
     <script>
         if (RGraph.isIE8()) {
-            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
         }
     </script>
 
@@ -194,6 +153,13 @@
     <div>
         <canvas width="450" height="75" id="progress1">[No canvas support]</canvas>
         <canvas width="450" height="75" id="progress2">[No canvas support]</canvas>
+    </div>
+    
+    <div>
+        <p style="text-align: center">
+            <b>Browser market share in September (custom highlight)</b>
+            <canvas id="browser_share" width="1000" height="80">[No canvas support]</canvas>
+        </p>
     </div>
 
 </body>

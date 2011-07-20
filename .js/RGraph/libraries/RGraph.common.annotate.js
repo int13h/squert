@@ -33,144 +33,147 @@
             /**
             * Capture the mouse events so we can set whther the mouse is down or not
             */
-                canvas.onmousedown = function (e)
-                {
-                    if (e.button == 0) {
+            var canvas_onmousedown = function (e)
+            {
+                if (e.button == 0) {
 
-                        e.target.__object__.Set('chart.mousedown', true);
+                    e.target.__object__.Set('chart.mousedown', true);
 
-                        // Get the context
-                        var obj = e.target.__object__;
-                        var context = obj.canvas.getContext('2d');
+                    // Get the context
+                    var obj = e.target.__object__;
+                    var context = obj.context;
 
-                        // Don't want any "joining" lines or colour "bleeding"
-                        context.beginPath();
+                    // Don't want any "joining" lines or colour "bleeding"
+                    context.beginPath();
 
-                        // Accommodate Chrome
-                        var coords = RGraph.getMouseXY(e);
-                        var x      = coords[0];
-                        var y      = coords[1];
-                        
-                        // Clear the annotation recording
-                        RGraph.Registry.Set('annotate.actions', [obj.Get('chart.annotate.color')]);
-
-                        context.strokeStyle = obj.Get('chart.annotate.color');
-
-                        context.moveTo(x, y);
+                    // Accommodate Chrome
+                    var coords = RGraph.getMouseXY(e);
+                    var x      = coords[0];
+                    var y      = coords[1];
                     
-                        // Set the lineWidth
-                        context.lineWidth = 1;
-                        
-                        RGraph.Registry.Set('started.annotating', false);
-                        
-                        /**
-                        * Fire the onannotatestart event
-                        */
-                        RGraph.FireCustomEvent(obj, 'onannotatestart');
-                    }
-                    
-                    return false;
-                }
+                    // Clear the annotation recording
+                    RGraph.Registry.Set('annotate.actions', [obj.Get('chart.annotate.color')]);
+
+                    context.strokeStyle = obj.Get('chart.annotate.color');
+
+                    context.moveTo(x, y);
                 
-                /**
-                * This cancels annotating for ALL canvases
-                */
-                window.onmouseup = function (e)
-                {
-                    var tags = document.getElementsByTagName('canvas');
-
-                    for (var i=0; i<tags.length; ++i) {
-                        if (tags[i].__object__) {
-                            tags[i].__object__.Set('chart.mousedown', false);
-                        }
-                    }
-
-                    // Store the annotations in browser storage if it's available
-                    if (RGraph.Registry.Get('annotate.actions') && RGraph.Registry.Get('annotate.actions').length > 0 && window.localStorage) {
-
-                        var id = '__rgraph_annotations_' + e.target.id + '__';
-                        var annotations  = window.localStorage[id] ? window.localStorage[id] + '|' : '';
-                            annotations += RGraph.Registry.Get('annotate.actions');
-
-                        // Store the annotations information in HTML5 browser storage here
-                        window.localStorage[id] = annotations;
-                    }
+                    // Set the lineWidth
+                    context.lineWidth = 1;
                     
-                    // Clear the recorded annotations
-                    RGraph.Registry.Set('annotate.actions', []);
-                }
-                
-                canvas.onmouseup = function (e)
-                {
+                    RGraph.Registry.Set('started.annotating', false);
+                    RGraph.Registry.Set('chart.annotating', obj);
                     
                     /**
-                    * Fire the annotate event
+                    * Fire the onannotatebegin event. It also fires an event called ononnotatestart for BC purposes
                     */
-                    RGraph.FireCustomEvent(e.target.__object__, 'onannotateend');
+                    RGraph.FireCustomEvent(obj, 'onannotatestart');
+                    RGraph.FireCustomEvent(obj, 'onannotatebegin');
+                }
+                
+                return false;
+            }
+            canvas.addEventListener('mousedown', canvas_onmousedown, false);
+            RGraph.AddEventListener(canvas.id, 'mousedown', canvas_onmousedown);
+            
+            /**
+            * This cancels annotating for ALL canvases
+            */
+            var window_onmouseup = function (e)
+            {
+                var obj  = RGraph.Registry.Get('chart.annotating');
+                var tags = document.getElementsByTagName('canvas');
 
-                    window.onmouseup(e);
+                for (var i=0; i<tags.length; ++i) {
+                    if (tags[i].__object__) {
+                        tags[i].__object__.Set('chart.mousedown', false);
+                    }
                 }
 
-                canvas.onmouseout = window.onmouseup;
+                if (e.button != 0 || !obj) {
+                    return;
+                }
+
+                // Store the annotations in browser storage if it's available
+                if (RGraph.Registry.Get('annotate.actions') && RGraph.Registry.Get('annotate.actions').length > 0 && window.localStorage) {
+
+                    var id = '__rgraph_annotations_' + e.target.id + '__';
+                    var annotations  = window.localStorage[id] ? window.localStorage[id] + '|' : '';
+                        annotations += RGraph.Registry.Get('annotate.actions');
+
+                    // Store the annotations information in HTML5 browser storage here
+                    window.localStorage[id] = annotations;
+                }
+                
+                // Clear the recorded annotations
+                RGraph.Registry.Set('annotate.actions', []);
+                
+                /**
+                * Fire the annotate event
+                */
+
+                RGraph.FireCustomEvent(obj, 'onannotateend');
+            }
+            window.addEventListener('mouseup', window_onmouseup, false);
+            RGraph.AddEventListener(canvas.id, 'window_mouseup', window_onmouseup);
+            
+            /**
+            * Canvas onmouseup event
+            */
+            var canvas_onmouseup = function (e)
+            {
+                var obj = e.target.__object__;
+                
+                RGraph.Registry.Set('chart.mousedown', false);
+            }
+            canvas.addEventListener('mouseup', canvas_onmouseup, false);
+            RGraph.AddEventListener(canvas.id, 'mouseup', canvas_onmouseup);
 
             /**
             * The canvas onmousemove function
             */
-            canvas.onmousemove = function (e)
+            var canvas_onmousemove = function (e)
             {
                 var e      = RGraph.FixEventObject(e);
                 var obj    = e.target.__object__;
                 var coords = RGraph.getMouseXY(e);
                 var x      = coords[0];
                 var y      = coords[1];
-                var gutter = obj.Get('chart.gutter');
                 var width  = canvas.width;
                 var height = canvas.height;
 
                 obj.context.lineWidth = 1;
 
                 // Don't allow annotating in the gutter
-                if (
-                    x > gutter && x < (width - gutter)
-                    && y > gutter && y < (height - gutter)
-                   ) {
+                //
+                // CHANGED 20TH DECEMBER 2010 TO ALLOW ANNOTATING IN THE GUTTER
+                if (true) {
                 
                     canvas.style.cursor = 'crosshair';
                 
                     if (obj.Get('chart.mousedown')) {
-
-                        // Don't allow annotating in the gutter
-                        if (
-                            x > gutter && x < (width - gutter)
-                            && y > gutter && y < (height - gutter)
-                           ) {
                            
-                           // Special case for HBars and Gantts with their extra wide left gutter
-                           if ( (obj.type != 'hbar' && obj.type != 'gantt') || x > (3 * gutter)) {
+                       // Special case for HBars and Gantts with their extra wide left gutter
+                       if ( (obj.type != 'hbar' && obj.type != 'gantt') || x > obj.gutterLeft) {
 
-                               /**
-                               * This is here to stop annotating in the gutter
-                               */
-                                if (RGraph.Registry.Get('started.annotating') == false) {
-                                    context.moveTo(x, y);
-                                    RGraph.Registry.Set('started.annotating', true)
-                                }
-
-                                context.lineTo(x, y);
-
-                                RGraph.Registry.Set('annotate.actions', RGraph.Registry.Get('annotate.actions') + '|' + x + ',' + y);
-
-                                context.stroke();
-
-                                /**
-                                * Fire the annotate event
-                                */
-                                RGraph.FireCustomEvent(obj, 'onannotate');
+                           /**
+                           * This is here to stop annotating in the gutter
+                           */
+                            if (RGraph.Registry.Get('started.annotating') == false) {
+                                context.moveTo(x, y);
+                                RGraph.Registry.Set('started.annotating', true)
                             }
 
-                        // No drawing in the gutter
-                        } else {
-                            context.moveTo(x, y);
+                            context.lineTo(x, y);
+
+                            RGraph.Registry.Set('annotate.actions', RGraph.Registry.Get('annotate.actions') + '|' + x + ',' + y);
+
+                            context.stroke();
+
+                            /**
+                            * Fire the annotate event
+                            */
+                            RGraph.FireCustomEvent(obj, 'onannotate');
                         }
                     }
 
@@ -178,6 +181,8 @@
                     canvas.style.cursor = 'default';
                 }
             }
+            canvas.addEventListener('mousemove', canvas_onmousemove, false);
+            RGraph.AddEventListener(canvas.id, 'mousemove', canvas_onmousemove);
 
             RGraph.ReplayAnnotations(obj);
         }
@@ -226,7 +231,7 @@
         var colors = ['red', 'blue', 'green', 'black', 'yellow', 'magenta', 'pink', 'cyan', 'purple', '#ddf', 'gray', '#36905c'];
 
         for (i=0; i<colors.length; ++i) {
-            str = str + '<span ' + common_mouseover + common_mouseout + ' style="background-color: ' + colors[i] + '; ' + common_css  + '" onclick="this.parentNode.__object__.Set(\'chart.annotate.color\', this.style.backgroundColor); this.parentNode.style.display = \'none\'">&nbsp;</span>';
+            str = str + '<span ' + common_mouseover + common_mouseout + ' style="background-color: ' + colors[i] + '; ' + common_css  + '" onclick="this.parentNode.__object__.Set(\'chart.annotate.color\', this.style.backgroundColor); this.parentNode.style.display = \'none\'; RGraph.FireCustomEvent(this.parentNode.__object__, \'onannotatecolor\')">&nbsp;</span>';
             
             // This makes the colours go across two levels
             if (i == 5) {
@@ -240,8 +245,8 @@
         /**
         * Now the div has been added to the document, move it up and left and set the width and height
         */
-        div.style.width  = (div.offsetWidth - (RGraph.isIE9up() ? 12 : 5)) + 'px';
-        div.style.height = (div.offsetHeight - (RGraph.isIE9up() ? 13 : 5)) + 'px';
+        div.style.width  = (div.offsetWidth) + 'px';
+        div.style.height = (div.offsetHeight - (RGraph.isIE9up() ? 5 : 5)) + 'px';
         div.style.left   = Math.max(0, e.pageX - div.offsetWidth - 2) + 'px';
         div.style.top    = (e.pageY - div.offsetHeight - 2) + 'px';
 
@@ -276,8 +281,13 @@
     */
     RGraph.ClearAnnotations = function (id)
     {
+        var canvas = document.getElementById(id);
+        var obj    = canvas.__object__;
+
         if (window.localStorage && window.localStorage['__rgraph_annotations_' + id + '__'] && window.localStorage['__rgraph_annotations_' + id + '__'].length) {
             window.localStorage['__rgraph_annotations_' + id + '__'] = [];
+            
+            RGraph.FireCustomEvent(obj, 'onannotateclear');
         }
     }
 

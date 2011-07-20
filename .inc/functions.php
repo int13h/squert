@@ -74,7 +74,7 @@ function cCheck() {
 
 function dbC() {
     if (file_exists('.inc/config.php')) {
-        include_once '.inc/config.php';
+        global $dbHost,$dbName,$dbUser,$dbPass;
         $link = mysql_connect($dbHost,$dbUser,$dbPass);
 
         if (!$link) {
@@ -100,7 +100,6 @@ function dbC() {
 // Query date and time
 function fixTime($sDate, $sTime, $eDate, $eTime) {
     global $offset;
-
     $_start = strtotime("$sDate $sTime");
     $_end = strtotime("$eDate $eTime");
     if ($offset[0] == "-") {

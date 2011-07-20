@@ -19,6 +19,9 @@ body {
     font-family: Georgia, Arial, Sans-Serif;
 }
 
+h1#title {
+}
+
 pre#code,
 code {
     display: block;
@@ -207,50 +210,16 @@ div#social {
     display: inline-block;
 }
 
-
-/*******************************************************************/
-
-
-/**
-* RGraph CSS classes. These allow you to customise how tooltips and
-* context menus will appear. To override the CSS defined in the graph scripts, you may
-* need to use  " ! important" like so:
-* 
-* font-weight: bold ! important
-* 
-* You don't always need to use this, only if you're trying to override something which
-* the script sets.
-*/
-
-
-/*******************************************************************/
-
-.RGraph_png {
-}
-
-.RGraph_tooltip {
-}
-
-.RGraph_contextmenu {
-}
-
-.RGraph_contextmenu_background {
-}
-
-.RGraph_contextmenu_item {
-}
-
-.RGraph_zoom_window {
-}
-
-.RGraph_zoomed_canvas {
-}
-
-.ModalDialog_background {
-}
-
-.ModalDialog_dialog {
-}
-
-.ModalDialog_topbar {
+.upgrade_notice {
+    display: inline;
+    display: inline-block;
+    text-align: center;
+    background-color: yellow;
+    border: 1px black solid;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    padding: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
 }

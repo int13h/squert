@@ -19,21 +19,37 @@
         */
     -->
 
-    <title>RGraph: HTML5 canvas graph library - a basic example</title>
+    <title>RGraph: Javascript charts and graph library - a basic example</title>
     
-    <meta name="keywords" content="rgraph html5 canvas basic example" />
-    <meta name="description" content="RGraph: A basic example" />
+    <meta name="keywords" content="rgraph javascript charts html5 canvas basic example" />
+    <meta name="description" content="RGraph: Javascript charts and graph library -  A basic example" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts &amp; HTML5 canvas charts library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
 
     <!-- 1/3. Include the RGraph libraries -->
     <script src="../libraries/RGraph.common.core.js" ></script>
     <script src="../libraries/RGraph.bar.js" ></script>
-    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+    <!--[if IE 8]><script src="../excanvas/excanvas.original.js"></script><![endif]-->
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 
 </head>
 
 <body>
 
-    <h1>RGraph: HTML5 canvas graph library - A basic example</h1>
+    <h1>RGraph: Javascript charts and graph library - A basic example</h1>
 
     <!-- 2/3. This is the canvas that the graph is drawn on -->
     <canvas id="myBar" width="1000" height="250">[No canvas support]</canvas>
@@ -46,7 +62,7 @@
         window.onload = function ()
         {
             var bar = new RGraph.Bar('myBar', [12,13,16,15,16,19,19,12,23,16,13,24]);
-            bar.Set('chart.gutter', 35);
+            bar.Set('chart.gutter.left', 35);
             bar.Set('chart.colors', ['red']);
             bar.Set('chart.title', 'A basic graph (big, but basic)');
             bar.Set('chart.labels', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
@@ -55,7 +71,7 @@
     </script>
     
     <p>
-        This is a very basic example that does little more than display a graph. If you're trying to understand how RGraph
+        This is a very basic example that does little more than display a chart. If you're trying to understand how RGraph
         works, this should help as there is very little happening on this page. To see the source code of this
         page simply view the source (Right click > View Source).
     </p>

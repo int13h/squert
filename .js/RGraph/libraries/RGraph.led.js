@@ -100,18 +100,17 @@
             'chart.zoom.shadow':   true,
             'chart.zoom.background': true,
             'chart.zoom.action':     'zoom',
-            'chart.resizable':       false
+            'chart.resizable':              false,
+            'chart.resize.handle.adjust':   [0,0],
+            'chart.resize.handle.background': null,
+            'chart.width':                    null,
+            'chart.height':                   null
         }
 
         // Check for support
         if (!this.canvas) {
             alert('[LED] No canvas support');
             return;
-        }
-        
-        // Check the canvasText library has been included
-        if (typeof(RGraph) == 'undefined') {
-            alert('[LED] Fatal error: The common library does not appear to have been included');
         }
     }
 
@@ -148,13 +147,7 @@
         * Fire the onbeforedraw event
         */
         RGraph.FireCustomEvent(this, 'onbeforedraw');
-        
-        /**
-        * Resolves the colors array, which allows the colors to be a function
-        */
-        this.Set('chart.background', RGraph.ResolveColors(this, this.Get('chart.background')));
-        this.Set('chart.dark', RGraph.ResolveColors(this, this.Get('chart.dark')));
-        this.Set('chart.light', RGraph.ResolveColors(this, this.Get('chart.light')));
+
 
         // First clear the canvas, using the background colour
         RGraph.Clear(this.canvas, this.Get('chart.background'));
@@ -208,15 +201,23 @@
         var light    = this.Get('chart.light');
         var dark     = this.Get('chart.dark');
         var lights   = (this.lights[letter] ? this.lights[letter] : [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]);
-        var lwidth   = this.canvas.width / this.text.length;
+        var lwidth   = RGraph.GetWidth(this) / this.text.length;
         var diameter = lwidth / 5;
         var radius   = diameter / 2;
+
+        var lheight = diameter * 7;
+        if (lheight > RGraph.GetHeight(this)) {
+            lheight  = RGraph.GetHeight(this);
+            diameter = (lheight / 7);
+            radius   = (diameter / 2);
+            lwidth   = diameter * 5;
+        }
 
         for (var i=0; i<7; i++) {
             for (var j=0; j<5; j++) {
 
                 var x = (j * diameter) + (index * lwidth) + radius;
-                var y = (this.canvas.height / 2) + ((i * diameter) + 2) - (7 * radius);
+                var y = ((i * diameter)) + radius;
 
                 // Draw a circle
                 this.context.fillStyle   = (lights[i][j] ? light : dark);

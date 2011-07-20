@@ -1,0 +1,139 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: Javascript charts and graph library - waterfall charts</title>
+
+    <meta name="keywords" content="rgraph html5 canvas example waterfall charts" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Waterfall chart example" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <script src="../libraries/RGraph.common.core.js"></script>
+    <script src="../libraries/RGraph.common.context.js" ></script>
+    <script src="../libraries/RGraph.common.annotate.js" ></script>
+    <script src="../libraries/RGraph.common.tooltips.js" ></script>
+    <script src="../libraries/RGraph.common.zoom.js" ></script>
+    <script src="../libraries/RGraph.common.resizing.js" ></script>
+    <script src="../libraries/RGraph.waterfall.js"></script>
+    <!--[if IE 8]><script src="../excanvas/excanvas.original.js"></script><![endif]-->
+
+    <script>
+        window.onload = function ()
+        {
+            var waterfall1 = new RGraph.Waterfall('waterfall1', [50,12,-5,-9, 130, -23])
+            waterfall1.Set('chart.background.grid.autofit', true);
+            waterfall1.Set('chart.background.grid.autofit.numhlines', 10);
+            waterfall1.Set('chart.background.grid.autofit.numvlines', 25);
+            waterfall1.Set('chart.title', 'A Waterfall chart showing income/expenditure (tooltips)');
+            //waterfall1.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom], ['Cancel', function () {}]]);
+            waterfall1.Set('chart.colors', ['black','red','blue']);
+            waterfall1.Set('chart.strokestyle', 'rgba(0,0,0,0)');
+            waterfall1.Set('chart.units.pre', '$');
+            waterfall1.Set('chart.units.post', 'k');
+            waterfall1.Set('chart.total', true);
+            waterfall1.Set('chart.labels', ['Sales','Misc income','Salaries','Running costs','Extortion','Stationary', 'Gross']);
+            waterfall1.Set('chart.tooltips', ['Traditional sales from the shops',
+                                              'Miscellaneous income from neer-do-wells',
+                                              'Salaries of the henchmen',
+                                              'Running costs including fuel for the cars',
+                                              'Extortion',
+                                              'Stationary for the offices',
+                                              'Gross income before "tax"']);
+            waterfall1.Set('chart.highlight.stroke', 'rgba(0,0,0,0)');
+            waterfall1.Set('chart.text.angle', 0);
+            //waterfall1.Set('chart.ymax', 500);
+            waterfall1.Set('chart.shadow', true);
+            waterfall1.Set('chart.shadow.color', '#aaa');
+            waterfall1.Set('chart.shadow.blur', 5);
+            waterfall1.Set('chart.shadow.offsetx', 0);
+            waterfall1.Set('chart.shadow.offsety', 0);
+            waterfall1.Set('chart.gutter.left', 50);
+            waterfall1.Draw();
+        }
+    </script>
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
+
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+            }
+        </script>
+    <!-- Social networking buttons -->
+
+
+<div id="breadcrumb">
+    <a href="../index.html">RGraph: Javascript charts and graph library</a>
+    >
+    <a href="./index.html">Examples</a>
+    >
+    Waterfall chart
+</div>
+
+    <h1>RGraph: Javascript charts and graph library - Waterfall charts</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+
+    <p>
+        Waterfall charts can be used to represent sales and expenditure for an entity. More information can be found here:
+        <a href="http://en.wikipedia.org/wiki/Waterfall_chart" target="_blank">http://en.wikipedia.org/wiki/Waterfall_chart</a>
+    </p>
+
+    <div>
+        <ul>
+            <li><a href="../docs/waterfall.html">Waterfall charts API documentation</a></li>
+        </ul>
+    </div>
+
+    <div>
+        <canvas width="900" height="500" id="waterfall1">[No canvas support]</canvas>
+    </div>
+
+</body>
+</html>

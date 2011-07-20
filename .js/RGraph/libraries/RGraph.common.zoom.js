@@ -94,7 +94,7 @@
             }
 
 
-            canvas.onmousemove = function (e)
+            var window_onmousemove = function (e)
             {
                 var startCoords = RGraph.Registry.Get('chart.zoomed.area.mousedown');
                 
@@ -155,6 +155,8 @@
                     }
                 }
             }
+            window.addEventListener('mousemove', window_onmousemove, false);
+            RGraph.AddEventListener(canvas.id, 'window_mousemove', window_onmousemove);
 
 
             canvas.onmouseup = function (e)
@@ -466,8 +468,6 @@
     */
     RGraph.ShowZoomWindow = function (obj)
     {
-        var gutter = obj.Get('chart.gutter');
-
         if (obj.Get('chart.zoom.mode') == 'thumbnail') {
             RGraph.ZoomWindow(obj.canvas);
         }
@@ -479,7 +479,7 @@
 
 
     /**
-    * Installs the evnt handler for the zoom window
+    * Installs the evnt handler for the zoom window/THUMBNAIL
     */
     RGraph.ZoomWindow = function (canvas)
     {
@@ -501,7 +501,10 @@
                 div.className    = 'RGraph_zoom_window';
                 div.style.width  = obj.Get('chart.zoom.thumbnail.width') + 'px';
                 div.style.height = obj.Get('chart.zoom.thumbnail.height') + 'px';
+                
+                // Added back in on the 17th December
                 div.style.border = '2px dashed gray';
+
                 div.style.position = 'absolute';
                 div.style.overflow = 'hidden';
                 div.style.backgroundColor = 'white';
@@ -672,8 +675,25 @@
         //if ((e.target.__canvas__ && e.target.__canvas__.__object__.Get('chart.zoom.mode') == 'thumbnail') || (e.target.parentNode.__canvas__ && e.target.parentNode.__canvas__.__object__.Get('chart.zoom.mode') == 'thumbnail') ) {
         //    return RGraph.ZoomWindow(e);
         //}
+        if (e && e.target && e.target.__canvas__) {
+            var canvas  = e.target.__canvas__;
+        
+        /*******************************************************
+        * This is here to facilitate zooming by just a single left click
+        *******************************************************/
+        } else if (e && e.target && e.target.__object__) {
+            var canvas = e.target.__object__.canvas;
+            e.stopPropagation(); // Hmmmm
+        }
 
-        var canvas  = e.target.__canvas__;
+        // Fallback for MSIE9
+        if (!canvas) {
+            var registry_canvas = RGraph.Registry.Get('chart.contextmenu').__canvas__;
+            if (registry_canvas) {
+                var canvas = registry_canvas;
+            }
+        }
+
         var context = canvas.getContext('2d');
         var obj     = canvas.__object__;
         var dataurl = canvas.toDataURL();

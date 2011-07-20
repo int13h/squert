@@ -1,0 +1,222 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html >
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: Javascript charts and graph library - Variable gutter sizes</title>
+    
+    <meta name="keywords" content="rgraph html5 canvas chart docs variable gutter sizes" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Variable gutter sizes" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.jpg"/>
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+    
+    <script src="../libraries/RGraph.common.core.js" ></script>
+    <script src="../libraries/RGraph.common.tooltips.js" ></script>
+    <script src="../libraries/RGraph.common.context.js" ></script>
+    <script src="../libraries/RGraph.common.zoom.js" ></script>
+    <script src="../libraries/RGraph.bar.js" ></script>
+    <!--[if IE 8]><script src="../excanvas/excanvas.original.js"></script><![endif]-->
+    
+    <script>
+        window.onload = function (e)
+        {
+            var bar = new RGraph.Bar('cvs', [0.2,0.2,0.5,0.6,0.5,0.3,0.5,0.1,0.2,0.7,4.2,3.5]);
+            bar.Set('chart.ymax', 5);
+            bar.Set('chart.labels', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
+            bar.Set('chart.tooltips', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
+            bar.Set('chart.text.angle', 45);
+            bar.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom]]);
+            bar.Set('chart.zoom.hdir', 'left');
+            bar.Set('chart.title', '2010 statistics (tooltips)');
+            bar.Set('chart.ylabels.specific', ['100,000','10,000','1,000','100','10']);
+            bar.Set('chart.background.grid.autofit', true);
+            bar.Set('chart.background.grid.autofit.align', true);
+            bar.Set('chart.title.vpos', 0.5);
+
+            bar.Set('chart.gutter.left', 65);
+            bar.Set('chart.gutter.right', 5);
+            bar.Set('chart.gutter.bottom', 60);
+
+            bar.Draw();
+        }
+    </script>
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+    <style>
+        ol li {
+            margin-top: 0;
+        }
+    </style>
+
+</head>
+<body>
+
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
+
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+            }
+        </script>
+    <!-- Social networking buttons -->
+
+    <div id="breadcrumb">
+        <a href="../index.html">RGraph: Javascript charts and graph library</a>
+        >
+        <a href="index.html">Documentation</a>
+        >
+        Variable gutter sizes
+    </div>
+
+    <h1>RGraph: Javascript charts and graph library - Variable gutter sizes</h1>
+
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+
+    <ul>
+        <li>
+            <a href="#upgrading">Upgrading from a previous version of RGraph</a>
+        </li>
+    </ul>
+
+    <canvas id="cvs" width="620" height="300" style="border: 1px dashed gray; float: right">[No canvas support]</canvas>
+    
+    <p>
+        New in June 2011 is the much requested feature of seperate gutter sizing. As the chart to the right shows, this means
+        that you can now easily set the left/right/top/bottom gutters independently. This makes it easy to give
+        yourself the space that you need for labels, which will be most noticeable with the Bar chart, the Line chart
+        and similar chart types. There is another example on the <a href="../examples/hbar.html#gutter-example">HBar example page</a>.
+    </p>
+    
+    <p>
+        Because of the fundamental nature of this change (every chart type has been affected) 
+        you should rigorously test your charts if you choose to upgrade.
+    </p>
+    
+    <p>
+        The new properties are:
+    </p>
+    
+    <ul>
+        <li>chart.gutter.left</li>
+        <li>chart.gutter.right</li>
+        <li>chart.gutter.top</li>
+        <li>chart.gutter.bottom</li>
+    </ul>
+    
+    <p>
+         They all default to 25 pixels (with a few exceptions) and each can be set independently.
+    </p>
+    
+    <p>
+        These new properties eliminate the need for certain others. So starting immediately the following properties are no longer
+        used:
+    </p>
+    
+    <ul>
+        <li>chart.gutter</li>
+        <li>chart.width</li>
+        <li>chart.height</li>
+        <li>chart.tooltips.coords.adjust</li>
+        <li>chart.resize.handle.adjust</li>
+    </ul>
+    
+    <p>
+        The <i>chart.gutter</i> property has been completely removed, so you will need to start using the new properties immediately.
+        The <i>chart.width</i> and <i>chart.height</i> properties are completely unused from this point and the last two
+        will be phased out starting immediately.
+    </p>
+
+        <br clear="all" />
+
+        <pre class="code">
+&lt;script&gt;
+        window.onload = function (e)
+        {
+            var bar = new RGraph.Bar('cvs', [0.2,0.2,0.5,0.6,0.5,0.3,0.5,0.1,0.2,0.7,4.2,3.5]);
+            bar.Set('chart.ymax', 5);
+            bar.Set('chart.labels', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
+            bar.Set('chart.tooltips', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
+            bar.Set('chart.text.angle', 45);
+            bar.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom]]);
+            bar.Set('chart.zoom.hdir', 'left');
+            bar.Set('chart.title', '2010 statistics (tooltips)');
+            bar.Set('chart.ylabels.specific', ['100,000','10,000','1,000','100','10']);
+            bar.Set('chart.background.grid.autofit', true);
+            bar.Set('chart.background.grid.autofit.align', true);
+            bar.Set('chart.title.vpos', 0.5);
+
+            <span style="color: green">bar.Set('chart.gutter.left', 65);
+            bar.Set('chart.gutter.right', 5);
+            bar.Set('chart.gutter.bottom', 60);</span>
+
+            bar.Draw();
+        }
+&lt;/script&gt;
+</pre>
+
+    <a name="upgrading"></a>
+    <h2>Upgrading from a previous version of RGraph</h2>
+    
+    <p>
+        If you're upgrading from a previous version of RGraph then there are a few points you should bear in mind:
+    </p>
+    
+    <ol>
+        <li>
+            Remove any calls to .translate().
+            If you use the .translate() method to give yourself extra space, this should be converted to the new gutter properties.
+        </li>
+        
+        <li>
+            If you use <i>chart.tooltips.coords.adjust</i> or <i>chart.resize.handle.adjust</i> then you should remove them. These
+            properties will cease to have any effect eventually, but not immediately.
+        </li>
+        
+        <li>
+            If you use caching, then you may need to use a CTRL/SHIFT+Refresh on your page to bypass any cached copy of the RGraph
+            libraries.
+        </li>
+    </ol>
+</body>
+</html>

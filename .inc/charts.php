@@ -109,7 +109,6 @@ function doCharts($theQuery,$pos,$statusQuery,$hdwmyQuery,$timeDiff) {
               bar0.Set('chart.colors', ['#ffff7a']);
               bar0.Set('chart.text.angle', 90);
               bar0.Set('chart.title', 'Protocol Distribution');
-              //bar0.Set('chart.title.yaxis', ' %');
               bar0.Set('chart.gutter', 65);
               bar0.Set('chart.strokecolor', 'black');
               bar0.Set('chart.background.grid', true);
@@ -180,4 +179,5 @@ function doCharts($theQuery,$pos,$statusQuery,$hdwmyQuery,$timeDiff) {
         </table>
         </center>";
 }
+
 ?>

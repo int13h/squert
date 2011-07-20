@@ -18,116 +18,62 @@
         * o------------------------------------------------------------------------------o
         */
     -->
-    <title>RGraph: HTML5 canvas graph library - gantt chart documentation</title>
+    <title>RGraph: Javascript charts and graph library - gantt chart documentation</title>
     
-    <meta name="keywords" content="rgraph html5 canvas graph docs gantt chart" />
-    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about the Gantt chart" />
+    <meta name="keywords" content="rgraph html5 canvas charts docs gantt chart" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Documentation about the Gantt chart" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.jpg"/>
 
     <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
     <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
 </head>
 <body>
 
-    <!-- Social networking buttons -->
-    <script src="../libraries/RGraph.common.core.js" ></script>
     
-    <script>
-        function HideTwitterDIV ()
-        {
-            document.getElementById("twitter_div").style.opacity = 0;
-            document.getElementById("twitter_div").style.display = 'none';
-        }
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
 
-
-        function ShowTwitterDIV (e)
-        {
-            var e   = RGraph.FixEventObject(document.all ? event : e);
-            var div = document.getElementById("twitter_div");
-            var img = document.getElementById("twitter_icon");
-
-            div.style.display = 'block';
-            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
-            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
-
-            /**
-            * Fade it in
-            */
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
-
-            e.stopPropagation();
-
-            return false;
-        }
-        
-        window.addEventListener('click', HideTwitterDIV, false);
-    </script>
-
-    <!-- The twitter DIV --> 
-    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
-        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
-        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
-    </div>
-
-    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
         <script>
             // Opera fix
             if (navigator.userAgent.indexOf('Opera') == -1) {
               document.getElementById("social_icons").style.position = 'fixed';
-              document.getElementById("twitter_div").style.position = 'fixed';
-    
             }
         </script>
-    
-        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
-    
-    
-            <div id="social">
-                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
-                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
-                </a> 
-     
-                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
-                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
-                </a>
-    
-    
-                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
-                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-    
-                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
-                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
-                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
-                </a>
-    
-                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
-                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
-                </a>
-            </div>
-    </div>
-    <!-- /Social networking buttons -->
+    <!-- Social networking buttons -->
 
     <div id="breadcrumb">
-        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        <a href="../index.html">RGraph: Javascript charts and graph library</a>
         >
         <a href="index.html">Documentation</a>
         >
         Gantt chart
     </div>
 
-    <h1>RGraph: HTML5 canvas graph library - Gantt chart documentation</h1>
+    <h1>RGraph: Javascript charts and graph library - Gantt chart documentation</h1>
 
     <script>
         if (RGraph.isIE8()) {
-            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
         }
     </script>
 
@@ -152,7 +98,7 @@
     {
         var gantt = new RGraph.Gantt('gantt');
         gantt.Set('chart.xmax', 365);
-        gantt.Set('chart.gutter', 35);
+        gantt.Set('chart.gutter.left', 75);
         gantt.Set('chart.labels', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
         gantt.Set('chart.title', 'Holiday schedule for Xyz Ltd');
         gantt.Set('chart.defaultcolor', 'rgba(255,0,0,1)');
@@ -167,7 +113,7 @@
                                      "&lt;b&gt;Cynthia&lt;/b&gt;&lt;br /&gt;Away for two weeks",
                                      "&lt;b&gt;Graham&lt;/b&gt;&lt;br /&gt;Away for August and September",
                                      "&lt;b&gt;Paul&lt;/b&gt;&lt;br /&gt;Away for 31 days"]);
-        gantt.Set('chart.events'[
+        gantt.Set('chart.events', [
                                  [31, 28, null, 'Richard'],
                                  [31, 28, null, 'Fred'],
                                  [59, 14, null, 'Barney'],
@@ -178,7 +124,7 @@
                                  [120, 14, null, 'Barry'],
                                  [130, 14, null, 'Cynthia'],
                                  [211, 61, null, 'Graham'],
-                                 [334, 31, null, 'Paul'],
+                                 [334, 31, null, 'Paul']
                                 ]);
         gantt.Set('chart.vbars', [
                                   [0, 31, 'rgba(192,255,192,0.5)'],
@@ -186,7 +132,7 @@
                                   [120, 31, 'rgba(192,255,192,0.5)'],
                                   [181, 31, 'rgba(192,255,192,0.5)'],
                                   [243, 30, 'rgba(192,255,192,0.5)'],
-                                  [304, 30, 'rgba(192,255,192,0.5)'],
+                                  [304, 30, 'rgba(192,255,192,0.5)']
                                  ]);
     
         gantt.Draw();
@@ -197,7 +143,7 @@
     <h2>Properties</h2>
     
     <p>
-        You can use these properties to control how the bar graph apears.
+        You can use these properties to control how the bar chart apears.
     </p>
 
     <ul>
@@ -213,10 +159,20 @@
 
 
 
-<a name="chart configuration"></a>
-<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Chart configuration</h3>            <a name="chart.xmax"></a>
-<b>chart.xmax</b><br />
-            Required. This determines how many "units" wide the Gantt chart is. For example to represent a year, you would use 365, giving a granularity of one day.<br /><i>Default: none</i><br /><br />
+    <a name="chart configuration"></a>
+        <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Chart configuration</h3>
+        <a name="chart.xmax"></a>
+        <b>chart.xmax</b><br />
+        Required. This determines how many "units" wide the Gantt chart is. For example to represent a year, you would use 365, giving
+        a granularity of one day.<br />
+        <i>Default: none</i><br /><br />
+
+        <a name="chart.xmin"></a>
+        <b>chart.xmin</b><br />
+        This option can sometimes make using a Gantt chart spread over several pages easier.<br />
+        <i>Default: 0</i><br /><br />
+
+
 <a name="background"></a>
 <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Background</h3>            <a name="chart.background.barcolor1"></a>
 <b>chart.background.barcolor1</b><br />
@@ -249,9 +205,30 @@
 <b>chart.background.grid.autofit.numvlines</b><br />
             When using autofit this allows you to specify how many vertical grid lines you want. <br /><i>Default: 20</i><br /><br />
 <a name="margins"></a>
-<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Margins</h3>            <a name="chart.gutter"></a>
-<b>chart.gutter</b><br />
-            How big the gutter is. This is the top, bottom and right gutters. The left gutter is three times the gutter wide, to accomodate the labels.<br /><i>Default: 25</i><br /><br />
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Margins</h3>
+
+
+
+            <a name="chart.gutter.left"></a>
+            <b>chart.gutter.left</b><br />
+            The left gutter of the chart, (the gutter is where the labels and title are)).<br />
+            <i>Default: 75</i><br /><br />
+
+            <a name="chart.gutter.right"></a>
+            <b>chart.gutter.right</b><br />
+            The right gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 25</i><br /><br />
+
+            <a name="chart.gutter.top"></a>
+            <b>chart.gutter.top</b><br />
+            The top gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 25</i><br /><br />
+
+            <a name="chart.gutter.bottom"></a>
+            <b>chart.gutter.bottom</b><br />
+            The bottom gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 25</i><br /><br />
+
 <a name="labels and text"></a>
 <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Labels and text</h3>            <a name="chart.text.size"></a>
 <b>chart.text.size</b><br />
@@ -269,6 +246,12 @@
 <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Titles</h3>            <a name="chart.title"></a>
 <b>chart.title</b><br />
             The title of the chart.<br /><i>Default: not set</i><br /><br />
+
+<a name="chart.title.background"></a>
+<b>chart.title.background</b><br />
+The background color (if any) for the title.<br />
+<i>Default: null</i><br /><br />
+
             <a name="chart.title.color"></a>
 <b>chart.title.color</b><br />
             The color of the title.<br /> <i>Default: black</i><br /><br />
@@ -287,7 +270,7 @@
             The animated effect used for showing tooltips. Can be either <i>fade</i> or <i>expand</i>.<br /><i>Default: fade</i><br /><br />
             <a name="chart.tooltips.css.class"></a>
 <b>chart.tooltips.css.class</b><br />
-            This is the name of the CSS class the graph uses.<br /><i>Default: RGraph_tooltip</i><br /><br />
+            This is the name of the CSS class the chart uses.<br /><i>Default: RGraph_tooltip</i><br /><br />
             <a name="chart.tooltips.override"></a>
 <b>chart.tooltips.override</b><br />
             If you wish to handle showing tooltips yourself, this should be a function object which does just that. There's more information on the <a href="tooltips.html">tooltips documentation page</a><br /><i>Default: null</i><br /><br />
@@ -300,16 +283,27 @@
             <a name="chart.annotate.color"></a>
 <b>chart.annotate.color</b><br />
             If you do not allow the use of the palette, then this will be the only colour allowed for annotations.<br /><i>Default: black</i><br /><br />
+
+
             <a name="chart.resizable"></a>
-<b>chart.resizable</b><br />
-            Defaulting to false, this determines whether your graph will be resizable. Because of the numerous event handlers this has to install code on, This feature is unlikely to work with other dynamic features (the context menu is fine however).<br /><i>Default: false</i><br /><br />
+            <b>chart.resizable</b><br />
+            Defaulting to false, this determines whether your chart will be resizable. Because of the numerous event handlers this has to install code on, This feature is unlikely to work with other dynamic features (the context menu is fine however).<br />
+            <i>Default: false</i><br /><br />
+
+            <a name="chart.resize.handle.background"></a>
+            <b>chart.resize.handle.background</b><br />
+            With this you can specify the background color for the resize handle. If you're adjusting the position of the
+            handle then you may need this to make the handle stand out more.<br />
+            <i>Default: null</i><br /><br />
+
+
 <a name="zoom"></a>
 <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Zoom</h3>            <a name="chart.zoom.mode"></a>
 <b>chart.zoom.mode</b><br />
             Can be used to control whether the zoom is in thumbnail or canvas mode. Possible values are: <i>thumbnail</i> and <i>canvas</i>.<br /><i>Default: canvas</i><br /><br />
             <a name="chart.zoom.factor"></a>
 <b>chart.zoom.factor</b><br />
-            This is the factor that the graph will be zoomed by (bigger values means more zoom)<br /><i>Default: 1.5</i><br /><br />
+            This is the factor that the chart will be zoomed by (bigger values means more zoom)<br /><i>Default: 1.5</i><br /><br />
             <a name="chart.zoom.fade.in"></a>
 <b>chart.zoom.fade.in</b><br />
             Whether the zoomed canvas fades in or not. This also can be used to control the fade in for the zoom in thumbnail mode.<br /><i>Default: true</i><br /><br />
@@ -340,8 +334,21 @@
             <a name="chart.zoom.background"></a>
 <b>chart.zoom.background</b><br />
             Defaulting to true, this determines whether the zoom has a dark, semi-opaque background that covers the entire web page.<br /><i>Default: true</i><br /><br />
-<a name="miscellaneous"></a>
-<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Miscellaneous</h3>            <a name="chart.borders"></a>
+
+    <a name="miscellaneous"></a>
+    <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Miscellaneous</h3>
+
+        <a name="chart.highlight.stroke"></a>
+        <b>chart.highlight.stroke</b><br />
+        If you use tooltips, this controls the colour of the highlight stroke.
+        <br /><i>Default: black</i><br /><br />
+
+        <a name="chart.highlight.fill"></a>
+        <b>chart.highlight.fill</b><br />
+        If you use tooltips, this controls the colour of the highlight fill.
+        <br /><i>Default: rgba(255,255,255,0.5)</i><br /><br />
+
+<a name="chart.borders"></a>
 <b>chart.borders</b><br />
             Whether a border is shown on the event bars<br /><i>Default: true</i><br /><br />
             <a name="chart.defaultcolor"></a>
@@ -401,7 +408,15 @@
     </p>
     
     <p>
-        And the last optional 6th value is the foreground color of the bar. Defaulting to #0c0.
+        The optional sixth value is the foreground color of the bar. Defaulting to #0c0.
+    </p>
+    
+    <p>
+        The optional seventh value is the border color, defaulting to black
+    </p>
+    
+    <p>
+        And the optional eigth value is the numerical linewidth of the border. The default is 1.
     </p>
     
     <a name="vbars"></a>

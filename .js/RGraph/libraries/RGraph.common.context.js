@@ -45,7 +45,7 @@
         /**
         * This is here to ensure annotating is OFF
         */
-        canvas.__object__.Set('chart.mousedown', false)
+        canvas.__object__.Set('chart.mousedown', false);
 
         var x      = e.pageX;
         var y      = e.pageY;
@@ -135,7 +135,7 @@
             * Install the event handler that calls the menuitem
             */
             if (menuitems[i] && menuitems[i][1] && typeof(menuitems[i][1]) == 'function') {
-                if (document.all) {
+                if (document.all  && 0) { // MSIE bit no longer necessary
                     menuitem.attachEvent('onclick', menuitems[i][1]);
                     menuitem.attachEvent('onclick', function () {RGraph.HideContext();});
                 } else {
@@ -144,24 +144,27 @@
             
             // Submenu
             } else if (menuitems[i] && menuitems[i][1] && RGraph.is_array(menuitems[i][1])) {
-                var tmp = menuitems[i][1]; // This is here because of "references vs primitives" and how they're passed around in Javascript
-                menuitem.addEventListener('mouseover', function (e) {RGraph.Contextmenu_submenu(canvas.__object__, tmp, e.target);}, false);
+                (function ()
+                {
+                    var tmp = menuitems[i][1]; // This is here because of "references vs primitives" and how they're passed around in Javascript
+                    menuitem.addEventListener('mouseover', function (e) {RGraph.Contextmenu_submenu(canvas.__object__, tmp, e.target);}, false);
+                })();
             }
         }
-        
+
         /**
         * Now all the menu items have been added, set the shadow width
         * Shadow now handled by CSS3?
         */
         div.style.width = (div.offsetWidth + 10) + 'px';
-        div.style.height = (div.offsetHeight - (RGraph.isIE9up() ? 10 : 2)) + 'px';
+        div.style.height = (div.offsetHeight - 2) + 'px';
 
         /**
         * Set the background (the left bar) width if it's MSIE
         */
-        if (document.all) {
-            bg.style.height = (div.offsetHeight - 10) + 'px';
-        }
+        //if (document.all) {
+        //    bg.style.height = (div.offsetHeight - 2) + 'px';
+        //}
 
         // Show the menu to the left or the right (normal) of the cursor?
         if (x + div.offsetWidth > document.body.offsetWidth) {
@@ -213,6 +216,18 @@
         }
 
         window.onresize = function () {RGraph.HideContext();}
+        
+        /**
+        * Add the __shape__ object to the context menu
+        */
+        
+        /**
+        * Set the shape coords from the .getShape()  method
+        */
+        if (typeof(canvas.__object__.getShape) == 'function') {
+            RGraph.Registry.Get('chart.contextmenu').__shape__ = canvas.__object__.getShape(e);
+        }
+
 
         e.stopPropagation();
 
@@ -280,12 +295,13 @@
             var isSafari     = navigator.userAgent.indexOf('Safari') >= 0;
             var isChrome     = navigator.userAgent.indexOf('Chrome') >= 0;
             var isMacFirefox = navigator.userAgent.indexOf('Firefox') > 0 && navigator.userAgent.indexOf('Mac') > 0;
+            var isIE9        = navigator.userAgent.indexOf('MSIE 9') >= 0;
 
             if (((!isOpera && !isSafari) || isChrome) && !isMacFirefox) {
 
                 obj.canvas.oncontextmenu = function (e)
                 {
-                    e = RGraph.FixEventObject(e);
+                     e = RGraph.FixEventObject(e);
 
                     if (e.ctrlKey) return true;
 
@@ -328,7 +344,7 @@
         subMenu.style.position = 'absolute';
         subMenu.style.width = '100px';
         subMenu.style.top = menu.offsetTop + parentMenuItem.offsetTop + 'px';
-        subMenu.style.left            = (menu.offsetLeft + menu.offsetWidth - (document.all ? 9 : 0)) + 'px';
+        subMenu.style.left            = (menu.offsetLeft + menu.offsetWidth - (RGraph.isIE8() ? 9 : 0)) + 'px';
         subMenu.style.backgroundColor = 'white';
         subMenu.style.border          = '1px solid black';
         subMenu.className             = 'RGraph_contextmenu';
@@ -476,8 +492,8 @@
         /**
         * Add the HTML text inputs
         */
-        div.innerHTML += '<div style="position: absolute; margin-left: 10px; top: ' + canvas.height + 'px; width: ' + (canvas.width - 50) + 'px; height: 25px"><span style="display: inline; display: inline-block; width: 65px; text-align: right">URL:</span><textarea style="float: right; overflow: hidden; height: 15px; width: ' + (canvas.width - (2 * obj.Get('chart.gutter')) - 80) + 'px" onclick="this.select()" readonly="readonly" id="__rgraph_dataurl__">' + canvas.toDataURL() + '</textarea></div>';
-        div.innerHTML += '<div style="position: absolute; top: ' + (canvas.height + 25) + 'px; left: ' + (obj.Get('chart.gutter') - 65 + (canvas.width / 2)) + 'px; width: ' + (canvas.width - obj.Get('chart.gutter')) + 'px; font-size: 65%">A link using the URL: <a href="' + canvas.toDataURL() + '">View</a></div>'
+        div.innerHTML += '<div style="position: absolute; margin-left: 10px; top: ' + canvas.height + 'px; width: ' + (canvas.width - 50) + 'px; height: 25px"><span style="display: inline; display: inline-block; width: 65px; text-align: right">URL:</span><textarea style="float: right; overflow: hidden; height: 15px; width: ' + (canvas.width - obj.gutterLeft - obj.gutterRight - 80) + 'px" onclick="this.select()" readonly="readonly" id="__rgraph_dataurl__">' + canvas.toDataURL() + '</textarea></div>';
+        div.innerHTML += '<div style="position: absolute; top: ' + (canvas.height + 25) + 'px; left: ' + (obj.gutterLeft - 65 + (canvas.width / 2)) + 'px; width: ' + (canvas.width - obj.gutterRight) + 'px; font-size: 65%">A link using the URL: <a href="' + canvas.toDataURL() + '">View</a></div>'
 
         
         

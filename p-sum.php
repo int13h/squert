@@ -19,8 +19,13 @@
 //
 //
 
+
 include_once '.inc/session.php';
+include_once '.inc/config.php';
 include_once '.inc/tabs.php';
+include_once '.inc/functions.php';
+include_once '.inc/countries.php';
+
 ?>
 
 <html>
@@ -35,24 +40,27 @@ include_once '.inc/tabs.php';
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.hbar.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.line.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.scatter.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.pie.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.context.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.tooltips.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.zoom.js"></script>
 </head>
 
 <body>
-
-<!---- Navigation ---->
-
-<body>
 <?php include_once '.inc/header.php';?>
 <table id=main-table width=1000 align=center cellpadding=0 cellspacing=0">
 <tr>
 <td>
-<?php tabber("SUMMARY",$id);?>
+<?php 
+  tabber("SUMMARY",$id,$startDate,$endDate);
+  dbC();
+?>
 <div id="main">
+<?php echo $timeLinks;?>
 <div id="contents" class="main">
-<?php include '.inc/charts/100_week_scatter.php';?>
+<?php include_once '.inc/charts/ip.php';?>
+<?php include_once '.inc/charts/country.php';?>
+<?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>
 </td>

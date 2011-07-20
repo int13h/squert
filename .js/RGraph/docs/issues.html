@@ -18,162 +18,104 @@
         * o------------------------------------------------------------------------------o
         */
     -->
-    <title>RGraph: HTML5 canvas graph library - Common issues</title>
+    <title>RGraph: Javascript charts and graph library - Common issues</title>
     
-    <meta name="keywords" content="rgraph html5 canvas graph docs common issues" />
-    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about common issues" />
+    <meta name="keywords" content="rgraph html5 canvas chart docs common issues" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Documentation about common issues" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.jpg"/>
 
     <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
     <link rel="icon" type="image/png" href="../images/favicon.png">
 
     <script src="../libraries/RGraph.common.core.js" ></script>
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
 </head>
 <body>
 
-    <!-- Social networking buttons -->
-    <script src="../libraries/RGraph.common.core.js" ></script>
     
-    <script>
-        function HideTwitterDIV ()
-        {
-            document.getElementById("twitter_div").style.opacity = 0;
-            document.getElementById("twitter_div").style.display = 'none';
-        }
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
 
-
-        function ShowTwitterDIV (e)
-        {
-            var e   = RGraph.FixEventObject(document.all ? event : e);
-            var div = document.getElementById("twitter_div");
-            var img = document.getElementById("twitter_icon");
-
-            div.style.display = 'block';
-            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
-            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
-
-            /**
-            * Fade it in
-            */
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
-
-            e.stopPropagation();
-
-            return false;
-        }
-        
-        window.addEventListener('click', HideTwitterDIV, false);
-    </script>
-
-    <!-- The twitter DIV --> 
-    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
-        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
-        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
-    </div>
-
-    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
         <script>
             // Opera fix
             if (navigator.userAgent.indexOf('Opera') == -1) {
               document.getElementById("social_icons").style.position = 'fixed';
-              document.getElementById("twitter_div").style.position = 'fixed';
-    
             }
         </script>
-    
-        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
-    
-    
-            <div id="social">
-                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
-                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
-                </a> 
-     
-                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
-                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
-                </a>
-    
-    
-                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
-                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-    
-                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
-                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
-                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
-                </a>
-    
-                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
-                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
-                </a>
-            </div>
-    </div>
-    <!-- /Social networking buttons -->
+    <!-- Social networking buttons -->
 
     <div id="breadcrumb">
-        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        <a href="../index.html">RGraph: Javascript charts and graph library</a>
         >
         <a href="index.html">Documentation</a>
         >
         Common issues
     </div>
 
-    <h1>RGraph: HTML5 canvas graph library - Common issues</h1>
+    <h1>RGraph: Javascript charts and graph library - Common issues</h1>
 
     <script>
         if (RGraph.isIE8()) {
-            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
         }
     </script>
-
-    <!-- Google Groups code -->
-        <table border="0" style="float: right; background-color: #eee; border: 2px dashed gray; padding: 5px" cellspacing=0>
-            <tr>
-                <td>
-                    <img src="../images/googlegroups.png" height="26" width="132" alt="Google Groups" />
-                </td>
-            </tr>
-  
-            <tr>
-                <td style="padding-left: 5px">
-                    <b>Subscribe to RGraph support</b>
-                </td>
-            </tr>
-
-            <tr>
-                <td style="padding-left: 5px;">
-                    <form action="http://groups.google.com/group/rgraph/boxsubscribe" method="get">
-                        Email: <input type=text name=email>
-                        <input type=submit name="sub" value="Subscribe">
-                    </form>
-                </td>
-            </tr>
-
-            <tr>
-                <td align="right">
-                    <a href="http://groups.google.com/group/rgraph/topics?gvc=2" target="_blank">Visit this group</a>
-                </td>
-            </tr>
-        </table>
-    <!-- End of Google Groups code -->
+    
+    <div style="text-align: center">
+        <span style="background-color: #efe; padding: 3px; border: 1px solid black; border-radius: 15px; padding-left: 10px; padding-right: 10px">
+            <b>
+                Join the support forum:
+                <a href="http://support.rgraph.net">http://support.rgraph.net</a>
+            </b>
+        </span>
+    </div>
 
     <p>
         These are some common issues that you should be aware of. If you're having trouble, you may want to look through these to see
         if any apply to you or may be the source of your problem.
     </p>
 
+    <a name="tooltips"></a>
+    <h4>Tooltips not working as of the October 2010 release</h4>
+
+    <p>
+        If you're specifying numbers instead of strings for your tooltips, they will not work any more. Simply cast them to
+        strings, like this:
+    </p>
+    
+    <pre class="code">
+<span style="color: red">
+// This WILL NOT work any more
+myBar.Set('chart.tooltips', [56, 67, 53]);
+</span>
+<span style="color: green">
+// Do any of these instead
+myBar.Set('chart.tooltips', ['56', (67).toString(), String(53)]);</span>
+</pre>
+
     <a name="annotations"></a>
     <h4>Annotations aren't saved when running locally in Mozilla Firefox</h4>
 
     <p>
-        The solution here is to run the graphs using a web server. At this time (March 2010) only Safari, Chrome and Opera
+        The solution here is to run the charts using a web server. At this time (March 2010) only Safari, Chrome and Opera
         support saving annotations when running locally.
     </p>
 
@@ -182,8 +124,12 @@
 
     <p>
         Since one of the Chrome 4 dev releases there has been an issue with Google Chrome 4 and 5, asynchronous processing and  not rendering
-        graph labels. This has been remedied by simply not using asynchronous processing. Because of the tag placement on the front page,
+        chart labels. This has been remedied by simply not using asynchronous processing. Because of the tag placement on the front page,
         the effect shouldn't be apparent. Other browsers (eg Firefox, Safari, Opera, MSIE) are fine.
+    </p>
+    
+    <p>
+        <b>Update:</b> Currently, (roughly March 2011), the missing text issue appears to be much less evident, if not resolved entirely.
     </p>
 
     <a name="firefox.tooltips.clipboard"></a>
@@ -202,12 +148,12 @@
         <b>Note:</b> Recent versions of Firefox 4 (from beta 6 onwards) appear to work as expected, and you can copy text with the mouse as normal.
     </p>
 
-    <h4>Shadows in Google Chrome 6 and the line chart</h4>
+    <h4>Shadows in Google Chrome and the line chart</h4>
 
     <p>
         Shadows in recent versions of Google Chrome are somewhat broken. Firefox, MSIE, Opera and Safari are fine. The reason for this
         error is a combination of factors it seems - shadow blurring and line width. Fixes have been added to allow shadow blurring and
-        a 1 pixel linewidth, though some graph types may be affected.
+        a 1 pixel linewidth, though some chart types may still be affected.
     </p>
 
 <!--

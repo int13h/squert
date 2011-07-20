@@ -89,7 +89,6 @@ function IP2C($string,$isCLI) {
                             AND m.ip IS NULL");
 
     $sipCount = $dipCount = 0;
-
     if ($sipList) {
         $sipCount = mysql_num_rows($sipList);
         if ($sipCount > 0) {

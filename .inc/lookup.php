@@ -57,7 +57,7 @@ $ip = $_REQUEST['ip'];
 <html>
 <head>
 <TITLE>Lookup - <?php echo $ip;?></TITLE>
-<link href=".css/squert.css" rel="stylesheet" type="text/css">
+<link href="../.css/squert.css" rel="stylesheet" type="text/css">
 </head>
 <body style="color: #000000; background: #f4f4f4; font-size: 1em;" onblur="self.close();">
 <?php localInfo($ip)?>

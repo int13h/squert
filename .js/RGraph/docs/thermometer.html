@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+    <meta http-equiv="X-UA-Compatible" content="chrome=1"> 
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    --> 
+    <title>RGraph: Javascript charts and graph library - thermometer documentation</title> 
+    
+    <meta name="keywords" content="rgraph html5 canvas chart docs thermometer chart" /> 
+    <meta name="description" content="RGraph: Javascript charts and graph library - Documentation about the Thermometer chart" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
+ 
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" /> 
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+</head> 
+<body>
+
+    
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
+
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+            }
+        </script>
+    <!-- Social networking buttons -->
+
+    <div id="breadcrumb"> 
+        <a href="../index.html">RGraph: Javascript charts and graph library</a> 
+        >
+        <a href="index.html">Documentation</a> 
+        >
+        Thermometer chart
+    </div> 
+ 
+    <h1>RGraph: Javascript charts and graph library - Thermometer chart documentation</h1> 
+    <script>
+        if (RGraph.isIE8()) {
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
+        }
+    </script>
+ 
+    <p> 
+        The thermometer chart, along with the progress bar, is a prime candidate for use in a status panel. Much like the progress bar,
+        but the design may be better suited to your application/website etc.
+    </p> 
+    
+    <p> 
+        The example file is <a href="../examples/thermometer.html">here</a>.
+    </p> 
+
+    <ul>
+        <li><a href="#available.properties">Properties</a></li>
+    </ul>
+
+    <pre class="code"> 
+&lt;script&gt;
+    window.onload = function ()
+    {
+        var thermometer = new RGraph.Thermometer('myCanvas', data);
+        thermometer.Set('chart.gutter.left', 45);
+        thermometer.Set('chart.gutter.right', 45);
+        thermometer.Set('chart.colors', ['rgba(255,0,0,1)']);
+        thermometer.Draw();
+    }
+&lt;/script&gt;
+</pre>
+
+    <a name="available.properties"></a>
+    <h2>Properties</h2>
+ 
+    <p> 
+        You can use these properties to control how the chart apears. You can set them by using the Set() method. Eg:
+    </p> 
+    
+    <p> 
+        <b>myBar.Set('name', 'value');</b> 
+    </p>
+    
+    <ul>
+        <li><a href="#margins">Margins</a></li>
+        <li><a href="#colors">Colors</a></li>
+        <li><a href="#labels">Labels and text</a></li>
+        <li><a href="#shadow">Shadow</a></li>
+        <li><a href="#interactive">Interactive features</a></li>
+        <li><a href="#zoom">Zoom</a></li>
+    </ul>
+
+
+<a name="margins"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Margins</h3>
+
+            <a name="chart.gutter.left"></a>
+            <b>chart.gutter.left</b><br />
+            The left gutter of the chart, (the gutter is where the labels and title are)).<br />
+            <i>Default: 15</i><br /><br />
+
+            <a name="chart.gutter.right"></a>
+            <b>chart.gutter.right</b><br />
+            The right gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 15</i><br /><br />
+
+            <a name="chart.gutter.top"></a>
+            <b>chart.gutter.top</b><br />
+            The top gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 15</i><br /><br />
+
+            <a name="chart.gutter.bottom"></a>
+            <b>chart.gutter.bottom</b><br />
+            The bottom gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 15</i><br /><br />
+
+<a name="colors"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Colors</h3>
+            
+            <a name="chart.colors"></a>
+            <b>chart.colors</b><br />
+            An array of the colors of the actual bars. <br />
+            <i>Default: An array - ['rgb(0,0,255)', '#0f0', '#00f', '#ff0', '#0ff', '#0f0']</i><br /><br />
+
+
+<a name="labels"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Labels and text</h3>
+
+        <a name="chart.value.label"></a>
+        <b>chart.value.label</b><br />
+        This controls whether the Thermometers value is shown in text.<br />
+        <i>Default: true</i><br /><br />
+
+<a name="shadow"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Shadow</h3>
+
+            <a name="chart.shadow"></a>
+            <b>chart.shadow</b><br />
+            Whether a drop shadow is applied. <br /><i>Default: true</i><br /><br />
+            
+            <a name="chart.shadow.color"></a>
+            <b>chart.shadow.color</b><br />
+            The color of the shadow. <br /><i>Default: gray</i><br /><br />
+            
+            <a name="chart.shadow.offsetx"></a>
+            <b>chart.shadow.offsetx</b><br />
+            The X offset of the shadow. <br /><i>Default: 0</i><br /><br />
+            
+            <a name="chart.shadow.offsety"></a>
+            <b>chart.shadow.offsety</b><br />
+            The Y offset of the shadow.  <br /><i>Default: 0</i><br /><br />
+            
+            <a name="chart.shadow.blur"></a>
+            <b>chart.shadow.blur</b><br />
+            The severity of the shadow blurring effect. <br /><i>Default: 15</i><br /><br />
+
+<a name="interactive"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Interactive features</h3>
+
+            <a name="chart.adjustable"></a>
+            <b>chart.adjustable</b><br />
+            Defaulting to false, this determines whether your bar chart will be adjustable.<br />
+            <i>Default: false</i><br /><br />
+
+<a name="zoom"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Zoom</h3>
+
+            <a name="chart.zoom.mode"></a>
+            <b>chart.zoom.mode</b><br />
+            Can be used to control whether the zoom is in thumbnail or canvas mode. Possible values are: <i>thumbnail</i> and <i>canvas</i>.<br />
+            <i>Default: canvas</i><br /><br />
+            
+            <a name="chart.zoom.factor"></a>
+            <b>chart.zoom.factor</b><br />
+            This is the factor that the chart will be zoomed by (bigger values means more zoom)<br />
+            <i>Default: 1.5</i><br /><br />
+
+            <a name="chart.zoom.fade.in"></a>
+            <b>chart.zoom.fade.in</b><br />
+            Whether the zoomed canvas fades in or not. This also can be used to control the fade in for the zoom in thumbnail mode.<br />
+            <i>Default: true</i><br /><br />
+
+            <a name="chart.zoom.fade.out"></a>
+            <b>chart.zoom.fade.out</b><br />
+            Whether the zoomed canvas fades out or not. This also can be used to control the fade in for the zoom in thumbnail mode.<br />
+            <i>Default: true</i><br /><br />
+
+            <a name="chart.zoom.hdir"></a>
+            <b>chart.zoom.hdir</b><br />
+            The horizontal direction of the zoom. Possible values are: <i>left</i>, <i>center</i>, <i>right</i><br />
+            <i>Default: right</i><br /><br />
+
+            <a name="chart.zoom.vdir"></a>
+            <b>chart.zoom.vdir</b><br />
+            The vertical direction of the zoom. Possible values are: <i>up</i>, <i>center</i>, <i>down</i><br />
+            <i>Default: down</i><br /><br />
+
+            <a name="chart.zoom.delay"></a>
+            <b>chart.zoom.delay</b><br />
+            The delay (in milliseconds) between frames.<br />
+            <i>Default: 50</i><br /><br />
+
+            <a name="chart.zoom.frames"></a>
+            <b>chart.zoom.frames</b><br />
+            The number of frames in the zoom animation.<br />
+            <i>Default: 10</i><br /><br />
+
+            <a name="chart.zoom.shadow"></a>
+            <b>chart.zoom.shadow</b><br />
+            Whether or not the zoomed canvas has a shadow or not.<br />
+            <i>Default: true</i><br /><br />
+
+            <a name="chart.zoom.thumbnail.width"></a>
+            <b>chart.zoom.thumbnail.width</b><br />
+            When the zoom is in thumbnail mode, this is the width (in pixels) of the thumbnail.<br />
+            <i>Default: 75</i><br /><br />
+
+            <a name="chart.zoom.thumbnail.height"></a>
+            <b>chart.zoom.thumbnail.height</b><br />
+            When the zoom is in thumbnail mode, this is the height (in pixels) of the thumbnail.<br />
+            <i>Default: 75</i><br /><br />
+
+            <a name="chart.zoom.background"></a>
+            <b>chart.zoom.background</b><br />
+            Defaulting to true, this determines whether the zoom has a dark, semi-opaque background that covers the entire web page.<br />
+            <i>Default: true</i><br /><br />
+
+</div>
+    
+    
+</body> 
+</html>

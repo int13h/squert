@@ -1,0 +1,179 @@
+<?php ob_start('ob_gzhandler') ?>
+<!DOCTYPE html >
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--
+        /**
+        * o------------------------------------------------------------------------------o
+        * | This file is part of the RGraph package - you can learn more at:             |
+        * |                                                                              |
+        * |                          http://www.rgraph.net                               |
+        * |                                                                              |
+        * | This package is licensed under the RGraph license. For all kinds of business |
+        * | purposes there is a small one-time licensing fee to pay and for non          |
+        * | commercial  purposes it is free to use. You can read the full license here:  |
+        * |                                                                              |
+        * |                      http://www.rgraph.net/LICENSE.txt                       |
+        * o------------------------------------------------------------------------------o
+        */
+    -->
+    <title>RGraph: Javascript charts and graph library - Integrating RGraph with external libraries - covering the scrollbars</title>
+
+    <meta name="keywords" content="rgraph html5 canvas chart docs external libraries" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Documentation about integrating RGraph with external libraries" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
+
+    <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <script>
+        obj    = document.all ? top.document.all['myCover'] : top.document.getElementById('myCover');
+        iframe = document.all ? top.document.all['myIframe'] : top.document.getElementById('myIframe');
+
+        function Cover (msg)
+        {            
+            // Show the ModalDialog
+            top.ModalDialog.Show('loginDialog', 300);
+        }
+        
+        /**
+        * This function uncovers the window
+        */
+        function Uncover ()
+        {
+            Resize = function (size)
+            {
+                iframe.style.width    = size + 'px';
+                iframe.style.height   = size + 'px';
+                iframe.style.position = 'static';
+                iframe.style.border   = '2px dashed gray';
+            }
+            
+            for (var i=0; i<10; i++) {
+                setTimeout('Resize(' + (((10 - i) * 50) + 250 )+')', i * 50);
+            }
+        }
+    </script>
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+</head>
+<body id="outer">
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
+
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+            }
+        </script>
+    <!-- Social networking buttons -->
+
+    <div id="breadcrumb">
+        <a href="../index.html" target="_top">RGraph: Javascript charts and graph library</a>
+        >
+        <a href="index.html" target="_top">Documentation</a>
+        >
+        Covering the browsers scroll bars
+    </div>
+
+    <h1>RGraph: Javascript charts and graph library - Covering the scroll bars</h1>
+
+    <button onclick="top.location.href = 'external.html#covering'">&laquo; Back</button>
+    <button onclick="Cover('The window is now completely covered...')">Cover me!</button>
+    <button onclick="Uncover()">Resize me!</button>
+    
+    <p>
+        This is an example of getting the ModalDialog to cover the entire page - including the scroll bars. A regular DIV does
+        not do this. This text is just here to pad the page and ensure that the browser creates a scroll bar.
+    </p>
+    
+    <hr>
+
+    <p>
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+    </p>
+    
+    <p>
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+    </p>
+    
+    <p>
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+        gh ghiu gyu gfyugf yu gfyu fgyugfyufgyu gfyu gfyu fgyu yu fyu yu gyu guighui ghui ghui uhi hui hui 
+    </p>
+
+</body>
+</html>

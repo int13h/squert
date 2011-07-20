@@ -1,13 +1,19 @@
 <?php
-    require('common.php');
-    ob_start('ob_gzhandler');
+    require_once('common.php');
+    
+    CheckDomain();
+
+    if ($_SERVER['SERVER_NAME'] == 'www.rgraph.net') {
+        ob_start('ob_gzhandler');
+        header('Cache-control: max-age=4800');
+    }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    
+
     <!--
         /**
         * o------------------------------------------------------------------------------o
@@ -24,48 +30,57 @@
         */
     -->
 
-    <title>RGraph: HTML5 canvas graph library based on the HTML5 canvas tag</title>
-
-    <script src="libraries/RGraph.common.adjusting.js" ></script>
-    <script src="libraries/RGraph.common.core.js" ></script>
-    <script src="libraries/RGraph.common.context.js" ></script>
-    <script src="libraries/RGraph.common.tooltips.js" ></script>
-    <script src="libraries/RGraph.common.zoom.js" ></script>
-    <script src="libraries/RGraph.modaldialog.js" ></script>
-
-    <script src="libraries/RGraph.line.js" ></script>
-    <script src="libraries/RGraph.bar.js" ></script>
-    <script src="libraries/RGraph.rose.js" ></script>
-    <!--[if IE 8]><script src="excanvas/excanvas.compressed.js"></script><![endif]-->
-
+    <title>RGraph: Javascript charts and graph library</title>
     <link rel="stylesheet" href="css/website.css" type="text/css" media="screen" />
+
+    <RELEASE_SCRIPT_REMOVE>
+        <!-- These get replaced by a single combined JS file -->
+        <script src="libraries/RGraph.common.core.js" ></script>
+        <script src="libraries/RGraph.common.tooltips.js" ></script>
+        <script src="libraries/RGraph.line.js" ></script>
+        <script src="libraries/RGraph.bar.js" ></script>
+        <script src="libraries/RGraph.rose.js" ></script>
+    </RELEASE_SCRIPT_REMOVE>
+    <!--[if IE 8]>
+        <script src="excanvas/excanvas.original.js"></script>
+    <![endif]-->
+
     <link rel="icon" type="image/png" href="images/favicon.png">
-    <link rel="alternate" type="application/rss+xml" title="RGraph: HTML5 canvas graph library" href="http://groups.google.com/group/rgraph/feed/rss_v2_0_msgs.xml">
+    <link rel="alternate" type="application/rss+xml" title="RGraph: Javascript charts and graph library" href="http://support.rgraph.net/rss">
 
     <meta name="verify-v1" content="5y8rHGO/NPFDYU8jBgyT3qI7CSiEoPaeB+4x2TXan+4=" />
-    <meta name="keywords" content="html5 canvas graph rgraph javascript line chart bar graphs" />
-    <meta name="description" content="RGraph: HTML5 canvas graph library for websites on all platforms" />
+    <meta name="keywords" content="html5 charts canvas graph rgraph javascript line chart bar charts" />
+    <meta name="description" content="RGraph: Javascript charts and graph library" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A javascript charts and graph library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
+    <meta property="fb:admins" content="825417645" />
     
     
     <style>
-        .RGraph_zoom_window {
-            border-radius: 0 ! important;
-            -moz-border-radius: 0 ! important;
-            -webkit-border-radius: 0 ! important;
+        .rose_graph_css,
+        .bar_graph_css,
+        .line_graph_css {
+            border: 0 ! important;
+            opacity: 0.9 ! important;
             box-shadow: 0 0 15px gray ! important;
-            -moz-box-shadow: 0 0 15px gray ! important;
-            -webkit-box-shadow: 0 0 15px gray ! important;
-             border: 1px gray solid ! important;
+            paddin: 5px ! important;
         }
-
-        .RGraph_zoomed_canvas {
-            -webkit-box-shadow: 0 0 15px gray ! important;
+        
+        .color_square {
+            display: inline;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
         }
-
-        .ModalDialog_dialog {
-            -webkit-box-shadow: gray 0 0 15px ! important;
-            -moz-box-shadow: 0 0 15px gray ! important;
-            box-shadow: 0 0 15px gray ! important;
+        
+        .black {
+            background-color: black;
+        }
+        
+        .red {
+            background-color: red;
         }
     </style>
 
@@ -100,7 +115,7 @@
                 cover.messageDiv.style.filter = 'filter: progid:DXImageTransform.Microsoft.Shadow(color=#666666,direction=135);';
                 document.body.appendChild(cover.messageDiv);
                 
-                cover.messageDiv.innerHTML = "<h2>Yikes!</h2>Your version of Microsoft Internet Explorer appears to be less than 8, which is required to view these graphs. You can still view the website, but it will look odd and the graphs won't work.<br /><br /><a onclick=\"cover.div.style.display = 'none'; cover.messageDiv.style.display = 'none';\" href=\"javascript:\">Close</a>"
+                cover.messageDiv.innerHTML = "<h2>Yikes!</h2>Your version of Microsoft Internet Explorer appears to be less than 8, which is required to view these charts. You can still view the website, but it will look odd and the charts won't work.<br /><br /><a onclick=\"cover.div.style.display = 'none'; cover.messageDiv.style.display = 'none';\" href=\"javascript:\">Close</a>"
             }
         }
 
@@ -125,158 +140,77 @@
 
             ShowWarning();
         }
-
-
-        function HideTwitterDIV ()
-        {
-            document.getElementById("twitter_div").style.opacity = 0;
-            document.getElementById("twitter_div").style.display = 'none';
-        }
-
-
-        function ShowTwitterDIV (e)
-        {
-            var e   = RGraph.FixEventObject(document.all ? event : e);
-            var div = document.getElementById("twitter_div");
-            var img = document.getElementById("twitter_icon");
-
-            div.style.display = 'block';
-            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
-            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
-
-            /**
-            * Fade it in
-            */
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
-
-            e.stopPropagation();
-
-            return false;
-        }
-
-
-        window.addEventListener('click', HideTwitterDIV, false);
+        
     </script>
 
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 </head>
 <body>
 
-    <!-- "Preload" images -->
-    <div style="position: absolute; top: -100px">
-        <img src="images/delicious.png">
-        <img src="images/twitter.png">
-        <img src="images/buzz.png">
-        <img src="images/facebook.png">
-        <img src="images/friendfeed.png">
-        <img src="images/stumble.png">
-    </div>
-    
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20chart%20types&title=RGraph:%20Javascript%20charts%20%26%20graph%20library" target="_blank"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAIAAABL1vtsAAAAK3RFWHRDcmVhdGlvbiBUaW1lAFN1biA0IE9jdCAyMDA5IDE2OjU1OjAyIC0wMDAwXdSr9wAAAAd0SU1FB9oGBBA4IE+EyF0AAAAJcEhZcwAACvAAAArwAUKsNJgAAAAEZ0FNQQAAsY8L/GEFAAADUklEQVR42qVUQYtcRRCuqu432Y3ZYEDFOBhDkJCQ9SAExKOXhYAI7uhJD2JAlOAf8OJvCd70JHgKJAoGPEg8iEEW9xCi7AaDybiZeW/mve4qv+qejfFs87bnbb/ur77vq6pmsy/p/41Yf5TeEcpGZMRE4ivKrPT5Zzeufb3XyEkRMTOSqNanfv7hR1sffLIe1ymGrxxiSBMRNhGH8j+fmYMpPf/cq+devhj0OD4aE0BCwCe69s2v80W4/PHZp5+lePfua6dOeVgzYRZ2Tr7ZKRHNZrP791MjGwSODIYeki1tnBj/8P2tM2fOvv0exel0Oh6PpUbx75DBhn8AQ5SSLjqzAHBww7KaIY7YQ+qG+Med4sUwLHMeQhhRPXQ4xEiN0oIf/Z1TJBYIUFPnC8BFlyxyOx8cIoRglFfn+BDAHEyUlm2eT1PGwVj2WHaPMDfDkQ3QaRxCVUsiFAqs5APnXU1Z7buUO25zZuCxBRNlzfD5yDBYqqzdHthIT2ooS2AGpG6ZMhhbKEQ1VXoIlMJiMawgRFwLUuolwUULOxstzsyXfQpiWWGik+Mspp7WBAMVkCshQZonGVjR4+GElnkvhcFiRxJUM5Ajk2aV8EDCHYqPVhmZTCZd19WiLEXFoKY6Wi6fev3iW5cuvZH7YwnJQIGqm4ToEto+v/DiS7MKMVy//u3BwYHZf+1wm9benbz5/uUTHp5L0q3OI5ajfz14Zm//d98HhchToeBv8KwKIRhObbKHsNI1BT/vD94L3ZSmprNqp/ePVelkj7mgHB0vLwJrKHmDpzFYbQU4m7XNuigswBAkuJSvaS0uNq5gTRg5IbStSaxKcqaAQwGJxFOw81AjM1chxKt+98eBYASoS8m3n0V9F6Q8rDwbjWIolfW4taxOXnHIAIjVWwD3RxnFEECimlAQzuIYxvGNEPiwM+BW/NdXceHqeChYLobixfnv7++3bev7X7nw2/b2Ngep10xpUVqZyrq2NqoGeIOBSG0iknv3/tzd3R2PT6565MqVT2OMN7+72fc9x8brKg+FtO3s7Fz94ioIN+5aPrwTfWxtbZ0+/WPxvly/t2+f+/mnW8NQWhK84T+kaeIQJDZoCLAEBFZB8Oja+ubm5vnzv1Q7/wE5+e63NZwqQQAAAABJRU5ErkJggg==" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAIAAABL1vtsAAAAK3RFWHRDcmVhdGlvbiBUaW1lAFN1biA0IE9jdCAyMDA5IDE4OjM4OjI3IC0wMDAwqmTObgAAAAd0SU1FB9oGBBA5GpCTIK4AAAAJcEhZcwAACvAAAArwAUKsNJgAAAAEZ0FNQQAAsY8L/GEFAAAD40lEQVR42j1UTW8cRRDt6u7dWe+u12sb21iOBUGJsEmcQ5AgKEJwRIIbN478If5HbhxAHEEiIKzIgETiRCDHseO1idf7MRvvfHR3Na/GNjM7vV/Vr1+9elUU44Ne+tkoLwORiipiJW+YgrKRmCjKreS6WC/eNSkT4mIzWZn9gY76ZwOtHcJd0AKiWDOxjUor5SMAFXCq7XSFga9EdWMM+/lazR6nKXW6hQ8IiexNVBxxrpNQYiVY8s/VckFCnjL4Rl3vH5/Y/iTtJi1GsJbDXFRdaxYbDTYqnU7TjL0WGlfnXxIxMTLp3MfBaGjL0pcheFbEQrDVsDfn55FXGePSQvPFOD1OJ0iKSONvUaq6QgyRDDYVpbM+8NR7sIgUgPLOQidj9e3uJHfh8425a7PN09E4Cx5M+EJsSQhaMHQDRuBoOXDunPyIhxki/fvaHZ4nQdF+GtZatdtrq67Sr/T++elgkGVKGyGkHKEOIVjnvXclNCTJkJi5VHUfg1PUy+KTcaGqiujIy+3kztqbj/YPTjOnFQsdosAC4XyeawAKDxZBWDmvEPV7j3eOGDpoBoRebZx/dbe12pk9Hh8xGVFEcfAeWoTzLLPGIhJVBQ2cWaBAEa6wsBkOuvAEJAtVyV+7grQoEJhtwCswUEr4SmsgI22PVbGP6vYy3VoQXwhBFa91Ou0aPXo1KAoQzSNyR6GioETnpCJak2P2LLWviqPebtInK6YqoxgvY/7xz92np0MQI9krWyxyRPZeJPUACt5xcE1LMaBH9N6o7DOdK7z0VCQx68tvxBh8dQl9h1SEBXiIn9EgyodXw9Hm9cXFZtbLZx6fmW9+nbbrkF76ZWvJfnp95b3xaPvvPfjKKEgK/dFSkYGHJ6A2HB8f9kz0X2wmXTsN0ZwVyYu0tpfavUny8z/TUcHLrVl2SigIEdlpIbFjkRqmg+MOzvq/PXl2f2vz67vNXw7K4TnEgV3g7nBzodFN9F/jERKIMg1AQyxj4QNAweYiO0SI4aenzwZp+vGdrS83ZlglsWpMmBrxL/v9P/aeeygpALg1Os/KglwADH2rsrPhnYPD3cPe3Fw7MTVpLwoeviupPx7mRtDEshgqpi4sDMd6vVbkhZdGZRkwTgbVhMNkOAIkas/ofB1kL9WCzBQxG9xXs9Z4p9v1uvG+NdOoGChxOHCkc8FWSyhKhniMEoLfCgqoJATidrPJ0+lSZ85+cGtj/7vvfZLMduY4SPWqdrZXg87Ey4EnbVh90JKFpvzkuEvx3v17yOXB7u7Ww+3tlycnQRqkChelL+fc/2PmanSqqhT2rfX1jz58/90bO/8BXcnf85jv+UAAAAAASUVORK5CYII=" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAIAAABL1vtsAAAAK3RFWHRDcmVhdGlvbiBUaW1lAFR1ZSAxIEp1biAyMDEwIDExOjM4OjUwIC0wMDAwr/Nf7AAAAAd0SU1FB9oGFBIJLNPyADUAAAAJcEhZcwAACvAAAArwAUKsNJgAAAAEZ0FNQQAAsY8L/GEFAAADdUlEQVR42nVUS48bRRCuqn6Mx/as12uThJAlIQlwiRIRHhf+AeQEEoeIf4bEP+CCxCVIe+CQkEMSQhSx0SIWEqF9am2PvbOeme4uqmeNkLJmbMvdPVVfPb6vGj+9+w28/jCwfGWBzMRAzMiEQMhQAzsMjAEUo0I5Qg3/92DEQZR/WQfnnfyI4nHzAU8AJDa8BEJeI0bLxlnMHftacZ219UonSW0CSHPn8mKen1Sg9VkIxui3SESiIDhD1XvXzt++eeX628Nep0XaHB1XDx5vbdx/XvolWeCiG6f+GBSFdy+f++LOJx/eWH8js6dGJcBoNH5wH0Ot9JIqFvGbhgJbA7dvXf/41uVBW1d1sbM/Psrn04JfvToMDonPQDS+MT4syglGwaWLA6tk53YPjr/fePHk+V+B1awIRRCEpYwwB4z+LIbSCIR2IuRF0INx+WTz8Oenu61WYm0inBK45aQG6YKCtcxeGqwMOrzWSSiKAm1irq73a7fuWY3GJ9NpgUtJbXTgU40337/w1Z2PMs1vDjPJA5x/51z29ecflKxe7uU/3Pvl8bOpB7sMQlgNrJl7bbp2pd9i0FJZkPZS26j1YVeliSLoptFXVLqEkcgnk/c4mfqtP/eEx4uDfieRPGheuINJXiK83J1NiyqIyBDOMtLIWtsK1NMXO3vf/r2Wubtffnbj6lvKwPb+5LsfH/62veOCHU1qmQ+x16+lgIsFOqZx7vN8MlwNs7nkFM+nFf+xO3/2e26TVJMmVBTL5EX6/wozbgl8VDaQglTFaVINqWLtLesErWaJryTdELMQFQiHHAD/g5B2IHuZcAWaPKggFEcIkjY7p+oqziEYJh2LFvjEGJGIOMUXp5qMNwRSiFPYbsmYLIaeSNvEtlOrrQnKSDNqH7TC0FtJ03YqvYWIwk1dkqDE1BJ8tVuJDuMe2LR0f7By/sJQpOmA8uNylM80ke90TK/XifqT5BtTBt8AKgUh65JODRm5YVCamK20+/3M2Jbz6BxMwkwyDd772tUU+XQx/kLkAklELNfKUV4e5POutaNpdVJVtXdc186hq328+GSURpPZrDiJJSyq4HhPBstsRaeJLTd+2vx1NU2N3T883tzeGecFkfEB5nMvoXTNui4cYCVJRK1h1KbEj6MGDU1YTh5tUXDkjQtUsg+xt66RYFTGPyhU1GDi67ZmAAAAAElFTkSuQmCC" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0" /></a>
+        </div>
+
+        <script>
+            // Opera fix
+            if (navigator.userAgent.indexOf('Opera') == -1) {
+              document.getElementById("social_icons").style.position = 'fixed';
+            }
+        </script>
+    <!-- Social networking buttons -->
+
 
     <div id="title">
         <div id="image">
             <br />
-            <img src="images/logo.png" align="absmiddle" alt="RGraph: HTML5 canvas graphing library" width="64" height="64" style="position: relative; top: 15px" />
+            <img src="data:image/png;base64,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" align="absmiddle" alt="RGraph: Javascript charts and graph library" width="64" height="64" style="position: relative; top: 15px" />
         </div>
         
         <div id="text">
-            <h1>RGraph: HTML5 canvas graph library based on the HTML5 canvas tag</h1>
-            <i style="position: relative; top: -20px; left: 5px">Interactive javascript/HTML5 canvas graphs using the <b>HTML5 canvas</b> tag for all platforms</i>
+            <h1 id="title">RGraph: Javascript charts and graph library</h1>
+            <i style="position: relative; top: -20px; left: 5px">Interactive <b>javascript charts</b> using the HTML5 canvas tag</i>
 
             <br />
 
             <div style="display: inline; display: inline-block; float: left">
-                <a href="#download" style="text-decoration: none">
-                    <img src="images/download-stable-sml.png" width="32" height="32" alt="Download the beta version" border="0" align="absmiddle" />
+                <a href="http://www.rgraph.net#download" style="text-decoration: none">
+                    <img id="download-stable-small" src="data:image/png;base64,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" width="32" height="32" alt="Download the beta version" border="0" align="absmiddle" />
                     <b style="text-decoration: underline">Download the stable version</b>
                 </a>
     
-                <a href="#download" style="text-decoration: none">
-                    <img src="images/download-beta-sml.png" width="32" height="32" alt="Download the beta version" border="0" align="absmiddle" />
+                <a href="http://www.rgraph.net#download" style="text-decoration: none">
+                    <img id="download-beta-small" src="data:image/png;base64,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" width="32" height="32" alt="Download the beta version" border="0" align="absmiddle" />
                     <b style="text-decoration: underline">Download the beta version</b>
                 </a>
             </div>
-
-
-            <!-- The twitter DIV --> 
-            <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
-                <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
-                <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
-            </div>
-
-            <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
-                <script>
-                    // Opera fix
-                    if (navigator.userAgent.indexOf('Opera') == -1) {
-                      document.getElementById("social_icons").style.position = 'fixed';
-                      document.getElementById("twitter_div").style.position = 'fixed';
-
-                    }
-                </script>
-
-                <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
-    
-                <!-- Social networking buttons -->
-    
-                    <div id="social">
-                        <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
-                            <img src="images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
-                        </a> 
-             
-                        <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
-                            <img src="images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
-                        </a>
-        
-        
-                        <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
-                            <img src="images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                        </a>
-        
-        
-                        <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
-                            <img src="images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                        </a>
-        
-                        <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
-                            <img src="images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
-                        </a>
-        
-                        <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
-                            <img src="images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
-                        </a>
-                    </div>
-
-                <!-- Social networking buttons -->
-            </div>
-
-            &nbsp;
         </div>
     </div>
 
-    <br />
-
-    <div>    
-        <div style="margin-top: 25px">
-            <center><b>Note:</b> Starting from preview 3, <b>Internet Explorer 9</b> has <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank" rel="nofollow">canvas support</a>.</center>
-        </div>
-    </div>
 
 
 
     <!-- END HEADER -->
     
-    
     <br clear="all" />
 
     <div style="width: 475px; float: right">
-    
-    
         <div style="float: right; width: 480px; text-align: center">
             <canvas id="myLine" width="480" height="230">[Please wait for the onload event to fire...]</canvas>
-            <script async>
+            <a href="examples/line.html">More Line charts...</a>
+            <script>
                 /**
                 * Create the line graph
                 */
@@ -284,8 +218,10 @@
                 {
                     var data1 = [14,13,16,18,14,12,11,14,19,18,17,18];
                     var data2 = [11,12,14,12,11,13,13,15,14,15,13,14];
+                    var labels = ['Jane','Geoff','Lou','Pob','Verity','Baz','Hue','Olga','Pete','Lou','Kev','Fred']
             
                     var myLine = new RGraph.Line('myLine', data1, data2);
+                    //myLine.Set('chart.labels', labels);
                     myLine.Set('chart.colors', ['red', 'black']);
                     myLine.Set('chart.units.post', '%');
                     myLine.Set('chart.tickmarks', null);
@@ -296,124 +232,115 @@
                     myLine.Set('chart.shadow.color', ['#f66', '#666']);
                     myLine.Set('chart.linewidth', 5);
                     myLine.Set('chart.hmargin', 10);
+                    
                     myLine.Set('chart.background.grid.width', 1);
                     myLine.Set('chart.background.grid.color', '#ddd');
-                    myLine.Set('chart.background.grid.hsize', 25);
-                    myLine.Set('chart.background.grid.vsize', 25);
                     myLine.Set('chart.background.barcolor1', 'white');
                     myLine.Set('chart.background.barcolor2', 'white');
-                    myLine.Set('chart.title', 'An example line chart with zoom');
+                    myLine.Set('chart.background.grid.autofit', true);
+                    myLine.Set('chart.background.grid.autofit.numvlines', 12);
+                    myLine.Set('chart.background.grid.autofit.numhlines', 5);
+
+                    myLine.Set('chart.title', 'An example line chart (tooltips)');
+                    myLine.Set('chart.title.vpos', 0.5);
                     myLine.Set('chart.title.xaxis', 'Previous year');
+                    myLine.Set('chart.title.yaxis.align', 'left');
                     myLine.Set('chart.title.yaxis.pos', 0.5);
                     myLine.Set('chart.title.xaxis.pos', 0.5);
-                    myLine.Set('chart.title.yaxis', 'Percentage');                
+                    myLine.Set('chart.title.yaxis', 'Percentage');
                     myLine.Set('chart.title.color', '#333');
+
                     myLine.Set('chart.text.color', '#333');
                     myLine.Set('chart.noaxes', true);
-                    myLine.Set('chart.gutter', 40);
+                    myLine.Set('chart.gutter.right', 40);
                     myLine.Set('chart.yaxispos', 'right');
                     myLine.Set('chart.ymin', 10);
 
                     myLine.Set('chart.key', ['Robert', 'Daniel']);
-                    myLine.Set('chart.key.shadow', true);
-                    myLine.Set('chart.key.shadow.blur', 15);
-                    myLine.Set('chart.key.shadow.offsetx', 0);
-                    myLine.Set('chart.key.shadow.offsety', 0);
-                    myLine.Set('chart.key.shadow.color', '#ccc');
                     myLine.Set('chart.key.rounded', true);
+                    myLine.Set('chart.key.background', 'white');
                     
-                    if (!RGraph.isIE8()) {
-                        myLine.Set('chart.zoom.frames', 15);
-                        myLine.Set('chart.zoom.delay', 20);
-                        myLine.Set('chart.zoom.hdir', 'left');
-                        myLine.Set('chart.zoom.vdir', 'center');
-                        myLine.Set('chart.zoom.mode', 'area');
-                        myLine.Set('chart.zoom.factor', 2);
-
-                    } else {
-                        myLine.Set('chart.contextmenu', [['Show modal dialog', function() {ModalDialog.Show('myDialog', 300);}],['Cancel', function () {}]]);
+                    if (RGraph.isIE8()) {
                         // Change the shadow color
                         myLine.Set('chart.shadow.color', '#666');
+                    } else {
+                        // Only show tooltips for capable browsers - ie NOT IE8
+                        window.__rgraph_line_object__ = myLine;
+                        function line_chart_tooltip_func (i)
+                        {
+                            var obj   = window.__rgraph_line_object__
+                            var index = i;
+
+                            while (i > 11) {
+                                index   = i - 12;
+                                i           = i - 12;
+                            }
+
+                            var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+                        
+                            return '<b>' + months[index] + '</b><br /><div class="color_square red"></div> Robert: ' + obj.original_data[0][index] + '<br /><div class="color_square black"></div> Daniel: ' + obj.original_data[1][index];
+                        }
+                        myLine.Set('chart.tooltips', line_chart_tooltip_func);
+                        myLine.Set('chart.tooltips.effect', 'snap');
+                        myLine.Set('chart.tooltips.css.class', 'line_graph_css');
+
                     }
-        
                     myLine.Draw();
                 }
             </script>
             
             
-            <div class="description">
-                An example of the line chart. This chart has zoom functionality enabled in area mode. Simply draw a rectangle around
-                the area you wish to zoom in on. Once the zoom appears you can move it around with the left mouse button, move the
-                canvas around within the zoom using the right mouse button and double click the zoom to expand it full size.
-            </div>
-            
-            
-            <br />
+            <br /><br />
     
     
-            <canvas id="myBar" width="480" height="230">[Please wait for the onload event to fire...]</canvas>
-            <script async>
+            <canvas id="myBar" width="480" height="270">[Please wait for the onload event to fire...]</canvas>
+            <a href="examples/bar.html">More Bar charts...</a>
+            <script>
                 function CreateBarChart ()
                 {
-                    var bar = new RGraph.Bar('myBar', [[23,25], [30,25], [27,28], [26,18], [31,20], [39,28], [27,29], [26,23]]);
-                    
+                    var bar = new RGraph.Bar('myBar', [[23,25], [30,25], [27,28], [26,18], [31,20], [39,28], [27,29], [26,23],[27,23]]);
+
                     /**
                     * Create the gradients
                     */
-                    var grad1 = bar.context.createLinearGradient(0,25,0,205);
+                    var grad1 = bar.context.createLinearGradient(0,25,0,200);
                     grad1.addColorStop(0, 'blue');
-                    grad1.addColorStop(1, '#6F72FF');
+                    grad1.addColorStop(1, 'white');
 
-                    var grad2 = bar.context.createLinearGradient(0,25,0,205);
+                    var grad2 = bar.context.createLinearGradient(0,25,0,200);
                     grad2.addColorStop(0, 'pink');
-                    grad2.addColorStop(1, '#FFDDFF');
+                    grad2.addColorStop(1, '#fff');
         
                     if (!RGraph.isIE8()) {
-                        bar.Set('chart.tooltips', ['<b>2000</b><br />Girls only had an average<br />year in 2000',
-                                              '<b>2000</b><br />Boys had a slightly better<br />year in 2000',
-                                              '<b>2001</b><br />Girls had a good year',
-                                              '<b>2001</b><br />Boys had an average year',
-                                              '<b>2002</b><br />Both girls and boys had an average year',
-                                              '<b>2002</b><br />Both girls and boys had an average year',
-                                              '<b>2003</b><br />Girls had an average year in 2003',
-                                              '<b>2003</b><br />Boys had a rather poor showing in 2003',
-                                              '<b>2004</b><br />Girls had a good showing in 2004',
-                                              '<b>2004</b><br />Slightly better than than last year,<br />but still not good',
-                                              '<b>2005</b><br />Girls had a particularly good year',
-                                              '<b>2005</b><br />Boys got back up to par this year',
-                                              '<b>2006</b><br />Girls were back to average',
-                                              '<b>2006</b><br />Boys remained at an average level',
-                                              '<b>2007</b><br />Girls were more or less the same as last month',
-                                              '<b>2007</b><br />Boys were starting to drop again'
-                                             ]);
-                        bar.Set('chart.tooltips.effect', 'contract');
-                        //bar.Set('chart.tooltips.event', 'onmousemove');
-                        bar.Set('chart.zoom.vdir', 'center');
-                        bar.Set('chart.zoom.hdir', 'left');
-                        bar.Set('chart.zoom.frames', 50);
-                        bar.Set('chart.zoom.delay', 5);
-                        bar.Set('chart.zoom.factor', 2);
-                        bar.Set('chart.contextmenu', [
-                                                      ['Zoom', RGraph.Zoom],
-                                                      ['Get PNG', RGraph.showPNG],
-                                                      ['Application',
-                                                                     [
-                                                                      ['Login...', function () {ModalDialog.Show('modaldialog_login', 300);}]
-                                                                     ]
-                                                     ],
-                                                     null,
-                                                     ['Cancel', function () {}]
-                                                    ]);
+                        bar.Set('chart.tooltips', ['<b>January</b><br />Girls had an average month',                        '<b>January</b><br />An OK month or the boys',
+                                                   '<b>February</b><br />The girls score jumped this month',                '<b>February</b><br />Another OK month or the boys',
+                                                   '<b>March</b><br />The girls score dipped a little',                     '<b>March</b><br />The boys score went up a little',
+                                                   '<b>April</b><br />Roughly the same as the prior month',                 '<b>April</b><br />A bad dip this month',
+                                                   '<b>May</b><br />A good month for the girls',                            '<b>May</b><br />A small recovery this month',
+                                                   '<b>June</b><br />By far the best month for the girls for two decades',  '<b>June</b><br />Much better in June',
+                                                   '<b>July</b><br />An average month',                                     '<b>July</b><br />Scores were maintained this month',
+                                                   '<b>August</b><br />Another average month',                              '<b>August</b><br />Scores dipped again this month',
+                                                   '<b>September</b><br />Again, an average month',                         '<b>September</b><br />Scores were maintained in September']);
+                        bar.Set('chart.tooltips.effect', 'expand');
+                        bar.Set('chart.tooltips.css.class', 'bar_graph_css');
+
+                        bar.Set('chart.highlight.stroke', 'rgba(0,0,0,0)');
+                        bar.Set('chart.highlight.fill', 'rgba(255,255,255,.5)');
                     }
-        
-                    bar.Set('chart.title', 'Population by gender (tooltips, context, zoom)');
-                    bar.Set('chart.gutter', 35);
+
+                    bar.Set('chart.gutter.top', 35);
+                    bar.Set('chart.gutter.left', 35);
+                    bar.Set('chart.gutter.right', 35);
+                    bar.Set('chart.gutter.bottom', 55);
+
                     bar.Set('chart.background.barcolor1', 'white');
                     bar.Set('chart.background.barcolor2', 'white');
                     bar.Set('chart.background.grid.autofit', true);
+                    bar.Set('chart.background.grid.autofit.align', true);
+
                     bar.Set('chart.colors', [grad2, grad1]);
-                    bar.Set('chart.labels', ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007']);
-                    bar.Set('chart.text.angle', 30);
+                    bar.Set('chart.labels', ['January', '\r\nFebruary', 'March', '\r\nApril', 'May', '\r\nJune', 'July', '\r\nAugust', 'September']);
+                    //bar.Set('chart.text.angle', 25);
                     bar.Set('chart.units.post', 'm');
                     
                     bar.Set('chart.shadow', true);
@@ -421,6 +348,8 @@
                     bar.Set('chart.shadow.blur', 15);
                     bar.Set('chart.shadow.offsetx', 0);
                     bar.Set('chart.shadow.offsety', 0);
+
+                    bar.Set('chart.title', 'Population by gender (tooltips)');
 
                     bar.Set('chart.strokecolor', 'rgba(0,0,0,0)');
                     bar.Set('chart.labels.above', true);
@@ -437,47 +366,45 @@
                 }
             </script>
             
-            
-            <div class="description">
-                The bar chart has tooltips, along with a context menu. The context menu has options to zoom the canvas (in full
-                canvas mode) and shows an example of the ModalDialog which is part of RGraph. The context menu shows one
-                level of submenus. It also shows how you can add an option to get a PNG version of the graph.
-            </div>
-            
-            <br />
+            <br /><br />
 
 
             <canvas id="rose" width="450" height="300">[Please wait for the onload event to fire...]</canvas>
-            <script async>
+            <a href="examples/rose.html">More Rose charts...</a>
+            <script>
                 /**
                 * Show the funnel chart
                 */
                 function CreateRoseChart ()
                 {
-                    var rose = new RGraph.Rose('rose', [41,37,16,3,3,45,26,25,24,12,34,60]);
-                    rose.Set('chart.colors', ['rgba(0,255,0,0.5)']);
-                    rose.Set('chart.gutter', 25);
-                    rose.Set('chart.labels', ['30','60','90','120','150','180','210','240','270','300','330','360']);
+                    var rose = new RGraph.Rose('rose', [[23,23,25], [31,15,23], [42,52,35], [35,25,65], [38,48,15], [41,51,26], [23,24,25], [23,25,31], [15,26,13], [27,45,35], [31,55,26], [33,52,42]]);
+                    rose.Set('chart.colors.alpha', 0.5);
+                    rose.Set('chart.strokestyle', 'rgba(0,0,0,0.5)');
+                    rose.Set('chart.labels', ['January','February','March','April','May','June','July','August','September','October','November','December']);
                     rose.Set('chart.labels.axes', 'n'); // North axis only
-                    rose.Set('chart.labels.position', 'edge');
+                    rose.Set('chart.labels.position', 'center');
         
                     if (!RGraph.isIE8()) {
-                        rose.Set('chart.zoom.vdir', 'center');
-                        rose.Set('chart.zoom.hdir', 'left');
-                        rose.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom], ['Get PNG', RGraph.showPNG]]);
-                        rose.Set('chart.adjustable', true);
-                        rose.Set('chart.tooltips', ['Lucy','Kelly','Bart','Abu','Anne','Hoolio','Richard','Pete','Lou','Kev','Fred','Jan']);
+                        rose.Set('chart.tooltips.css.class', 'rose_graph_css');
+                        rose.Set('chart.tooltips.event', 'onmousemove');
+                        rose.Set('chart.tooltips', [
+                                                    'Lucy (23)','Kelly (23)','Bart (25)',
+                                                    'Lucy (31)','Kelly (15)','Bart (23)',
+                                                    'Lucy (42)','Kelly (52)','Bart (35)',
+                                                    'Lucy (35)','Kelly (25)','Bart (65)',
+                                                    'Lucy (38)','Kelly (48)','Bart (15)',
+                                                    'Lucy (41)','Kelly (51)','Bart (26)',
+                                                    'Lucy (23)','Kelly (24)','Bart (25)',
+                                                    'Lucy (23)','Kelly (25)','Bart (31)',
+                                                    'Lucy (15)','Kelly (26)','Bart (13)',
+                                                    'Lucy (27)','Kelly (45)','Bart (35)',
+                                                    'Lucy (31)','Kelly (55)','Bart (26)',
+                                                    'Lucy (33)','Kelly (52)','Bart (42)']);
                     }
         
                     rose.Draw();
                 }
             </script>
-            
-            
-            <div class="description">
-                The Rose chart is a less well known chart but can be very effective in showing information in some circumstances. This
-                example shows tooltips and adjusting.
-            </div>
         </div>
     </div>
 
@@ -496,35 +423,47 @@
         <h2>Introduction to RGraph</h2>
     
         <p>
-            RGraph is a HTML5 canvas graph library. It uses features that became available in HTML5 (specifically, the CANVAS tag)
-            to produce a wide variety of graph types: bar chart, bi-polar chart (also known as an age frequency chart), donut chart,
-            funnel chart, gantt chart, horizontal bar chart, LED display, line graph, meter, odometer, pie chart, progress bar, rose chart,
-            scatter graph and traditional radar chart. RGraph is covered by the <b><a href="#license">RGraph License</a></b>.
+            RGraph is a Javascript charts and graph library. It uses the HTML5 canvas tag
+            to produce a <a href="docs/index.html">wide variety of javascript charts and graphs</a>. RGraph is covered by the
+            <b><a href="#license">RGraph License</a></b>.
         </p>
         
-        <img src="images/chrome_logo.png" align="left" alt="Ideal for Chrome extensions!" width="61" height="58" style="margin-right: 10px" />
+        <h3>Faster websites with RGraph</h3>
         
         <p>
-            Being Javascript, RGraph is ideal for use in <b>Chrome extensions</b> and <b>Web Apps</b>. You can download a sample
-            extension <a href="http://www.rgraph.net/RGraph_ChromeExtension_sample.zip"><b>here</b></a>.
+            Javascript charts are created in the users web browser, meaning
+            quicker charts and less server load. RGraph is an easy way of speeding up your website.
         </p>
-        
+
         <p style="float: right">
             <a href="docs/index.html"><b>Full documentation &raquo;</b></a>
         </p>
+        
+        <br clear="all" />
+
+        <h3>Internet Explorer 9 supports RGraph</h3>
+
+        <div>
+            <b>Internet Explorer 9</b> fully supports RGraph: Javascript charts and graph library.
+            There are some screenshots <b><a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank" rel="nofollow">here</a></b>.
+            Internet Explorer 8 can show the charts with ExCanvas. <a href="docs/msie.html">More...</a>
+        </div>
+
+        <br />
     
+
         <br clear="all" />
 
         <h2>Contents</h2>
     
         <ul>
-            <li><a href="#intro" title="A short description of RGraph">Introduction to RGraph</a></li>
-            <li><a href="docs/index.html#benefits" title="Benefits of using RGraph over more traditional server based graph/chart libraries">Benefits of HTML5 canvas graphs</a></li>
+            <li><a href="#intro" title="A short description of RGraph: Javascript charts and graph library">Introduction to RGraph: Javascript charts and graph library</a></li>
+            <li><a href="docs/index.html#benefits" title="Benefits of javascript charts libraries over more traditional server based chart and graph libraries">Benefits of RGraph: Javascript charts and graph library</a></li>
             <li>
                 <a href="examples/index.html" title="Look at the examples">Examples</a> &amp; <a href="docs/index.html" title="Look at the documentation">documentation</a><br />
     
                 <div style="padding-left: 20px">
-                    <div class="list-item label">Bar chart</div>
+                    <div class="list-item label">Bar charts</div>
                     <div class="list-item">
                         [<a href="examples/bar.html">examples</a>]
                         [<a href="docs/bar.html">documentation</a>]
@@ -532,7 +471,7 @@
     
                     <br />
     
-                    <div class="list-item label">Bi-polar chart</div>
+                    <div class="list-item label">Bi-polar charts</div>
                     <div class="list-item link">
                         [<a href="examples/bipolar.html">examples</a>]
                         [<a href="docs/bipolar.html">documentation</a>]
@@ -540,7 +479,7 @@
     
                     <br />
     
-                    <div class="list-item label">Donut chart</div>
+                    <div class="list-item label">Donut charts</div>
                     <div class="list-item">
                         [<a href="examples/donut.html">examples</a>]
                         [<a href="docs/donut.html">documentation</a>]
@@ -548,7 +487,7 @@
     
                     <br />
     
-                    <div class="list-item label">Funnel chart</div>
+                    <div class="list-item label">Funnel charts</div>
                     <div class="list-item">
                         [<a href="examples/funnel.html">examples</a>]
                         [<a href="docs/funnel.html">documentation</a>]
@@ -556,7 +495,7 @@
     
                     <br />
     
-                    <div class="list-item label">Gantt chart</div>
+                    <div class="list-item label">Gantt charts</div>
                     <div class="list-item link">
                         [<a href="examples/gantt.html">examples</a>]
                         [<a href="docs/gantt.html">documentation</a>]
@@ -564,7 +503,7 @@
     
                     <br />
     
-                    <div class="list-item label">Horizontal Bar chart</div>
+                    <div class="list-item label">Horizontal Bar charts</div>
                     <div class="list-item link">
                         [<a href="examples/hbar.html">examples</a>]
                         [<a href="docs/hbar.html">documentation</a>]
@@ -588,7 +527,7 @@
     
                     <br />
     
-                    <div class="list-item label">Line chart</div>
+                    <div class="list-item label">Line charts</div>
                     <div class="list-item link">
                         [<a href="examples/line.html">examples</a>]
                         [<a href="docs/line.html">documentation</a>]
@@ -596,7 +535,7 @@
     
                     <br />
     
-                    <div class="list-item label">Meter</div>
+                    <div class="list-item label">Meter charts</div>
                     <div class="list-item link">
                         [<a href="examples/meter.html">examples</a>]
                         [<a href="docs/meter.html">documentation</a>]
@@ -604,7 +543,7 @@
     
                     <br />
     
-                    <div class="list-item label">Odometer</div>
+                    <div class="list-item label">Odometer charts</div>
                     <div class="list-item link">
                         [<a href="examples/odo.html">examples</a>]
                         [<a href="docs/odo.html">documentation</a>]
@@ -612,7 +551,7 @@
     
                     <br />
     
-                    <div class="list-item label">Pie chart</div>
+                    <div class="list-item label">Pie charts</div>
                     <div class="list-item link">
                         [<a href="examples/pie.html">examples</a>]
                         [<a href="docs/pie.html">documentation</a>]
@@ -620,7 +559,15 @@
     
                     <br />
     
-                    <div class="list-item label">Rose chart</div>
+                    <div class="list-item label">Radar charts</div>
+                    <div class="list-item link">
+                        [<a href="examples/radar.html">examples</a>]
+                        [<a href="docs/radar.html">documentation</a>]
+                    </div>
+    
+                    <br />
+    
+                    <div class="list-item label">Rose charts</div>
                     <div class="list-item link">
                         [<a href="examples/rose.html">examples</a>]
                         [<a href="docs/rose.html">documentation</a>]
@@ -628,7 +575,7 @@
     
                     <br />
     
-                    <div class="list-item label">Radial scatter chart</div>
+                    <div class="list-item label">Radial scatter charts</div>
                     <div class="list-item link">
                         [<a href="examples/rscatter.html">examples</a>]
                         [<a href="docs/rscatter.html">documentation</a>]
@@ -636,7 +583,7 @@
     
                     <br />
     
-                    <div class="list-item label">Scatter chart</div>
+                    <div class="list-item label">Scatter charts</div>
                     <div class="list-item link">
                         [<a href="examples/scatter.html">examples</a>]
                         [<a href="docs/scatter.html">documentation</a>]
@@ -644,10 +591,10 @@
     
                     <br />
     
-                    <div class="list-item label">Traditional radar chart</div>
+                    <div class="list-item label">Thermometer charts</div>
                     <div class="list-item link">
-                        [<a href="examples/tradar.html">examples</a>]
-                        [<a href="docs/tradar.html">documentation</a>]
+                        [<a href="examples/thermometer.html">examples</a>]
+                        [<a href="docs/thermometer.html">documentation</a>]
                     </div>
     
                     <br />
@@ -658,6 +605,14 @@
                         [<a href="docs/vprogress.html">documentation</a>]
                     </div>
     
+                    <br />
+    
+                    <div class="list-item label">Waterfall chart</div>
+                    <div class="list-item link">
+                        [<a href="examples/waterfall.html">examples</a>]
+                        [<a href="docs/waterfall.html">documentation</a>]
+                    </div>
+    
                     <br /><br />
             </li>
         </ul>
@@ -665,19 +620,33 @@
         <h3 style="margin-left: 20px">Features</h3>
         
         <ul>
-            <li><a href="docs/png.html">Retrieving a PNG of your graph</a></li>
+            <li><a href="docs/gutters.html"><b>Variable gutter sizes</b></a></li>
+            <li><a href="docs/setconfig.html">The RGraph.SetConfig() function</a></li>
+            <li><a href="docs/keys.html">Examples of keys</a></li>
+            <li><a href="docs/dynamic.html">Updating your charts dynamically</a></li>
+            <li><a href="docs/png.html">Retrieving a PNG of your chart</a></li>
             <li><a href="docs/domcontentloaded.html">The DOMContentLoaded event</a></li>
             <li><a href="docs/events.html">Custom RGraph events</a></li>
-            <li><a href="docs/adjusting.html">Adjusting your graphs interactively</a></li>
+            <li><a href="docs/adjusting.html">Adjusting your charts interactively</a></li>
             <li><a href="docs/tooltips.html">Using tooltips</a></li>
-            <li><a href="docs/resizing.html">Resizing your graphs</a></li>
+            <li><a href="docs/resizing.html">Resizing your charts</a></li>
             <li><a href="docs/msie.html">Microsoft Internet Explorer support</a></li>
             <li><a href="docs/async.html">Asynchronous processing</a></li>
-            <li><a href="docs/zoom.html">Zooming your graphs</a></li>
-            <li><a href="docs/annotating.html">Annotating your graphs</a></li>
+            <li><a href="docs/zoom.html">Zooming your charts</a></li>
+            <li>
+                <a href="docs/annotating.html">Annotating your charts</a>
+                <ul>
+                    <li><a href="docs/annotate_persist.html">Making your annotations shareable across browsers/computers</a></li>
+                </ul>
+            </li>
             <li><a href="docs/combine.html">Combining charts</a></li>
             <li><a href="docs/external.html">Integrating RGraph with external libraries (ModalDialog)</a></li>
-            <li><a href="docs/animation.html">Animating your graphs</a></li>
+            <li>
+                <a href="docs/animation.html">Animating your charts</a>
+                <ul>
+                    <li><a href="docs/animation_segments.html">An animated (interactive) Pie chart</a></li>
+                </ul>
+            </li>
             <li><a href="examples/basic.html">A basic example</a></li>
             <li><a href="docs/css.html">Available CSS classes</a></li>
             <li><a href="docs/color.html">About canvas color definitions</a></li>
@@ -688,7 +657,7 @@
 
         <ul>
             <li><a href="docs/index.html#browser" title="Information about browser support">Browser support</a></li>
-            <li><a href="docs/index.html#performance" title="Things you may want to look at concerning performance">Improving the performance of your graphs</a></li>
+            <li><a href="docs/index.html#performance" title="Things you may want to look at concerning performance">Improving the performance of your charts</a></li>
             <li><a href="docs/index.html#implementation" title="Implementing RGraph on your website">Implementing RGraph</a></li>
             <li><a href="docs/index.html#structure" title="Suggested structure for RGraph">Suggested structure for RGraph</a></li>
             <li>
@@ -730,8 +699,8 @@
             <?php ShowDownloadLinks() ?>
     
             <p style="background-color: #ff0; border: 2px dashed black; padding: 5px; box-shadow: 0 0 15px #ccc; -moz-box-shadow: 0 0 15px #ccc; -webkit-box-shadow: 0 0 15px #ccc">
-                The website is based on the beta version of RGraph. If you're only interested in the stable version of RGraph, you should
-                download the stable archive and use that.
+                The website is based on the latest version of RGraph (be it stable or beta). If you're only interested in the stable version of RGraph, you should
+                download the stable archive and use that. All of the documentation is included in the archive.
             </p>
         </div>
 
@@ -741,6 +710,16 @@
             [Only available on <a href="http://www.rgraph.net#download">http://www.rgraph.net</a>]
         </span>
     <?php endif ?>
+
+    <h4>Pre-June 2011 stable version</h4>
+    
+    <p>
+        If you want the stable version of RGraph prior to the change to individual gutter settings, you can get it
+        <a href="http://www.rgraph.net/downloads/RGraph_2011-03-25-stable.zip"><b>here</b></a>. Note that because
+        of the change to the gutters you will probably have to adjust your charts.
+        <a href="docs/gutters.html">Read more about the change</a>.
+    </p>
+
     
     <script>
         /**
@@ -757,26 +736,31 @@
 
 
     <a name="license"></a>
-    <h2>License</h2>
+    <h2>The RGraph license</h2>
 
-    <div style="float: right; padding-left: 15px; padding-right: 40px">
-        
-        <div style="float: right">
-            <form action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/456239608328156" id="BB_BuyButtonForm" method="post" name="BB_BuyButtonForm">
-                <input name="item_name_1" type="hidden" value="RGraph and PHPGuru License" />
-                <input name="item_description_1" type="hidden" value="License for RGraph: HTML5 canvas graph library and phpguru.org" />
-                <input name="item_quantity_1" type="hidden" value="1" />
-                <input name="item_price_1" type="hidden" value="49.0" />
-                <input name="item_currency_1" type="hidden" value="GBP" />
-                <input name="_charset_" type="hidden" value="utf-8" />
-                <input alt="" width="116" height="61" src="images/buy.png" type="image" />
-            </form>
-        </div>
+    <div style="float: right; padding-left: 15px; padding-right: 40px; text-align: center">
+
+        <form action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/456239608328156" id="BB_BuyButtonForm" method="post" name="BB_BuyButtonForm">
+            <input name="item_name_1" type="hidden" value="RGraph License" />
+            <input name="item_description_1" type="hidden" value="License for RGraph: Javascript charts and graph library" />
+            <input name="item_quantity_1" type="hidden" value="1" />
+            <input name="item_price_1" type="hidden" value="49.0" />
+            <input name="item_currency_1" type="hidden" value="GBP" />
+            <input name="_charset_" type="hidden" value="utf-8" />
+            <input alt="" width="116" height="61" src="images/buy.png" type="image" />
+        </form>
+
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="hosted_button_id" value="A8BND7SHYMSFL">
+            <input type="image" src="images/paypal.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+            <img alt="" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110401-1/en_GB/i/scr/pixel.gif" width="1" height="1">
+        </form>
     </div>
 
     <p>
-        RGraph is covered by the RGraph license. A summary is that for commercial/business use
-        there is a small one-time licensing fee to pay. For non-commercial purposes it's freely usable.
+        RGraph is covered by the RGraph license. A summary is that for commercial/business use there is a small one-time
+        licensing fee of 49 GBP (roughly 80 USD) to pay. For non-commercial purposes it's freely usable.
         
         There are some
         <a href="docs/licensing.html"><b>licensing FAQs</b></a> that should help to answer any
@@ -785,12 +769,14 @@
 
     <p>
         If you have any questions about RGraph licensing, you can send your question to: <a href="mailto:licensing@rgraph.net">licensing@rgraph.net</a>.
-        If your question is of a support nature though, please use the <a href="http://groups.google.com/group/rgraph/topics?gvc=2" target="_blank">support forum</a>.
+        If your question is of a support nature though, please use the <a href="http://support.rgraph.net" target="_blank">support forum</a>.
     </p>
     
     <iframe width="100%" height="300" src="LICENSE.txt"></iframe>
 
     <p>
+        <a href="http://www.rgraph.net" target="_blank">&laquo; Keep up-to-date - go to www.rgraph.net</a>
+    </p>
     
     <div id="rgraph"></div>
     
@@ -801,55 +787,15 @@
     </script>
 
     <script>
-        if (location.host == 'www.rgraph.net') {
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-        }
+        (function swapImages ()
+        {
+            document.getElementById("social_icons").getElementsByTagName('IMG')[0].src = 'images/delicious.png';
+            document.getElementById("social_icons").getElementsByTagName('IMG')[1].src = 'images/twitter.png';
+            document.getElementById("social_icons").getElementsByTagName('IMG')[2].src = 'images/facebook.png';
+            document.getElementById("title").getElementsByTagName('IMG')[0].src = 'images/logo.png';
+            document.getElementById("download-stable-small").src = 'images/download-stable-sml.png';
+            document.getElementById("download-beta-small").src = 'images/download-beta-sml.png';
+        })()
     </script>
-        
-    <script>
-    
-        if (location.host == 'www.rgraph.net') {
-            try {
-                var pageTracker = _gat._getTracker("UA-54706-2");
-                pageTracker._trackPageview();
-            } catch(err) {}
-        }
-    </script>
-
-
-    <div id="myDialog" class="ModalDialog_dialog" style="display: none">
-        <div style="font-weight: bold; font-face: Verdana; text-align: center">A modal dialog</div>
-        <p>
-            This is an example of the ModalDialog that comes as part of RGraph. More information on it
-            can be found <a href="docs/external.html">here</a>.
-        </p>
-        <small><a href="javascript: ModalDialog.Close()">Close</a></small>
-    </div>
-
-    <!-- Login dialog -->
-    <div style="display: none" class="ModalDialog" id="modaldialog_login">
-        
-        <b>Login to admin area</b><br /><br />
-
-        <table border="0">
-            <tr>
-                <td align="right">Email:</td>
-                <td><input type="text" name="email" /></td>
-            </tr>
-            <tr>
-                <td align="right">Password:</td>
-                <td><input type="password" name="password" /></td>
-            </tr>
-            
-            <tr>
-                <td>&nbsp;</td>
-                <td align="right"><input type="submit" value="Login &raquo;" /></td>
-            </tr>
-        </table>
-
-        <div style="font-size: 8pt; float: right"><a href="" onclick="ModalDialog.Hide(); return false">Dismiss</a></div>
-    </div>
-
 </body>
-</html>
+</html><!-- 2011-07-12 -->

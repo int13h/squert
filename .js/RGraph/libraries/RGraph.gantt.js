@@ -1,4 +1,4 @@
-    /**
+7    /**
     * o------------------------------------------------------------------------------o
     * | This file is part of the RGraph package - you can learn more at:             |
     * |                                                                              |
@@ -56,12 +56,19 @@
             'chart.text.size':              10,
             'chart.text.font':              'Verdana',
             'chart.text.color':             'black',
-            'chart.gutter':                 25,
+            'chart.gutter.left':            75,
+            'chart.gutter.right':           25,
+            'chart.gutter.top':             35,
+            'chart.gutter.bottom':          25,
             'chart.labels':                 [],
             'chart.margin':                 2,
             'chart.title':                  '',
+            'chart.title.background':       null,
             'chart.title.hpos':             null,
             'chart.title.vpos':             null,
+            'chart.title.yaxis':            '',
+            'chart.title.yaxis.pos':        this.canvas.width - 12.5,
+            'chart.title.yaxis.position':   'right',
             'chart.events':                 [],
             'chart.borders':                true,
             'chart.defaultcolor':           'white',
@@ -70,6 +77,9 @@
             'chart.tooltips.effect':         'fade',
             'chart.tooltips.css.class':      'RGraph_tooltip',
             'chart.tooltips.highlight':     true,
+            'chart.highlight.stroke':       'black',
+            'chart.highlight.fill':         'rgba(255,255,255,0.5)',
+            'chart.xmin':                   0,
             'chart.xmax':                   0,
             'chart.contextmenu':            null,
             'chart.annotatable':            false,
@@ -87,12 +97,10 @@
             'chart.zoom.thumbnail.height':  75,
             'chart.zoom.background':        true,
             'chart.zoom.action':            'zoom',
-            'chart.resizable':              false
-        }
-
-        // Check the common library has been included
-        if (typeof(RGraph) == 'undefined') {
-            alert('[GANTT] Fatal error: The common library does not appear to have been included');
+            'chart.resizable':              false,
+            'chart.resize.handle.adjust':   [0,0],
+            'chart.resize.handle.background': null,
+            'chart.adjustable':             false
         }
     }
 
@@ -136,17 +144,19 @@
         RGraph.ClearEventListeners(this.id);
         
         /**
-        * Resolves the colors array, which allows the colors to be a function
+        * This is new in May 2011 and facilitates indiviual gutter settings,
+        * eg chart.gutter.left
         */
-        this.Set('chart.defaultcolor', RGraph.ResolveColors(this, this.Get('chart.defaultcolor')));
-
-        var gutter = this.Get('chart.gutter');
+        this.gutterLeft   = this.Get('chart.gutter.left');
+        this.gutterRight  = this.Get('chart.gutter.right');
+        this.gutterTop    = this.Get('chart.gutter.top');
+        this.gutterBottom = this.Get('chart.gutter.bottom');
 
         /**
         * Work out the graphArea
         */
-        this.graphArea     = this.canvas.width - (2 * gutter);
-        this.graphHeight   = this.canvas.height - (2 * gutter);
+        this.graphArea     = RGraph.GetWidth(this) - this.gutterLeft - this.gutterRight;
+        this.graphHeight   = RGraph.GetHeight(this) - this.gutterTop - this.gutterBottom;
         this.numEvents     = this.Get('chart.events').length
         this.barHeight     = this.graphHeight / this.numEvents;
         this.halfBarHeight = this.barHeight / 2;
@@ -159,16 +169,15 @@
         /**
         * Draw a space for the left hand labels
         */
-        this.context.beginPath();
-        this.context.lineWidth   = 1;
-        this.context.strokeStyle = this.Get('chart.background.grid.color');
-        this.context.fillStyle   = 'white';
-        this.context.fillRect(0,gutter - 5,gutter * 3, this.canvas.height - (2 * gutter) + 10);
-        this.context.moveTo(gutter * 3, gutter);
-        this.context.lineTo(gutter * 3, this.canvas.height - gutter);
-        
-        this.context.stroke();
-        this.context.fill();
+        //this.context.beginPath();
+            //this.context.lineWidth   = 1;
+            //this.context.strokeStyle = this.Get('chart.background.grid.color');
+            //this.context.fillStyle   = 'white';
+            //this.context.fillRect(0,gutter - 5,gutter * 3, RGraph.GetHeight(this) - (2 * gutter) + 10);
+            //this.context.moveTo(gutter * 3, gutter);
+            //this.context.lineTo(gutter * 3, RGraph.GetHeight(this) - gutter);
+        //this.context.stroke();
+        //this.context.fill();
         
         /**
         * Draw the labels at the top
@@ -209,7 +218,16 @@
         if (this.Get('chart.resizable')) {
             RGraph.AllowResizing(this);
         }
-        
+
+
+        /**
+        * This function enables adjusting
+        */
+        if (this.Get('chart.adjustable')) {
+            RGraph.AllowAdjusting(this);
+        }
+
+
         /**
         * Fire the RGraph ondraw event
         */
@@ -222,27 +240,25 @@
     */
     RGraph.Gantt.prototype.DrawLabels = function ()
     {
-        var gutter = this.Get('chart.gutter');
-
         this.context.beginPath();
         this.context.fillStyle = this.Get('chart.text.color');
 
         /**
         * Draw the X labels at the top of the chart.
         */
-        var labelSpace = (this.graphArea - (2 * gutter)) / this.Get('chart.labels').length;
-        var xPos       = (3 * gutter) + (labelSpace / 2);
+        var labelSpace = (this.graphArea) / this.Get('chart.labels').length;
+        var xPos       = this.gutterLeft + (labelSpace / 2);
         this.context.strokeStyle = 'black'
 
         for (i=0; i<this.Get('chart.labels').length; ++i) {
-            RGraph.Text(this.context, this.Get('chart.text.font'), this.Get('chart.text.size'), xPos + (i * labelSpace), gutter * (3/4), String(this.Get('chart.labels')[i]), 'center', 'center');
+            RGraph.Text(this.context,this.Get('chart.text.font'),this.Get('chart.text.size'),xPos + (i * labelSpace),this.gutterTop - (this.Get('chart.text.size') / 2) - 5,String(this.Get('chart.labels')[i]),'center','center');
         }
         
         // Draw the vertical labels
         for (i=0; i<this.Get('chart.events').length; ++i) {
             var ev = this.Get('chart.events')[i];
-            var x  = (3 * gutter);
-            var y  = gutter + this.halfBarHeight + (i * this.barHeight);
+            var x  = this.gutterLeft;
+            var y  = this.gutterTop + this.halfBarHeight + (i * this.barHeight);
 
             RGraph.Text(this.context, this.Get('chart.text.font'), this.Get('chart.text.size'), x - 5, y, String(ev[3]), 'center', 'right');
         }
@@ -255,7 +271,6 @@
     {
         var canvas  = this.canvas;
         var context = this.context;
-        var gutter  = this.Get('chart.gutter');
         var events  = this.Get('chart.events');
 
         /**
@@ -265,21 +280,23 @@
 
         /**
         * First draw the vertical bars that have been added
-        */if (this.Get('chart.vbars')) {
+        */
+        if (this.Get('chart.vbars')) {
             for (i=0; i<this.Get('chart.vbars').length; ++i) {
                 // Boundary checking
                 if (this.Get('chart.vbars')[i][0] + this.Get('chart.vbars')[i][1] > this.Get('chart.xmax')) {
                     this.Get('chart.vbars')[i][1] = 364 - this.Get('chart.vbars')[i][0];
                 }
     
-                var barX   = (3 * gutter) + (this.Get('chart.vbars')[i][0] / this.Get('chart.xmax')) * (this.graphArea - (2 * gutter) );
-                var barY   = gutter;
-                var width  = ( (this.graphArea - (2 * gutter)) / this.Get('chart.xmax')) * this.Get('chart.vbars')[i][1];
-                var height = canvas.height - (2 * gutter);
+                var barX   = this.gutterLeft + (( (this.Get('chart.vbars')[i][0] - this.Get('chart.xmin')) / (this.Get('chart.xmax') - this.Get('chart.xmin')) ) * this.graphArea);
+
+                var barY   = this.gutterTop;
+                var width  = (this.graphArea / (this.Get('chart.xmax') - this.Get('chart.xmin')) ) * this.Get('chart.vbars')[i][1];
+                var height = RGraph.GetHeight(this) - this.gutterTop - this.gutterBottom;
                 
                 // Right hand bounds checking
-                if ( (barX + width) > (this.canvas.width - gutter) ) {
-                    width = this.canvas.width - gutter - barX;
+                if ( (barX + width) > (RGraph.GetWidth(this) - this.gutterRight) ) {
+                    width = RGraph.GetWidth(this) - this.gutterRight - barX;
                 }
     
                 context.fillStyle = this.Get('chart.vbars')[i][2];
@@ -289,33 +306,27 @@
 
 
         /**
-        * Draw the actual events
+        * Draw the events
         */
         for (i=0; i<events.length; ++i) {
             
-            var ev = events[i];
+            var ev  = events[i];
+            var min = this.Get('chart.xmin');
 
             context.beginPath();
             context.strokeStyle = 'black';
             context.fillStyle = ev[4] ? ev[4] : this.Get('chart.defaultcolor');
 
-            var barStartX  = (3 * gutter) + (ev[0] / this.Get('chart.xmax')) * (this.graphArea - (2 * gutter) );
+            var barStartX  = this.gutterLeft + (((ev[0] - min) / (this.Get('chart.xmax') - min)) * this.graphArea);
             //barStartX += this.margin;
-            var barStartY  = gutter + (i * this.barHeight);
-            var barWidth   = (ev[1] / this.Get('chart.xmax')) * (this.graphArea - (2 * gutter));
+            var barStartY  = this.gutterTop + (i * this.barHeight);
+            var barWidth   = (ev[1] / (this.Get('chart.xmax') - min) ) * this.graphArea;
 
             /**
             * If the width is greater than the graph atrea, curtail it
             */
-            if ( (barStartX + barWidth) > (canvas.width - gutter) ) {
-                barWidth = canvas.width - gutter - barStartX;
-            }
-
-            // draw the border around the bar
-            if (this.Get('chart.borders')) {
-                context.strokeStyle = 'black';
-                context.beginPath();
-                context.strokeRect(barStartX, barStartY + this.Get('chart.margin'), barWidth, this.barHeight - (2 * this.Get('chart.margin')) );
+            if ( (barStartX + barWidth) > (RGraph.GetWidth(this) - this.gutterRight) ) {
+                barWidth = RGraph.GetWidth(this) - this.gutterRight - barStartX;
             }
 
             /**
@@ -339,6 +350,14 @@
                 context.beginPath();
                 context.fillStyle = this.Get('chart.text.color');
                 RGraph.Text(context, this.Get('chart.text.font'), this.Get('chart.text.size'), barStartX + barWidth + 5, barStartY + this.halfBarHeight, String(ev[2]) + '%', 'center');
+            }
+
+            // draw the border around the bar
+            if (this.Get('chart.borders') || events[i][6]) {
+                context.strokeStyle = typeof(events[i][6]) == 'string' ? events[i][6] : 'black';
+                context.lineWidth = (typeof(events[i][7]) == 'number' ? events[i][7] : 1);
+                context.beginPath();
+                context.strokeRect(barStartX, barStartY + this.Get('chart.margin'), barWidth, this.barHeight - (2 * this.Get('chart.margin')) );
             }
         }
 
@@ -451,8 +470,8 @@
                             /**
                             * Draw a rectangle around the correct bar, in effect highlighting it
                             */
-                            context.strokeStyle = 'black';
-                            context.fillStyle = 'rgba(255,255,255,0.8)';
+                            context.strokeStyle = obj.Get('chart.highlight.stroke');
+                            context.fillStyle   = obj.Get('chart.highlight.fill');
                             context.strokeRect(xCoord, yCoord, width, height);
                             context.fillRect(xCoord, yCoord, width, height);
     

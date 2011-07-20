@@ -44,10 +44,15 @@
         this.max     = 0;
         
         this.properties = {
+            'chart.radius':                 null,
             'chart.colors':                 [], // This is used internally for the key
             'chart.colors.default':         'black',
-            'chart.gutter':                 25,
+            'chart.gutter.left':            25,
+            'chart.gutter.right':           25,
+            'chart.gutter.top':             25,
+            'chart.gutter.bottom':          25,
             'chart.title':                  '',
+            'chart.title.background':       null,
             'chart.title.hpos':             null,
             'chart.title.vpos':             null,
             'chart.labels':                 null,
@@ -57,13 +62,20 @@
             'chart.text.font':              'Verdana',
             'chart.text.size':              10,
             'chart.key':                    null,
+            'chart.key.background':         'white',
+            'chart.key.position':           'graph',
+            'chart.key.halign':             'right',
             'chart.key.shadow':             false,
             'chart.key.shadow.color':       '#666',
             'chart.key.shadow.blur':        3,
             'chart.key.shadow.offsetx':     2,
             'chart.key.shadow.offsety':     2,
-            'chart.key.background':         'white',
-            'chart.key.position':           'graph',
+            'chart.key.position.gutter.boxed': true,
+            'chart.key.position.x':         null,
+            'chart.key.position.y':         null,
+            'chart.key.color.shape':        'square',
+            'chart.key.rounded':            true,
+            'chart.key.linewidth':          1,
             'chart.contextmenu':            null,
             'chart.tooltips.effect':        'fade',
             'chart.tooltips.css.class':     'RGraph_tooltip',
@@ -85,15 +97,15 @@
             'chart.zoom.background':        true,
             'chart.zoom.action':            'zoom',
             'chart.resizable':              false,
+            'chart.resize.handle.adjust':   [0,0],
+            'chart.resize.handle.background': null,
             'chart.adjustable':             false,
             'chart.ymax':                   null,
+            'chart.ymin':                   0,
             'chart.tickmarks':              'cross',
             'chart.ticksize':               3,
-        }
-        
-        // Check the common library has been included
-        if (typeof(RGraph) == 'undefined') {
-            alert('[RSCATTER] Fatal error: The common library does not appear to have been included');
+            'chart.scale.decimals':         null,
+            'chart.scale.round':            false
         }
     }
 
@@ -135,32 +147,61 @@
         * Clear all of this canvases event handlers (the ones installed by RGraph)
         */
         RGraph.ClearEventListeners(this.id);
+
         
         /**
-        * Resolves the colors array, which allows the colors to be a function
+        * This doesn't affect the chart, but is used for compatibility
         */
-        RGraph.ResolveColors(this, this.Get('chart.colors'));
+        this.gutterLeft   = this.Get('chart.gutter.left');
+        this.gutterRight  = this.Get('chart.gutter.right');
+        this.gutterTop    = this.Get('chart.gutter.top');
+        this.gutterBottom = this.Get('chart.gutter.bottom');
 
         // Calculate the radius
-        this.radius  = (Math.min(this.canvas.width, this.canvas.height) / 2) - this.Get('chart.gutter');
-        this.centerx = this.canvas.width / 2;
-        this.centery = this.canvas.height / 2;
+        this.radius  = (Math.min(RGraph.GetWidth(this) - this.gutterLeft - this.gutterRight, RGraph.GetHeight(this) - this.gutterTop - this.gutterBottom) / 2);
+        this.centerx = RGraph.GetWidth(this) / 2;
+        this.centery = RGraph.GetHeight(this) / 2;
         this.coords  = [];
+        
+        /**
+        * If there's a user specified radius, use that
+        */
+        if (typeof(this.Get('chart.radius')) == 'number') {
+            this.radius = this.Get('chart.radius');
+        }
         
         /**
         * Work out the scale
         */
-        for (var i=0; i<this.data.length; ++i) {
-            this.max = Math.max(this.max, this.data[i][1]);
+        var max = this.Get('chart.ymax');
+        var min = this.Get('chart.ymin');
+        
+        if (typeof(max) == 'number') {
+            this.max   = max;
+            this.scale = [((max - min) * 0.2) + min,((max - min) * 0.4) + min,((max - min) * 0.6) + min,((max - min) * 0.8) + min,((max - min) * 1.0) + min,];
+            
+        } else {
+            for (var i=0; i<this.data.length; ++i) {
+                this.max = Math.max(this.max, this.data[i][1]);
+            }
+            this.scale = RGraph.getScale(this.max, this);
+            this.max   = this.scale[4];
+
+            // Hmmmmmmmm
+            if (String(this.scale[0]).indexOf('e') == -1) {
+                this.scale[0] = Number(this.scale[0]).toFixed(this.Get('chart.scale.decimals'));
+                this.scale[1] = Number(this.scale[1]).toFixed(this.Get('chart.scale.decimals'));
+                this.scale[2] = Number(this.scale[2]).toFixed(this.Get('chart.scale.decimals'));
+                this.scale[3] = Number(this.scale[3]).toFixed(this.Get('chart.scale.decimals'));
+                this.scale[4] = Number(this.scale[4]).toFixed(this.Get('chart.scale.decimals'));
+            }
         }
-        this.scale = RGraph.getScale(this.max);
-        this.max   = this.scale[4];
 
         /**
         * Change the centerx marginally if the key is defined
         */
         if (this.Get('chart.key') && this.Get('chart.key').length > 0 && this.Get('chart.key').length >= 3) {
-            this.centerx = this.centerx - this.Get('chart.gutter') + 5;
+            this.centerx = this.centerx - this.Get('chart.gutter.right') + 5;
         }
         
         /**
@@ -270,7 +311,11 @@
 
         // Draw the title if any has been set
         if (this.Get('chart.title')) {
-            RGraph.DrawTitle(this.canvas, this.Get('chart.title'), this.Get('chart.gutter'), this.centerx, this.Get('chart.text.size') + 2);
+            RGraph.DrawTitle(this.canvas,
+                             this.Get('chart.title'),
+                             (this.canvas.height / 2) - this.radius - 5,
+                             this.centerx,
+                             this.Get('chart.text.size') + 2);
         }
         
         /**
@@ -383,7 +428,7 @@
             var d1 = data[i][0];
             var d2 = data[i][1];
             var a   = d1 / (180 / Math.PI); // RADIANS
-            var r   = (d2 / this.max) * this.radius;
+            var r   = ( (d2 - this.Get('chart.ymin')) / (this.max - this.Get('chart.ymin')) ) * this.radius;
             var x   = Math.sin(a) * r;
             var y   = Math.cos(a) * r;
             var color = data[i][2] ? data[i][2] : this.Get('chart.colors.default');
@@ -413,7 +458,6 @@
     */
     RGraph.Rscatter.prototype.DrawLabels = function ()
     {
-        
         this.context.lineWidth = 1;
         var key = this.Get('chart.key');
         
@@ -473,11 +517,15 @@
             RGraph.Text(context, font_face, font_size, this.centerx - ((r) * 0.8), this.centery, String(this.scale[3]), 'center', 'center', true, false, color);
             RGraph.Text(context, font_face, font_size, this.centerx - r, this.centery, String(this.scale[4]), 'center', 'center', true, false, color);
         }
+        
+        // Draw the center minimum value (but only if there's at least one axes labels stipulated)
+        if (this.Get('chart.labels.axes').length > 0) {
+            RGraph.Text(context, font_face, font_size, this.centerx,  this.centery, this.Get('chart.ymin') > 0 ? String(this.Get('chart.ymin').toFixed(this.Get('chart.scale.decimals'))) : '0', 'center', 'center', true, false, color);
+        }
 
         /**
         * Draw the key
         */
-        RGraph.Text(context, font_face, font_size, this.centerx,  this.centery, '0', 'center', 'center', true, false, color);
         if (key && key.length) {
             RGraph.DrawKey(this, key, this.Get('chart.colors'));
         }

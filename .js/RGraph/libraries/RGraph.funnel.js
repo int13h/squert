@@ -43,20 +43,19 @@
             alert('[FUNNEL] No canvas support');
             return;
         }
-        
-        // Check the common library has been included
-        if (typeof(RGraph) == 'undefined') {
-            alert('[FUNNEL] Fatal error: The common library does not appear to have been included');
-        }
-        
+
         /**
         * The funnel charts properties
         */
         this.properties = {
             'chart.strokestyle':           'black',
-            'chart.gutter':                25,
+            'chart.gutter.left':           25,
+            'chart.gutter.right':          25,
+            'chart.gutter.top':            25,
+            'chart.gutter.bottom':         25,
             'chart.labels':                null,
             'chart.title':                 '',
+            'chart.title.background':       null,
             'chart.title.hpos':             null,
             'chart.title.vpos':            null,
             'chart.colors':                ['red', 'green', 'gray', 'blue', 'black', 'gray'],
@@ -71,17 +70,26 @@
             'chart.shadow.blur':           3,
             'chart.shadow.offsetx':        3,
             'chart.shadow.offsety':        3,
-            'chart.key':                   [],
-            'chart.key.position':          'graph',
-            'chart.key.background':        'white',
-            'chart.key.shadow':            false,
+            'chart.key':                    [],
+            'chart.key.background':         'white',
+            'chart.key.position':           'graph',
+            'chart.key.halign':             'right',
+            'chart.key.shadow':             false,
             'chart.key.shadow.color':       '#666',
             'chart.key.shadow.blur':        3,
             'chart.key.shadow.offsetx':     2,
             'chart.key.shadow.offsety':     2,
-            'chart.tooltips':              null,
+            'chart.key.position.gutter.boxed': true,
+            'chart.key.position.x':         null,
+            'chart.key.position.y':         null,
+            'chart.key.color.shape':        'square',
+            'chart.key.rounded':            true,
+            'chart.key.linewidth':          1,
+            'chart.tooltips':               null,
             'chart.tooltips.effect':        'fade',
             'chart.tooltips.css.class':     'RGraph_tooltip',
+            'chart.highlight.stroke':       'black',
+            'chart.highlight.fill':         'rgba(255,255,255,0.5)',
             'chart.tooltips.highlight':     true,
             'chart.annotatable':           false,
             'chart.annotate.color':        'black',
@@ -101,7 +109,9 @@
             'chart.zoom.thumbnail.height': 75,
             'chart.zoom.background':        true,
             'chart.zoom.action':            'zoom',
-            'chart.resizable':              false
+            'chart.resizable':              false,
+            'chart.resize.handle.adjust':   [0,0],
+            'chart.resize.handle.background': null
         }
 
         // Store the data
@@ -148,14 +158,18 @@
         RGraph.ClearEventListeners(this.id);
         
         /**
-        * Resolves the colors array, which allows the colors to be a function
+        * This is new in May 2011 and facilitates indiviual gutter settings,
+        * eg chart.gutter.left
         */
-        RGraph.ResolveColors(this, this.Get('chart.colors'));
+        this.gutterLeft   = this.Get('chart.gutter.left');
+        this.gutterRight  = this.Get('chart.gutter.right');
+        this.gutterTop    = this.Get('chart.gutter.top');
+        this.gutterBottom = this.Get('chart.gutter.bottom');
 
         // This stops the coords array from growing
         this.coords = [];
 
-        RGraph.DrawTitle(this.canvas, this.Get('chart.title'), this.Get('chart.gutter'), null, this.Get('chart.text.size') + 2);
+        RGraph.DrawTitle(this.canvas, this.Get('chart.title'), this.gutterTop, null, this.Get('chart.text.size') + 2);
         this.DrawFunnel();
         
         
@@ -237,7 +251,9 @@
 
                         RGraph.NoShadow(obj);
 
-                        context.fillStyle = 'rgba(255,255,255,0.5)';
+                        context.strokeStyle = obj.Get('chart.highlight.stroke');
+                        context.fillStyle   = obj.Get('chart.highlight.fill');
+
                         context.moveTo(coords[i][0], coords[i][1]);
                         context.lineTo(coords[i][2], coords[i][3]);
                         context.lineTo(coords[i][4], coords[i][5]);
@@ -414,10 +430,10 @@
     {
         var context   = this.context;
         var canvas    = this.canvas;
-        var width     = this.canvas.width - (2 * this.Get('chart.gutter'));
-        var height    = this.canvas.height - (2 * this.Get('chart.gutter'));
+        var width     = RGraph.GetWidth(this) - this.gutterLeft - this.gutterRight;
+        var height    = RGraph.GetHeight(this) - this.gutterTop - this.gutterBottom;
         var total     = RGraph.array_max(this.data);
-        var accheight = this.Get('chart.gutter');
+        var accheight = this.gutterTop;
 
 
         /**
@@ -435,25 +451,26 @@
         for (i=0; i<this.data.length; ++i) {
 
             i = Number(i);
-            
-            var curvalue  = this.data[i];
-            var curwidth  = (curvalue / total) * width;
-            var curheight = height / this.data.length;
+
+            var firstvalue = this.data[0];
+            var firstwidth = (firstvalue / total) * width;
+            var curvalue   = this.data[i];
+            var curwidth   = (curvalue / total) * width;
+            var curheight  = height / this.data.length;
             var halfCurWidth = (curwidth / 2);
-            var nextvalue = this.data[i + 1] ?  this.data[i + 1] : 0;
-            var nextwidth = this.data[i + 1] ? (nextvalue / total) * width : 0;
+            var nextvalue  = this.data[i + 1] ?  this.data[i + 1] : 0;
+            var nextwidth  = this.data[i + 1] ? (nextvalue / total) * width : 0;
             var halfNextWidth = (nextwidth / 2);
-            var center    = (canvas.width / 2);
-            var gutter    = this.Get('chart.gutter');
+            var center     = this.gutterLeft + (firstwidth / 2);
 
             /**
             * First segment
             */
             if (i == 0) {
                 var x1 = center - halfCurWidth;
-                var y1 = gutter;
+                var y1 = this.gutterTop;
                 var x2 = center + halfCurWidth;
-                var y2 = gutter;
+                var y2 = this.gutterTop;
                 var x3 = center + halfNextWidth;
                 var y3 = accheight + curheight;
                 var x4 = center - halfNextWidth;
@@ -543,7 +560,7 @@
     RGraph.Funnel.prototype.DrawLabels = function ()
     {
         /**
-        * Draws the labels (draws them "as we go")
+        * Draws the labels
         */
         if (this.Get('chart.labels') && this.Get('chart.labels').length > 0) {
 
@@ -561,7 +578,17 @@
                 
                 var label = this.Get('chart.labels')[j];
 
-                RGraph.Text(context, this.Get('chart.text.font'), this.Get('chart.text.size'), this.Get('chart.text.halign') == 'left' ? 15 : this.canvas.width / 2, this.coords[j][1], label, 'center', this.Get('chart.text.halign') == 'left' ? 'left' : 'center', true, null, this.Get('chart.text.boxed') ? 'white' : null);
+                RGraph.Text(context,
+                            this.Get('chart.text.font'),
+                            this.Get('chart.text.size'),
+                            this.Get('chart.text.halign') == 'left' ? (this.gutterLeft - 15) : ((this.canvas.width - this.gutterLeft - this.gutterRight) / 2) + this.gutterLeft,
+                            this.coords[j][1],
+                            label,
+                            'center',
+                            this.Get('chart.text.halign') == 'left' ? 'left' : 'center',
+                            true,
+                            null,
+                            this.Get('chart.text.boxed') ? 'white' : null);
             }
         }
     }

@@ -87,7 +87,8 @@ table.datagrid td {
 */
 .topnav {
     color: white;
-    background-color: #314657;
+    background-color: #314657; /* Old */
+    background-color: #2D4B33;
     padding: 1px;
     padding-left: 10px;
 }
@@ -115,10 +116,12 @@ table.datagrid td {
 }
 
 .leftnav {
-    box-shadow: 3px 3px 3px #aaa;
+
+    box-shadow: 0 0 15px #aaa;
+    -moz-box-shadow: 0 0 15px #aaa;
+    -webkit-box-shadow: 0 0 15px #aaa;
+
     border-radius: 5px;
-    -moz-box-shadow: 3px 3px 3px #aaa;
-    -webkit-box-shadow: 3px 3px 3px #aaa;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     width: 180px;

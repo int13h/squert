@@ -1,14 +1,13 @@
 <?php
 // This creates the tabs
-function tabber($tab,$id) {
+function tabber($tab,$id,$s,$e) {
 
     // Tab title, then page name.
     $theTabs = array(
-        "INTELLIGENCE"	=> "p-intel.php?id=$id",
-        "SIGNATURES"	=> "p-sig.php?id=$id",
-        "IP"		=> "p-ip.php?id=$id",
-        "QUERY"		=> "p-query.php?id=$id",
-        "SETTINGS"	=> "p-settings.php?id=$id"
+        "SUMMARY"	=> "p-sum.php?id=$id&s=$s&e=$e",
+        "SIGNATURES"	=> "p-sig.php?id=$id&s=$s&e=$e",
+        "IP"		=> "p-ip.php?id=$id&s=$s&e=$e",
+        "QUERY"		=> "p-query.php?id=$id&s=$s&e=$e",
     );
 
    //ksort($theTabs);
@@ -33,13 +32,4 @@ function tabber($tab,$id) {
         </ul>
         </div>\n";
 }
-
-// We dont want anything cached
-header ("Expires: Sun, 11 Nov 1973 05:00:00 GMT");
-header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header ("Cache-Control: no-cache, must-revalidate");
-header ("Pragma: no-cache");
-
 ?>
-
-

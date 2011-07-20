@@ -18,17 +18,24 @@
         * o------------------------------------------------------------------------------o
         */
     -->
-    <title>RGraph: HTML5 canvas graph library - Animating your graphs</title>
+    <title>RGraph: Javascript charts and graph library - Animating your charts</title>
     
-    <meta name="keywords" content="rgraph html5 canvas graph docs animation" />
-    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about animating your charts" />
+    <meta name="keywords" content="rgraph html5 canvas chart docs animation" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Documentation about animating your charts" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A chart library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
 
     <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
     <link rel="icon" type="image/png" href="../images/favicon.png">
     
     <script src="../libraries/RGraph.common.core.js" ></script>
+    <script src="../libraries/RGraph.rose.js" ></script>
     <script src="../libraries/RGraph.bar.js" ></script>
-    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+    <script src="../libraries/RGraph.line.js" ></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" ></script>
+    <!--[if IE 8]><script src="../excanvas/excanvas.original.js"></script><![endif]-->
     
     <script>
         /**
@@ -43,31 +50,40 @@
             /**
             * Clear all of the canvases
             */
-            RGraph.Clear(document.getElementById("myBar"));
+            RGraph.Clear(document.getElementById("myRose"));
 
             /**
             * Draw the bar chart
             */
             var multiplier = curframe / numframe;
-            var bar = new RGraph.Bar('myBar', [45 * multiplier, 12 * multiplier,
+            var rose = new RGraph.Rose('myRose', [45 * multiplier, 12 * multiplier,
                                            16 * multiplier, 18 * multiplier,
                                            44 * multiplier, 54 * multiplier,
                                            23 * multiplier, 21 * multiplier,
                                            56 * multiplier, 58 * multiplier,
                                            33 * multiplier, 47 * multiplier] );
-            bar.Set('chart.labels', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
-            bar.Set('chart.ymax', 60); // This stops the scale from changing frame to frame
-            bar.Set('chart.hmargin', 5);
-            bar.Set('chart.title', 'An animated bar chart');
+            rose.Set('chart.labels', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+            rose.Set('chart.ymax', 60); // This stops the scale from changing frame to frame
+            rose.Set('chart.hmargin', 5);
+            rose.Set('chart.gutter.left', 30);
+            rose.Set('chart.gutter.right', 30);
+            rose.Set('chart.gutter.top', 30);
+            rose.Set('chart.gutter.bottom', 30);
             
             // Gradient
-            var grad = bar.context.createLinearGradient(0,0,0,200);
-            grad.addColorStop(0, 'red');
-            grad.addColorStop(1, 'white');
+            var grad = rose.context.createRadialGradient(rose.canvas.width / 2,
+                                                         rose.canvas.height / 2,
+                                                         0,
+                                                         rose.canvas.width / 2,
+                                                         rose.canvas.height / 2,
+                                                         150);
 
-            bar.Set('chart.colors', [grad]);
-            bar.Set('chart.strokecolor', null);
-            bar.Draw();
+            grad.addColorStop(0, 'white');
+            grad.addColorStop(1, 'red');
+
+            rose.Set('chart.colors', [grad]);
+            rose.Set('chart.strokecolor', null);
+            rose.Draw();
 
             /**
             * If the animation frame is less than number of the total number of frames, redraw the canvas
@@ -78,123 +94,65 @@
             }
         }
     </script>
+
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 </head>
 <body>
 
-    <!-- Social networking buttons -->
-    <script src="../libraries/RGraph.common.core.js" ></script>
     
-    <script>
-        function HideTwitterDIV ()
-        {
-            document.getElementById("twitter_div").style.opacity = 0;
-            document.getElementById("twitter_div").style.display = 'none';
-        }
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
 
-
-        function ShowTwitterDIV (e)
-        {
-            var e   = RGraph.FixEventObject(document.all ? event : e);
-            var div = document.getElementById("twitter_div");
-            var img = document.getElementById("twitter_icon");
-
-            div.style.display = 'block';
-            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
-            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
-
-            /**
-            * Fade it in
-            */
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
-
-            e.stopPropagation();
-
-            return false;
-        }
-        
-        window.addEventListener('click', HideTwitterDIV, false);
-    </script>
-
-    <!-- The twitter DIV --> 
-    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
-        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
-        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
-    </div>
-
-    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
         <script>
             // Opera fix
             if (navigator.userAgent.indexOf('Opera') == -1) {
               document.getElementById("social_icons").style.position = 'fixed';
-              document.getElementById("twitter_div").style.position = 'fixed';
-    
             }
         </script>
-    
-        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
-    
-    
-            <div id="social">
-                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
-                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
-                </a> 
-     
-                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
-                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
-                </a>
-    
-    
-                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
-                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-    
-                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
-                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
-                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
-                </a>
-    
-                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
-                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
-                </a>
-            </div>
-    </div>
-    <!-- /Social networking buttons -->
+    <!-- Social networking buttons -->
 
     <div id="breadcrumb">
-        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        <a href="../index.html">RGraph: Javascript charts and graph library</a>
         >
         <a href="index.html">Documentation</a>
         >
-        Animating your graphs
+        Animating your charts
     </div>
 
-    <h1>RGraph: HTML5 canvas graph library - Animating your graphs</h1>
+    <h1>RGraph: Javascript charts and graph library - Animating your charts</h1>
 
     <script>
         if (RGraph.isIE8()) {
-            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
         }
     </script>
 
     <div style="float: right">
-        <canvas id="myBar" width="400" height="200">[No canvas support]</canvas>
+        <canvas id="myRose" width="300" height="300">[No canvas support]</canvas>
     </div>
 
     <p>
-        Animating your graphs is a relatively easy affair, whilst not being supported natively as it would only serve to
+        Animating your charts is a relatively easy affair, whilst not being supported natively as it would only serve to
         over-complicate the RGraph libraries. The way to do it is to use
         the function <i>RGraph.Clear(canvas)</i>, passing it your canvas object that is returned by
-        <i>document.getElementById()</i>. By default this will cover the canvas in white. You can change this by
+        <i>document.getElementById()</i>. By default this will revert the canvas back to transparency. You can change this by
         passing it the color you want it to use as the second (optional) argument. You could even use a gradient if
-        you wanted. Then you can simply redraw the entire graph.
+        you wanted. Then you can simply redraw the entire chart.
     </p>
     
     <p>
@@ -204,11 +162,109 @@
     
     <p>
         You can review the source of this page if you need further help. Two global variables are set - the number of frames
-        and the current frame number (which starts at one). The graphs are then drawn with appropriate data
+        and the current frame number (which starts at one). The charts are then drawn with appropriate data
         (ie the data multiplied by the frame number over the total number of frames). If the frame number is less than
         the total number of frames, the frame number is incremented and the function (window.onload) is called again
         after a small delay.
     </p>
+    
+    <h4>Animation using jQuery</h4>
 
+
+    <div style="width: 600px; height: 250px; display: inline; display: inline-block; float: right">
+        <canvas id="myLine" width="600" height="250" style="position: relative">[No canvas support]</canvas>
+    </div>
+    <button style="width: 600px; float: right" id="butAnimate" onclick="Animate(); this.disabled = true; setTimeout(function () {document.getElementById('butAnimate').disabled = false;}, 2000);">Animate!</button>
+
+    <script>
+        animate = false;
+        ShowGraph();
+
+        /**
+        * This is the jQuery animation bit
+        */
+        function Animate()
+        {
+            $('#myLine').animate({
+                opacity: 0,
+                width: 0,
+                height: 0,
+                left: '+=300px',
+                top: '+=125px'
+            }, 1000, null, function () {animate = true; ShowGraph();});
+        }
+        
+        function ShowGraph()
+        {
+            // This clears the canvas            
+            document.getElementById("myLine").width = 600;
+            
+            if (document.getElementById("myLine").__object__ && document.getElementById("myLine").__object__.type == 'line') {
+                var bar = new RGraph.Bar('myLine', [4,2,3]);
+                bar.Set('chart.labels', ['Fred','Charles','Carl']);
+                bar.Set('chart.title', 'jQuery animation example');
+                bar.Set('chart.labels.above', true);
+                bar.Set('chart.labels.above.size', 16);
+                bar.Set('chart.units.post', 'pt');
+                bar.Draw();
+            
+            } else {    
+                line = new RGraph.Line('myLine', [4,5,3,4,6,8,4,9,5,2]);
+                line.Set('chart.hmargin', 5);
+                line.Set('chart.labels', ['Gavin','Hoolio','June','Kev','Lou','Jane','Rich','Tom','John','Pat']);
+                line.Set('chart.tickmarks', 'endcircle');
+                line.Set('chart.title', 'jQuery animation example');
+                line.Draw();
+            }
+
+            if (animate) {
+                $('#myLine').animate({
+                    opacity: 1,
+                    width: '600px',
+                    height: '250px',
+                    left: '-=300px',
+                    top: '-=125px'
+                }, 1000);
+                
+                animate = true;
+            }
+        }
+    </script>
+
+    <p>
+        You can if you prefer use an external library for animation, like jQuery.
+    </p>
+    
+    <p>
+        The chart to the right is animated using
+        jQuery. In the example the width is maintained by placing the canvas within a DIV which has the width/height CSS
+        attributes set.
+    </p>
+    
+    <p>
+        In this instance, the <a href="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" target="_blank">
+        Google hosted jQuery</a> is used.
+    </p>
+    
+    
+    <br clear="all" />
+    
+    <h4>CSS animation versus &lt;canvas&gt; animation</h4>
+    
+    <p>
+        As you can see from the above examples, or if you build your own animations, CSS animation (which jQuery does) can be much smoother.
+        This is because CSS animation (ie changing the CSS attributes) does not have the side effect of clearing the canvas, and so
+        does not incur a redraw.
+    </p>
+    
+    <h4>An Animated Pie chart</h4>
+    
+    <p>
+        <a href="animation_segments.html"><b>This example</b></a> is of the Pie chart, with animated segment separation. Animated
+        segment separation is now (April 2011) available as an alternative tooltip highlight mode:
+        
+        <pre class="code">myObj.Set('chart.highlight.style', 'explode');</pre>
+    </p>
+    
 </body>
 </html>

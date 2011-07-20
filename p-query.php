@@ -19,6 +19,7 @@
 //
 //
 
+include_once '.inc/functions.php';
 include_once '.inc/session.php';
 include_once '.inc/tabs.php';
 ?>
@@ -51,11 +52,13 @@ include_once '.inc/tabs.php';
 <tr>
 <td>
 <?php 
-  tabber("QUERY",$id);
+  tabber("QUERY",$id,$startDate,$endDate);
 ?>
 <div id="main">
+<?php echo $timeLinks;?>
 <div id="contents" class="main">
-<?php include '.inc/squert.php';?>
+<?php include_once '.inc/squert.php';?>
+<?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>
 </td>

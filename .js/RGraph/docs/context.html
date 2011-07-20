@@ -18,19 +18,24 @@
         * o------------------------------------------------------------------------------o
         */
     -->
-    <title>RGraph: HTML5 canvas graph library - Context menus</title>
+    <title>RGraph: Javascript charts and graph library - Context menus</title>
     
-    <meta name="keywords" content="rgraph html5 canvas graph docs context menus" />
-    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about context menus" />
+    <meta name="keywords" content="rgraph html5 canvas chart docs context menus" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Documentation about context menus" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A chart library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
 
     <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
     <link rel="icon" type="image/png" href="../images/favicon.png">
     
     <script src="../libraries/RGraph.common.core.js" ></script>
     <script src="../libraries/RGraph.common.context.js" ></script>
+    <script src="../libraries/RGraph.common.zoom.js" ></script>
     <script src="../libraries/RGraph.bar.js" ></script>
     <script src="../libraries/RGraph.line.js" ></script>
-    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+    <!--[if IE 8]><script src="../excanvas/excanvas.original.js"></script><![endif]-->
 
     <!-- Contextmenu CSS classes -->
     <style>
@@ -44,112 +49,61 @@
         }
     </style>
 
+
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 </head>
 <body>
 
-    <!-- Social networking buttons -->
-    <script src="../libraries/RGraph.common.core.js" ></script>
     
-    <script>
-        function HideTwitterDIV ()
-        {
-            document.getElementById("twitter_div").style.opacity = 0;
-            document.getElementById("twitter_div").style.display = 'none';
-        }
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
 
-
-        function ShowTwitterDIV (e)
-        {
-            var e   = RGraph.FixEventObject(document.all ? event : e);
-            var div = document.getElementById("twitter_div");
-            var img = document.getElementById("twitter_icon");
-
-            div.style.display = 'block';
-            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
-            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
-
-            /**
-            * Fade it in
-            */
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
-
-            e.stopPropagation();
-
-            return false;
-        }
-        
-        window.addEventListener('click', HideTwitterDIV, false);
-    </script>
-
-    <!-- The twitter DIV --> 
-    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
-        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
-        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
-    </div>
-
-    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
         <script>
             // Opera fix
             if (navigator.userAgent.indexOf('Opera') == -1) {
               document.getElementById("social_icons").style.position = 'fixed';
-              document.getElementById("twitter_div").style.position = 'fixed';
-    
             }
         </script>
-    
-        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
-    
-    
-            <div id="social">
-                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
-                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
-                </a> 
-     
-                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
-                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
-                </a>
-    
-    
-                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
-                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-    
-                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
-                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
-                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
-                </a>
-    
-                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
-                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
-                </a>
-            </div>
-    </div>
-    <!-- /Social networking buttons -->
+    <!-- Social networking buttons -->
 
     <div id="breadcrumb">
-        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        <a href="../index.html">RGraph: Javascript charts and graph library</a>
         >
         <a href="index.html">Documentation</a>
         >
         Context menus
     </div>
 
-    <h1>RGraph: HTML5 canvas graph library - Context menus</h1>
+    <h1>RGraph: Javascript charts and graph library - Context menus</h1>
 
 
     <script>
         if (RGraph.isIE8()) {
-            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
         }
     </script>
+    
+    
+    
+    <div style="text-align: center; float: right">
+        <canvas id="myCanvas" width="500" height="200">[No canvas support]</canvas><br />
+        <small>(<a href="#mac">some browsers use a double left click</a>)</small>
+    </div>
     
     <ul>
         <li><a href="#what">What are context menus?</a></li>
@@ -158,9 +112,9 @@
         <li><a href="#define">How do I define context menus?</a></li>
         <li><a href="#seperators">Can I have "separators"?</a></li>
         <li><a href="#bypass">How do I bypass them?</a></li>
+        <li><a href="#getshape">How do I get the underlying shape that was clicked on?</a></li>
         <li><a href="#use">What can I use them for?</a></li>
-        <li><a href="#example">Is there an example file that uses the CSS classes?</a></li>
-        <li><a href="#mac">Context menus, Macs, Safari and Opera</a></li>
+        <li><a href="#mac">Context menus, Macs, Safari, Opera and MSIE 9</a></li>
     </ul>
 
     <a name="what"></a>
@@ -169,14 +123,14 @@
 
     <p>
         Context menus are what you see when you click your right mouse button. With RGraph, you can specify custom menus
-        for your graphs if you wish. This way you can define custom actions to be associated with menu items. Context menus are a
-        very easy way to extend the functionality of your graphs, allowing you to associate presentation style functionality
+        for your charts if you wish. This way you can define custom actions to be associated with menu items. Context menus are a
+        very easy way to extend the functionality of your charts, allowing you to associate presentation style functionality
         with them.
     </p>
     
     <p>
         <b>Important:</b> Opera does not allow you to customise the context menu, so with this browser you
-        should use the left mouse button on the graph, instead of the right.
+        should use the left mouse button on the chart, instead of the right.
     </p>
 
     <a name="look"></a>
@@ -205,7 +159,7 @@
 &lt;/style&gt;</pre>
 
     <p>
-        The "! important" is not necessary if you're not overriding a style that is set by the graph script. If you're having trouble,
+        The "! important" is not necessary if you're not overriding a style that is set by the chart script. If you're having trouble,
         it's a good idea to use it though.
     </p>
 
@@ -272,8 +226,36 @@ myBar.Set('chart.contextmenu', [
     
     <p>
         If for any reason you wish to access the browsers own context menu, you can hold down your CTRL key on your keyboard when you
-        click, and the canvas context menu will be bypassed. Try it on the graph below by holding your CTRL key whilst right clicking.
+        click, and the canvas context menu will be bypassed. Try it on the chart below by holding your CTRL key whilst right clicking.
     </p>
+
+
+
+
+    <a name="getshape"></a>
+    <br />&nbsp;<br />
+
+    <canvas id="cvs" width="600" height="250" style="float: right">[No canvas support]</canvas>
+
+    <h3>How do I get the underlying shape that was clicked on?</h3>
+    
+    <p>
+        In some circumstances you may want to know which bar/point/segment was right-clicked on when showing the context menu (if any).
+        In these cases you will find the pertinent information (the same as what you get from the various .get*() methods) on the
+        context menu object - which is held in the registry: <i>RGraph.Registry.Get('chart.contextmenu').__shape__</i>. The example bar chart
+        shows it in action.
+    </p>
+    
+    <pre class="code">
+&lt;script&gt;
+    function myListener (obj)
+    {
+        p(RGraph.Registry.Get('chart.contextmenu').__shape__)
+    }
+    RGraph.AddCustomEventListener(myBar, 'oncontextmenu', myListener);
+&lt;/script&gt;
+</pre>
+    
 
     <a name="use"></a>
     <br />&nbsp;<br />
@@ -282,26 +264,15 @@ myBar.Set('chart.contextmenu', [
     <p>
         Since the context menu items run Javascript functions when selected, you can use them for pretty much
         anything you want. For example you could make a presentation system, with the context menu controlling which
-        graph is shown on the canvas. For example:
-    </p>
-    
-    <div style="text-align: center">
-        <canvas id="myCanvas" width="600" height="200">[No canvas support]</canvas>
-    </div>
-
-    <a name="example"></a>
-    <h3>Is there an example file that uses the CSS classes?</h3>
-
-    <p>
-        You can take a look at the bottom of the <a href="../css/website.css" >CSS file for this website</a>.
+        chart is shown on the canvas, like the example above.
     </p>
 
     <a name="mac"></a>
     <br />&nbsp;<br />
-    <h3>Context menus, Macs, Safari and Opera</h3>
+    <h3>Context menus, Macs, Safari, Opera and MSIE 9</h3>
     
     <p>
-        Mac Safari, Mac Firefox and Windows Safari can have trouble displaying the context menu. So for this reason, for these browsers,
+        Mac Safari, Mac Firefox, Windows Safari and MSIE 9 (beta 1) can have trouble displaying the context menu. So for this reason, for these browsers,
         the context menu is attached to a double click of the left mouse button. Opera doesn't support customising the context menu so
         this browser also uses a left mouse button double click to trigger the context menu.
     </p>
@@ -316,11 +287,12 @@ myBar.Set('chart.contextmenu', [
 
             var bar = new RGraph.Bar('myCanvas', [[45,15],[16,23],[52,12],[33,64],[34,54],[62,33],[66,23],[12,23],[12,53],[16,45],[26,43],[46,42],[41,41],[32,46]]);
             bar.Set('chart.colors', ['#66f', '#f66']);
-            bar.Set('chart.gutter', 25);
             bar.Set('chart.title', 'Data represented on a bar chart (with context menu)');
             bar.Set('chart.labels', ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th', '13th', '14th']);
-            bar.Set('chart.contextmenu', [['Graph', [['Bar chart', ShowGraphOne], ['Line graph', ShowGraphTwo]]], null, ['Cancel', function () {}]]);
+            bar.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom], null, ['Chart', [['Bar chart', ShowGraphOne], ['Line chart', ShowGraphTwo]]], null, ['Cancel', function () {}]]);
             bar.Set('chart.grouping', 'grouped');
+            bar.Set('chart.zoom.hdir', 'left');
+            bar.Set('chart.zoom.vdir', 'center');
             bar.Draw();
         }
 
@@ -332,25 +304,40 @@ myBar.Set('chart.contextmenu', [
             RGraph.Clear(document.getElementById('myCanvas'));
 
             var line = new RGraph.Line('myCanvas', [15,23,12,64,54,33,23,23,53,45,43,42,41,46], [45,16,52,33,34,62,66,12,12,16,26,46,41,32]);
-            line.Set('chart.title', 'Same data, but represented on a line chart (with context menu)');
+            line.Set('chart.title', 'Data represented on a line chart (context menu)');
             line.Set('chart.colors', ['#f66', '#66f']);
-            line.Set('chart.background.barcolor1', '#fff');
-            line.Set('chart.background.barcolor2', '#fff');
+            line.Set('chart.background.barcolor1', 'white');
+            line.Set('chart.background.barcolor2', 'white');
             line.Set('chart.tickmarks', null);
             line.Set('chart.linewidth', 3);
-            line.Set('chart.gutter', 25);
             line.Set('chart.hmargin', 550 / 26);
             line.Set('chart.labels', ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th', '13th', '14th']);
-            line.Set('chart.contextmenu', [['Graph', [['Bar chart', ShowGraphOne], ['Line graph', ShowGraphTwo]]], null, ['Cancel', function () {}]]);
+
+            line.Set('chart.contextmenu', [['Zoom in', RGraph.Zoom], null, ['Chart', [['Bar chart', ShowGraphOne],['Line chart', ShowGraphTwo]]], null,['Cancel', function () {}]]);
+            line.Set('chart.zoom.hdir', 'left');
+            line.Set('chart.zoom.vdir', 'center');
+
             line.Draw();
         }
         
         /**
-        * Show the first graph
+        * Show the first chart
         */
         window.onload = function ()
         {
             ShowGraphOne();
+            
+            var myBar = new RGraph.Bar('cvs', [54,52,64,84,72,65]);
+            myBar.Set('chart.labels', ['Fred','Rich','Dave','John','Kev','Lou']);
+            myBar.Set('chart.title', 'A chart showing the context menu .__shape__ property (context)');
+            myBar.Set('chart.contextmenu', [['A sample context menu item', function () {}]]);
+            myBar.Draw();
+            
+            function myListener (obj)
+            {
+                p(RGraph.Registry.Get('chart.contextmenu').__shape__)
+            }
+            RGraph.AddCustomEventListener(myBar, 'oncontextmenu', myListener);
         }
 
     </script>

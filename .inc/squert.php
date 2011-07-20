@@ -21,7 +21,6 @@
 
 include_once 'session.php';
 include "config.php";
-include "functions.php";
 include "grid.php";
 include "charts.php";
 include "map.php";
@@ -57,6 +56,7 @@ if(!isset($_REQUEST['eHour'])) { $eHour = 23; } else { $eHour = $_REQUEST['eHour
 if(!isset($_REQUEST['eMin'])) { $eMin = 59; } else { $eMin = $_REQUEST['eMin']; }
 if(!isset($_REQUEST['eSec'])) { $eSec = 59; } else { $eSec = $_REQUEST['eSec']; }
 $timeParts = fixTime($sDate,"$sHour:$sMin:$sSec",$eDate,"$eHour:$eMin:$eSec");
+
 
 // Main Function
 function DoQueries($timeParts) {
@@ -884,7 +884,6 @@ if (isset($_POST['base'])) {
             break;
    }
 }
-$_SESSION['LAST_ACTIVITY'] = time();
 ?>
 <script type="text/javascript" src=".js/menu.js"></script>
 </form>

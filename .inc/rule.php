@@ -72,7 +72,7 @@ $sigID = $_REQUEST['sigID'];
 <html>
 <head>
 <TITLE>Signature ID:<?php echo $sigID;?></TITLE>
-<link href=".css/squert.css" rel="stylesheet" type="text/css">
+<link href="../.css/squert.css" rel="stylesheet" type="text/css">
 </head>
 <body style="color: #000000; background: #f4f4f4; font-size: .8em;">
 

@@ -18,26 +18,29 @@
         * o------------------------------------------------------------------------------o
         */
     -->
-    <title>RGraph: HTML5 canvas graph library - Integrating RGraph with external libraries</title>
+    <title>RGraph: Javascript charts and graph library - Integrating RGraph with external libraries</title>
     
-    <meta name="keywords" content="rgraph html5 canvas graph docs external libraries" />
-    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about integrating RGraph with external libraries" />
+    <meta name="keywords" content="rgraph html5 canvas charts docs external libraries" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Documentation about integrating RGraph with external libraries" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A charts library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
 
     <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="../css/ModalDialog.css" type="text/css" media="screen" />
     <link rel="icon" type="image/png" href="../images/favicon.png">
 
     <script src="../libraries/RGraph.modaldialog.js" ></script>
     <script src="../libraries/RGraph.common.core.js" ></script>
     <script src="../libraries/RGraph.common.context.js" ></script>
     <script src="../libraries/RGraph.line.js" ></script>
-    <!--[if IE 8]><script src="../excanvas/excanvas.compressed.js"></script><![endif]-->
+    <!--[if IE 8]><script src="../excanvas/excanvas.original.js"></script><![endif]-->
     
     <script>
         window.onload = function ()
         {
             /**
-            * Draw the line graph
+            * Draw the line chart
             */
             var line = new RGraph.Line('myLine', [45,12,16,18,44,54,23,21,56,58,33,47]);
             line.Set('chart.background.barcolor1', 'white');
@@ -48,7 +51,7 @@
             line.Set('chart.shadow', true);
             line.Set('chart.shadow.offset', 2);
             line.Set('chart.labels', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
-            line.Set('chart.title', 'A line graph with context menu');
+            line.Set('chart.title', 'A line chart with context menu');
 
             // This defines a context menu which shows the dialog. The commented out
             // bit defines an onclick handler on the background, so that when you
@@ -83,110 +86,51 @@
         }
     </style>
 
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
 </head>
 <body>
 
-    <!-- Social networking buttons -->
-    <script src="../libraries/RGraph.common.core.js" ></script>
     
-    <script>
-        function HideTwitterDIV ()
-        {
-            document.getElementById("twitter_div").style.opacity = 0;
-            document.getElementById("twitter_div").style.display = 'none';
-        }
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
 
-
-        function ShowTwitterDIV (e)
-        {
-            var e   = RGraph.FixEventObject(document.all ? event : e);
-            var div = document.getElementById("twitter_div");
-            var img = document.getElementById("twitter_icon");
-
-            div.style.display = 'block';
-            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
-            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
-
-            /**
-            * Fade it in
-            */
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
-
-            e.stopPropagation();
-
-            return false;
-        }
-        
-        window.addEventListener('click', HideTwitterDIV, false);
-    </script>
-
-    <!-- The twitter DIV --> 
-    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
-        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
-        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
-    </div>
-
-    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
         <script>
             // Opera fix
             if (navigator.userAgent.indexOf('Opera') == -1) {
               document.getElementById("social_icons").style.position = 'fixed';
-              document.getElementById("twitter_div").style.position = 'fixed';
-    
             }
         </script>
-    
-        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
-    
-    
-            <div id="social">
-                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
-                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
-                </a> 
-     
-                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
-                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
-                </a>
-    
-    
-                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
-                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-    
-                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
-                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
-                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
-                </a>
-    
-                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
-                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
-                </a>
-            </div>
-    </div>
-    <!-- /Social networking buttons -->
+    <!-- Social networking buttons -->
 
 
     <div id="breadcrumb">
-        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        <a href="../index.html">RGraph: Javascript charts and graph library</a>
         >
         <a href="index.html">Documentation</a>
         >
         Integrating RGraph with external libraries
     </div>
 
-    <h1>RGraph: HTML5 canvas graph library - Integrating RGraph with external libraries</h1>
+    <h1>RGraph: Javascript charts and graph library - Integrating RGraph with external libraries</h1>
 
     <script>
         if (RGraph.isIE8()) {
-            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
         }
     </script>
 
@@ -195,13 +139,14 @@
         <li><a href="#hiding">Hiding the ModalDialog</a></li>
         <li><a href="#customising">Customising the ModalDialog</a></li>
         <li><a href="#integration">ModalDialog integration</a></li>
+        <li><a href="#covering">Covering the scroll bars</a></li>
     </ul>
 
     <canvas id="myLine" width="400" height="200" style="float: right">[No canvas support]</canvas>
 
     <p>
-        This page shows you how you can easily integrate the graphs with other external Javascript libraries. This particular example
-        attaches a context menu to the graph, of which the only option is to show a login dialog. This could, for example, be used to
+        This page shows you how you can easily integrate the charts with other external Javascript libraries. This particular example
+        adds a context menu to the chart, of which the only option is to show a login dialog. This could, for example, be used to
         allow logging in to an admin area.
     </p>
     
@@ -227,7 +172,7 @@
     window.onload = function ()
     {
         /**
-        * Draw the line graph
+        * Draw the line chart
         */
         var line = new RGraph.Line('myLine', [45,12,16,18,44,54,23,21,56,58,33,47]);
         line.Set('chart.background.barcolor1', 'white');
@@ -238,14 +183,41 @@
         line.Set('chart.shadow', true);
         line.Set('chart.shadow.offset', 2);
         line.Set('chart.labels', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
-        line.Set('chart.title', 'A line graph with context menu');
+        line.Set('chart.title', 'A line chart with context menu');
         <span style="color: green">
         // This defines a context menu which calls the given function. This function in turn shows the dialog
         line.Set('chart.contextmenu', [['Login to admin area...', function () {ModalDialog.Show('myDialog', 300);}}]]);
         </span>
         line.Draw();
     }
-&lt;/script&gt;</pre>
+&lt;/script&gt;
+
+&lt;!-- This is the popup dialog--&gt;
+    &lt;div id="myDialog" class="modalDialog" style="display: none"&gt;
+        &lt;b&gt;Please login&lt;/b&gt;
+        &lt;p&gt;
+            &lt;table border="0"&gt;
+                &lt;tr&gt;
+                    &lt;td align="right" style="padding-top: 4px"&gt;Email&lt;/td&gt;
+                    &lt;td&gt;&lt;input type="text" size="20" name="email" style="width: 150px" />&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td align="right" style="padding-top: 4px"&gt;Password&lt;/td&gt;
+                    &lt;td&gt;&lt;input type="password" size="20" name="password" style="width: 150px" /&gt;&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td colspan="2" align="right"&gt;
+                        &lt;input type="reset" value="Cancel" onclick="ModalDialog.Close()"&gt;
+                        &lt;input type="submit"
+                                  name="submit"
+                                  value="Login &raquo;"
+                                  onclick="alert('This is just an example'); event.stopPropagation()"&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/table&gt;
+        &lt;/p&gt;
+    &lt;/div&gt;
+&lt;!-- End of dialog --&gt;</pre>
 
     <p>
         If you're interested in using this modal dialog, then you'll probably also want the CSS that styles it. This can be found in the
@@ -276,12 +248,12 @@
 
     <a name="customising"></a>
     <h3>Customising the ModalDialog</h3>
-    <p>
-        You can customise the appearance of the ModalDialog by using three CSS classes, which are documented <a href="css.html">here</a>.
-        This page customises the dialog slightly by changing the shadow X/Y offsets:
-    </p>
-    
-    <pre class="code">
+        <p>
+            You can customise the appearance of the ModalDialog by using three CSS classes, which are documented <a href="css.html">here</a>.
+            This page customises the dialog slightly by changing the shadow X/Y offsets:
+        </p>
+        
+        <pre class="code">
 &lt;style&gt;
     /*
     * These are the CSS classes that you can use to customise the appearance of the ModalDialog. If you're trying to
@@ -316,17 +288,34 @@
 
     <a name="integration"></a>
     <h3>ModalDialog integration</h3>
-    <p>
-        To integrate the ModalDialog look at the sample code above (the key line is where the context menu is defined). The method you should call is <b>ModalDialog.Show(id, width)</b>.
-        The <i>id</i> is the <i>id</i> of the layer to use. Only the <i>.innerHTML</i> is used, not the layer itself, so it can be hidden by
-        setting the display CSS <i>display</i> property to <i>none</i>. The <i>width</i> is a number which is used as the width of the dialog.
-    </p>
-    
-    <p>
-        The only library needed for the ModalDialog to work is <i>RGraph.modaldialog.js</i> - you do not need to use
-        <i>RGraph.common.js</i>. This makes for far smaller download requirements.
+        <p>
+            To integrate the ModalDialog look at the sample code above (the key line is where the context menu is defined). The method you should call is <b>ModalDialog.Show(id, width)</b>.
+            The <i>id</i> is the <i>id</i> of the layer to use. Only the <i>.innerHTML</i> is used, not the layer itself, so it can be hidden by
+            setting the display CSS <i>display</i> property to <i>none</i>. The <i>width</i> is a number which is used as the width of the dialog.
+        </p>
         
-    </p>
+        <p>
+            The only library needed for the ModalDialog to work is <i>RGraph.modaldialog.js</i> - you do not need to use
+            <i>RGraph.common.js</i>. This makes for far smaller download requirements.
+        </p>
+
+    <a name="covering"></a>
+    <h3>Covering the scroll bars</h3>
+        <p>
+            Normally, a regular DIV lives inside the browser and cannot cover the scroll bars. There is however a way to achieve
+            this but it does mean that restructuring your website may be necessary, and it's done by using an IFRAME. The following
+            steps are involved:
+        </p>
+        
+        <ol>
+            <li style="margin-top: 0">The index page of your website creates an IFRAME and sets it to cover the entire window.</li>
+            <li style="margin-top: 0">This IFRAME then loads the website.</li>
+            <li style="margin-top: 0">The DIV then covers the top-most window.</li></li>
+        </ol>
+        
+        <p style="margin-bottom: 50px">
+            There is an example of this technique <a href="iframe-setup.html"><b>here</b></a>
+        </p>
 
     <!-- This is the popup dialog-->
 
@@ -348,7 +337,7 @@
                     <tr>
                         <td colspan="2" align="right">
                             <input type="reset" value="Cancel" onclick="ModalDialog.Close()">
-                            <input type="submit" name="submit" value="Login &raquo;" onclick="alert('This is just an example'); if (document.all) event.cancelBubble = true; else event.stopPropagation()">
+                            <input type="submit" name="submit" value="Login &raquo;" onclick="alert('This is just an example'); event.stopPropagation()">
                         </td>
                     </tr>
                 </table>

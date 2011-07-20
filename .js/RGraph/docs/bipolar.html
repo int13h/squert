@@ -18,116 +18,62 @@
         * o------------------------------------------------------------------------------o
         */
     -->
-    <title>RGraph: HTML5 canvas graph library - Bi-polar chart documentation</title>
+    <title>RGraph: Javascript charts and graph library - Bi-polar chart documentation</title>
     
-    <meta name="keywords" content="rgraph html5 canvas graph docs bipolar chart" />
-    <meta name="description" content="RGraph: HTML5 canvas graph software - Documentation about the Bipolar chart" />
+    <meta name="keywords" content="rgraph html5 canvas chart docs bipolar chart" />
+    <meta name="description" content="RGraph: Javascript charts and graph library - Documentation about the Bipolar chart" />
+    
+    <meta property="og:title" content="RGraph: Javascript charts and graph library" />
+    <meta property="og:description" content="A chart library based on the HTML5 canvas tag" />
+    <meta property="og:image" content="http://www.rgraph.net/images/logo.png"/>
 
     <link rel="stylesheet" href="../css/website.css" type="text/css" media="screen" />
     <link rel="icon" type="image/png" href="../images/favicon.png">
+
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-54706-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 </head>
 <body>
 
-    <!-- Social networking buttons -->
-    <script src="../libraries/RGraph.common.core.js" ></script>
     
-    <script>
-        function HideTwitterDIV ()
-        {
-            document.getElementById("twitter_div").style.opacity = 0;
-            document.getElementById("twitter_div").style.display = 'none';
-        }
+    <!-- Social networking buttons -->
+        <div id="social_icons" class="warning" style="border-radius: 10px; top: 1px; position: fixed">
+            <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20javascript%20charts%20library%20supporting%20a%20wide%20range%20of%20different%20charts%20types&title=RGraph:Javascript%20charts%20and%20graphs%20library" target="_blank"><img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a href="http://twitter.com/home/?status=RGraph%3A%20Javascript+charts+and+graph+library+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas+%23javascript+%23charts+@_rgraph" target="_blank"><img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" /></a>
+            <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20Javascript%20chart%20and%20graph%20library', 'facebook_window', 'width=500,height=400,top=100,left=100'); return false"><img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" border="0"/></a>
+        </div>
 
-
-        function ShowTwitterDIV (e)
-        {
-            var e   = RGraph.FixEventObject(document.all ? event : e);
-            var div = document.getElementById("twitter_div");
-            var img = document.getElementById("twitter_icon");
-
-            div.style.display = 'block';
-            div.style.left    = (RGraph.getCanvasXY(img)[0] + img.offsetWidth - div.offsetWidth + 110) + 'px';
-            div.style.top     = (RGraph.getCanvasXY(img)[1] - 1) + 'px';
-
-            /**
-            * Fade it in
-            */
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.2;', 25);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.4;', 50);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.6;', 100);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 0.8;', 125);
-            setTimeout('document.getElementById("twitter_div").style.opacity = 1.0;', 150);
-
-            e.stopPropagation();
-
-            return false;
-        }
-        
-        window.addEventListener('click', HideTwitterDIV, false);
-    </script>
-
-    <!-- The twitter DIV --> 
-    <div id="twitter_div" style="position: absolute;top: 0;left: 0;background-color: #eee;border: 2px dashed black;box-shadow: 0 0 15px #aaa;-moz-box-shadow: 0 0 15px #aaa;-webkit-box-shadow: 0 0 15px #aaa;padding: 3px;display: none;opacity: 0;z-index: 99;"> 
-        <a href="http://twitter.com/home/?status=RGraph%3A+HTML5+canvas+graph+library+based+on+the+HTML5+canvas+tag+http%3A%2F%2Fwww.rgraph.net+%23rgraph+%23html5+%23canvas" target="_blank" title="Share on Twitter" rel="nofollow" style="text-decoration: none">Tweet&nbsp;about&nbsp;RGraph</a><br>
-        <a href="http://twitter.com/_rgraph" style="text-decoration: none" rel="nofollow" target="_blank">Follow for HTML5 news</a> 
-    </div>
-
-    <div id="social_icons" class="warning" style="top: 0; left: 5px; position: absolute">
         <script>
             // Opera fix
             if (navigator.userAgent.indexOf('Opera') == -1) {
               document.getElementById("social_icons").style.position = 'fixed';
-              document.getElementById("twitter_div").style.position = 'fixed';
-    
             }
         </script>
-    
-        <b style="display: inline-block; position: relative; top: 1px">Bookmark and share:</b>
-    
-    
-            <div id="social">
-                <a title="Bookmark with delicious" href="http://delicious.com/save?jump=close&v=4&noui&jump=close&url=http://www.rgraph.net&notes=RGraph%20is%20a%20HTML5%20based%20graph%20library%20supporting%20a%20wide%20range%20of%20different%20graph%20types:Bar,%20Bipolar,%20Donut,%20Funnel,%20Gantt,%20Horizontal%20Bar,%20LED,%20Line,%20Meter,%20Odometer,%20Pie,%20Progress%20Bar,%20Rose,%20RScatter,%20Scatter%20and%20Traditional%20Radar&title=RGraph:%20HTML5%20canvas%20graph%20library%20based%20on%20the%20HTML5%20canvas%20tag" target="_blank">
-                    <img src="../images/delicious.png" alt="Bookmark with delicious" width="22" height="22" border="0" align="absmiddle" /> 
-                </a> 
-     
-                <a href="" target="_blank" onmouseover="if (document.getElementById('twitter_div').style.display == 'none') ShowTwitterDIV(event);" onclick="event.stopPropagation(); event.cancelBubble = true; return false">
-                    <img src="../images/twitter.png" id="twitter_icon" alt="tweet this site" width="22" height="22" border="0" align="absmiddle" />
-                </a>
-    
-    
-                <a title="Post to Google Buzz!" href="" onclick="window.open('http://www.google.com/buzz/post?url=http://www.rgraph.net&imageurl=http://www.rgraph.net/images/logo.png', 'google_buzz_window', 'width=800,height=400,top=100,left=100'); return false">
-                    <img src="../images/buzz.png" width="22" height="22" alt="Post to Google Buzz!" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-    
-                <a title="Share RGraph on Facebook" href="" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.rgraph.net&t=RGraph:%20HTML5%20canvas%20graph%20library', 'facebook_window', 'width=500,height=300,top=100,left=100'); return false">
-                    <img src="../images/facebook.png" width="22" height="22" alt="Post to Facebook" align="absmiddle" style="position: relative; top: -2px; border: 0" border="0"/>
-                </a>
-    
-                <a href="mailto:share@friendfeed.com" title="Share on FriendFeed"> 
-                    <img src="../images/friendfeed.png" width="22" height="22" alt="Share on FriendFeed" border="0" align="absmiddle" /> 
-                </a>
-    
-                <a href="http://www.stumbleupon.com/submit?url=http://www.rgraph.net" target="_blank" title="Share on StumbleUpon" >
-                    <img src="../images/stumble.png" alt="Stumble! this site" width="22" height="22" border="0" align="absmiddle" /> 
-                </a>
-            </div>
-    </div>
-    <!-- /Social networking buttons -->
+    <!-- Social networking buttons -->
 
     <div id="breadcrumb">
-        <a href="../index.html">RGraph: HTML5 canvas graph library</a>
+        <a href="../index.html">RGraph: Javascript charts and graph library</a>
         >
         <a href="index.html">Documentation</a>
         >
         Bi-polar chart
     </div>
 
-    <h1>RGraph: HTML5 canvas graph library - Bi-polar chart documentation</h1>
+    <h1>RGraph: Javascript charts and graph library - Bi-polar chart documentation</h1>
 
     <script>
         if (RGraph.isIE8()) {
-            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the graphs, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://groups.google.com/group/rgraph/browse_thread/thread/c5651ff8c56b8f3c#" target="_blank">here</a> to see some screenshots.</div>');
+            document.write('<div style="background-color: #fee; border: 2px dashed red; padding: 5px"><b>Important</b><br /><br /> Internet Explorer 8 does not natively support the HTML5 canvas tag, so if you want to see the charts, you can either:<ul><li>Install <a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a></li><li>Use ExCanvas. This is provided in the RGraph Archive.</li><li>Use another browser entirely. Your choices are Firefox 3.5+, Chrome 2+, Safari 4+ or Opera 10.5+. </li></ul> <b>Note:</b> Internet Explorer 9 fully supports the canvas tag. Click <a href="http://support.rgraph.net/message/rgraph-in-internet-explorer-9.html" target="_blank">here</a> to see some screenshots.</div>');
         }
     </script>
 
@@ -153,7 +99,7 @@
         bipolar.Set('chart.labels', ['Barry', 'John', 'Fred', 'George', 'Rich', 'Larry', 'John', 'Mike']);
         bipolar.Set('chart.title.left', '2007');
         bipolar.Set('chart.title.right', '2008');
-        bipolar.Set('chart.gutter', 35);
+        bipolar.Set('chart.gutter.bottom', 45);
         bipolar.Draw();
     }
 &lt;/script&gt;
@@ -179,19 +125,50 @@
         <li><a href="#interactive features">Interactive features</a></li>
         <li><a href="#shadow">Shadow</a></li>
         <li><a href="#zoom">Zoom</a></li>
+        <li><a href="#miscellaneous">Miscellaneous</a></li>
     </ul>
 
-
-
 <a name="margins"></a>
-<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Margins</h3>            <a name="chart.gutter"></a>
-<b>chart.gutter</b><br />
-            The space given over to the labels. <br /><i>Default: 25</i><br /><br />
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Margins</h3>
+
+
+
+            <a name="chart.gutter.left"></a>
+            <b>chart.gutter.left</b><br />
+            The left gutter of the chart, (the gutter is where the labels and title are)).<br />
+            <i>Default: 25</i><br /><br />
+
+            <a name="chart.gutter.right"></a>
+            <b>chart.gutter.right</b><br />
+            The right gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 25</i><br /><br />
+
+            <a name="chart.gutter.top"></a>
+            <b>chart.gutter.top</b><br />
+            The top gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 25</i><br /><br />
+
+            <a name="chart.gutter.bottom"></a>
+            <b>chart.gutter.bottom</b><br />
+            The bottom gutter of the chart, (the gutter is where the labels and title are).<br />
+            <i>Default: 25</i><br /><br />
+
             <a name="chart.margin"></a>
 <b>chart.margin</b><br />
             The space above and below each bar. <br /><i>Default: 2</i><br /><br />
 <a name="titles"></a>
-<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Titles</h3>            <a name="chart.title.hpos"></a>
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Titles</h3>
+
+<b>chart.title</b><br />
+The main title of the chart.<br />
+<i>Default: (An empty string)</i><br /><br />
+
+<a name="chart.title.background"></a>
+<b>chart.title.background</b><br />
+The background color (if any) for the title.<br />
+<i>Default: null</i><br /><br />
+
+<a name="chart.title.hpos"></a>
 <b>chart.title.hpos</b><br />
             This allows you to completely override the horizontal positioning of the title. It should be a number between 0 and 1, and is multiplied with the whole width of the canvas and then used as the horizontal position. <br /><i>Default: null</i><br /><br />
             <a name="chart.title.vpos"></a>
@@ -201,8 +178,6 @@
 <b>chart.title.color</b><br />
             The color of the title.<br /> <i>Default: black</i><br /><br />
             <a name="chart.title"></a>
-<b>chart.title</b><br />
-            The main title of the chart.<br /><i>Default: (An empty string)</i><br /><br />
             <a name="chart.title.left"></a>
 <b>chart.title.left</b><br />
             The left title. <br /><i>Default: An empty string</i><br /><br />
@@ -210,9 +185,19 @@
 <b>chart.title.right</b><br />
             The right title. <br /><i>Default: An empty string</i><br /><br />
 <a name="colors"></a>
-<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Colors</h3>            <a name="chart.colors"></a>
-<b>chart.colors</b><br />
-            An array of colors. These too can be gradients that you make if you wish. <br /><i>Default: ['#fcf', '#00f', '#f00', '#0f0', '#ff0', '#0ff', '#f0f', '#ff6101', '#b401ff', '#e4ff01', '#fb8195', '#ccc']</i><br /><br />
+
+<h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Colors</h3>
+
+    <a name="chart.colors"></a>
+    <b>chart.colors</b><br />
+    An array of colors. These too can be gradients that you make if you wish. <br />
+    <i>Default: ['#fcf', '#00f', '#f00', '#0f0', '#ff0', '#0ff', '#f0f', '#ff6101', '#b401ff', '#e4ff01', '#fb8195', '#ccc']</i><br /><br />
+    
+    <a name="chart.strokestyle"></a>
+    <b>chart.strokestyle</b><br />
+    This is the color used as the stroke style. If you didn't want it, you could set this to <i>rgba(0,0,0,0)</i><br />
+    <i>Default: #333</i><br /><br />
+
 <a name="labels, text and axes"></a>
 <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Labels, text and axes</h3>            <a name="chart.xtickinterval"></a>
 <b>chart.xtickinterval</b><br />
@@ -223,6 +208,21 @@
             <a name="chart.xmax"></a>
 <b>chart.xmax</b><br />
             This allows you to set the maximum X value that the chart uses, instead of it being auto-generated.<br><i>Default: null</i></br><br /><br />
+
+<a name="chart.scale.formatter"></a>
+            <b>chart.scale.formatter</b><br />
+            To allow thoroughly custom formats of numbers in the scale, you can use this option to
+            specify a function that is used by RGraph to format numbers. This function should
+            handle ALL of the formatting. Eg:<br /><br />
+            <pre class="code">
+function myFormatter(obj, num)
+{
+    return num + 'F'; // An example of formatting
+}
+myGraph.Set('chart.scale.formatter', myFormatter);
+</pre>
+            <br /><i>Default: null</i><br /><br />
+
             <a name="chart.scale.decimals"></a>
 <b>chart.scale.decimals</b><br />
             This allows you to set the precision of the X labels.<br /><i>Default: null</i><br /><br />
@@ -234,7 +234,7 @@
             The character used as the thousand separator<br /><i>Default: ,</i><br /><br />
             <a name="chart.labels"></a>
 <b>chart.labels</b><br />
-            An array of the graphs labels (they go in the middle). <br /><i>Default: null</i><br /><br />
+            An array of the charts labels (they go in the middle). <br /><i>Default: null</i><br /><br />
             <a name="chart.text.size"></a>
 <b>chart.text.size</b><br />
             The size of the text used (in points). <br /><i>Default: 10</i><br /><br />
@@ -246,6 +246,13 @@
             The color of the labels. <br /><i>Default: black</i><br /><br />
 <a name="scale"></a>
 <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Scale</h3>            <a name="chart.units.pre"></a>
+
+            
+            <a name="chart.scale.round"></a>
+            <b>chart.scale.round</b><br />
+            Whether to round the maximum scale value up or not. This will produce slightly better scales in some instances.<br />
+            <i>Default: null</i><br /><br />
+
 <b>chart.units.pre</b><br />
             The units that are applied to the X axis labels (these are pre-pended to the number).<br /><i>Default: none</i><br /><br />
             <a name="chart.units.post"></a>
@@ -260,7 +267,7 @@
             The animated effect used for showing tooltips. Can be either <i>fade</i> or <i>expand</i>.<br /><i>Default: fade</i><br /><br />
             <a name="chart.tooltips.css.class"></a>
 <b>chart.tooltips.css.class</b><br />
-            This is the name of the CSS class the graph uses.<br /><i>Default: RGraph_tooltip</i><br /><br />
+            This is the name of the CSS class the chart uses.<br /><i>Default: RGraph_tooltip</i><br /><br />
             <a name="chart.tooltips.override"></a>
 <b>chart.tooltips.override</b><br />
             If you wish to handle showing tooltips yourself, this should be a function object which does just that. There's more information on the <a href="tooltips.html">tooltips documentation page</a><br /><i>Default: null</i><br /><br />
@@ -273,9 +280,20 @@
             <a name="chart.annotate.color"></a>
 <b>chart.annotate.color</b><br />
             If you do not allow the use of the palette, then this will be the only colour allowed for annotations.<br /><i>Default: black</i><br /><br />
+
+
             <a name="chart.resizable"></a>
-<b>chart.resizable</b><br />
-            Defaulting to false, this determines whether your graph will be resizable. Because of the numerous event handlers this has to install code on, This feature is unlikely to work with other dynamic features (the context menu is fine however).<br /><i>Default: false</i><br /><br />
+            <b>chart.resizable</b><br />
+            Defaulting to false, this determines whether your chart will be resizable. Because of the numerous event handlers this has to install code on, This feature is unlikely to work with other dynamic features (the context menu is fine however).<br />
+            <i>Default: false</i><br /><br />
+
+            <a name="chart.resize.handle.background"></a>
+            <b>chart.resize.handle.background</b><br />
+            With this you can specify the background color for the resize handle. If you're adjusting the position of the
+            handle then you may need this to make the handle stand out more.<br />
+            <i>Default: null</i><br /><br />
+
+
 <a name="shadow"></a>
 <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Shadow</h3>            <a name="chart.shadow"></a>
 <b>chart.shadow</b><br />
@@ -298,7 +316,7 @@
             Can be used to control whether the zoom is in thumbnail or canvas mode. Possible values are: <i>thumbnail</i> and <i>canvas</i>.<br /><i>Default: canvas</i><br /><br />
             <a name="chart.zoom.factor"></a>
 <b>chart.zoom.factor</b><br />
-            This is the factor that the graph will be zoomed by (bigger values means more zoom)<br /><i>Default: 1.5</i><br /><br />
+            This is the factor that the chart will be zoomed by (bigger values means more zoom)<br /><i>Default: 1.5</i><br /><br />
             <a name="chart.zoom.fade.in"></a>
 <b>chart.zoom.fade.in</b><br />
             Whether the zoomed canvas fades in or not. This also can be used to control the fade in for the zoom in thumbnail mode.<br /><i>Default: true</i><br /><br />
@@ -329,6 +347,21 @@
             <a name="chart.zoom.background"></a>
 <b>chart.zoom.background</b><br />
             Defaulting to true, this determines whether the zoom has a dark, semi-opaque background that covers the entire web page.<br /><i>Default: true</i><br /><br />
+
+
+    <a name="miscellaneous"></a>
+    <h3 style="border: 1px solid #aaa; background-color: #eee; font-style: italic; padding: 5px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px">Miscellaneous</h3>
+
+        <a name="chart.highlight.stroke"></a>
+        <b>chart.highlight.stroke</b><br />
+        If you use tooltips, this controls the colour of the highlight stroke.
+        <br /><i>Default: black</i><br /><br />
+
+        <a name="chart.highlight.fill"></a>
+        <b>chart.highlight.fill</b><br />
+        If you use tooltips, this controls the colour of the highlight fill.
+        <br /><i>Default: rgba(255,255,255,0.5)</i><br /><br />
+
 </div><!-- /DOCS --><br /><br />
 
 </body>
