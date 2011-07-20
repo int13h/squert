@@ -95,14 +95,25 @@ function mkLinks() {
 
         if ($n == 1) {
             $previousYear = date('Y-m-d', strtotime("$startDate -1 year"));
-            $html .= "<td class=$mClass align=center><a class=datesel_m href=\"$page?id=$id&s=${previousYear}&e=${previousYear}\"><b>&lt;$previousYear</b></a></td>\n";
+            $pyL = substr($previousYear,0,4);
+            $html .= "<td class=$mClass align=center><a class=datesel_m href=\"$page?id=$id&s=${previousYear}&e=${previousYear}\"><b>&lt; $pyL</b></a></td>\n";
         }
 
-        $html .= "<td class=$mClass width=71 align=center><a class=datesel_m href=\"$page?id=$id&s=${link}-01&e=${link}-01\">$month</a></td>\n";
+
+        if ($link > $today) {
+            $html .= "<td class=$mClass width=71 align=center>$month</td>\n";
+        } else {
+            $html .= "<td class=$mClass width=71 align=center><a class=datesel_m href=\"$page?id=$id&s=${link}-01&e=${link}-01\">$month</a></td>\n";
+        }
 
         if ($n == 12) {
             $nextYear = date('Y-m-d', strtotime("$startDate +1 year"));
-            $html .= "<td class=$mClass align=center><a class=datesel_m href=\"$page?id=$id&s=${nextYear}&e=${nextYear}\"><b>$nextYear&gt;</b></a></td>\n";
+            $nyL = substr($nextYear, 0,4);
+            if ($link > $today) {
+                $html .= "<td class=$mClass align=center><b>$nyL &gt;</b></td>\n";
+            } else {
+                $html .= "<td class=$mClass align=center><a class=datesel_m href=\"$page?id=$id&s=${nextYear}&e=${nextYear}\"><b>$nyL &gt;</b></a></td>\n";
+            }
         }   
     }
 
