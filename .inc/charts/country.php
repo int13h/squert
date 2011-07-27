@@ -99,12 +99,12 @@ echo "
 <script>
   function createCountry () {
   var sc = new RGraph.Pie('scountry', [$plot1]);
-  sc.Set('chart.strokestyle', '#333');
+  sc.Set('chart.title', 'Top Source Countries');
   sc.Set('chart.gutter.left', 30);
   sc.Set('chart.tooltips', [$label1]);
   sc.Set('chart.text.size', 8);
   sc.Set('chart.key', [$key1]);
-  sc.Set('chart.key.background', 'white');
+  sc.Set('chart.key.background', 'rgba(255,255,255,0.3)');
   sc.Set('chart.colors', [$sCols]);
   sc.Set('chart.highlight.style', '2d');
   sc.Set('chart.tooltips.effect', 'fade');
@@ -117,12 +117,12 @@ echo "
   sc.Draw();
 
   var dc = new RGraph.Pie('dcountry', [$plot2]);
-  dc.Set('chart.strokestyle', '#333');
+  dc.Set('chart.title', 'Top Destination Countries');
   dc.Set('chart.gutter.left', 30);
   dc.Set('chart.tooltips', [$label2]);
   dc.Set('chart.text.size', 8);
   dc.Set('chart.key', [$key2]);
-  dc.Set('chart.key.background', 'white');
+  dc.Set('chart.key.background', 'rgba(255,255,255,0.3)');
   dc.Set('chart.colors', [$dCols]);
   dc.Set('chart.highlight.style', '2d');
   dc.Set('chart.tooltips.effect', 'fade');

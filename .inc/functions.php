@@ -311,6 +311,7 @@ function Segments($type) {
 
 // Time Picker
 function qTime($type,$stop,$extra) {
+   
     if(!isset($_REQUEST['sHour'])) { $sHour = $extra; } else { $sHour = $_REQUEST['sHour']; }
     if(!isset($_REQUEST['sMin'])) { $sMin = $extra; } else { $sMin = $_REQUEST['sMin']; }
     if(!isset($_REQUEST['sSec'])) { $sSec = $extra; } else { $sSec = $_REQUEST['sSec']; }

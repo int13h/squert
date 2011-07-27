@@ -35,6 +35,9 @@ $q2 = "SELECT COUNT(dst_port) AS c1, COUNT(DISTINCT(dst_ip)) AS c2, COUNT(DISTIN
 
 $r2 = mysql_query($q2);
 
+// Result count
+$rC = 15;
+
 $i = 0;
 
 $src_bar1 = $src_s1 = $src_lbl = '';
@@ -44,10 +47,10 @@ while ($row = mysql_fetch_row($r1)) {
     $x = $i - .6;
     $y = $i - .4;
     $src_bar1 .= $row[0] . ",";
-    $src_s1 .= "[" . $x . "," . $row[1] . ",'#cc0000'],";
+    $src_s1 .= "[" . $x . "," . $row[1] . ",'#b80028'],";
     $src_s1 .= "[" . $y . "," . $row[2] . ",'#22335a'],";
     $src_lbl .= "'" . $row[3] . "',";
-    if ($i == 10) { break; }        
+    if ($i == $rC) { break; }        
 }
 
 $i = 0;
@@ -56,13 +59,13 @@ $dst_bar1 = $dst_s1 = $dst_lbl = '';
 
 while ($row = mysql_fetch_row($r2)) {
     $i++;
-    $x = $i - .7;
-    $y = $i - .3;
+    $x = $i - .6;
+    $y = $i - .4;
     $dst_bar1 .= $row[0] . ",";
     $dst_s1 .= "[" . $x . "," . $row[1] . ",'#22335a'],";
-    $dst_s1 .= "[" . $y . "," . $row[2] . ",'#cc0000'],";
+    $dst_s1 .= "[" . $y . "," . $row[2] . ",'#b80028'],";
     $dst_lbl .= "'" . $row[3] . "',";
-    if ($i == 10) { break; }
+    if ($i == $rC) { break; }
 }
     
 // Chart Logic
@@ -79,25 +82,23 @@ echo "
   bar1.Set('chart.background.grid', true);
   bar1.Set('chart.background.grid.autofit', true);
   bar1.Set('chart.background.grid.vlines', true);
-  bar1.Set('chart.background.grid.border', false);
-  
-  bar1.Set('chart.background.barcolor1', '#fafafa');
-  bar1.Set('chart.background.barcolor2', '#fafafa'); 
+  bar1.Set('chart.background.grid.width', .5);
   bar1.Set('chart.labels', [$src_lbl]);
   bar1.Set('chart.text.angle', 45);
-  bar1.Set('chart.colors', ['#c4c4c4','#cc0000','#22335a']);
+  bar1.Set('chart.colors', ['#c4c4c4','#b80028','#22335a']);
   bar1.Set('chart.gutter.bottom', 75);
   bar1.Set('chart.gutter.left', 75);
   bar1.Set('chart.gutter.right', 50);
   bar1.Set('chart.strokecolor', 'black');
   bar1.Set('chart.text.size', 8);
   bar1.Set('chart.text.font', 'verdana');
+  bar1.Set('chart.ylabels.count', 10);
   bar1.Set('chart.key', ['< Events', '> Sources', '> Destinations']);
   bar1.Set('chart.key.background', 'rgba(255,255,255,0.3)');
-  bar1.Set('chart.background.grid.autofit.numhlines', 20);
-  bar1.Set('chart.background.grid.autofit.numvlines', 10);
+  bar1.Set('chart.background.grid.autofit.align', true);
  
   var src_s1 = new RGraph.Scatter('daily_sport', [$src_s1]);
+  src_s1.Set('chart.background.grid.autofit.align', true);
   src_s1.Set('chart.gutter.left', 75);
   src_s1.Set('chart.gutter.bottom', 75);
   src_s1.Set('chart.gutter.right', 50);
@@ -106,8 +107,9 @@ echo "
   src_s1.Set('chart.text.size', 8);
   src_s1.Set('chart.yaxispos', 'right')
   src_s1.Set('chart.background.grid', false);
-  src_s1.Set('chart.background.grid.autofit.align', true);
-  src_s1.Set('chart.xmax', 10); // Important!
+  src_s1.Set('chart.ylabels.count', 10);
+  src_s1.Set('chart.numyticks', 5);
+  src_s1.Set('chart.xmax', $rC);
   bar1.Draw();
   src_s1.Draw();
 
@@ -117,25 +119,23 @@ echo "
   bar2.Set('chart.background.grid', true);
   bar2.Set('chart.background.grid.autofit', true);
   bar2.Set('chart.background.grid.vlines', true);
-  bar2.Set('chart.background.grid.border', false);
-
-  bar2.Set('chart.background.barcolor1', '#fafafa');
-  bar2.Set('chart.background.barcolor2', '#fafafa');
+  bar2.Set('chart.background.grid.width', .5);
   bar2.Set('chart.labels', [$dst_lbl]);
   bar2.Set('chart.text.angle', 45);
-  bar2.Set('chart.colors', ['#c4c4c4','#22335a','#cc0000']);
+  bar2.Set('chart.colors', ['#c4c4c4','#22335a','#b80028']);
   bar2.Set('chart.gutter.bottom', 75);
   bar2.Set('chart.gutter.left', 75);
   bar2.Set('chart.gutter.right', 50);
   bar2.Set('chart.strokecolor', 'black');
   bar2.Set('chart.text.size', 8);
   bar2.Set('chart.text.font', 'verdana');
+  bar2.Set('chart.ylabels.count', 10);
   bar2.Set('chart.key', ['< Events', '> Destinations', '> Sources']);
   bar2.Set('chart.key.background', 'rgba(255,255,255,0.3)');
-  bar2.Set('chart.background.grid.autofit.numhlines', 20);
-  bar2.Set('chart.background.grid.autofit.numvlines', 10);
+  bar2.Set('chart.background.grid.autofit.align', true);
  
   var dst_s1 = new RGraph.Scatter('daily_dport', [$dst_s1]);
+  dst_s1.Set('chart.background.grid.autofit.align', true);
   dst_s1.Set('chart.gutter.left', 75);
   dst_s1.Set('chart.gutter.bottom', 75);
   dst_s1.Set('chart.text.size', 8);
@@ -144,8 +144,8 @@ echo "
   dst_s1.Set('chart.ticksize', 6);
   dst_s1.Set('chart.yaxispos', 'right')
   dst_s1.Set('chart.background.grid', false);
-  dst_s1.Set('chart.background.grid.autofit.align', true);
-  dst_s1.Set('chart.xmax', 10); // Important!
+  dst_s1.Set('chart.ylabels.count', 10);
+  dst_s1.Set('chart.xmax', $rC);
   bar2.Draw();
   dst_s1.Draw();
 }

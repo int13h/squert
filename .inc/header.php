@@ -31,6 +31,7 @@ function valiDate($startDate, $endDate, $today) {
 
     function testDate($date,$fail) {
 
+        // Test validity
         if (preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $date)) {
         
             list($y,$m,$d) = explode('-', $date);
@@ -45,7 +46,6 @@ function valiDate($startDate, $endDate, $today) {
         return $fail;
     }
 
-    // Test validity
     $fail += testDate($startDate,$fail);
     $fail += testDate($endDate,$fail);
 
@@ -133,7 +133,7 @@ function mkLinks() {
         $extra = '';
 
         if ($link == $startDate) {
-            $extra = "style=\"background: lightyellow; font-weight: bold;\"";
+            $extra = "style=\"background: yellow; font-weight: bold;\"";
         }
 
         if ($link <= $today) {
@@ -152,7 +152,7 @@ $timeLinks = mkLinks();
 
 echo "<form id=head method=post>
 <div style=\"width: 1000px; margin: 0 auto; padding: none; text-align: right;\">
-Welcome $sUser <b>|</b>
+Welcome <b>$sUser</b> <b>|</b>
 <a class=submit id=whiteboard_yes style=\"display:;\" href=\".inc/whiteboard.php\" target=\"whiteboard\" onclick=\"javascript:poof('whiteboard','yes');\">Whiteboard</a>
 <a class=submit id=whiteboard_no style=\"display: none;\" href=\"javascript:poof('whiteboard','no');\">Whiteboard</a>
 <b>|</b> <input class=submit type=submit id=lout name=base value=\"Log out\">

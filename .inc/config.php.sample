@@ -16,7 +16,7 @@ $dotPath = "/usr/bin/dot";
 
 // Where do you want to land after you log in?
 // sum, sig, ip, query
-$startPage = 'query';
+$startPage = 'sum';
 
 // DNS server to query
 $dns = "8.8.8.8";

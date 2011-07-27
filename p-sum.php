@@ -35,6 +35,7 @@ include_once '.inc/countries.php';
 <style type="text/css" media="screen">@import ".css/squert.css";</style>
 <style type="text/css" media="screen">@import ".css/tabs.css";</style>
 <script type="text/javascript" src=".js/squert.js"></script>
+<script type="text/javascript" src=".js/sorttable.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.hbar.js" ></script>
@@ -57,9 +58,8 @@ include_once '.inc/countries.php';
 ?>
 <div id="main">
 <?php echo $timeLinks;?>
-<div id="contents" class="main">
-<?php include_once '.inc/charts/ip.php';?>
-<?php include_once '.inc/charts/country.php';?>
+<div id="contents" class="main" style="padding-left: 20px;">
+<?php include_once '.inc/charts/summary.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>

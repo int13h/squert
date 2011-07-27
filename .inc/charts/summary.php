@@ -19,17 +19,6 @@
 //
 //
 
-// Perform a "string is like" array search
-function array_find($needle, $haystack) {
-    foreach ($haystack as $item) {
-        if (strpos($item, $needle) !== FALSE) {
-            $tmp = explode('|', $item);
-            return $tmp[2];
-            break;
-        }
-    }
-}
-
 // Event Categories
 
 $category	=  mysql_query("SELECT COUNT(signature) as c1, status 
@@ -49,12 +38,6 @@ $destinations	=  mysql_query("SELECT COUNT(DISTINCT(dst_ip))
                    FROM event
                    WHERE $when[0]");
 
-// Distinct Signatures
-
-$signatures	=  mysql_query("SELECT COUNT(DISTINCT(signature))
-                   FROM event
-                   WHERE $when[0]");
-
 // Event Distribution (sensor)
 
 $sensor		= mysql_query("SELECT st.net_name, st.hostname, st.agent_type, st.sid, COUNT(signature) AS c1 
@@ -67,6 +50,16 @@ $sensors        = mysql_query("SELECT net_name, hostname, agent_type, sid
                   FROM sensor
                   WHERE agent_type != 'pcap'");
 
+
+// Signatures
+
+$signatures	= mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id
+                  FROM event
+                  WHERE $when[0]
+                  AND signature NOT LIKE 'URL%'
+                  GROUP BY signature
+                  ORDER BY c1 DESC");
+
 // Brief
 
 $presentCats = array();
@@ -77,7 +70,7 @@ while ($row = mysql_fetch_row($category)) {
     $sumEvents += $row[0];
 }
 
-$sigCount = mysql_fetch_row($signatures);
+$sigCount = mysql_num_rows($signatures);
 $srcCount = mysql_fetch_row($sources);
 $dstCount = mysql_fetch_row($destinations);
 
@@ -85,7 +78,7 @@ echo "<h2> Brief</h2>
       \r<table width=100% align=center>\n
       \r<tr>\n
       \r<td align=center><div class=big>Total Events</div><div class=box>$sumEvents</div></td>\n
-      \r<td align=center><div class=big>Total Signatures</div><div class=box>$sigCount[0]</div></td>\n
+      \r<td align=center><div class=big>Total Signatures</div><div class=box>$sigCount</div></td>\n
       \r<td align=center><div class=big>Total Sources</div><div class=box>$srcCount[0]</div></td>\n
       \r<td align=center><div class=big>Total Destinations</div><div class=box>$dstCount[0]</div></td>\n
       \r</tr>\n
@@ -107,13 +100,13 @@ while ($row = mysql_fetch_row($sensor)) {
 
 }
 
-echo "<h2> Events by Sensor</h2>";
-echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid gray;\">\n
+echo "<h2> Event Distribution by Sensor</h2>";
+echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
       \r<th class=sort>Network</th>
-      \r<th class=sort>Hostname</th>
-      \r<th class=sort>Agent Type</th>
-      \r<th class=sort width=10%>Count</th>
-      \r<th class=sort width=10%>% of Total</th>\n";
+      \r<th class=sort width=300>Hostname</th>
+      \r<th class=sort width=100>Agent Type</th>
+      \r<th class=sort width=100>Count</th>
+      \r<th class=sort width=100>% of Total</th>\n";
 
 foreach ($sensorList as $key => $sid) {
 
@@ -133,20 +126,49 @@ foreach ($sensorList as $key => $sid) {
 
 
     echo "<tr><td class=sortbig>$netName</td><td class=sortbig>$hostName</td>
-      <td class=sortbig><b>$agent</b></td><td class=sortbig><b>$numEvents</b></td><td class=sortbig><b>$per</b></td></tr>\n";
+          <td class=sortbig>$agent</td><td class=sortbigbold>$numEvents</td>
+          <td class=sortbigbold>$per</td></tr>\n";
 
+}
+
+echo "</table><br><br>";
+
+// Top Signatures
+
+echo "<h2> Top Signatures</h2>";
+echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
+      \r<th class=sort>Signature</th>
+      \r<th class=sort width=100>ID</th>
+      \r<th class=sort width=100>Count</th>
+      \r<th class=sort width=100>% of Total</th>\n";
+
+$i = 0;
+
+while ($row = mysql_fetch_row($signatures)) {
+    $i++;
+    if ($row[0] > 0) {
+            $per = round($row[0] / $sumEvents * 100,2) . "%";
+        } else {
+            $per = 0;
+    }
+
+    echo "<tr><td class=sortbig>$row[1]</td><td class=sortbig>$row[2]</td>
+          <td class=sortbigbold>$row[0]</td><td class=sortbigbold>$per</td></tr>\n";
+
+    // It is cheaper to perform the limit here than on the query
+    if ($i == 10) {break;};
 }
 
 echo "</table><br><br>";
 
 // Events by Category
 
-echo "<h2> Events by Category</h2>";
-echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid gray;\">\n
-      \r<th class=sort width=5%>#</th>
+echo "<h2> Event Distribution by Category</h2>";
+echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
+      \r<th class=sort width=20>#</th>
       \r<th class=sort>Category</th>
-      \r<th class=sort width=10%>Count</th>
-      \r<th class=sort width=10%>% of Total</th>\n";
+      \r<th class=sort width=100>Count</th>
+      \r<th class=sort width=100>% of Total</th>\n";
 
 foreach ($statusList as $key => $status) {
 
@@ -167,7 +189,7 @@ foreach ($statusList as $key => $status) {
      }
       
     echo "<tr><td class=sortbig style=\"background: $colour;\">$shortDesc</td><td class=sortbig>$longDesc</td>
-          <td class=sortbig><b>$numEvents</b></td><td class=sortbig><b>$per</b></td></tr>\n";
+          <td class=sortbigbold>$numEvents</td><td class=sortbigbold>$per</td></tr>\n";
  
 }
 

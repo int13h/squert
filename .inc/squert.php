@@ -47,8 +47,8 @@ $initSdate = $today;
 $initStime = "0.0.0";
 $initEdate = $today;
 $initEtime = "23.59.59";
-if(!isset($_REQUEST['sDate'])) { $sDate = $today; } else { $sDate = $_REQUEST['sDate']; }
-if(!isset($_REQUEST['eDate'])) { $eDate = $today; } else { $eDate = $_REQUEST['eDate']; }
+if(!isset($_REQUEST['sDate'])) { $sDate = $s; } else { $sDate = $_REQUEST['sDate']; }
+if(!isset($_REQUEST['eDate'])) { $eDate = $e; } else { $eDate = $_REQUEST['eDate']; }
 if(!isset($_REQUEST['sHour'])) { $sHour = 0; } else { $sHour = $_REQUEST['sHour']; }
 if(!isset($_REQUEST['sMin'])) { $sMin = 0; } else { $sMin = $_REQUEST['sMin']; }
 if(!isset($_REQUEST['sSec'])) { $sSec = 0; } else { $sSec = $_REQUEST['sSec']; }
@@ -685,8 +685,7 @@ if ($hCl == 1) {$shCl = array('none','','');} else {$shCl = array('','none','non
 
 <!-- Controls start here -->
 
-
-<form id=squert method=post action="p-query.php?id=<?php echo $id;?>">
+<form id=squert method=post action="p-query.php?<?php echo "id=$id&s=$s&e=$e";?>">
 
 <table width=100% id=controls border=0 align=center cellpadding=1 cellspacing=0>
 <tr>

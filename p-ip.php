@@ -41,6 +41,7 @@ include_once '.inc/countries.php';
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.line.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.scatter.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.pie.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.bipolar.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.context.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.tooltips.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.zoom.js"></script>
@@ -59,6 +60,7 @@ include_once '.inc/countries.php';
 <?php echo $timeLinks;?>
 <div id="contents" class="main">
 <?php include_once '.inc/charts/ip.php';?>
+<?php include_once '.inc/charts/ports.php';?>
 <?php include_once '.inc/charts/country.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>

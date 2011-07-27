@@ -45,14 +45,15 @@
             bar.Set('chart.annotatable', true);
             bar.Set('chart.contextmenu', [['Show palette', RGraph.Showpalette], ['Clear', function () {RGraph.Clear(bar.canvas); bar.Draw();}]]);
             bar.Draw();
+
             var b_canvas = document.getElementById(\"mrwhite\");
             var b_context = b_canvas.getContext(\"2d\");            
             b_context.font = \"1em calibri, trebuchet ms, helvetica\";
             b_context.fillStyle = \"#cc0000\";
-            b_context.fillText(\"This is\", 2, 43);            
+            b_context.fillText(\"This is\", 10, 20);            
             b_context.font = \"2em calibri, trebuchet ms, helvetica\";
             b_context.fillStyle = \"#000000\";
-            b_context.fillText(\"Not ready yet.\", 5, 30);
+            b_context.fillText(\"Not ready yet.\", 5, 40);
           }
           doBoard();
           </script>
