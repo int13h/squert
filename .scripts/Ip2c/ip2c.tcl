@@ -1,6 +1,6 @@
 #!/bin/sh
 # Run tcl from users PATH \
-exec /usr/bin/tclsh "$0" "$@"
+exec /usr/local/bin/tclsh "$0" "$@"
 
 #
 #
@@ -222,7 +222,7 @@ if {[file exists $countryFile]} {
 
     for_file line $countryFile {
 
-        if { [regexp {\"(.*)\|(.*)\"} $line match country cc] } {
+        if { [regexp {\"(.*)\|(.*)\|(.*)\"} $line match country cc colour] } {
 
             set countryArray($cc) $country
 
