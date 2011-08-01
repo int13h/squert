@@ -1,6 +1,6 @@
 #!/bin/sh
 # Run tcl from users PATH \
-exec /usr/bin/tclsh "$0" "$@"
+exec tclsh "$0" "$@"
 
 #
 #
