@@ -59,7 +59,10 @@ include_once '.inc/countries.php';
 <div id="main">
 <?php echo $timeLinks;?>
 <div id="contents" class="main" style="padding-left: 20px;">
-<?php include_once '.inc/charts/summary.php';?>
+<?php include_once '.inc/charts/stub_brief.php';?>
+<?php include_once '.inc/charts/stub_sigsum.php';?>
+<?php include_once '.inc/charts/stub_src-ip.php';?>
+<?php include_once '.inc/charts/stub_dst-ip.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>

@@ -24,7 +24,7 @@ $stub = "Top Source IPs";
 $sources =  mysql_query("SELECT COUNT(src_ip) AS c1, COUNT(DISTINCT(dst_ip)) AS c2, COUNT(DISTINCT(signature)) AS c3, INET_NTOA(src_ip), map1.c_long as src_c_long           FROM event
             LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
             LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
-            WHERE $when[0] AND signature NOT LIKE 'URL%'
+            WHERE $when[0]
             GROUP BY src_ip
             ORDER BY c1 DESC");
 

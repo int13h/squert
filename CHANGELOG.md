@@ -1,3 +1,10 @@
+# Squert 0.9.1
+
+* Fixed country array in ip2c.tcl
+* Moved key in bar charts below x-axis labels
+* Altered country pie chart to better accommodate key
+* Added src and dst IP tables to summary tab
+
 # Squert 0.9.0
 
 * tabbed interface

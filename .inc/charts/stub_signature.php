@@ -22,7 +22,6 @@
 $scc = "SELECT COUNT(signature) as count, signature
           FROM event
           WHERE $when[0]
-          AND signature NOT LIKE 'URL %'
           GROUP BY signature
           ORDER BY count DESC";
 

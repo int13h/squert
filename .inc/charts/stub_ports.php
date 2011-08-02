@@ -21,7 +21,7 @@
  
 $q1 = "SELECT COUNT(src_port) AS c1, COUNT(DISTINCT(src_ip)) AS c2, COUNT(DISTINCT(dst_ip)) AS c3, src_port 
           FROM event
-          WHERE $when[0] AND signature NOT LIKE 'URL%'
+          WHERE $when[0]
           GROUP BY src_port
           ORDER BY c1 DESC";
 
@@ -29,7 +29,7 @@ $r1 = mysql_query($q1);
 
 $q2 = "SELECT COUNT(dst_port) AS c1, COUNT(DISTINCT(dst_ip)) AS c2, COUNT(DISTINCT(src_ip)) AS c3, dst_port
           FROM event
-          WHERE $when[0] AND signature NOT LIKE 'URL%'
+          WHERE $when[0]
           GROUP BY dst_port
           ORDER BY c1 DESC";
 

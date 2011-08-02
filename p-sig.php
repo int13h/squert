@@ -58,7 +58,7 @@ include_once '.inc/countries.php';
 <div id="main">
 <?php echo $timeLinks;?>
 <div id="contents" class="main">
-<?php include_once '.inc/charts/signature.php';?>
+<?php include_once '.inc/charts/stub_signature.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>

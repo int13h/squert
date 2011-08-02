@@ -59,9 +59,9 @@ include_once '.inc/countries.php';
 <div id="main">
 <?php echo $timeLinks;?>
 <div id="contents" class="main">
-<?php include_once '.inc/charts/ip.php';?>
-<?php include_once '.inc/charts/ports.php';?>
-<?php include_once '.inc/charts/country.php';?>
+<?php include_once '.inc/charts/stub_ip.php';?>
+<?php include_once '.inc/charts/stub_ports.php';?>
+<?php include_once '.inc/charts/stub_country.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>

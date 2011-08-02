@@ -24,7 +24,6 @@ $stub = "Top Signatures";
 $signatures	= mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id
                   FROM event
                   WHERE $when[0]
-                  AND signature NOT LIKE 'URL%'
                   GROUP BY signature
                   ORDER BY c1 DESC");
 
