@@ -21,6 +21,10 @@ exec tclsh "$0" "$@"
 #
 #
 
+### Config and Country file
+set configFile "../../.inc/config.php"
+set countryFile "../../.inc/countries.php"
+
 ### The RIR's
 set site1 "AFRINIC ftp://ftp.afrinic.net/pub/stats/afrinic/ delegated-afrinic-latest"
 set site2 "APNIC ftp://ftp.apnic.net/pub/stats/apnic/ delegated-apnic-latest"
@@ -32,43 +36,49 @@ set site5 "RIPE ftp://ftp.ripe.net/ripe/stats/ delegated-ripencc-latest"
 set workDir "[pwd]"
 set resultsFile "results.txt"
 
-### Config
-set configFile "../../.inc/config.php"
+### Check for config file
+if { ![file readable $configFile] } {
+    puts "Error: Unable to read $configFile. Specify the correct path and try again."
+    exit 
+}
 
-### Countries.
-set countryFile "../../.inc/countries.php"
+### Check for countries file
+if { ![file readable $countryFile] } {
+    puts "Error: Unable to read $countryFile. Specify the correct path and try again."
+    exit
+}
 
 ### Load extended tcl
 if [catch {package require Tclx} tclxVersion] {
-    puts "ERROR: Package TclX not found"
+    puts "Error: Package TclX not found"
     exit
 }
 
 ### Load mysql support.
 if [catch {package require mysqltcl} mysqltclVersion] {
-    puts "ERROR: Package mysqltcl not found"
+    puts "Error: Package mysqltcl not found"
     exit
 }
 
 ### Load uri support
 if [catch {package require uri} uriVersion] {
-    puts "ERROR: Package uri not found"
+    puts "Error: Package uri not found"
     exit
 }
 
 ### Load ftp support
 if [catch {package require ftp} ftpVersion] {
-    puts "ERROR: Package ftp not found"
+    puts "Error: Package ftp not found"
     exit
 }
 if [catch {package require ftp::geturl} ftpgeturlVersion] {
-    puts "ERROR: Package ftp::geturl not found"
+    puts "Error: Package ftp::geturl not found"
     exit
 }
 
 ### Load MD5 support
 if [catch {package require md5} md5Version] {
-    puts "ERROR: Package md5 not found"
+    puts "Error: Package md5 not found"
     exit
 }
 
