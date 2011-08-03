@@ -39,20 +39,38 @@ set configFile "../../.inc/config.php"
 set countryFile "../../.inc/countries.php"
 
 ### Load extended tcl
-package require Tclx
+if [catch {package require Tclx} tclxVersion] {
+    puts "ERROR: Package TclX not found"
+    exit
+}
 
 ### Load mysql support.
-package require mysqltcl
+if [catch {package require mysqltcl} mysqltclVersion] {
+    puts "ERROR: Package mysqltcl not found"
+    exit
+}
 
 ### Load uri support
-package require uri
+if [catch {package require uri} uriVersion] {
+    puts "ERROR: Package uri not found"
+    exit
+}
 
 ### Load ftp support
-package require ftp
-package require ftp::geturl
+if [catch {package require ftp} ftpVersion] {
+    puts "ERROR: Package ftp not found"
+    exit
+}
+if [catch {package require ftp::geturl} ftpgeturlVersion] {
+    puts "ERROR: Package ftp::geturl not found"
+    exit
+}
 
 ### Load MD5 support
-package require md5
+if [catch {package require md5} md5Version] {
+    puts "ERROR: Package md5 not found"
+    exit
+}
 
 #--------------- Procedures ---------------#
 
