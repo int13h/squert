@@ -20,18 +20,20 @@
 //
  
 $q1 = "SELECT COUNT(src_ip) AS c1, COUNT(DISTINCT(dst_ip)) AS c2, COUNT(DISTINCT(signature)) AS c3, INET_NTOA(src_ip) 
-          FROM event
-          WHERE $when[0]
-          GROUP BY src_ip
-          ORDER BY c1 DESC";
+       FROM event
+       WHERE $when[0]
+       AND signature NOT REGEXP '^URL'
+       GROUP BY src_ip
+       ORDER BY c1 DESC";
 
 $r1 = mysql_query($q1);
 
 $q2 = "SELECT COUNT(dst_ip) AS c1, COUNT(DISTINCT(src_ip)) AS c2, COUNT(DISTINCT(signature)) AS c3, INET_NTOA(dst_ip)
-          FROM event
-          WHERE $when[0]
-          GROUP BY dst_ip
-          ORDER BY c1 DESC";
+       FROM event
+       WHERE $when[0]
+       AND signature NOT REGEXP '^URL'
+       GROUP BY dst_ip
+       ORDER BY c1 DESC";
 
 $r2 = mysql_query($q2);
 

@@ -21,11 +21,12 @@
 
 $stub = "Top Signatures";
 
-$signatures	= mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id
-                  FROM event
-                  WHERE $when[0]
-                  GROUP BY signature
-                  ORDER BY c1 DESC");
+$signatures = mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id
+                           FROM event
+                           WHERE $when[0]
+                           AND signature NOT REGEXP '^URL'
+                           GROUP BY signature
+                           ORDER BY c1 DESC");
 
 echo "<h2> $stub</h2>";
 echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n

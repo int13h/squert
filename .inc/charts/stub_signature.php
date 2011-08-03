@@ -20,10 +20,11 @@
 //
 
 $scc = "SELECT COUNT(signature) as count, signature
-          FROM event
-          WHERE $when[0]
-          GROUP BY signature
-          ORDER BY count DESC";
+        FROM event
+        WHERE $when[0]
+        AND signature NOT REGEXP '^URL'
+        GROUP BY signature
+        ORDER BY count DESC";
 
 $sccQuery = mysql_query($scc);
 

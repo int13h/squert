@@ -22,42 +22,48 @@
 // Event Categories
 
 $category	=  mysql_query("SELECT COUNT(signature) as c1, status 
-                   FROM event
-                   WHERE $when[0]
-                   GROUP BY status");
+                                FROM event
+                                WHERE $when[0]
+                                AND signature NOT REGEXP '^URL'
+                                GROUP BY status");
 
 // Distinct Sources
 
 $sources	=  mysql_query("SELECT COUNT(DISTINCT(src_ip)) 
-                   FROM event
-                   WHERE $when[0]");
+                                FROM event
+                                WHERE $when[0]
+                                AND signature NOT REGEXP '^URL'");
 
 // Distinct Destinations
 
 $destinations	=  mysql_query("SELECT COUNT(DISTINCT(dst_ip))
-                   FROM event
-                   WHERE $when[0]");
+                                FROM event
+                                WHERE $when[0]
+                                AND signature NOT REGEXP '^URL'");
 
 // Event Distribution (sensor)
 
 $sensor		= mysql_query("SELECT st.net_name, st.hostname, st.agent_type, st.sid, COUNT(signature) AS c1 
-                  FROM event LEFT JOIN sensor AS st ON event.sid = st.sid
-                  WHERE $when[0]
-                  GROUP BY event.sid 
-                  ORDER BY c1 DESC");
+                               FROM event LEFT JOIN sensor AS st ON event.sid = st.sid
+                               WHERE $when[0]
+                               AND signature NOT REGEXP '^URL'
+                               GROUP BY event.sid 
+                               ORDER BY c1 DESC");
 
 $sensors        = mysql_query("SELECT net_name, hostname, agent_type, sid
-                  FROM sensor
-                  WHERE agent_type != 'pcap'");
+                               FROM sensor
+                               WHERE (agent_type != 'pcap' 
+                               AND agent_type != 'httpry')");
 
 
 // Signatures
 
 $signatures	= mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id
-                  FROM event
-                  WHERE $when[0]
-                  GROUP BY signature
-                  ORDER BY c1 DESC");
+                               FROM event
+                               WHERE $when[0]
+                               AND signature NOT REGEXP '^URL'
+                               GROUP BY signature
+                               ORDER BY c1 DESC");
 
 // Brief
 

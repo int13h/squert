@@ -21,14 +21,15 @@
 
 $stub = "Top Destination IPs";
 
-$destinations =  mysql_query("SELECT COUNT(dst_ip) AS c1, COUNT(DISTINCT(src_ip)) AS c2, COUNT(DISTINCT(signature)) AS c3, 
-                 INET_NTOA(dst_ip), map2.c_long as dst_c_long
-                 FROM event
-                 LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
-                 LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
-                 WHERE $when[0]
-                 GROUP BY dst_ip
-                 ORDER BY c1 DESC");
+$destinations = mysql_query("SELECT COUNT(dst_ip) AS c1, COUNT(DISTINCT(src_ip)) AS c2, COUNT(DISTINCT(signature)) AS c3, 
+                             INET_NTOA(dst_ip), map2.c_long as dst_c_long
+                             FROM event
+                             LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
+                             LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
+                             WHERE $when[0]
+                             AND signature NOT REGEXP '^URL'
+                             GROUP BY dst_ip
+                             ORDER BY c1 DESC");
 
 echo "<h2> $stub</h2>";
 echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n

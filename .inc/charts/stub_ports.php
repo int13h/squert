@@ -20,18 +20,20 @@
 //
  
 $q1 = "SELECT COUNT(src_port) AS c1, COUNT(DISTINCT(src_ip)) AS c2, COUNT(DISTINCT(dst_ip)) AS c3, src_port 
-          FROM event
-          WHERE $when[0]
-          GROUP BY src_port
-          ORDER BY c1 DESC";
+       FROM event
+       WHERE $when[0]
+       AND signature NOT REGEXP '^URL'
+       GROUP BY src_port
+       ORDER BY c1 DESC";
 
 $r1 = mysql_query($q1);
 
 $q2 = "SELECT COUNT(dst_port) AS c1, COUNT(DISTINCT(dst_ip)) AS c2, COUNT(DISTINCT(src_ip)) AS c3, dst_port
-          FROM event
-          WHERE $when[0]
-          GROUP BY dst_port
-          ORDER BY c1 DESC";
+       FROM event
+       WHERE $when[0]
+       AND signature NOT REGEXP '^URL'
+       GROUP BY dst_port
+       ORDER BY c1 DESC";
 
 $r2 = mysql_query($q2);
 
