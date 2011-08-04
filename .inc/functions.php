@@ -131,6 +131,7 @@ function formatStamp($dateTime,$type) {
         case 1: $format = 'd H:i'; break;
         case 2: $format = 'G'; break;
         case 3: $format = 'm-d'; break;
+        case 4: $format = 'H:i:s'; break;
     }
 
     if ($offset === 0) {
