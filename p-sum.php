@@ -26,6 +26,13 @@ include_once '.inc/tabs.php';
 include_once '.inc/functions.php';
 include_once '.inc/countries.php';
 
+// Record limit
+$rList = array(
+                 10 => "10||Null",
+                 15 => "15||Null",
+                 20 => "20||Null",
+                 50 => "50||Null",
+                  0 => "All||Null");
 ?>
 
 <html>
@@ -59,6 +66,19 @@ include_once '.inc/countries.php';
 <div id="main">
 <?php echo $timeLinks;?>
 <div id="contents" class="main" style="padding-left: 20px;">
+<form name=summary id=summary method=post action="<?php echo "p-sum.php?id=$id&s=$s&e=$e";?>">
+<?php echo $todayLink;?>
+<div style="float: right;">
+<b>Detail Lines:</b>
+<SELECT id=sLimit name=sLimit class=input onchange="summary.submit();">
+<?php
+
+    if(!isset($_REQUEST['sLimit'])) { $sLimit = 10; } else { $sLimit = $_REQUEST['sLimit']; }
+    mkSelect($rList,$sLimit);
+?>
+</SELECT>&nbsp;&nbsp;&nbsp;
+<b>Report Period:</b> <u><?php echo $dispDate;?></u>
+</div><br><br><br>
 <?php include_once '.inc/charts/stub_brief.php';?>
 <?php include_once '.inc/charts/stub_sigsum.php';?>
 <?php include_once '.inc/charts/stub_src-ip.php';?>
@@ -69,5 +89,6 @@ include_once '.inc/countries.php';
 </td>
 </tr>
 </table>
+</form>
 </body>
 </html>

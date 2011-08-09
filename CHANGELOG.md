@@ -1,9 +1,19 @@
+# Squert 0.9.2
+
+* Added 'last time' indicators to summary tab
+* Fixed display logic when viewing spans on summary tab
+* Added record count selector to summary tab
+* Changed country and signature charts to donut variant. Cleaner
+* Truncate long key entries for country and signature charts
+* Countries were not being filtered when added to the exclude filter. This has been fixed
+* Very likely a couple other things
+
 # Squert 0.9.1
 
 * Fixed country array in ip2c.tcl
 * Moved key in bar charts below x-axis labels
-* Altered country pie chart to better accommodate key
 * Added src and dst IP tables to summary tab
+
 
 # Squert 0.9.0
 

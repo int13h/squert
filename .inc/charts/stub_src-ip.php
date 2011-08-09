@@ -22,7 +22,7 @@
 $stub = "Top Source IPs";
 
 $sources = mysql_query("SELECT COUNT(src_ip) AS c1, COUNT(DISTINCT(dst_ip)) AS c2, COUNT(DISTINCT(signature)) AS c3, 
-                        INET_NTOA(src_ip), map1.c_long as src_c_long
+                        INET_NTOA(src_ip), map1.c_long as src_c_long, MAX(timestamp)
                         FROM event
                         LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
                         LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
@@ -32,13 +32,15 @@ $sources = mysql_query("SELECT COUNT(src_ip) AS c1, COUNT(DISTINCT(dst_ip)) AS c
                         ORDER BY c1 DESC");
 
 echo "<h2> $stub</h2>";
-echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
-      \r<th class=sort width=200>IP</th>
-      \r<th class=sort>Country</th>
+echo "<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
+      \r<th class=sort width=130>IP</th>
+      \r<th class=sort width=330>Country</th>
       \r<th class=sort width=100>Signatures</th>
       \r<th class=sort width=100>Destinations</th>
-      \r<th class=sort width=100>Count</th>
-      \r<th class=sort width=100>% of Total</th>\n";
+      \r<th class=sort width=129>Last Event</th>
+      \r<th class=sorttable_nosort width=1></th>
+      \r<th class=sort width=80>Count</th>
+      \r<th class=sort width=80>% of Total</th>\n";
 
 $i = 0;
 
@@ -51,7 +53,10 @@ while ($row = mysql_fetch_row($sources)) {
     }
 
     $ip = $row[3];
+    $ipInt = sprintf("%u", ip2long($ip));
     $cc = $row[4];
+    $stamp = formatStamp($row[5],0);
+    $stampLine = lastTime($stamp);
     $style = " style=\"font-weight: bold; color: #545454;\"";
 
     if (rfc1918($ip) == '0') {
@@ -63,15 +68,15 @@ while ($row = mysql_fetch_row($sources)) {
         $cc = "--";
     }
 
-    echo "<tr><td class=sortbig>$row[3]</td>
+    echo "<tr><td class=sortbig sorttable_customkey=\"$ipInt\">$ip</td>
             \r<td class=sortbig$style>$cc</td>
             \r<td class=sortbigbold>$row[2]</td>
             \r<td class=sortbigbold>$row[1]</td>
+            \r$stampLine
             \r<td class=sortbigbold>$row[0]</td>
             \r<td class=sortbigbold>$per</td></tr>\n";
 
-    // It is cheaper to perform the limit here than on the query
-    if ($i == 10) {break;};
+    if ($sLimit != 0) { if ($i == $sLimit) {break;};}
 }
 
 echo "</table><br><br>";

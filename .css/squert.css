@@ -29,6 +29,17 @@ td.sortbigbold {
   font-weight: bold;
 }
 
+td.sortsmall {
+  background: #e9e9e9;
+  border: 1pt solid #c4c4c4;
+  border-top: none;
+  border-right: none;
+  color: #000000;
+  padding: 3px 5px 3px 5px;
+  font-size: 9px;
+  font-weight: bold;
+}
+
 div.big {
   font-size: 12px;
   font-weight: bold;

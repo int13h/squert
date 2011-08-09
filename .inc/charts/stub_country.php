@@ -67,8 +67,14 @@ while ($row = mysql_fetch_row($sccQuery)) {
     $i++;
     $plot1 .= $row[0] . ",";
     $label1 .= "'" . $row[2] . "'" . ",";
-    $sWrap = strtolower($row[2]);
-    $key1 .= "'" . $sWrap . " (" . $row[0] . ")" . "'" . ",";
+
+    if (strlen($row[2]) > 20) {
+        $name = substr($row[2], 0,20) . "..";
+    } else {
+        $name = $row[2];
+    }
+    
+    $key1 .= "'" . $name . " (" . $row[0] . ")" . "'" . ",";
     $sCol = array_find("$row[2]|", $countries);
     $sCols .= "'" . $sCol . "'" . ",";     
     if ($i == 10) { break; }
@@ -80,8 +86,14 @@ while ($row = mysql_fetch_row($dccQuery)) {
     $i++;
     $plot2 .= $row[0] . ",";
     $label2 .= "'" . $row[2] . "'" . ",";
-    $dWrap = strtolower($row[2]);
-    $key2 .= "'" . $dWrap . " (" . $row[0] . ")" . "'" . ",";
+
+    if (strlen($row[2]) > 20) {
+        $name = substr($row[2], 0,20) . "..";
+    } else {
+        $name = $row[2];
+    }
+
+    $key2 .= "'" . $name . " (" . $row[0] . ")" . "'" . ",";
     $dCol = array_find("$row[2]|", $countries);
     $dCols .= "'" . $dCol . "'" . ",";
     if ($i == 10) { break; }
@@ -95,8 +107,8 @@ $label2 = rtrim($label2,",");
 // Chart Logic
 
 echo "
-<canvas id=\"scountry\" width=\"475\" height=\"300\">[No canvas support]</canvas>
-<canvas id=\"dcountry\" width=\"475\" height=\"300\">[No canvas support]</canvas>
+<canvas id=\"scountry\" width=\"480\" height=\"350\">[No canvas support]</canvas>
+<canvas id=\"dcountry\" width=\"480\" height=\"350\">[No canvas support]</canvas>
 
 <script>
   function createCountry () {
@@ -104,36 +116,40 @@ echo "
   sc.Set('chart.title', 'Top Source Countries');
   sc.Set('chart.gutter.left', 30);
   sc.Set('chart.tooltips', [$label1]);
+  sc.Set('chart.tooltips.effect', 'fade');
+  sc.Set('chart.tooltips.event', 'onmousemove');
   sc.Set('chart.text.size', 8);
   sc.Set('chart.key', [$key1]);
   sc.Set('chart.key.background', 'rgba(255,255,255,0.3)');
+  sc.Set('chart.key.position.y', 70);
+  sc.Set('chart.key.position.x', 260);
   sc.Set('chart.colors', [$sCols]);
-  sc.Set('chart.highlight.style', '2d');
-  sc.Set('chart.tooltips.effect', 'fade');
-  sc.Set('chart.tooltips.event', 'onmousemove');
-  sc.Set('chart.linewidth', .5);
   sc.Set('chart.strokestyle', '#ffffff');
   sc.Set('chart.align', 'left');
   sc.Set('chart.radius', 110);
   sc.Set('chart.shadow', false);
+  sc.Set('chart.variant', 'donut');
+  sc.Set('chart.linewidth', 2);
   sc.Draw();
 
   var dc = new RGraph.Pie('dcountry', [$plot2]);
   dc.Set('chart.title', 'Top Destination Countries');
   dc.Set('chart.gutter.left', 30);
   dc.Set('chart.tooltips', [$label2]);
+  dc.Set('chart.tooltips.effect', 'fade');
+  dc.Set('chart.tooltips.event', 'onmousemove');
   dc.Set('chart.text.size', 8);
   dc.Set('chart.key', [$key2]);
   dc.Set('chart.key.background', 'rgba(255,255,255,0.3)');
+  dc.Set('chart.key.position.y', 70);
+  dc.Set('chart.key.position.x', 260);
   dc.Set('chart.colors', [$dCols]);
-  dc.Set('chart.highlight.style', '2d');
-  dc.Set('chart.tooltips.effect', 'fade');
-  dc.Set('chart.tooltips.event', 'onmousemove');
-  dc.Set('chart.linewidth', .5);
   dc.Set('chart.strokestyle', '#ffffff');
   dc.Set('chart.align', 'left');
   dc.Set('chart.radius', 110);
   dc.Set('chart.shadow', false);
+  dc.Set('chart.variant', 'donut');
+  dc.Set('chart.linewidth', 2);
   dc.Draw();
 }
 

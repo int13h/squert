@@ -119,7 +119,7 @@ function DoQueries($timeParts) {
        
         for ($i = 0; $i < $c; ++$i) {
 
-            $aCountry = $theCountries[$i];
+            $aCountry = mysql_real_escape_string($theCountries[$i]);
 
             if ($i == 0) {
                 $cFilter = "AND (";
@@ -180,7 +180,7 @@ function DoQueries($timeParts) {
                            'dst_ip'    => 'INET_NTOA(event.dst_ip)',
                            'src_port'  => 'event.src_port',
                            'dst_port'  => 'event.dst_port',
-                           'c'         => '(map1.cc != \'**\' AND map1.c_long != \'**\' OR map2.cc != \'**\' AND map2.c_long != \'**\')'
+                           'c'         => '(map1.cc != \'**\' OR map2.cc != \'**\') AND (map1.c_long != \'**\' OR map2.c_long != \'**\')'
                          );
 
         $toExclude = explode(";", $xString);
@@ -192,9 +192,7 @@ function DoQueries($timeParts) {
             
             @list($subj,$pred) = explode("=", $toExclude[$i]);
 
-            $toStrip = array("\"","'","`","^");
-            $roundOne = str_replace($toStrip, "", $pred);
-            $pred = str_replace('\\', '\\\\\\\\', $roundOne);
+            $pred = mysql_real_escape_string($pred);
            
             // tight or loose query
             $prefix = "!=";
@@ -365,6 +363,11 @@ function DoQueries($timeParts) {
     $qText = $theQueries["q".$qLogic];
     $theQuery = mysql_query($theQueries["q".$qLogic]);
     $theCols = explode("||",$theQueries["c".$qLogic]);
+
+    if (!$theQuery) {
+        die('Invalid query: ' . mysql_error());
+    }
+
     $numRows = mysql_num_rows($theQuery);
 
     if ($numRows == $recLimit) {

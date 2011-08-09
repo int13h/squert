@@ -148,7 +148,25 @@ function mkLinks() {
     return $html;
 }
 
+// Report Date
+$rStart = date("l M j, Y", strtotime("$startDate"));
+$rEnd = date("l M j, Y", strtotime("$endDate"));
+if ($rStart == $rEnd) {
+    $dispDate = "$rEnd";
+} else {
+    $dispDate = "Between $rStart and $rEnd";
+}
+
+// The ribbon
 $timeLinks = mkLinks();
+
+// Today link
+if (strtotime($today) != strtotime($endDate)) {
+    $page = ltrim($_SERVER['PHP_SELF'],"/squert");
+    $todayLink = "You are viewing a day in the past, <a href=\"$page?id=$id&s=$today&e=$today\">click here to view today</a>";
+} else {
+    $todayLink = "";
+}
 
 echo "<form id=head method=post>
 <div style=\"width: 1000px; margin: 0 auto; padding: none; text-align: right;\">

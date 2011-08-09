@@ -58,6 +58,8 @@ include_once '.inc/countries.php';
 <div id="main">
 <?php echo $timeLinks;?>
 <div id="contents" class="main">
+&nbsp;&nbsp;<?php echo $todayLink;?>
+<div style="float: right; color: #000000;"><u><b>Report Period:</b> <?php echo $dispDate;?></u></div>
 <?php include_once '.inc/charts/stub_signature.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>

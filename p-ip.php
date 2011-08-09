@@ -59,6 +59,8 @@ include_once '.inc/countries.php';
 <div id="main">
 <?php echo $timeLinks;?>
 <div id="contents" class="main">
+&nbsp;&nbsp;<?php echo $todayLink;?>
+<div style="float: right; color: #000000;"><u><b>Report Period:</b> <?php echo $dispDate;?></u></div><br><br>
 <?php include_once '.inc/charts/stub_ip.php';?>
 <?php include_once '.inc/charts/stub_ports.php';?>
 <?php include_once '.inc/charts/stub_country.php';?>

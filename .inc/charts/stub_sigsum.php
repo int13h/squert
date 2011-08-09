@@ -21,7 +21,7 @@
 
 $stub = "Top Signatures";
 
-$signatures = mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id
+$signatures = mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id, MAX(timestamp)
                            FROM event
                            WHERE $when[0]
                            AND signature NOT REGEXP '^URL'
@@ -29,11 +29,13 @@ $signatures = mysql_query("SELECT COUNT(signature) AS c1, signature, signature_i
                            ORDER BY c1 DESC");
 
 echo "<h2> $stub</h2>";
-echo "<table width=100% cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
-      \r<th class=sort>Signature</th>
+echo "<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
+      \r<th class=sort width=570>Signature</th>
       \r<th class=sort width=100>ID</th>
-      \r<th class=sort width=100>Count</th>
-      \r<th class=sort width=100>% of Total</th>\n";
+      \r<th class=sort width=129>Last Event</th>
+      \r<th class=sorttable_nosort width=1></th>
+      \r<th class=sort width=80>Count</th>
+      \r<th class=sort width=80>% of Total</th>\n";
 
 $i = 0;
 
@@ -45,11 +47,16 @@ while ($row = mysql_fetch_row($signatures)) {
             $per = 0;
     }
 
-    echo "<tr><td class=sortbig>$row[1]</td><td class=sortbig>$row[2]</td>
-          <td class=sortbigbold>$row[0]</td><td class=sortbigbold>$per</td></tr>\n";
+    $stamp = formatStamp($row[3],0);
+    $stampLine = lastTime($stamp);
 
-    // It is cheaper to perform the limit here than on the query
-    if ($i == 10) {break;};
+    echo "<tr><td class=sortbig>$row[1]</td>
+          \r<td class=sortbig>$row[2]</td>
+          \r$stampLine
+          \r<td class=sortbigbold>$row[0]</td>
+          \r<td class=sortbigbold>$per</td></tr>\n";
+
+    if ($sLimit != 0) { if ($i == $sLimit) {break;};}
 }
 
 echo "</table><br><br>";

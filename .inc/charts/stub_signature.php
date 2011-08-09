@@ -36,8 +36,13 @@ while ($row = mysql_fetch_row($sccQuery)) {
     $i++;
     $plot1 .= $row[0] . ",";
     $label1 .= "'" . $row[1] . "'" . ",";
-    $key1 .= "'" . $row[1] . " (" . $row[0] . ")" . "'" . ",";
-    if ($i == 15) { break; }
+    if (strlen($row[1]) > 100) {
+        $name = substr($row[1], 0,100) . "..";
+    } else {
+        $name = $row[1];
+    }
+    $key1 .= "'" . $name . " (" . $row[0] . ")" . "'" . ",";
+    if ($i == 10) { break; }
 }
 
 $colours = "'#4E4E9E', '#ECE64F', '#3E9AC0', '#4A4557', '#A817DF', '#14870D', '#925E72', '#B3B88C', '#5F4A4F', '#E3ECE8', '#1F5BCD', '#30858C', '#6DC787', '#8FF045', '#22FFBE'";
@@ -45,32 +50,34 @@ $colours = "'#4E4E9E', '#ECE64F', '#3E9AC0', '#4A4557', '#A817DF', '#14870D', '#
 // Chart Logic
 
 echo "
-<canvas id=\"sigs\" width=\"980\" height=\"350\">[No canvas support]</canvas>
+<canvas id=\"sigs\" width=\"960\" height=\"350\">[No canvas support]</canvas>
 
 <script>
   function createSigs () {
-  var sc = new RGraph.Pie('sigs', [$plot1]);
-  sc.Set('chart.title', 'Top Signatures');
-  sc.Set('chart.gutter.left', 20);
-  sc.Set('chart.gutter.top', 10);
-  sc.Set('chart.tooltips', [$label1]);
-  sc.Set('chart.text.size', 8);
-  sc.Set('chart.key', [$key1]);
-  sc.Set('chart.key.background', 'rgba(245,245,245,0.3)');
-  sc.Set('chart.colors', [$colours]);
-  sc.Set('chart.highlight.style', '2d');
-  sc.Set('chart.tooltips.effect', 'fade');
-  sc.Set('chart.tooltips.event', 'onmousemove');
-  sc.Set('chart.linewidth', 2);
-  sc.Set('chart.strokestyle', '#ffffff');
-  sc.Set('chart.align', 'left');
-  sc.Set('chart.radius', 130);
-  sc.Set('chart.shadow', false);
-  sc.Draw();
+
+  var ct = new RGraph.Pie('sigs', [$plot1]);
+  ct.Set('chart.title', 'Top Signatures');
+  ct.Set('chart.gutter.left', 30);
+  ct.Set('chart.tooltips', [$label1]);
+  ct.Set('chart.tooltips.effect', 'fade');
+  ct.Set('chart.tooltips.event', 'onmousemove');
+  ct.Set('chart.text.size', 8);
+  ct.Set('chart.key', [$key1]);
+  ct.Set('chart.key.background', 'rgba(255,255,255,0.3)');
+  ct.Set('chart.key.position.y', 70);
+  ct.Set('chart.key.position.x', 300);
+  ct.Set('chart.colors', [$colours]);
+  ct.Set('chart.strokestyle', '#ffffff');
+  ct.Set('chart.align', 'left');
+  ct.Set('chart.radius', 120);
+  ct.Set('chart.shadow', false);
+  ct.Set('chart.variant', 'donut');
+  ct.Set('chart.linewidth', 2);
+  ct.Draw();
+
+
 }
 
 createSigs();
 </script>";
-
-
 ?>
