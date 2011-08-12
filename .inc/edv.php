@@ -19,7 +19,13 @@
 //
 //
 
+$baseDir	= realpath('../images');
+$imgDir		= "../images";
+$propsDir	= realpath('../.props');
+$debugDir	= realpath('../.debug');
+
 function Links($string,$ofPre,$vType,$eLength,$vLabel,$lProps,$bgcolor,$mode) {
+    global $baseDir, $imgDir, $propsDir, $debugDir;
     include_once "config.php";
     include_once "functions.php";
     $WHERE = hextostr($string);
@@ -50,8 +56,8 @@ function Links($string,$ofPre,$vType,$eLength,$vLabel,$lProps,$bgcolor,$mode) {
     $hit = "no";
 
     if ($glowDebug == "yes") {
-        $dotOut = "-o ../.debug/dot.txt";
-        $glowErr = "../.debug/glow.txt";
+        $dotOut = "-o $debugDir/dot.txt";
+        $glowErr = "$debugDir/glow.txt";
     } else {
         $dotOut = "-Tpng -o $baseDir/$outFile";
         $glowErr = "/dev/null";
@@ -83,7 +89,7 @@ function Links($string,$ofPre,$vType,$eLength,$vLabel,$lProps,$bgcolor,$mode) {
 
     // Start timing
     $gst = microtime(true);
-    $glowCmd = "$glowPath -c ../.props/$lProps $glowArgs -e $eLength -p $mode $dashN | $dotPath -K$vType -Gbgcolor=$bgcolor $dotArgs $dotOut";
+    $glowCmd = "$glowPath -c $propsDir/$lProps $glowArgs -e $eLength -p $mode $dashN | $dotPath -K$vType -Gbgcolor=$bgcolor $dotArgs $dotOut";
     $dspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"),2 => array("file", "$glowErr", "a"));
     $process = proc_open($glowCmd, $dspec, $pipes);
 
@@ -131,7 +137,7 @@ function Links($string,$ofPre,$vType,$eLength,$vLabel,$lProps,$bgcolor,$mode) {
     $itime = $iet - $ist;
     $irt = sprintf("%01.3f",$itime);
     $html = "\r<table width=100% border=0 cellpadding=1 cellspacing=0>
-             \r<tr><td><center><a href=$baseDir/$outFile target=_new><img onLoad=\"poof('wrkn','no');\" src=$baseDir/$outThumb border=0></a></center></td></tr>
+             \r<tr><td><center><a href=$imgDir/$outFile target=_new><img onLoad=\"poof('wrkn','no');\" src=$imgDir/$outThumb border=0></a></center></td></tr>
              \r<tr><td align=right style=\"color: #545454;\"><samp>query: ${qrt} graphviz: ${grt} scale: ${irt}</samp></td></tr>
              \r</table>";
 
@@ -162,30 +168,29 @@ function imgScale($inImg,$width,$height) {
 }
 
 function ShowImg($xyz) {
-
-    include_once "config.php";
+    global $imgDir;
     if ($xyz != "0") {
         $thumb = str_replace('.png','_thumb.png',$xyz);
         $html = "<table width=100% border=0 cellpadding=1 cellspacing=0>
                  \r<tr><td><center><u>$xyz</u></center></td></tr>
-                 \r<tr><td><center><a href=$baseDir/$xyz target=_new><img src=$baseDir/$thumb border=0></a></center></td></tr>
+                 \r<tr><td><center><a href=$imgDir/$xyz target=_new><img src=$imgDir/$thumb border=0></a></center></td></tr>
                  \r</table>";
     }
     return $html;
 }
 
 function delImg($xyz) {
-
+    global $baseDir;
     $html = '';
     if ($xyz != "0") {
         $thumb = str_replace('.png','_thumb.png',$xyz);
-        if (file_exists("../images/$xyz")) {
-            unlink("../images/$xyz");
+        if (file_exists("$baseDir/$xyz")) {
+            unlink("$baseDir/$xyz");
         }
-        if (file_exists("../images/$thumb")) {
-            unlink("../images/$thumb");
+        if (file_exists("$baseDir/$thumb")) {
+            unlink("$baseDir/$thumb");
         }
-        if ((!file_exists("../images/$xyz")) || (!file_exists("../images/$thumb"))) {
+        if ((!file_exists("$baseDir/$xyz")) || (!file_exists("$baseDir/$thumb"))) {
             $html = "<table width=100% border=0 cellpadding=1 cellspacing=0>
                      \r<tr><td style=\"color: #cc0000\"><center><u>Deleted $xyz</u></center></td></tr>
                      \r</table>";
@@ -199,7 +204,8 @@ function delImg($xyz) {
 }
 
 function DirList($active) {
-    $files = scandir('../images');
+    global $baseDir;
+    $files = scandir("$baseDir");
     if ($files != false && count($files) > 2) {
         for ($i = 0, $fc = count($files) - 1; $i <= $fc; $i++) {
             if (($files[$i] != ".") && ($files[$i] != "..")) {
@@ -209,7 +215,7 @@ function DirList($active) {
                     } else {
                         $selected = '';
                     }
-                    $fShort = str_replace("../images", "", $files[$i]);
+                    $fShort = str_replace($baseDir, "", $files[$i]);
                     echo "\r<option value=\"$files[$i]\" $selected>$fShort</option>";
                 }
             }
@@ -220,7 +226,8 @@ function DirList($active) {
 }
 
 function propList($active) {
-    $files = scandir('../.props');
+    global $propsDir;
+    $files = scandir($propsDir);
     if ($files != false && count($files) > 2) {
         for ($i = 0, $fc = count($files) - 1; $i <= $fc; $i++) {
             if (($files[$i] != ".") && ($files[$i] != "..")) {
@@ -229,7 +236,7 @@ function propList($active) {
                 } else {
                     $selected = '';
                 }
-                $fShort = str_replace("../.props", "", $files[$i]);
+                $fShort = str_replace($propsDir, "", $files[$i]);
                 echo "\r<option value=\"$files[$i]\" $selected>$fShort</option>";
             }
         }
@@ -240,6 +247,7 @@ function propList($active) {
 
 function TheHTML($string,$fileName,$outFile,$vType,$eLength,$vLabel,$lProps,$bgcolor,$mode) {
 
+    global $cssDir, $jsDir;
     include_once 'functions.php';
     $vTypes = array(
                      "neato"  => "neato||Null",
@@ -269,6 +277,7 @@ function TheHTML($string,$fileName,$outFile,$vType,$eLength,$vLabel,$lProps,$bgc
                     "3" => "once per unique source and target||Null");
 
     $omox = "onMouseOver=\"style.backgroundColor='#ff0000';\" onMouseOut=\"style.backgroundColor='#B80028';\"";
+
     echo "<html>
           \r<head>
           \r<script type=\"text/javascript\" src=\"../.js/squert.js\"></script>
