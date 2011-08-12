@@ -69,7 +69,7 @@ $endHex =       '000000'; //Examples: CC0000  CC0000 22335A
 $dotArgs = "-Goutputorder=edgesfirst -Gpad=1 -Gsplines=true";
 
 // Afterglow
-$glowPath = "../.glow/afterglow.pl";
+$glowPath = realpath('../.glow/afterglow.pl');
 $glowArgs = " -p0 -a";
 
 // Results Limit. 
@@ -79,9 +79,6 @@ $LIMIT = ''; // No limit.
 // Image scaling defaults.
 $width = 900;
 $height = 800;
-
-// Image location. You must chmod 777 this directory
-$baseDir = "../images";
 
 // Debug. This will output the dot files and afterglows output to .debug
 $glowDebug = "no";
