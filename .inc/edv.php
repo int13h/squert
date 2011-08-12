@@ -175,6 +175,8 @@ function ShowImg($xyz) {
                  \r<tr><td><center><u>$xyz</u></center></td></tr>
                  \r<tr><td><center><a href=$imgDir/$xyz target=_new><img src=$imgDir/$thumb border=0></a></center></td></tr>
                  \r</table>";
+    } else {
+        $html = "";
     }
     return $html;
 }
