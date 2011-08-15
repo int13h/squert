@@ -25,6 +25,7 @@
 // A simple indicator of how close the last event generated time is to "now"
 $ltCols = array("#cc0000","#FAB005","#F2E766","#d4d4d4");
 
+
 function lastTime($stamp) {
     global $today, $startDate, $endDate, $ltCols;
     $sSecs = strtotime($startDate);
@@ -42,7 +43,7 @@ function lastTime($stamp) {
 
     if ($tDiff >= 86400)  {
         $timeResult = $stamp;
-        $timeStyle = "sortsmall";
+        $timeStyle = "sortmed";
     } else {
         if ($stamp != "-") {
             list($date,$time) = explode(" ", $stamp);
@@ -50,28 +51,29 @@ function lastTime($stamp) {
         } else {
             $timeResult = '-';
         }
-        $timeStyle = "sortbigbold";
+        $timeStyle = "sortmed";
     }        
 
     if ($tDiff == 0 && $endDate == $today || $tDiff >= 86400 && $endDate == $today) {
         switch ($tVar) {
-            case ($tVar < 60):		$style = "style=\"border: 1pt solid black; background: $ltCols[0];\""; break;
-            case ($tVar < 500):		$style = "style=\"border: 1pt solid black; background: $ltCols[1];\""; break;
-            case ($tVar < 1800):	$style = "style=\"border: 1pt solid black; background: $ltCols[2];\""; break;
-            case ($tVar > 1800):	$style = "style=\"border: 1pt solid black; background: $ltCols[3];\""; break;
-            default:			$style = "style=\"border: 1pt solid black; background: $ltCols[3];\""; break;
+            case ($tVar < 60):		$bgcol = $ltCols[0]; break;
+            case ($tVar < 500):		$bgcol = $ltCols[1]; break;
+            case ($tVar < 1800):	$bgcol = $ltCols[2]; break;
+            case ($tVar > 1800):	$bgcol = $ltCols[3]; break;
+            default:			$bgcol = $ltCols[3]; break;
         }
     } else {
-        $style = "style=\"border-left: none;\"";
+        $bgcol = "#e9e9e9";
     }
 
-    $stampLine = "<td class=$timeStyle>$timeResult</td><td class=sortbigbold $style></td>";
+    $stampLine = "<td class=$timeStyle>$timeResult</td><td style=\"background: $bgcol; border: 1pt solid #000000;\"></td>";
     return $stampLine;
 }
 
 // Event Categories
 
-$category	=  mysql_query("SELECT COUNT(signature) as c1, status, MAX(timestamp)
+$category	=  mysql_query("SELECT COUNT(signature) as c1, status, MAX(timestamp), 
+                                COUNT(DISTINCT(signature)), COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip))
                                 FROM event
                                 WHERE $when[0]
                                 AND signature NOT REGEXP '^URL'
@@ -93,7 +95,8 @@ $destinations	=  mysql_query("SELECT COUNT(DISTINCT(dst_ip))
 
 // Event Distribution (sensor)
 
-$sensor		= mysql_query("SELECT st.net_name, st.hostname, st.agent_type, st.sid, COUNT(signature) AS c1, MAX(timestamp) 
+$sensor		= mysql_query("SELECT st.net_name, st.hostname, st.agent_type, st.sid, COUNT(signature) AS c1, MAX(timestamp),
+                               COUNT(DISTINCT(signature)), COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip)) 
                                FROM event LEFT JOIN sensor AS st ON event.sid = st.sid
                                WHERE $when[0]
                                AND signature NOT REGEXP '^URL'
@@ -120,7 +123,7 @@ $presentCats = array();
 $sumEvents = 0;
 
 while ($row = mysql_fetch_row($category)) {
-    $presentCats [$row[1]] = "$row[0]||$row[2]";
+    $presentCats [$row[1]] = "$row[0]||$row[2]||$row[3]||$row[4]||$row[5]";
     $sumEvents += $row[0];
 }
 
@@ -151,16 +154,19 @@ while ($row = mysql_fetch_row($sensors)) {
 
 // The event counts
 while ($row = mysql_fetch_row($sensor)) {
-    $presentSens [$row[3]] = "$row[0]||$row[1]||$row[2]||$row[4]||$row[5]";
+    $presentSens [$row[3]] = "$row[0]||$row[1]||$row[2]||$row[4]||$row[5]||$row[6]||$row[7]||$row[8]";
 }
 
 echo "<h2> Event Distribution by Sensor</h2>";
 echo "<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
-      \r<th class=sort width=370>Network</th>
+      \r<th class=sort width=250>Network</th>
       \r<th class=sort width=200>Hostname</th>
       \r<th class=sort width=100>Agent Type</th>
       \r<th class=sort width=129>Last Event</th>
       \r<th class=sorttable_nosort width=1></th>
+      \r<th class=sort width=40>Sig</th>
+      \r<th class=sort width=40>Src</th>
+      \r<th class=sort width=40>Dst</th>
       \r<th class=sort width=80>Count</th>
       \r<th class=sort width=80>% of Total</th>\n";
 
@@ -169,7 +175,7 @@ foreach ($sensorList as $key => $sid) {
     list($netName,$hostName,$agent) = explode('||', $sid);
 
     if (isset($presentSens[$key])) {
-        list($netName,$hostName,$agent,$numEvents,$stamp) = explode('||', $presentSens[$key]);
+        list($netName,$hostName,$agent,$numEvents,$stamp,$sig,$src,$dst) = explode('||', $presentSens[$key]);
         $stamp = formatStamp($stamp,0);
         if ($numEvents > 0) {
             $per = round($numEvents / $sumEvents * 100,2) . "%";
@@ -177,8 +183,7 @@ foreach ($sensorList as $key => $sid) {
             $per = 0;
         }
     } else {
-        $numEvents = 0;
-        $per = 0;
+        $sig = $src = $dst = $numEvents = $per = 0;
         $stamp = "-";
     }
 
@@ -187,6 +192,9 @@ foreach ($sensorList as $key => $sid) {
           \r<td class=sortbig>$hostName</td>
           \r<td class=sortbig>$agent</td>
           \r$stampLine
+          \r<td class=sortmed>$sig</td>
+          \r<td class=sortmed>$src</td>
+          \r<td class=sortmed>$dst</td>
           \r<td class=sortbigbold>$numEvents</td>
           \r<td class=sortbigbold>$per</td></tr>\n";
 }
@@ -218,9 +226,12 @@ if (strtotime($today) == strtotime($endDate)) {
 echo "<h2> Event Distribution by Category</h2>";
 echo "<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
       \r<th class=sort width=20>#</th>
-      \r<th class=sort width=650>Category</th>
+      \r<th class=sort width=530>Category</th>
       \r<th class=sort width=129>Last Event</th>
       \r<th class=sorttable_nosort width=1></th>
+      \r<th class=sort width=40>Sig</th>
+      \r<th class=sort width=40>Src</th>
+      \r<th class=sort width=40>Dst</th>
       \r<th class=sort width=80>Count</th>
       \r<th class=sort width=80>% of Total</th>\n";
 
@@ -231,7 +242,7 @@ foreach ($statusList as $key => $status) {
     list($longDesc,$class_colour,$shortDesc) = explode('||', $status);
 
     if (isset($presentCats[$key])) {
-        list($numEvents,$stamp) = explode('||', $presentCats[$key]);
+        list($numEvents,$stamp,$sig,$src,$dst) = explode('||', $presentCats[$key]);
         $stamp = formatStamp($stamp,0);
         if ($numEvents > 0) {
             $per = round($numEvents / $sumEvents * 100,2) . "%";
@@ -239,8 +250,7 @@ foreach ($statusList as $key => $status) {
            $per = 0;
         }
     } else {
-        $numEvents = 0;
-        $per = 0;
+        $sig = $src = $dst = $numEvents = $per = 0;
         $stamp = "-";
     }
 
@@ -248,6 +258,9 @@ foreach ($statusList as $key => $status) {
     echo "<tr><td class=sortbig style=\"background: $class_colour;\">$shortDesc</td>
           \r<td class=sortbig>$longDesc</td>
           \r$stampLine
+          \r<td class=sortmed>$sig</td>
+          \r<td class=sortmed>$src</td>
+          \r<td class=sortmed>$dst</td>
           \r<td class=sortbigbold>$numEvents</td>
           \r<td class=sortbigbold>$per</td></tr>\n";
  

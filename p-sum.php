@@ -79,10 +79,10 @@ $rList = array(
 </SELECT>&nbsp;&nbsp;&nbsp;
 <b>Report Period:</b> <u><?php echo $dispDate;?></u>
 </div><br><br><br>
-<?php include_once '.inc/charts/stub_brief.php';?>
-<?php include_once '.inc/charts/stub_sigsum.php';?>
-<?php include_once '.inc/charts/stub_src-ip.php';?>
-<?php include_once '.inc/charts/stub_dst-ip.php';?>
+<?php include '.inc/charts/stub_brief.php';?>
+<?php include '.inc/charts/stub_sigsum.php';?>
+<?php include '.inc/charts/stub_src-ip.php';?>
+<?php include '.inc/charts/stub_dst-ip.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>

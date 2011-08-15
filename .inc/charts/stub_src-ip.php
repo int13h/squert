@@ -34,11 +34,11 @@ $sources = mysql_query("SELECT COUNT(src_ip) AS c1, COUNT(DISTINCT(dst_ip)) AS c
 echo "<h2> $stub</h2>";
 echo "<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
       \r<th class=sort width=130>IP</th>
-      \r<th class=sort width=330>Country</th>
-      \r<th class=sort width=100>Signatures</th>
-      \r<th class=sort width=100>Destinations</th>
+      \r<th class=sort width=450>Country</th>
       \r<th class=sort width=129>Last Event</th>
       \r<th class=sorttable_nosort width=1></th>
+      \r<th class=sort width=40>Sig</th>
+      \r<th class=sort width=40>Dst</th>
       \r<th class=sort width=80>Count</th>
       \r<th class=sort width=80>% of Total</th>\n";
 
@@ -70,9 +70,9 @@ while ($row = mysql_fetch_row($sources)) {
 
     echo "<tr><td class=sortbig sorttable_customkey=\"$ipInt\">$ip</td>
             \r<td class=sortbig$style>$cc</td>
-            \r<td class=sortbigbold>$row[2]</td>
-            \r<td class=sortbigbold>$row[1]</td>
             \r$stampLine
+            \r<td class=sortmed>$row[2]</td>
+            \r<td class=sortmed>$row[1]</td>
             \r<td class=sortbigbold>$row[0]</td>
             \r<td class=sortbigbold>$per</td></tr>\n";
 

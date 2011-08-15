@@ -21,7 +21,7 @@
 
 $stub = "Top Signatures";
 
-$signatures = mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id, MAX(timestamp)
+$signatures = mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id, MAX(timestamp), COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip))
                            FROM event
                            WHERE $when[0]
                            AND signature NOT REGEXP '^URL'
@@ -30,10 +30,12 @@ $signatures = mysql_query("SELECT COUNT(signature) AS c1, signature, signature_i
 
 echo "<h2> $stub</h2>";
 echo "<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 2pt solid #c9c9c9;\">\n
-      \r<th class=sort width=570>Signature</th>
+      \r<th class=sort width=410>Signature</th>
       \r<th class=sort width=100>ID</th>
       \r<th class=sort width=129>Last Event</th>
       \r<th class=sorttable_nosort width=1></th>
+      \r<th class=sort width=30>Src</th>
+      \r<th class=sort width=30>Dst</th>
       \r<th class=sort width=80>Count</th>
       \r<th class=sort width=80>% of Total</th>\n";
 
@@ -53,6 +55,8 @@ while ($row = mysql_fetch_row($signatures)) {
     echo "<tr><td class=sortbig>$row[1]</td>
           \r<td class=sortbig>$row[2]</td>
           \r$stampLine
+          \r<td class=sortmed>$row[4]</td>
+          \r<td class=sortmed>$row[5]</td>
           \r<td class=sortbigbold>$row[0]</td>
           \r<td class=sortbigbold>$per</td></tr>\n";
 

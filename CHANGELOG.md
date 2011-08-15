@@ -1,3 +1,8 @@
+# Squert 0.9.3
+
+
+
+
 # Squert 0.9.2
 
 * Added 'last time' indicators to summary tab
