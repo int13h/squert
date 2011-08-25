@@ -156,5 +156,4 @@ echo "
 createCountry();
 </script>";
 
-
 ?>

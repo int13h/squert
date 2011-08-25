@@ -49,11 +49,8 @@
             var b_canvas = document.getElementById(\"mrwhite\");
             var b_context = b_canvas.getContext(\"2d\");            
             b_context.font = \"1em calibri, trebuchet ms, helvetica\";
-            b_context.fillStyle = \"#cc0000\";
-            b_context.fillText(\"This is\", 10, 20);            
-            b_context.font = \"2em calibri, trebuchet ms, helvetica\";
-            b_context.fillStyle = \"#000000\";
-            b_context.fillText(\"Not ready yet.\", 5, 40);
+            b_context.fillStyle = \"#c9c9c9\";
+            b_context.fillText(\"this is not ready yet\", 400, 20);            
           }
           doBoard();
           </script>

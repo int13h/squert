@@ -64,9 +64,7 @@ function doWorld($sccQuery,$dccQuery) {
         $cHit = 'yes';
     }
 
-    $aBan = '';
-    $bBan = '';
-    $cBan = '';
+    $aBan = $bBan = $cBan = '';
 
     // Count items and establish threshold
     if ($aHit == 'yes') {
@@ -101,7 +99,7 @@ function doWorld($sccQuery,$dccQuery) {
           \r<tr>
           \r<td style=\"font-size: .8em;\" align=center colspan=2><b>Event Distribution by Country</b></td>
           \r</tr><tr>
-          \r<td align=center colspan=2><canvas class=round style=\"border: 1pt solid gray;\" id=\"wm1\" width=\"950\" height=\"500\">[No canvas support]></canvas></td>
+          \r<td align=center colspan=2><canvas class=round style=\"border: 1pt solid #c9c9c9;\" id=\"wm1\" width=\"950\" height=\"500\">[No canvas support]></canvas></td>
           \r</tr>
           \r</table>
           \r</center>";

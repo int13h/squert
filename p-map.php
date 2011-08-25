@@ -19,19 +19,14 @@
 //
 //
 
-include_once '.inc/functions.php';
-include_once '.inc/session.php';
-include_once '.inc/tabs.php';
-include_once '.inc/config.php';
-include_once '.inc/countries.php';
 
-// Record limit
-$rList = array(
-                 10 => "10||Null",
-                 15 => "15||Null",
-                 20 => "20||Null",
-                 50 => "50||Null",
-                  0 => "All||Null");
+include_once '.inc/session.php';
+include_once '.inc/config.php';
+include_once '.inc/tabs.php';
+include_once '.inc/functions.php';
+include_once '.inc/countries.php';
+include_once '.inc/map.php';
+
 ?>
 
 <html>
@@ -41,6 +36,7 @@ $rList = array(
 <style type="text/css" media="screen">@import ".css/squert.css";</style>
 <style type="text/css" media="screen">@import ".css/tabs.css";</style>
 <script type="text/javascript" src=".js/squert.js"></script>
+<script type="text/javascript" src=".js/worldmap.js"></script>
 <script type="text/javascript" src=".js/sorttable.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
@@ -48,6 +44,7 @@ $rList = array(
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.line.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.scatter.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.pie.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.bipolar.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.context.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.tooltips.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.zoom.js"></script>
@@ -59,32 +56,15 @@ $rList = array(
 <tr>
 <td>
 <?php 
-  tabber("SUMMARY",$id,$startDate,$endDate);
+  tabber("MAP",$id,$startDate,$endDate);
   dbC();
 ?>
 <div id="main">
 <?php echo $timeLinks;?>
-<div id="contents" class="main" style="padding-left: 20px;">
-<form name=summary id=summary method=post action="<?php echo "p-sum.php?id=$id&s=$s&e=$e";?>">
-<?php echo $todayLink;?>
-<div style="float: right;">
-<b>Detail Lines:</b>
-<SELECT id=sLimit name=sLimit class=input onchange="summary.submit();">
-<?php
-
-    if(!isset($_REQUEST['sLimit'])) { $sLimit = 10; } else { $sLimit = $_REQUEST['sLimit']; }
-    mkSelect($rList,$sLimit);
-?>
-</SELECT>&nbsp;&nbsp;&nbsp;
-</form>
-<b>Report Period:</b> <u><?php echo $dispDate;?></u>
-</div>
-<p></p>
-<br>
-<?php include '.inc/charts/stub_brief.php';?>
-<?php include '.inc/charts/stub_sigsum.php';?>
-<?php include '.inc/charts/stub_src-ip.php';?>
-<?php include '.inc/charts/stub_dst-ip.php';?>
+<div id="contents" class="main">
+&nbsp;&nbsp;<?php echo $todayLink;?>
+<div style="float: right; color: #000000;"><u><b>Report Period:</b> <?php echo $dispDate;?></u></div><br><br>
+<?php include_once '.inc/charts/stub_world.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>

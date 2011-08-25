@@ -7,6 +7,7 @@ function tabber($tab,$id,$s,$e) {
         "SUMMARY"	=> "p-sum.php?id=$id&s=$s&e=$e",
         "SIGNATURES"	=> "p-sig.php?id=$id&s=$s&e=$e",
         "IP"		=> "p-ip.php?id=$id&s=$s&e=$e",
+        "MAP"           => "p-map.php?id=$id&s=$s&e=$e",
         "QUERY"		=> "p-query.php?id=$id&s=$s&e=$e",
     );
 

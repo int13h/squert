@@ -177,5 +177,5 @@ Welcome <b>$sUser</b> <b>|</b>
 </div>
 </form>";
 
-echo "<div align=center><IFRAME id=whiteboard name=whiteboard frameborder=0 scrolling=no width=1000px height=800px style=\"display: none; border: 2pt solid black; margin-bottom: 20px;\"></IFRAME></div>\n";
+echo "<div align=center><IFRAME id=whiteboard name=whiteboard frameborder=0 scrolling=no width=1000px height=800px style=\"display: none; border: 1pt solid #c9c9c9; margin-bottom: 50px;\"></IFRAME></div>\n";
 ?>
