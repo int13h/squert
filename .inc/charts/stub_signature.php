@@ -28,7 +28,7 @@ $scc = "SELECT COUNT(signature) as count, signature
 
 $sccQuery = mysql_query($scc);
 
-$i = 0;
+$i = $sigsE = 0;
 
 $plot1 = $label1 = $key1 = '';
 
@@ -45,39 +45,53 @@ while ($row = mysql_fetch_row($sccQuery)) {
     if ($i == 10) { break; }
 }
 
+if ($i == 0) { $sigsE = 1; }
+
 $colours = "'#4E4E9E', '#ECE64F', '#3E9AC0', '#4A4557', '#A817DF', '#14870D', '#925E72', '#B3B88C', '#5F4A4F', '#E3ECE8', '#1F5BCD', '#30858C', '#6DC787', '#8FF045', '#22FFBE'";
 
 // Chart Logic
 
-echo "
-<canvas id=\"sigs\" width=\"960\" height=\"350\">[No canvas support]</canvas>
+echo "<canvas id=\"sigs\" width=\"960\" height=\"350\">[No canvas support]</canvas>";
 
-<script>
-  function createSigs () {
+echo "\r<script>";
 
-  var ct = new RGraph.Pie('sigs', [$plot1]);
-  ct.Set('chart.title', 'Top Signatures');
-  ct.Set('chart.gutter.left', 30);
-  ct.Set('chart.tooltips', [$label1]);
-  ct.Set('chart.tooltips.effect', 'fade');
-  ct.Set('chart.tooltips.event', 'onmousemove');
-  ct.Set('chart.text.size', 8);
-  ct.Set('chart.key', [$key1]);
-  ct.Set('chart.key.background', 'rgba(255,255,255,0.3)');
-  ct.Set('chart.key.position.y', 70);
-  ct.Set('chart.key.position.x', 300);
-  ct.Set('chart.colors', [$colours]);
-  ct.Set('chart.strokestyle', '#ffffff');
-  ct.Set('chart.align', 'left');
-  ct.Set('chart.radius', 120);
-  ct.Set('chart.shadow', false);
-  ct.Set('chart.variant', 'donut');
-  ct.Set('chart.linewidth', 2);
-  ct.Draw();
+if ($sigsE != 1) {
 
+    echo "
+          function createSigs () {
+            var ct = new RGraph.Pie('sigs', [$plot1]);
+            ct.Set('chart.title', 'Top Signatures');
+            ct.Set('chart.gutter.left', 30);
+            ct.Set('chart.tooltips', [$label1]);
+            ct.Set('chart.tooltips.effect', 'fade');
+            ct.Set('chart.tooltips.event', 'onmousemove');
+            ct.Set('chart.text.size', 8);
+            ct.Set('chart.key', [$key1]);
+            ct.Set('chart.key.background', 'rgba(255,255,255,0.3)');
+            ct.Set('chart.key.position.y', 70);
+            ct.Set('chart.key.position.x', 300);
+            ct.Set('chart.colors', [$colours]);
+            ct.Set('chart.strokestyle', '#ffffff');
+            ct.Set('chart.align', 'left');
+            ct.Set('chart.radius', 120);
+            ct.Set('chart.shadow', false);
+            ct.Set('chart.variant', 'donut');
+            ct.Set('chart.linewidth', 2);
+            ct.Draw();
+          }
 
+          createSigs();";
+
+} else {
+
+    echo "
+          var sigs_canvas = document.getElementById(\"sigs\");
+          var sigs_context = sigs_canvas.getContext(\"2d\");
+          sigs_context.font = \"14px calibri, trebuchet ms, helvetica\";
+          sigs_context.fillStyle = \"#000000\";
+          sigs_context.fillText(\"No result for this time period\", 160,175);";
 }
 
-createSigs();
-</script>";
+echo "</script>";
+
 ?>

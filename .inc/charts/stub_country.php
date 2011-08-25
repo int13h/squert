@@ -61,7 +61,7 @@ $dccQuery = mysql_query($dcc);
 
 $plot1 = $plot2 = $label1 = $label2 = $key1 = $key2 = $sCols = $dCols = '';
 
-$i = 0;
+$i = $scE = $dcE = 0;
 
 while ($row = mysql_fetch_row($sccQuery)) {
     $i++;
@@ -79,6 +79,9 @@ while ($row = mysql_fetch_row($sccQuery)) {
     $sCols .= "'" . $sCol . "'" . ",";     
     if ($i == 10) { break; }
 }
+
+// No result
+if ($i == 0) { $scE = '1'; }
 
 $i = 0;
 
@@ -99,6 +102,9 @@ while ($row = mysql_fetch_row($dccQuery)) {
     if ($i == 10) { break; }
 }
 
+// No result
+if ($i == 0) { $dcE = '1'; }
+
 $plot1 = rtrim($plot1,",");
 $label1 = rtrim($label1,",");
 $plot2 = rtrim($plot2,",");
@@ -108,52 +114,81 @@ $label2 = rtrim($label2,",");
 
 echo "
 <canvas id=\"scountry\" width=\"480\" height=\"350\">[No canvas support]</canvas>
-<canvas id=\"dcountry\" width=\"480\" height=\"350\">[No canvas support]</canvas>
+<canvas id=\"dcountry\" width=\"480\" height=\"350\">[No canvas support]</canvas>";
 
-<script>
-  function createCountry () {
-  var sc = new RGraph.Pie('scountry', [$plot1]);
-  sc.Set('chart.title', 'Top Source Countries');
-  sc.Set('chart.gutter.left', 30);
-  sc.Set('chart.tooltips', [$label1]);
-  sc.Set('chart.tooltips.effect', 'fade');
-  sc.Set('chart.tooltips.event', 'onmousemove');
-  sc.Set('chart.text.size', 8);
-  sc.Set('chart.key', [$key1]);
-  sc.Set('chart.key.background', 'rgba(255,255,255,0.3)');
-  sc.Set('chart.key.position.y', 70);
-  sc.Set('chart.key.position.x', 260);
-  sc.Set('chart.colors', [$sCols]);
-  sc.Set('chart.strokestyle', '#ffffff');
-  sc.Set('chart.align', 'left');
-  sc.Set('chart.radius', 110);
-  sc.Set('chart.shadow', false);
-  sc.Set('chart.variant', 'donut');
-  sc.Set('chart.linewidth', 2);
-  sc.Draw();
+echo "\r<script>";
 
-  var dc = new RGraph.Pie('dcountry', [$plot2]);
-  dc.Set('chart.title', 'Top Destination Countries');
-  dc.Set('chart.gutter.left', 30);
-  dc.Set('chart.tooltips', [$label2]);
-  dc.Set('chart.tooltips.effect', 'fade');
-  dc.Set('chart.tooltips.event', 'onmousemove');
-  dc.Set('chart.text.size', 8);
-  dc.Set('chart.key', [$key2]);
-  dc.Set('chart.key.background', 'rgba(255,255,255,0.3)');
-  dc.Set('chart.key.position.y', 70);
-  dc.Set('chart.key.position.x', 260);
-  dc.Set('chart.colors', [$dCols]);
-  dc.Set('chart.strokestyle', '#ffffff');
-  dc.Set('chart.align', 'left');
-  dc.Set('chart.radius', 110);
-  dc.Set('chart.shadow', false);
-  dc.Set('chart.variant', 'donut');
-  dc.Set('chart.linewidth', 2);
-  dc.Draw();
+if ($scE != 1) {
+
+    echo "
+          function srcCountry () {
+            var sc = new RGraph.Pie('scountry', [$plot1]);
+            sc.Set('chart.title', 'Top Source Countries');
+            sc.Set('chart.gutter.left', 30);
+            sc.Set('chart.tooltips', [$label1]);
+            sc.Set('chart.tooltips.effect', 'fade');
+            sc.Set('chart.tooltips.event', 'onmousemove');
+            sc.Set('chart.text.size', 8);
+            sc.Set('chart.key', [$key1]);
+            sc.Set('chart.key.background', 'rgba(255,255,255,0.3)');
+            sc.Set('chart.key.position.y', 70);
+            sc.Set('chart.key.position.x', 260);
+            sc.Set('chart.colors', [$sCols]);
+            sc.Set('chart.strokestyle', '#ffffff');
+            sc.Set('chart.align', 'left');
+            sc.Set('chart.radius', 110);
+            sc.Set('chart.shadow', false);
+            sc.Set('chart.variant', 'donut');
+            sc.Set('chart.linewidth', 2);
+            sc.Draw();
+          }
+         
+          srcCountry();";
+} else {
+
+    echo "
+          var scan_canvas = document.getElementById(\"scountry\");
+          var scan_context = scan_canvas.getContext(\"2d\");
+          scan_context.font = \"14px calibri, trebuchet ms, helvetica\";
+          scan_context.fillStyle = \"#000000\";
+          scan_context.fillText(\"No result for this time period\", 160,175);";
 }
 
-createCountry();
-</script>";
+if ($dcE != 1) { 
+
+    echo "
+          function dstCountry () {  
+            var dc = new RGraph.Pie('dcountry', [$plot2]);
+            dc.Set('chart.title', 'Top Destination Countries');
+            dc.Set('chart.gutter.left', 30);
+            dc.Set('chart.tooltips', [$label2]);
+            dc.Set('chart.tooltips.effect', 'fade');
+            dc.Set('chart.tooltips.event', 'onmousemove');
+            dc.Set('chart.text.size', 8);
+            dc.Set('chart.key', [$key2]);
+            dc.Set('chart.key.background', 'rgba(255,255,255,0.3)');
+            dc.Set('chart.key.position.y', 70);
+            dc.Set('chart.key.position.x', 260);
+            dc.Set('chart.colors', [$dCols]);
+            dc.Set('chart.strokestyle', '#ffffff');
+            dc.Set('chart.align', 'left');
+            dc.Set('chart.radius', 110);
+            dc.Set('chart.shadow', false);
+            dc.Set('chart.variant', 'donut');
+            dc.Set('chart.linewidth', 2);
+            dc.Draw();
+          }
+          dstCountry();";
+} else {
+
+    echo "
+          var dcan_canvas = document.getElementById(\"dcountry\");
+          var dcan_context = dcan_canvas.getContext(\"2d\");
+          dcan_context.font = \"14px calibri, trebuchet ms, helvetica\";
+          dcan_context.fillStyle = \"#000000\";
+          dcan_context.fillText(\"No result for this time period\", 160,175);";
+}
+
+echo "</script>";
 
 ?>

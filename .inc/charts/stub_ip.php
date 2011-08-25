@@ -37,9 +37,9 @@ $q2 = "SELECT COUNT(dst_ip) AS c1, COUNT(DISTINCT(src_ip)) AS c2, COUNT(DISTINCT
 
 $r2 = mysql_query($q2);
 
-$rC = 15;
+$sRows = $dRows = 15;
 
-$i = 0;
+$i = $siE = $diE = 0;
 
 $src_bar1 = $src_s1 = $src_lbl = '';
 
@@ -51,8 +51,13 @@ while ($row = mysql_fetch_row($r1)) {
     $src_s1 .= "[" . $x . "," . $row[1] . ",'#000000'],";
     $src_s1 .= "[" . $y . "," . $row[2] . ",'pink'],";
     $src_lbl .= "'" . $row[3] . "',";
-    if ($i == $rC) { break; }        
+    if ($i == $sRows) { break; }
 }
+
+$sRows = $i;
+
+// No result
+if ($i == 0) { $siE = '1'; }
 
 $i = 0;
 
@@ -66,97 +71,133 @@ while ($row = mysql_fetch_row($r2)) {
     $dst_s1 .= "[" . $x . "," . $row[1] . ",'#000000'],";
     $dst_s1 .= "[" . $y . "," . $row[2] . ",'pink'],";
     $dst_lbl .= "'" . $row[3] . "',";
-    if ($i == $rC) { break; }
+    if ($i == $dRows) { $dRows = $i; break; }
 }
+
+$dRows = $i;
     
+// No result
+if ($i == 0) { $diE = '1'; }
+
 // Chart Logic
 
 echo "
 <canvas id=\"daily_sip\" width=\"475\" height=\"300\">[No canvas support]</canvas>
-<canvas id=\"daily_dip\" width=\"475\" height=\"300\">[No canvas support]</canvas>
+<canvas id=\"daily_dip\" width=\"475\" height=\"300\">[No canvas support]</canvas>";
 
-<script>
-  function createIP () {
-  var bar1 = new RGraph.Bar('daily_sip', [$src_bar1]);
-  bar1.Set('chart.title', 'Top Source IPs');
-  bar1.Set('chart.yaxispos', 'left');
-  bar1.Set('chart.background.grid', true);
-  bar1.Set('chart.background.grid.autofit', true);
-  bar1.Set('chart.background.grid.vlines', true);
-  bar1.Set('chart.background.grid.width', .5);
-  bar1.Set('chart.labels', [$src_lbl]);
-  bar1.Set('chart.text.angle', 45);
-  bar1.Set('chart.colors', ['#c4c4c4','#000000','pink']);
-  bar1.Set('chart.gutter.bottom', 100);
-  bar1.Set('chart.gutter.left', 75);
-  bar1.Set('chart.gutter.right', 50);
-  bar1.Set('chart.strokecolor', 'black');
-  bar1.Set('chart.text.size', 8);
-  bar1.Set('chart.text.font', 'verdana');
-  bar1.Set('chart.ylabels.count', 10);
-  bar1.Set('chart.key', ['< Events', '> Destinations', '> Signatures']);
-  bar1.Set('chart.key.text.size', 8);
-  bar1.Set('chart.key.background', 'rgba(255,255,255,0.3)');
-  bar1.Set('chart.key.position', 'gutter');
-  bar1.Set('chart.key.position.y', bar1.canvas.height -15);
-  bar1.Set('chart.background.grid.autofit.align', true);
- 
-  var src_s1 = new RGraph.Scatter('daily_sip', [$src_s1]);
-  src_s1.Set('chart.gutter.left', 75);
-  src_s1.Set('chart.gutter.bottom', 100);
-  src_s1.Set('chart.gutter.right', 50);
-  src_s1.Set('chart.tickmarks', 'circle');
-  src_s1.Set('chart.ticksize', 6);
-  src_s1.Set('chart.text.size', 8);
-  src_s1.Set('chart.yaxispos', 'right')
-  src_s1.Set('chart.background.grid', false);
-  src_s1.Set('chart.background.grid.autofit.align', true);
-  src_s1.Set('chart.ylabels.count', 10);
-  src_s1.Set('chart.xmax', $rC);
-  bar1.Draw();
-  src_s1.Draw();
+echo "\r<script>";
 
-  var bar2 = new RGraph.Bar('daily_dip', [$dst_bar1]);
-  bar2.Set('chart.title', 'Top Destination IPs');
-  bar2.Set('chart.yaxispos', 'left');
-  bar2.Set('chart.background.grid', true);
-  bar2.Set('chart.background.grid.autofit', true);
-  bar2.Set('chart.background.grid.vlines', true);
-  bar2.Set('chart.background.grid.width', .5);
-  bar2.Set('chart.labels', [$dst_lbl]);
-  bar2.Set('chart.text.angle', 45);
-  bar2.Set('chart.colors', ['#c4c4c4','#000000','pink']);
-  bar2.Set('chart.gutter.bottom', 100);
-  bar2.Set('chart.gutter.left', 75);
-  bar2.Set('chart.gutter.right', 50);
-  bar2.Set('chart.strokecolor', 'black');
-  bar2.Set('chart.text.size', 8);
-  bar2.Set('chart.text.font', 'verdana');
-  bar2.Set('chart.ylabels.count', 10);
-  bar2.Set('chart.key', ['< Events', '> Sources', '> Signatures']);
-  bar2.Set('chart.key.text.size', 8);
-  bar2.Set('chart.key.background', 'rgba(255,255,255,0.3)');
-  bar2.Set('chart.key.position', 'gutter'); 
-  bar2.Set('chart.key.position.y', bar2.canvas.height -15);
-  bar2.Set('chart.background.grid.autofit.align', true);
+if ($siE != 1) {
+
+    echo "
+          function createSIP () {
+            var bar1 = new RGraph.Bar('daily_sip', [$src_bar1]);
+            bar1.Set('chart.title', 'Top Source IPs');
+            bar1.Set('chart.yaxispos', 'left');
+            bar1.Set('chart.background.grid', true);
+            bar1.Set('chart.background.grid.autofit', true);
+            bar1.Set('chart.background.grid.vlines', true);
+            bar1.Set('chart.background.grid.width', .5);
+            bar1.Set('chart.labels', [$src_lbl]);
+            bar1.Set('chart.text.angle', 45);
+            bar1.Set('chart.colors', ['#c4c4c4','#000000','pink']);
+            bar1.Set('chart.gutter.bottom', 100);
+            bar1.Set('chart.gutter.left', 75);
+            bar1.Set('chart.gutter.right', 50);
+            bar1.Set('chart.strokecolor', 'black');
+            bar1.Set('chart.text.size', 8);
+            bar1.Set('chart.text.font', 'verdana');
+            bar1.Set('chart.ylabels.count', 10);
+            bar1.Set('chart.key', ['< Events', '> Destinations', '> Signatures']);
+            bar1.Set('chart.key.text.size', 8);
+            bar1.Set('chart.key.background', 'rgba(255,255,255,0.3)');
+            bar1.Set('chart.key.position', 'gutter');
+            bar1.Set('chart.key.position.y', bar1.canvas.height -15);
+            bar1.Set('chart.background.grid.autofit.align', true);
  
-  var dst_s1 = new RGraph.Scatter('daily_dip', [$dst_s1]);
-  dst_s1.Set('chart.gutter.left', 75);
-  dst_s1.Set('chart.gutter.bottom', 100);
-  dst_s1.Set('chart.text.size', 8);
-  dst_s1.Set('chart.gutter.right', 50);
-  dst_s1.Set('chart.tickmarks', 'circle');
-  dst_s1.Set('chart.ticksize', 6);
-  dst_s1.Set('chart.yaxispos', 'right')
-  dst_s1.Set('chart.background.grid', false);
-  dst_s1.Set('chart.background.grid.autofit.align', true);
-  dst_s1.Set('chart.ylabels.count', 10);
-  dst_s1.Set('chart.xmax', $rC);
-  bar2.Draw();
-  dst_s1.Draw();
+            var src_s1 = new RGraph.Scatter('daily_sip', [$src_s1]);
+            src_s1.Set('chart.gutter.left', 75);
+            src_s1.Set('chart.gutter.bottom', 100);
+            src_s1.Set('chart.gutter.right', 50);
+            src_s1.Set('chart.tickmarks', 'circle');
+            src_s1.Set('chart.ticksize', 6);
+            src_s1.Set('chart.text.size', 8);
+            src_s1.Set('chart.yaxispos', 'right')
+            src_s1.Set('chart.background.grid', false);
+            src_s1.Set('chart.background.grid.autofit.align', true);
+            src_s1.Set('chart.ylabels.count', 10);
+            src_s1.Set('chart.xmax', $sRows);
+            bar1.Draw();
+            src_s1.Draw();
+          }
+
+          createSIP();";
+} else {
+
+    echo "
+          var dsip_canvas = document.getElementById(\"daily_sip\");
+          var dsip_context = dsip_canvas.getContext(\"2d\");
+          dsip_context.font = \"14px calibri, trebuchet ms, helvetica\";
+          dsip_context.fillStyle = \"#000000\";
+          dsip_context.fillText(\"No result for this time period\", 160,175);";
 }
 
-createIP();
-</script>";
+if ($diE != 1) {
+
+    echo "
+          function createDIP () {
+            var bar2 = new RGraph.Bar('daily_dip', [$dst_bar1]);
+            bar2.Set('chart.title', 'Top Destination IPs');
+            bar2.Set('chart.yaxispos', 'left');
+            bar2.Set('chart.background.grid', true);
+            bar2.Set('chart.background.grid.autofit', true);
+            bar2.Set('chart.background.grid.vlines', true);
+            bar2.Set('chart.background.grid.width', .5);
+            bar2.Set('chart.labels', [$dst_lbl]);
+            bar2.Set('chart.text.angle', 45);
+            bar2.Set('chart.colors', ['#c4c4c4','#000000','pink']);
+            bar2.Set('chart.gutter.bottom', 100);
+            bar2.Set('chart.gutter.left', 75);
+            bar2.Set('chart.gutter.right', 50);
+            bar2.Set('chart.strokecolor', 'black');
+            bar2.Set('chart.text.size', 8);
+            bar2.Set('chart.text.font', 'verdana');
+            bar2.Set('chart.ylabels.count', 10);
+            bar2.Set('chart.key', ['< Events', '> Sources', '> Signatures']);
+            bar2.Set('chart.key.text.size', 8);
+            bar2.Set('chart.key.background', 'rgba(255,255,255,0.3)');
+            bar2.Set('chart.key.position', 'gutter'); 
+            bar2.Set('chart.key.position.y', bar2.canvas.height -15);
+            bar2.Set('chart.background.grid.autofit.align', true);
+ 
+            var dst_s1 = new RGraph.Scatter('daily_dip', [$dst_s1]);
+            dst_s1.Set('chart.gutter.left', 75);
+            dst_s1.Set('chart.gutter.bottom', 100);
+            dst_s1.Set('chart.text.size', 8);
+            dst_s1.Set('chart.gutter.right', 50);
+            dst_s1.Set('chart.tickmarks', 'circle');
+            dst_s1.Set('chart.ticksize', 6);
+            dst_s1.Set('chart.yaxispos', 'right')
+            dst_s1.Set('chart.background.grid', false);
+            dst_s1.Set('chart.background.grid.autofit.align', true);
+            dst_s1.Set('chart.ylabels.count', 10);
+            dst_s1.Set('chart.xmax', $dRows);
+            bar2.Draw();
+            dst_s1.Draw();
+          }
+
+          createDIP();";
+
+} else {
+
+    echo "
+          var ddip_canvas = document.getElementById(\"daily_dip\");
+          var ddip_context = ddip_canvas.getContext(\"2d\");
+          ddip_context.font = \"14px calibri, trebuchet ms, helvetica\";
+          ddip_context.fillStyle = \"#000000\";
+          ddip_context.fillText(\"No result for this time period\", 160,175);";
+}
+
+echo "</script>";
 
 ?>
