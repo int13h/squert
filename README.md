@@ -10,9 +10,9 @@ SQueRT is a tool that is used to query event data.
 
 ## Demo
 
-URL: [http://demo.sguil.net](http://demo.sguil.net)
+URL: [https://94.23.230.171:9123/squert](https://94.23.230.171:9123/squert)
 
-User: squert
+User: demo
 
 Pass: squert
 
