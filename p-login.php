@@ -20,6 +20,8 @@
 //
 
 
+session_destroy();
+session_unset();
 include '.inc/config.php';
 
 $username = $password = $err = '';
@@ -176,7 +178,7 @@ Password<br>
 <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
 <td class=err><?php echo $err;?></td></tr>
 </table>
-<div class=cp>Version 0.9.2<span>&copy;2011 Paul Halliday</span></div>
+<div class=cp>Version 0.9.3b<span>&copy;2011 Paul Halliday</span></div>
 </form>
 <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>
 </body>
