@@ -63,6 +63,9 @@ while ($row = mysql_fetch_row($signatures)) {
     if ($sLimit != 0) { if ($i == $sLimit) {break;};}
 }
 
-echo "</table><br><br>";
+echo "</table>";
+ 
+echo "<table align=right cellpadding=0 cellspacing=0 style=\"padding-right: 10px; font-size: 10px; font-weight:bold;\">
+      <tr><td>Viewing: $i of $sigCount signatures</td></tr></table><br><br>";
 
 ?>
