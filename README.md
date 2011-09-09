@@ -1,6 +1,6 @@
 # SQueRT - A Simple Query and Report Tool
 
-Home: [http://www.pintumbler.org](http://www.pintumbler.org/Code/squert)
+Home: [http://www.squertproject.org](http://www.squertproject.org)
 
 
 ## Description
