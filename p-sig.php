@@ -61,6 +61,7 @@ include_once '.inc/countries.php';
 &nbsp;&nbsp;<?php echo $todayLink;?>
 <div style="float: right; color: #000000;"><u><b>Report Period:</b> <?php echo $dispDate;?></u></div>
 <?php include_once '.inc/charts/stub_signature.php';?>
+<?php include_once '.inc/charts/stub_country.php';?>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>
 </div>
 </div>
