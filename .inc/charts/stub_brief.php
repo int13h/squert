@@ -23,7 +23,7 @@
 // the rest will use for calculations.
 
 // A simple indicator of how close the last event generated time is to "now"
-$ltCols = array("#cc0000","#FAB005","#F2E766","#d4d4d4");
+$ltCols = array("#cc0000","#FAB005","#F2E766","#c9c9c9");
 
 
 function lastTime($stamp) {

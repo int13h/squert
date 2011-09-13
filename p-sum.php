@@ -40,6 +40,7 @@ $rList = array(
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <style type="text/css" media="screen">@import ".css/squert.css";</style>
 <style type="text/css" media="screen">@import ".css/tabs.css";</style>
+<link rel="stylesheet" type="text/css" href=".css/print.css" media="print">
 <script type="text/javascript" src=".js/squert.js"></script>
 <script type="text/javascript" src=".js/sorttable.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>

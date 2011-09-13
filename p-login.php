@@ -19,9 +19,6 @@
 //
 //
 
-
-session_destroy();
-session_unset();
 include '.inc/config.php';
 
 $username = $password = $err = '';

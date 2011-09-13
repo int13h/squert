@@ -14,7 +14,7 @@ function tabber($tab,$id,$s,$e) {
    //ksort($theTabs);
 
     echo "
-      <div id=\"header\">\n
+      <div class=noprint id=\"header\">\n
         <ul id=\"primary\">\n";
 
     foreach ($theTabs as $name => $page) {

@@ -71,7 +71,7 @@ while ($row = mysql_fetch_row($r2)) {
     $dst_s1 .= "[" . $x . "," . $row[1] . ",'#000000'],";
     $dst_s1 .= "[" . $y . "," . $row[2] . ",'pink'],";
     $dst_lbl .= "'" . $row[3] . "',";
-    if ($i == $dRows) { $dRows = $i; break; }
+    if ($i == $dRows) { break; }
 }
 
 $dRows = $i;
@@ -125,7 +125,7 @@ if ($siE != 1) {
             src_s1.Set('chart.yaxispos', 'right')
             src_s1.Set('chart.background.grid', false);
             src_s1.Set('chart.background.grid.autofit.align', true);
-            src_s1.Set('chart.ylabels.count', 10);
+            //src_s1.Set('chart.ylabels.count', );
             src_s1.Set('chart.xmax', $sRows);
             bar1.Draw();
             src_s1.Draw();
@@ -180,7 +180,7 @@ if ($diE != 1) {
             dst_s1.Set('chart.yaxispos', 'right')
             dst_s1.Set('chart.background.grid', false);
             dst_s1.Set('chart.background.grid.autofit.align', true);
-            dst_s1.Set('chart.ylabels.count', 10);
+            //dst_s1.Set('chart.ylabels.count', 10);
             dst_s1.Set('chart.xmax', $dRows);
             bar2.Draw();
             dst_s1.Draw();

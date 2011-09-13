@@ -126,7 +126,7 @@ if ($spE != 1) {
             src_s1.Set('chart.text.size', 8);
             src_s1.Set('chart.yaxispos', 'right')
             src_s1.Set('chart.background.grid', false);
-            src_s1.Set('chart.ylabels.count', 10);
+            src_s1.Set('chart.ylabels.count', 5);
             src_s1.Set('chart.numyticks', 5);
             src_s1.Set('chart.xmax', $sRows);
             bar1.Draw();

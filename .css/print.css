@@ -1,0 +1,16 @@
+body {
+  color : #000000;
+  background : #ffffff;
+  font-family : "Times New Roman", Times, serif;
+  font-size : 12px;
+}
+
+table { border: none;}
+
+a {
+  text-decoration : none;
+  color : #000000;
+}
+
+.noprint { display: none;}
+

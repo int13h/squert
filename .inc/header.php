@@ -81,7 +81,7 @@ function mkLinks() {
     $daysInMonth = date('t', strtotime($startDate));
     $page = ltrim($_SERVER['PHP_SELF'],"/squert");
 
-    $html = "<table width=100% cellpadding=0 cellspacing=0><tr>";
+    $html = "<table class=noprint width=100% cellpadding=0 cellspacing=0><tr>";
 
     // Create month and year links
     for ($n = 1; $n <= 12; $n++) {
@@ -117,7 +117,7 @@ function mkLinks() {
         }   
     }
 
-    $html .= "</tr></table><table style=\"border-collapse: collapse;\" cellpadding=0 cellspacing=0><tr>";
+    $html .= "</tr></table><table class=noprint style=\"border-collapse: collapse;\" cellpadding=0 cellspacing=0><tr>";
 
     // Create Day links
     for ($n = 0; $n <= $daysInMonth -1; $n++) {
@@ -169,7 +169,7 @@ if (strtotime($today) != strtotime($endDate)) {
 }
 
 echo "<form id=head method=post>
-<div style=\"width: 1000px; margin: 0 auto; padding: none; text-align: right;\">
+<div class=noprint style=\"width: 1000px; margin: 0 auto; padding: none; text-align: right;\">
 Welcome <b>$sUser</b> <b>|</b>
 <a class=submit id=whiteboard_yes style=\"display:;\" href=\".inc/whiteboard.php\" target=\"whiteboard\" onclick=\"javascript:poof('whiteboard','yes');\">Whiteboard</a>
 <a class=submit id=whiteboard_no style=\"display: none;\" href=\"javascript:poof('whiteboard','no');\">Whiteboard</a>
@@ -177,5 +177,5 @@ Welcome <b>$sUser</b> <b>|</b>
 </div>
 </form>";
 
-echo "<div align=center><IFRAME id=whiteboard name=whiteboard frameborder=0 scrolling=no width=1000px height=800px style=\"display: none; border: 1pt solid #c9c9c9; margin-bottom: 50px;\"></IFRAME></div>\n";
+echo "<div class=noprint align=center><IFRAME id=whiteboard name=whiteboard frameborder=0 scrolling=no width=1000px height=800px style=\"display: none; border: 1pt solid #c9c9c9; margin-bottom: 50px;\"></IFRAME></div>\n";
 ?>
