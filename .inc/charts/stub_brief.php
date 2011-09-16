@@ -105,7 +105,8 @@ $sensor		= mysql_query("SELECT st.net_name, st.hostname, st.agent_type, st.sid, 
 $sensors        = mysql_query("SELECT net_name, hostname, agent_type, sid
                                FROM sensor
                                WHERE (agent_type != 'pcap' 
-                               AND agent_type != 'httpry')");
+                               AND agent_type != 'httpry'
+                               AND agent_type != 'sancp')");
 
 
 // Signatures
