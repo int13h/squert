@@ -79,7 +79,7 @@ function doCharts($theQuery,$pos,$statusQuery,$hdwmyQuery,$timeDiff) {
             case 15: $cat15 = $row[1]; break;
             case 16: $cat16 = $row[1]; break;
             case 17: $cat17 = $row[1]; break;
-            case 19: $cat19 = $row[1]; break;
+            case 2: $cat19 = $row[1]; break;
         }
     }
     

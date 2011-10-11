@@ -35,7 +35,7 @@ $statusList = array(
                     15 => "Policy Violation||#9999CC||C5",
                     16 => "Reconnaissance||#FFCC00||C6",
                     17 => "Malware||#CC66FF||C7",
-                    19 => "Escalated Event||pink||ES",
+                     2 => "Escalated Event||pink||ES",
                      1 => "Expired Event||lightblue||NA",
                     42 => "--||--||--");
 
