@@ -51,13 +51,14 @@ $debug = 'no';
 $recLimit = '5000';
 
 // Map foreground, background and line Colours
-$mapFGC = '#f9ffed';
+$mapFGC = '#ffffff';
 $mapBGC = '#bbccdd';
-$mapLNC = '#c7e4bc';
+$mapBGC = '#f4f4f4';
+$mapLNC = '#c4c4c4';
 
 // Map event start and end colours.
-$mapSC = '#f9ffed';
-$mapEC = '#267114';
+$mapSC = '#cc0000';
+$mapEC = '#000000';
 
 // Severity Start and end colours
 $startHex =     'ffffff'; //Examples: 60BB22  FFDE00 D5E1DD
