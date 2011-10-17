@@ -16,6 +16,15 @@ CREATE TABLE IF NOT EXISTS ip2c
   INDEX end_ip (end_ip)
 );  
 
+INSERT IGNORE INTO ip2c (registry,cc,c_long,type,start_ip,end_ip,date,status)
+VALUES ('RFC1918','LO','RFC1918','ipv4','167772160','184549375','1996-02-01','allocated');
+
+INSERT IGNORE INTO ip2c (registry,cc,c_long,type,start_ip,end_ip,date,status)
+VALUES ('RFC1918','LO','RFC1918','ipv4','167772160','184549375','1996-02-01','allocated');
+
+INSERT IGNORE INTO ip2c (registry,cc,c_long,type,start_ip,end_ip,date,status)
+VALUES ('RFC1918','LO','RFC1918','ipv4','167772160','184549375','1996-02-01','allocated');
+
 CREATE TABLE IF NOT EXISTS mappings
 (
   registry       VARCHAR(7),
@@ -31,15 +40,4 @@ CREATE TABLE IF NOT EXISTS mappings
   INDEX cc (cc),
   INDEX c_long (c_long),
   INDEX age (age)
-);
-
-CREATE TABLE IF NOT EXISTS iprep
-(
-  id		TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  list		VARCHAR(255),
-  url		VARCHAR(255),
-  weight	TINYINT(1) NOT NULL DEFAULT 0,
-  user		VARCHAR(255),
-  age           TIMESTAMP,		
-  PRIMARY KEY (id)
 );

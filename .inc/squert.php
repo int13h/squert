@@ -61,7 +61,7 @@ $timeParts = fixTime($sDate,"$sHour:$sMin:$sSec",$eDate,"$eHour:$eMin:$eSec");
 // Main Function
 function DoQueries($timeParts) {
 
-    global $id;
+    global $id, $countries;
     include 'config.php';
 
     $wString =	$_REQUEST["wString"];
@@ -180,18 +180,20 @@ function DoQueries($timeParts) {
                            'dst_ip'    => 'INET_NTOA(event.dst_ip)',
                            'src_port'  => 'event.src_port',
                            'dst_port'  => 'event.dst_port',
-                           'c'         => '(map1.cc != \'**\' OR map2.cc != \'**\') AND (map1.c_long != \'**\' OR map2.c_long != \'**\')'
+                           'c'         => '(map1.cc NOT IN(**) AND map2.cc NOT IN (**) AND map1.c_long NOT IN(**) AND map2.c_long NOT IN (**))'
                          );
 
         $toExclude = explode(";", $xString);
         $c = count($toExclude);
         $xFilter = '';
         $problem = 0;
+        $cExlist = '';
 
         for ($i = 0; $i < $c; ++$i) {
             
             @list($subj,$pred) = explode("=", $toExclude[$i]);
 
+            $subj = mysql_real_escape_string($subj);
             $pred = mysql_real_escape_string($pred);
            
             // tight or loose query
@@ -203,8 +205,11 @@ function DoQueries($timeParts) {
             if (array_key_exists($subj, $subjects)) {
                 $subject = $subjects[$subj];
                 if ($subj == 'c') {
-                    $subject = str_replace("**", $pred, $subject);
-                    $xFilter .= "AND " . "$subject " ;
+                    $cExlist .= "'" . $pred . "',";
+                    if ($i == ($c - 1)) {
+                        $cExlist = rtrim($cExlist, ",");
+                        $xFilter = "AND " . str_replace("**", $cExlist, $subject);
+                    }
                 } else {
                     $xFilter .= "AND " . $subject . " $prefix " . "'$pred' ";
                 }
@@ -654,8 +659,8 @@ function DoQueries($timeParts) {
                     $dstPort =	$row[7];
                     $sigName =	$row[8];
                     $sigID =	$row[9];
-                    $sid =		$row[10];
-                    $cid =		$row[11];
+                    $sid =	$row[10];
+                    $cid =	$row[11];
                     $srcHTML = IPLine($srcIP,$srcPort,'src',$srcCC,$rC);
                     $dstHTML = IPLine($dstIP,$dstPort,'dst',$dstCC,$rC);
                     $sigHTML = SignatureLine($sigName,$rC);
@@ -663,13 +668,20 @@ function DoQueries($timeParts) {
 
                     echo "$status\n";
                     echo "<td id=t-$rC class=sort style=\"font-weight: bold;\" onclick=\"window.open('.inc/packet.php?sid=$sid&cid=$cid','$cid','width=1000,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes')\">$time</b></td>\n";
+                    //echo "<td id=t-$rC class=sort style=\"font-weight: bold;\" onclick=\"poof('pd-$rC','yes')\">$time</b></td>\n";
                     echo "$srcHTML\n";
                     echo "$dstHTML\n";
                     echo "$sigHTML\n";
                     echo "$sidHTML\n";
                     break;
             }
-        echo "</tr>";
+            echo "</tr>";
+
+            if ($qLogic == 2) {
+                echo "<tr id=pd-$rC style=\"display: none;\"><td colspan=10 style=\"border-bottom: 1pt solid #c9c9c9;\">";
+                echo "<a href=\"#\" onclick=\"poof('pd-$rC','no')\">Close</a>";
+                echo "</td></tr>\n";
+            }
         }
     }
     echo "</table>\n";
@@ -823,6 +835,7 @@ if ($hCl == 1) {$shCl = array('none','','');} else {$shCl = array('','none','non
 
 <br>
 
+<!-- Context Menu -->
 <table cellpadding=0 cellspacing=0 id=divContext style="background: #fafafa; border: 1pt solid gray; border-collapse: collapse; display: none; position: absolute;">
 <tr>
 <td style="font-size: 10px; background: #000000; color: #ffffff; padding: 7px 5px 7px 10px; border-bottom: 1pt solid gray;"><b>Actions</b></td>

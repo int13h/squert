@@ -405,8 +405,7 @@ function IPLine($ip,$port,$type,$cc,$rC) {
             $cc = '--';
         }
         if (rfc1918($ip) == '0') {
-            $cc = 'LO';
-            $cchtml = "<td class=sort style=\"padding: none; color: gray;\">$cc</td>";
+            $cchtml = "<td class=sort name=$ccID id=$ccID style=\"padding: none; color: gray;\">$cc</td>";
         } else {
             $cchtml = "<td class=sort name=$ccID id=$ccID style=\"font-weight: bold;\">$cc</td>";
         }
