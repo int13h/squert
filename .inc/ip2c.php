@@ -26,7 +26,7 @@ function IP2C($string,$isCLI) {
 
     if ($isCLI == 'NO') {
         // Running from a browser
-        $when = "WHERE " . hextostr($string) . " AND";
+        $when = 'WHERE ' . hextostr($string) . ' AND ';
     } else {
         // Running from the command line
         if ($string == 0) {
@@ -75,18 +75,9 @@ function IP2C($string,$isCLI) {
     // Start timing
     $st = microtime(true);
     $sipList = mysql_query("SELECT DISTINCT(e.src_ip) FROM event AS e LEFT JOIN mappings AS m ON e.src_ip=m.ip
-                            $when
-                            e.src_ip NOT BETWEEN 167772160 AND 184549375
-                            AND e.src_ip NOT BETWEEN 2886729728 AND 2886795263
-                            AND e.src_ip NOT BETWEEN 3232235520 AND 3232301055
-                            AND m.ip IS NULL");
-
+                            $when m.ip IS NULL");
     $dipList = mysql_query("SELECT DISTINCT(e.dst_ip) FROM event AS e LEFT JOIN mappings AS m ON e.dst_ip=m.ip
-                            $when
-                            e.dst_ip NOT BETWEEN 167772160 AND 184549375
-                            AND e.dst_ip NOT BETWEEN 2886729728 AND 2886795263
-                            AND e.dst_ip NOT BETWEEN 3232235520 AND 3232301055
-                            AND m.ip IS NULL");
+                            $when m.ip IS NULL");
 
     $sipCount = $dipCount = 0;
     if ($sipList) {

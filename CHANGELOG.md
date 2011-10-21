@@ -1,6 +1,11 @@
 # Squert 0.9.3
 
+* Fixed issue #21 Escalated events not filtering properly
+* Fixed issue #16 Exclude not working correclty
+* Misc adjustments to accommodate http_agent
 
+
+* Fix for new http_agent
 
 
 # Squert 0.9.2

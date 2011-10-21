@@ -1,0 +1,13 @@
+color.edge=get_severity($fields[3],5);
+
+# Source
+shape.source=Mrecord
+color.source=white
+
+# Event
+color.event=hexcol(0xDAE6F2);
+shape.event="circle"
+
+# Target
+color.target=hexcol(0xA1B6CC);
+shape.target="circle"
