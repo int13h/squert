@@ -371,7 +371,7 @@ function Status($status) {
 }
 
 function SignatureLine($_sigName,$rC) {
-    $sigName = rtrim($_sigName);
+    $sigName = htmlspecialchars(rtrim($_sigName));
     $rowID = "cm-sig-$rC";
     $html = "<td class=sort name=$rowID id=$rowID>$sigName</td>";
     return $html;
