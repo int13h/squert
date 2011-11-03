@@ -8,7 +8,6 @@ function tabber($tab,$id,$s,$e) {
         "SIGNATURES"	=> "p-sig.php?id=$id&s=$s&e=$e",
         "IP"		=> "p-ip.php?id=$id&s=$s&e=$e",
         "MAP"           => "p-map.php?id=$id&s=$s&e=$e",
-        "URLS"		=> "p-url.php?id=$id&s=$s&e=$e",
         "QUERY"		=> "p-query.php?id=$id&s=$s&e=$e"   
     );
 
