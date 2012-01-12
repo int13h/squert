@@ -667,8 +667,7 @@ function DoQueries($timeParts) {
                     $sidHTML = SigidLine($sigID,$rC);
 
                     echo "$status\n";
-                    echo "<td id=t-$rC class=sort style=\"font-weight: bold;\" onclick=\"window.open('.inc/packet.php?sid=$sid&cid=$cid','$cid','width=1000,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes')\">$time</b></td>\n";
-                    //echo "<td id=t-$rC class=sort style=\"font-weight: bold;\" onclick=\"poof('pd-$rC','yes')\">$time</b></td>\n";
+                    echo "<td class=sort name=\"t-$rC\" id=\"t-$rC\" style=\"font-weight: bold;\" onclick=\"window.open('.inc/packet.php?sid=$sid&cid=$cid','$cid','width=1000,left=0,top=0,menubar=no,scrollbars=yes,status=no,toolbar=no,resizable=yes');\">$time</td>\n";
                     echo "$srcHTML\n";
                     echo "$dstHTML\n";
                     echo "$sigHTML\n";
@@ -676,12 +675,6 @@ function DoQueries($timeParts) {
                     break;
             }
             echo "</tr>";
-
-            if ($qLogic == 2) {
-                echo "<tr id=pd-$rC style=\"display: none;\"><td colspan=10 style=\"border-bottom: 1pt solid #c9c9c9;\">";
-                echo "<a href=\"#\" onclick=\"poof('pd-$rC','no')\">Close</a>";
-                echo "</td></tr>\n";
-            }
         }
     }
     echo "</table>\n";
