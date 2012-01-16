@@ -20,10 +20,10 @@ INSERT IGNORE INTO ip2c (registry,cc,c_long,type,start_ip,end_ip,date,status)
 VALUES ('RFC1918','LO','RFC1918','ipv4','167772160','184549375','1996-02-01','allocated');
 
 INSERT IGNORE INTO ip2c (registry,cc,c_long,type,start_ip,end_ip,date,status)
-VALUES ('RFC1918','LO','RFC1918','ipv4','167772160','184549375','1996-02-01','allocated');
+VALUES ('RFC1918','LO','RFC1918','ipv4','2886729728','2886795263','1996-02-01','allocated');
 
 INSERT IGNORE INTO ip2c (registry,cc,c_long,type,start_ip,end_ip,date,status)
-VALUES ('RFC1918','LO','RFC1918','ipv4','167772160','184549375','1996-02-01','allocated');
+VALUES ('RFC1918','LO','RFC1918','ipv4','3232235520','3232301055','1996-02-01','allocated');
 
 CREATE TABLE IF NOT EXISTS mappings
 (
