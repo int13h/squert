@@ -72,11 +72,9 @@ dbC();
 </div>
 
 <div id=t_map_content class=content>
-Map
 </div>
 
 <div id=t_que_content class=content>
-Query
 </div>
 
 <div id=debug class=debug>
