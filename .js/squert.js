@@ -230,16 +230,14 @@ $(document).ready(function(){
     function eventList (type) {
 
         var parts = type.split("-");
-
         switch (parts[0]) {
 
         // Events level 2
         case "2":
-
           urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
-          });d_row_sub
+          });
 
           function cb1(data){
               //converts the JSON string to a JavaScript object
