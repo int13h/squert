@@ -170,7 +170,7 @@ $(document).ready(function(){
         // What type of row are we?
         rowType = this.id.substr(0,3);
 
-        if (!$(".d_row_active")[0]) {          
+        if (!$(".d_row_active")[0] && rowType == 'sid') {          
 
             rowValue = this.id.replace("sid-","");
 
@@ -213,14 +213,30 @@ $(document).ready(function(){
 
     // More detail
     $(".b_detail").live("click", function() {
-        //alert(this.id[0]);
-        if (!$(".d_row_sub_active")[0]) {        
-            rowcall = this.id.split("-");
-            callerID = rowcall[0];
-            $("#" + callerID).attr('class','d_row_sub_active');
-            $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
-            eventList("3-" + this.id);
+
+        switch (this.id[0]) {
+
+        case "r":
+          if (!$(".d_row_sub_active")[0]) {        
+              rowcall = this.id.split("-");
+              callerID = rowcall[0];
+              $("#" + callerID).attr('class','d_row_sub_active');
+              $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+              eventList("3-" + this.id);
+          }
+          break;
+
+        case "s":
+          if (!$(".d_row_sub1_active")[0]) {
+              rowcall = this.id.split("-");
+              callerID = rowcall[0];
+              $("#" + callerID).attr('class','d_row_sub1_active');
+              $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+              eventList("4-" + this.id);
+          }
+          break;
         }
+        
     });
 
     //
@@ -240,7 +256,6 @@ $(document).ready(function(){
           });
 
           function cb1(data){
-              //converts the JSON string to a JavaScript object
               eval("theData=" + data);
               tbl = '';
               head = '';
@@ -293,7 +308,6 @@ $(document).ready(function(){
           });
 
           function cb2(data){
-              //converts the JSON string to a JavaScript object
               eval("theData=" + data);
 
               tbl = '';
@@ -351,50 +365,10 @@ $(document).ready(function(){
           });
 
           function cb3(data){
-              //converts the JSON string to a JavaScript object
               eval("theData=" + data);
-
               tbl = '';
               head = '';
               row = '';
-              head += "<thead><tr>";
-              head += "<th class=sub1 width=10>ST</th>";
-              head += "<th class=sub1 width=140>Timestamp</th>";
-              head += "<th class=sub1 width=100>Source</th>";
-              head += "<th class=sub1 width=40>Port</th>";
-              head += "<th class=sub1 width=100>Destination</th>";
-              head += "<th class=sub1 width=40>Port</th>";
-              head += "<th class=sub1 width=180>Actions</th>";
-              head += "</tr></thead>";
-              for (var i=0; i<theData.length; i++) {
-
-                  rid = "sid-cid";
-                  row += "<tr class=d_row_sub1 id=r1" + i + ">";
-                  tclass = "c" + theData[i].status;
-                  cv = classifications.class[tclass][0].short;
-
-                  row += "<td class=" + cv + ">" + cv + "</td>";
-                  row += "<td class=sub>" + theData[i].timestamp + "</td>";
-                  row += "<td class=sub>" + theData[i].src_ip + "</td>";
-                  row += "<td class=sub>" + theData[i].src_port + "</td>";
-                  row += "<td class=sub>" + theData[i].dst_ip + "</td>";
-                  row += "<td class=sub>" + theData[i].dst_port + "</td>";
-                  row += "<td class=sub>";
-                  row += "<div class=b_detail id=" + rid + " title='More Detail'>D</div>";
-                  row += "<div class=b_tx title='Transcript'>X</div>";
-                  row += "<div class=b_notes title='Add Notes'>N</div>";
-                  row += "<div class=b_tag title='Add Tag'>T</div>";
-                  row += "<div class=b_clsfy title='Classify'>C</div>";
-                  row += "</td></tr>";
-              }
-
-              tbl += "<tr class=eview_sub2 id=eview_sub2><td colspan=7><div id=ev_close_sub class=close_sub>X</div>";
-              tbl += "<div class=notes id=notes></div>";
-              tbl += "<table align=center width=100% cellpadding=0 cellspacing=0>";
-              tbl += head;
-              tbl += row;
-              tbl += "</table></td></tr>";
-              $("#" + rowLoke).after(tbl);
           }
           break;
         }
