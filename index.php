@@ -24,13 +24,6 @@ include_once '.inc/config.php';
 include_once '.inc/functions.php';
 include_once '.inc/ribbon.php';
 
-$loFilter = "AND signature NOT REGEXP '^URL'
-             AND (INET_NTOA(event.src_ip) NOT LIKE '10.%.239.%' OR INET_NTOA(event.dst_ip) NOT LIKE '10.%.239.%'
-             OR INET_NTOA(event.src_ip) NOT LIKE '10.%.228.%' OR INET_NTOA(event.dst_ip) NOT LIKE '10.%.228.%'
-             OR INET_NTOA(event.src_ip) NOT LIKE '10.%.229.%' OR INET_NTOA(event.dst_ip) NOT LIKE '10.%.229.%'
-             OR INET_NTOA(event.src_ip) NOT LIKE '10.%.230.%' OR INET_NTOA(event.dst_ip) NOT LIKE '10.%.230.%')";
-
-
 $loFilter = "";
 dbC();
 
