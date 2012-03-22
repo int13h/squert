@@ -1,0 +1,26 @@
+#-------------
+# PORN RULES
+#-------------
+
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE alt.binaries.pictures.erotica"; flow:established; content:"alt.binaries.pictures.erotica"; nocase; classtype:inappropriate-content; sid:2010111901; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE alt.binaries.pictures.tinygirls"; flow:established; content:"alt.binaries.pictures.tinygirls"; nocase; classtype:inappropriate-content; sid:2010111902; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE free XXX"; content:"FREE XXX"; nocase; flow:established; classtype:inappropriate-content; sid:2010111903; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE XNXX"; content:"XNXX.com"; nocase; flow:established; classtype:inappropriate-content; sid:2010111904; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE Brazzers"; content:"brazzers"; nocase; flow:established; classtype:inappropriate-content; sid:2010111905; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE up skirt"; content:"up skirt"; nocase; flow:established; classtype:inappropriate-content; sid:2010111906; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE Pornhub"; content:"pornhub"; nocase; flow:established; classtype:inappropriate-content; sid:2010111907; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE Redtube"; content:"redtube"; nocase; flow:established; classtype:inappropriate-content; sid:2010111908; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE Xhamster"; content:"xhamster"; nocase; flow:established; classtype:inappropriate-content; sid:2010111909; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE anal sex"; content:"anal sex"; nocase; flow:established; classtype:inappropriate-content; sid:2010111910; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE Karups"; content:"karups"; nocase; flow:established; classtype:inappropriate-content; sid:2010111911; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE dildo"; content:"dildo"; nocase; flow:established; classtype:inappropriate-content; sid:2010111914; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE nude celeb"; content:"nude celeb"; nocase; flow:established; classtype:inappropriate-content; sid:2010111917; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE pussy pics"; content:"pussy pics"; nocase; flow:established; classtype:inappropriate-content; sid:2010111924; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE lamalinks"; content:"lamalinks"; nocase; flow:established; classtype:inappropriate-content; sid:2010111926; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE teenies"; content:"teenies"; nocase; flow:established; classtype:inappropriate-content; sid:2010111927; rev:1;)
+
+# Should fire on free sites that have grouped pics
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE creampie pics"; content:"creampie pics"; nocase; flow:established; classtype:inappropriate-content; sid:2010111928; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE cfnm pics"; content:"cfnm pics"; nocase; flow:established; classtype:inappropriate-content; sid:2010111929; rev:1;)
+alert tcp  any any -> any $HTTP_PORTS (msg:"INAPPROPRIATE hardcore pics"; content:"hardcore pics"; nocase; flow:established; classtype:inappropriate-content; sid:2010111931; rev:1;)
+

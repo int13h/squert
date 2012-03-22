@@ -1,0 +1,178 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2012, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata.
+#Matt Jonkman, info from Bob Grabowsky
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET 1345 (msg:"ET WORM AIM Bot Outbound Control Channel Open and Login"; flow: to_server,established; content:"PASS"; nocase; pcre:"/PASS\s.*?\x0d\x0aNICK\s.*?\x0d\x0aUSER\s.*?\s\d\s\d\s\:\S/im"; reference:url,doc.emergingthreats.net/2001910; classtype:trojan-activity; sid:2001910; rev:5;)
+
+#by Matt Jonkman
+#
+#alert icmp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET WORM Allaple ICMP Sweep Ping Outbound"; icode:0; itype:8; content:"Babcdefghijklmnopqrstuvwabcdefghi"; threshold: type both, count 1, seconds 60, track by_src; reference:url,www.sophos.com/virusinfo/analyses/w32allapleb.html; reference:url,isc.sans.org/diary.html?storyid=2451; reference:url,doc.emergingthreats.net/2003292; classtype:trojan-activity; sid:2003292; rev:7;)
+
+#by Matt Jonkman
+#
+#alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM Allaple ICMP Sweep Reply Inbound"; icode:0; itype:0; content:"Babcdefghijklmnopqrstuvwabcdefghi"; threshold: type both, count 1, seconds 60, track by_dst; reference:url,www.sophos.com/virusinfo/analyses/w32allapleb.html; reference:url,isc.sans.org/diary.html?storyid=2451; reference:url,doc.emergingthreats.net/2003293; classtype:trojan-activity; sid:2003293; rev:9;)
+
+#by Matt Jonkman
+#
+#alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM Allaple ICMP Sweep Ping Inbound"; icode:0; itype:8; content:"Babcdefghijklmnopqrstuvwabcdefghi"; threshold: type both, count 1, seconds 60, track by_src; reference:url,www.sophos.com/virusinfo/analyses/w32allapleb.html; reference:url,isc.sans.org/diary.html?storyid=2451; reference:url,doc.emergingthreats.net/2003294; classtype:trojan-activity; sid:2003294; rev:6;)
+
+#by Matt Jonkman
+#
+#alert icmp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET WORM Allaple ICMP Sweep Reply Outbound"; icode:0; itype:0; content:"Babcdefghijklmnopqrstuvwabcdefghi"; threshold: type both, count 1, seconds 60, track by_dst; reference:url,www.sophos.com/virusinfo/analyses/w32allapleb.html; reference:url,isc.sans.org/diary.html?storyid=2451; reference:url,doc.emergingthreats.net/2003295; classtype:trojan-activity; sid:2003295; rev:8;)
+
+#Matt Jonkman
+#
+#alert http any any -> any $HTTP_PORTS (msg:"ET WORM Allaple Unique HTTP Request - Possibly part of DDOS"; flow:established,to_server; content:"GET /  HTTP/1.1|0d 0a|"; rawbytes; depth:20; threshold:type both, count 1, seconds 60, track by_src; reference:url,doc.emergingthreats.net/2003484; reference:url,isc.sans.org/diary.html?storyid=2451; classtype:trojan-activity; sid:2003484; rev:9;)
+
+#Bagle variants
+#Taken from the Netsquid Rules for Bagle.I and other variants
+#
+#alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET WORM Beagle User Agent Detected"; flow: to_server,established; dsize:<150; content:"|0d 0a|User-Agent|3a| beagle_beagle"; nocase; reference:url,securityresponse.symantec.com/avcenter/venc/data/w32.beagle.i@mm.html; reference:url,doc.emergingthreats.net/2001269; classtype:trojan-activity; sid:2001269; rev:16;)
+
+#CIA
+#Submitted by Chris Norton
+#
+#alert ip $HOME_NET any -> $EXTERNAL_NET any (msg:"ET WORM Possible CIA Trojan download/upload attempt"; content:"|6C 75 66 6A 65 6F 6F|"; reference:url,doc.emergingthreats.net/2001233; classtype:trojan-activity; sid:2001233; rev:8;)
+
+#Korgo Worm
+#Submitted by Nick Hatch
+#
+#alert tcp $HOME_NET any -> any 445 (msg:"ET WORM Korgo.P offering executable"; flow: to_server,established; content:"|FF|SMB"; depth: 10; content:"|58|http"; content:".exe"; nocase; within: 36; reference:url,www.f-secure.com/v-descs/korgo_p.shtml; reference:url,doc.emergingthreats.net/2001337; classtype:trojan-activity; sid:2001337; rev:7;)
+
+#Korgo Worm
+#Submitted by Nick Hatch
+#
+#alert tcp $HOME_NET any -> any any (msg:"ET WORM Korgo.P binary upload"; flow: to_server,established; content:"|aa4f7ea86c90457d686868f0de687a68689768686868|"; reference:url,www.f-secure.com/v-descs/korgo_p.shtml; reference:url,doc.emergingthreats.net/2001338; classtype:trojan-activity; sid:2001338; rev:8;)
+
+#Matt Jonkman
+#
+#alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET WORM Korgo.U Reporting"; flow: to_server,established; uricontent:"/index.php?id="; nocase; uricontent:"cnt="; nocase; uricontent:"&scn="; nocase; uricontent:"&inf="; nocase; uricontent:"&ver="; nocase; reference:url,www.f-secure.com/v-descs/korgo_u.shtml; reference:url,doc.emergingthreats.net/2003070; classtype:trojan-activity; sid:2003070; rev:6;)
+
+#Matt Jonkman, variant using ? rather than &'s
+#
+#alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET WORM Korgo.P Reporting"; flow: to_server,established; uricontent:"/index.php?id="; nocase; uricontent:"?cnt="; nocase; uricontent:"?scn="; nocase; uricontent:"?inf="; nocase; uricontent:"?ver="; nocase; reference:url,www.f-secure.com/v-descs/korgo_p.shtml; reference:url,doc.emergingthreats.net/2008192; classtype:trojan-activity; sid:2008192; rev:3;)
+
+#by Scott Melnick
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM Possible MSN Worm Exploit php"; flow: established; content:"X-MMS-IM-"; depth:153; content:"http"; nocase; content:".php"; nocase; reference:url,doc.emergingthreats.net/2002322; classtype:misc-activity; sid:2002322; rev:3;)
+
+#by Scott Melnick
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM Possible MSN Worm Exploit exe"; flow: established; content:"X-MMS-IM-"; depth:153; content:"http"; nocase; content:".exe"; nocase; reference:url,doc.emergingthreats.net/2002323; classtype:misc-activity; sid:2002323; rev:3;)
+
+#by Scott Melnick
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM Possible MSN Worm Exploit pif"; flow: established; content:"X-MMS-IM-"; depth:153; content:"http"; nocase; content:".pif"; nocase; reference:url,doc.emergingthreats.net/2002324; classtype:misc-activity; sid:2002324; rev:3;)
+
+#Specific Kelvir.HI detection on MSN
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM W32.kelvir.HI"; flow: established; content:"X-MMS-IM-"; depth:153; content:"search.php?data="; reference:url,securityresponse.symantec.com/avcenter/venc/data/w32.kelvir.hi.html; reference:url,doc.emergingthreats.net/2002325; classtype:misc-activity; sid:2002325; rev:3;)
+
+#MySQL Worm
+#Submitted by unknown
+#
+#alert tcp $HOME_NET any -> !$SQL_SERVERS 3306 (msg:"ET WORM Potential MySQL bot scanning for SQL server"; flags:S,12; reference:url,isc.sans.org/diary.php?date=2005-01-27; reference:url,doc.emergingthreats.net/2001689; classtype:trojan-activity; sid:2001689; rev:8;)
+
+#Novarg Worm
+#Taken from the Netsquid Rules
+#obsoleting
+#
+#alert tcp $HOME_NET any -> $EXTERNAL_NET 25 (msg:"ET WORM Outbound W32.Novarg.A worm"; flow: established; content:"TVqQAAMAAAAEAAAA"; content:"8AALgAAAAAAAAAQ"; within: 20; distance: 2; content:"UEUA..AEwBAW"; content:"DgAA8BCwEHAABQAAAAE"; within: 40; distance: 16; content:"ABVUFgwAAAAAABgAAAAEAAAAAAAAAAEA"; content:"ACAAADg"; within: 30; distance: 16; reference:url,securityresponse.symantec.com/avcenter/venc/data/w32.mydoom.a@mm.html; reference:url,doc.emergingthreats.net/2001273; classtype:trojan-activity; sid:2001273; rev:13;)
+
+#by matt jonkman
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET WORM SDBot HTTP Checkin"; flow:established,to_server; content:"|0d 0a|User-Agent|3a| Mozilla/3.0 (compatible|3b| Indy Library)|0d 0a 0d 0a|quem=dodoi&tit="; content:"&txt="; distance:0; within:40; reference:url,doc.emergingthreats.net/2007914; classtype:trojan-activity; sid:2007914; rev:4;)
+
+#Sasser Worm
+#Submitted by Lin Zhong for Sasser variants
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM W32/Sasser.worm.a"; flow: established; content:"|BC 3B 74 0B 50 8B 3D E8 46 A7 3D 09 85 B8 F8 CD 76 40 DE 7C 5B 5C D7 2A A8 E8 58 75 62 96 25 24|"; reference:url,securityresponse.symantec.com/avcenter/venc/data/w32.sasser.worm.html; reference:url,doc.emergingthreats.net/2001057; classtype:misc-activity; sid:2001057; rev:7;)
+
+#Sasser Worm
+#Submitted by Lin Zhong for Sasser variants
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM W32/Sasser.worm.b"; flow: established; content:"|58 BC 0C FF 59 57 32 31 BD EC 34 64 6E D6 E3 8D 65 04 68 58 62 79 DF D8 2C 25 6A B5 28 BA 13 74|"; reference:url,securityresponse.symantec.com/avcenter/venc/data/w32.sasser.worm.html; reference:url,doc.emergingthreats.net/2001056; classtype:misc-activity; sid:2001056; rev:7;)
+
+#Sasser Worm
+#Submitted by Lin Zhong for Sasser variants
+#
+#alert tcp any any -> any 5554 (msg:"ET WORM Sasser FTP Traffic"; flow: to_server,established; content:"up.exe"; reference:url,vil.mcafeesecurity.com/vil/content/Print125009.htm; reference:url,doc.emergingthreats.net/2000040; classtype:misc-activity; sid:2000040; rev:5;)
+
+#Sasser Worm
+#Submitted by Lin Zhong for Sasser variants
+#
+#alert tcp any any -> any 9996 (msg:"ET WORM Sasser Transfer _up.exe"; flow: established,to_server; content:"|5F75702E657865|"; depth: 250; reference:url,vil.mcafeesecurity.com/vil/content/Print125009.htm; reference:url,doc.emergingthreats.net/2000047; classtype:misc-activity; sid:2000047; rev:5;)
+
+#Submitted by Joe Stewart for Sasser FTP exploit
+#
+#alert tcp $HOME_NET any -> $EXTERNAL_NET 5554 (msg:"ET WORM Sasser FTP exploit attempt"; flow: to_server,established; dsize: >150; content:"PORT "; depth: 5; reference:url,www.lurhq.com/dabber.html; reference:url,doc.emergingthreats.net/2001548; classtype:attempted-admin; sid:2001548; rev:6;)
+
+#by matt jonkman. Win32.Socks.s
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET WORM Win32.Socks.s HTTP Post Checkin"; flow:established,to_server; content:"POST "; depth:5; uricontent:".php"; content:"|0d 0a 0d 0a|proc=[System Process]|0a|"; reference:url,doc.emergingthreats.net/2008020; classtype:trojan-activity; sid:2008020; rev:4;)
+
+#from Jack Pepper
+#Disabling, tends to false
+#
+#alert http $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"ET WORM shell bot perl code download"; flow:to_client,established; content:"# ShellBOT"; nocase; reference:url,doc.emergingthreats.net/2002683; classtype:trojan-activity; sid:2002683; rev:6;)
+
+#from Jack Pepper
+#Disabling, tends to false
+#
+#alert http $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"ET WORM Shell Bot Code Download"; flow:to_client,established; content:"##################### IRC #######################"; nocase; reference:url,doc.emergingthreats.net/2002684; classtype:trojan-activity; sid:2002684; rev:5;)
+
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 3127:3198 (msg:"GPL WORM mydoom.a backdoor upload/execute attempt"; flow:to_server,established; content:"|85 13|<|9E A2|"; depth:5; classtype:trojan-activity; sid:3272; rev:2;)
+
+#
+alert udp $HOME_NET any -> $EXTERNAL_NET 1434 (msg:"GPL WORM Slammer Worm propagation attempt OUTBOUND"; content:"|04|"; depth:1; content:"|81 F1 03 01 04 9B 81 F1|"; content:"sock"; content:"send"; reference:bugtraq,5310; reference:bugtraq,5311; reference:cve,2002-0649; reference:nessus,11214; reference:url,vil.nai.com/vil/content/v_99992.htm; classtype:misc-attack; sid:2102004; rev:8;)
+
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET WORM Possible Worm Sohanad.Z or Other Infection Request for setting.nql"; flow:established,to_server; content:"/setting.nql"; nocase; http_uri; reference:url,www.threatexpert.com/report.aspx?md5=a70aad8f27957702febfa162556dc5b5; classtype:trojan-activity; sid:2012201; rev:3;)
+
+#
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET WORM Rimecud Worm checkin"; flow:established,to_server; content:"GET"; http_method; content:"User-Agent|3a| Mozilla/3.0 (compatible|3b| Indy Library)"; http_header; content:"/taskx.txt"; http_uri; fast_pattern; reference:url,www.threatexpert.com/report.aspx?md5=9623efa133415d19c941ef92a4f921fc; classtype:trojan-activity; sid:2012739; rev:2;)
+
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET WORM AirOS .css Worm Outbound Propagation Sweep"; flow:established,to_server; content:"/admin.cgi/.gif"; http_uri; pcre:"/Host\x3a ([0-9]{1,3}\.){3}[0-9]{1,3}/H"; reference:url,seclists.org/fulldisclosure/2011/Dec/419; reference:url,www.root.cz/clanky/virus-v-bezdratovych-routerech-skynet/; classtype:trojan-activity; sid:2014041; rev:5;)
+
+#
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WORM AirOS admin.cgi/css Exploit Attempt"; flow:established,to_server; content:"POST"; http_method; content:"/etc/persistent/.skynet/install&action=cli"; http_uri; reference:url,seclists.org/fulldisclosure/2011/Dec/419; reference:url,www.root.cz/clanky/virus-v-bezdratovych-routerech-skynet/; classtype:trojan-activity; sid:2014042; rev:4;)
+

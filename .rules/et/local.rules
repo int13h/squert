@@ -1,0 +1,89 @@
+# ----------------
+# Rules
+# ----------------
+
+# 50 google searches in 60 seconds
+alert tcp $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET Policy Potential Excessive Google Searching"; flow:established,to_server; content:"/search?"; http_uri; fast_pattern:only; content:!"&start="; http_uri; content:".google.com|0d 0a|"; http_header; threshold:type both, track by_src, count 50, seconds 60; sid:2011092201; rev:2;)
+
+# Facebook
+alert tcp [10.13.12.20,10.37.98.5] any -> [69.63.176.0/20,69.63.176.0/20,204.15.20.0/22] $HTTP_PORTS (msg:"ET POLICY facebook activity"; flow:established,to_server; classtype:policy-violation; reference:url,compnetworking.about.com/od/traceipaddresses/f/facebook-ip-address.htm; reference:url,doc.emergingthreats.net/2010952; reference:url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/POLICY/POLICY_Facebook; sid:2011091301; rev:3;)
+
+# Facebook Apps
+alert tcp [10.13.12.20,10.37.98.5] any -> $EXTERNAL_NET any (msg:"ET POLICY facebook apps activity"; content:"Host: apps.facebook.com"; http_header; flow:to_server,established; sid:2011091302; rev:1;)
+
+# Web server
+alert tcp 10.69.1.105 any -> $EXTERNAL_NET any (msg:"Outgoing connection from NSCC.CA"; content:!"Host: www.flikr.com"; http_header; content:!"picasaweb.google.com"; http_header; flow:to_server,established; sid:20110101; rev:1;)
+
+# Outbound SMTP
+alert tcp any any -> $EXTERNAL_NET 25 (msg:"ET POLICY SMTP outbound"; flow:to_server,established; content:"Subject|3A|"; classtype:policy-violation; sid:201104081; rev:1;)
+
+# ----------------
+# Pass Rules
+# ----------------
+
+# Monitors
+#pass tcp 10.37.98.5,10.37.80.6 any -> any any (sid:9110004;)
+#pass tcp any any -> 10.37.80.6,10.37.98.5 any (sid:9110005;)
+
+# CAS Servers
+pass tcp 10.95.1.0/24 any -> 192.168.1.10,192.168.1.11 25 (sid:9110009;)
+pass tcp 192.168.1.10,192.168.1.11 any -> 10.95.1.0/24 25 (sid:9110011;) 
+
+# Blackhole
+pass udp 10.37.1.5 any -> any 53 (sid:9110007;)
+pass udp any 53 -> 10.37.1.5 any (sid:9110008;)
+
+# Nessusd
+
+pass tcp 10.13.1.80,10.13.1.81 any -> any any (sid:9110001;)
+pass udp 10.13.1.80,10.13.1.81 any -> any any (sid:9110002;)
+pass icmp 10.13.1.80,10.13.1.81 any -> any any (sid:9110003;)
+
+# Userlock
+pass icmp 10.37.1.11 any -> any any (sid:9110006;)
+pass icmp any any -> 10.37.1.11 any (sid:9110010;)
+
+
+# ----------------
+# Suppress Rules
+# ----------------
+
+# Http
+
+#suppress gen_id 119, sig_id 15 # http_inspect: OVERSIZE REQUEST-URI DIRECTORY
+#suppress gen_id 119, sig_id 14 # http_inspect: NON-RFC DEFINED CHAR
+
+# SSH
+suppress gen_id 128, sig_id 4
+# ssh: Protocol mismatch
+
+# Zabbix
+
+suppress gen_id 1, sig_id 1893, track by_src, ip 10.37.80.101
+suppress gen_id 1, sig_id 1893, track by_src, ip 10.36.80.101
+
+# Printer Scans
+
+suppress gen_id 1, sig_id 2008597, track by_src, ip 10.13.1.6
+suppress gen_id 1, sig_id 2008597, track by_src, ip 10.69.1.4
+
+# Mail
+suppress gen_id 1, sig_id 2002087, track by_src, ip 142.227.2.71
+suppress gen_id 1, sig_id 201104081, track by_src, ip 142.227.2.71
+suppress gen_id 1, sig_id 201104081, track by_src, ip 192.168.1.10
+suppress gen_id 1, sig_id 201104081, track by_src, ip 10.13.1.72
+suppress gen_id 1, sig_id 2000328, track by_src, ip 10.13.1.72
+suppress gen_id 1, sig_id 201104081, track by_src, ip 10.13.1.108
+
+# Some update stuff (binary downloads)
+suppress gen_id 1, sig_id 2007671, track by_src, ip [65.52.0.0/14,142.176.0.0/16] 
+suppress gen_id 1, sig_id 2000419, track by_src, ip [65.52.0.0/14,142.176.0.0/16]
+
+# Youtube related?
+suppress gen_id 1, sig_id 2007994, track by_src, ip [10.37.228.0/24,10.37.230.0/24]
+
+# Dog video
+suppress gen_id 1, sig_id 2007695, track by_dst, ip 24.89.245.55
+
+# DHGate
+suppress gen_id 1, sig_id 2012229, track by_src, ip 124.42.15.198

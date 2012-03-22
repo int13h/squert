@@ -1,0 +1,55 @@
+body {
+    background: #d8d8d8;
+    font-family: verdana, trebuchet ms, helvetica, sans;
+}
+td.header {
+    font-size: 10pt;
+    font-weight: normal;
+    padding: 20px 0px 20px 40px;
+    background: #333333;
+    color: #adadad;
+    border-bottom: 1px solid #c4c4c4;
+}
+td.boxes {
+    font-size: .8em;
+    padding: 20px 0px 5px 40px;
+}
+table.boxes {
+    border-collapse: collapse;
+    border: 1pt solid #c4c4c4;
+    background: #ffffff;
+}
+.rb {
+    background: #DDDDDD;
+    color: #000000;
+    border: none;
+    border: 1pt solid gray;
+    font-size: 1em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 10px 20px 10px 20px;
+}
+.rb:hover {
+    background: #ffffff;
+}
+.in {
+    border: 1pt solid #c4c4c4;
+    height: 30px;
+    width: 300px;
+    font-size: 1.5em;
+}
+.err {
+    color: #cc0000;
+    font-size: .8em;
+}
+.cp {
+    font-size: .7em;
+    margin: 0 auto;
+    width: 450px;
+    color: #545454;
+    padding-left: 10px;
+}
+.cp span {
+    float: right;
+    padding-right: 10px;
+}
