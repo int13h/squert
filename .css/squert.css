@@ -34,7 +34,6 @@ h3 {
 
 
 /* Event expansion */
-
 th.sub {
   background: #e9e9e9;
   color: #000000;
@@ -49,6 +48,16 @@ th.sub1 {
   color: #000000;
   padding: 5px 5px 5px 5px;
   font-size: 10px;
+  text-align: left;
+  border: none;
+}
+
+th.sub2 {
+  background: #c9c9c9;
+  color: #000000;
+  padding: 5px 5px 5px 5px;
+  font-size: 10px;
+  font-weight: bold;
   text-align: left;
   border: none;
 }
@@ -107,11 +116,33 @@ tr.d_row_sub_active {
     font-weight: bold;
 }
 
+tr.d_row_sub1 {
+    background-color: #fafafa;
+}
+
+tr.d_row_sub1_active {
+    font-weight: bold;
+}
+
 div.close_sub {
     padding: 3px 10px 3px 10px;
     float: right;
     text-align: center;
     background-color: #E5FABB;
+    color: #495239;
+    font-weight: bold;
+    margin-top: -1px;
+    border-left: 1pt solid #c9c9c9;
+    border-bottom: 1pt solid #c9c9c9;
+    -moz-border-radius-bottomleft: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+}
+
+div.close_sub1 {
+    padding: 3px 10px 3px 10px;
+    float: right;
+    text-align: center;
+    background-color: #ffffff;
     color: #495239;
     font-weight: bold;
     margin-top: -1px;
@@ -140,6 +171,17 @@ tr.d_row_sub:hover, tr.d_row_sub1:hover {
 }
 
 td.sub {
+  background: transparent;
+  border: 1pt solid #c4c4c4;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  color: #000000;
+  padding: 3px 5px 3px 5px;
+  font-size: 11px;
+}
+
+td.sub_act {
   background: transparent;
   border: 1pt solid #c4c4c4;
   border-top: none;
@@ -196,8 +238,18 @@ div.notes {
     font-size: 10pt;
 }
 
+div.notes_sub2 {
+    padding: 15px;
+    background-color: #c9c9c9;
+    font-weight: normal;
+    font-size: 10pt;
+}
+
 /* Tabs */
 div.tab_group {
+    top:0;
+    left:0;
+    position: fixed;
     width: 100%;
     text-align: center;
     background-color: #333333;
@@ -229,6 +281,7 @@ div.tab_active {
 div.content_active {
     display: '';
     clear: both;
+    padding-top: 70px;
 }
 
 /* Other */
@@ -365,8 +418,8 @@ span.links:hover {
 
 th.sort {
   background: #000000;
-  color: #ffffff;
-  padding: 10px;
+  color: #adadad;
+  padding: 10px 0px 10px 5px;
   cursor: pointer;
   font-size: 10px;
   text-align: left;
@@ -467,7 +520,7 @@ div.b_clsfy {
     color: #ffffff;
 }
 
-div.close:hover, div.close_sub:hover {
+div.close:hover, div.close_sub:hover, div.close_sub1:hover {
     cursor: pointer;
     color: #444444;
 }

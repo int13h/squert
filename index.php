@@ -41,11 +41,10 @@ dbC();
 </head>
 <body>
 <div id=tab_group class=tab_group>
-<div id=t_sum class=tab_active>Summary</div>
+<div id=t_sum class=tab_active>Main</div>
 <div id=t_sig class=tab>Signature</div>
 <div id=t_ip class=tab>IP</div>
 <div id=t_map class=tab>Map</div>
-<div id=t_que class=tab>Query</div>
 <div id=t_stats class=stats></div>
 <div id=t_usr class=user>Welcome <b><?php echo $sUser;?></b> | <span id=settings class=links>Settings</span> | <span id=logout class=links>Logout</span></div>
 <?php echo $timeLinks;?>
@@ -72,9 +71,6 @@ dbC();
 </div>
 
 <div id=t_map_content class=content>
-</div>
-
-<div id=t_que_content class=content>
 </div>
 
 <div id=debug class=debug>
