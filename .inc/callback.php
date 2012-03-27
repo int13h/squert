@@ -1,6 +1,5 @@
 <?php
 $base = dirname(__FILE__);
-//include "$base/session.php";
 include_once "$base/config.php";
 include_once "$base/functions.php";
 
@@ -20,7 +19,7 @@ $types = array(
 $type = $types[$type];
 
 if (!$type) {
-    echo "boo!";
+    exit;
 }
 
 function ec() {
@@ -34,9 +33,8 @@ function ec() {
 
     $rows = array();
 
-    while ($row = mysql_fetch_assoc($result)) {
-        $rows[] = $row;
-    }
+    $row = mysql_fetch_assoc($result);
+    $rows[] = $row;
     $theJSON = json_encode($rows);
     echo $theJSON;
 
@@ -44,11 +42,18 @@ function ec() {
 
 function si() {
 
-    $sigID = $_REQUEST['sid'];
+    $object = $_REQUEST['sid'];
+    list($sigID, $gID) = explode("-", $object);
     global $rulePath;
-    $wasMatched = '';
+    $wasMatched = 0;
     $dirs = explode("||",$rulePath);
-    $dc = (count($dirs) - 1);
+
+    if ( $gID > 100 ) {
+        $dc = 0;
+        $wasMatched = 2;
+    } else { 
+        $dc = (count($dirs) - 1);
+    }
 
     for ($i = 0; $i <= $dc; $i++)
         if ($ruleDir = opendir($dirs[$i])) {
@@ -78,10 +83,17 @@ function si() {
            closedir($ruleDir);
     }
 
-    if ($wasMatched != 1) {
+    if ($wasMatched == 0) {
         $result = array("ruletxt" => "No match for signature ID $sigID",
                         "rulefile"  => "n/a",
                         "ruleline"  => "n/a",                 
+        );
+    }
+
+    if ($wasMatched == 2) {
+        $result = array("ruletxt" => "Generator ID > 100. This event belongs to a preprocessor or the decoder.",
+                        "rulefile"  => "n/a",
+                        "ruleline"  => "n/a",
         );
     }
 
@@ -141,6 +153,71 @@ function ed() {
     while ($row = mysql_fetch_assoc($result)) {
         $rows[] = $row;
     }
+    $theJSON = json_encode($rows);
+    echo $theJSON;
+
+}
+
+function pd() {
+
+    $comp = mysql_real_escape_string($_REQUEST['object']);
+    list($type,$ln,$sid,$cid) = explode(",", $comp);
+
+    $query = "SELECT INET_NTOA(src_ip), INET_NTOA(dst_ip), ip_ver, ip_hlen, ip_tos, ip_len, ip_id,ip_flags,
+             ip_off, ip_ttl, ip_csum, src_port, dst_port, ip_proto, signature, signature_id, timestamp
+             FROM event
+             WHERE sid='$sid' and cid='$cid'";
+
+    $result = mysql_query($query);
+
+    $rows = array();
+
+    $row = mysql_fetch_assoc($result);
+    $rows[] = $row;
+    $ipp = $row["ip_proto"];
+
+    // Protocol
+    switch ($ipp) {
+
+        case 1:
+            $query = "SELECT event.icmp_type AS icmp_type, event.icmp_code AS icmp_code, icmphdr.icmp_csum AS icmp_csum, 
+                      icmphdr.icmp_id AS icmp_id, icmphdr.icmp_seq AS icmp_seq
+                      FROM event, icmphdr WHERE event.sid=icmphdr.sid AND event.cid=icmphdr.cid AND event.sid='$sid'
+                      AND event.cid='$cid'";
+            
+            $result = mysql_query($query);
+
+            $row = mysql_fetch_assoc($result);
+            $rows[] = $row;
+            break;
+
+        case 6:
+            $query = "SELECT tcp_seq, tcp_ack, tcp_off, tcp_res, tcp_flags, tcp_win, tcp_urp, tcp_csum
+                      FROM tcphdr WHERE sid='$sid' and cid='$cid'";
+            
+            $result = mysql_query($query);
+
+            $row = mysql_fetch_assoc($result);
+            $rows[] = $row;
+            break;
+         
+        case 17:
+            $query = "SELECT udp_len, udp_csum FROM udphdr WHERE sid='$sid' and cid='$cid'";
+
+            $result = mysql_query($query);
+
+            $row = mysql_fetch_assoc($result);
+            $rows[] = $row;
+            break;
+    }
+
+    // Data
+    $query = "SELECT data_payload FROM data WHERE sid='$sid' AND cid='$cid'";
+
+    $result = mysql_query($query);
+
+    $row = mysql_fetch_assoc($result);
+    $rows[] = $row;
     $theJSON = json_encode($rows);
     echo $theJSON;
 
