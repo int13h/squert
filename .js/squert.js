@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
         "c12":[{"short": "C2", "long": "Unauthorized User Access"}],
@@ -18,11 +17,11 @@ $(document).ready(function(){
     // Filter by Class
     //
 
-    $('tr[id^=cat-]').click(function(){
-            rowValue = this.id.replace("cat-","");
-            $('tr[id^=sid-]').hide();
-            $("[data-class*='" + rowValue + "']").fadeIn('slow');
-    });
+    //$('tr[id^=cat-]').click(function(){
+    //        rowValue = this.id.replace("cat-","");
+    //        $('tr[id^=sid-]').hide();
+    //        $("[data-class*='" + rowValue + "']").fadeIn('slow');
+    //});
 
     //
     // Event monitor
@@ -56,7 +55,7 @@ $(document).ready(function(){
             } else {
                 ess = 's';
             }
-            $("#b_event").fadeTo('slow',0.7);
+            $("#b_event").fadeTo('slow',0.8);
             $("#b_event").html(eventCount + " new event" + ess);
         }
 
@@ -316,20 +315,16 @@ $(document).ready(function(){
                   row += "<div class=b_clsfy title='Classify'>C</div>";
                   row += "</td></tr>";
               }
-              var el2 = i;
-
               tbl += "<div class=eview_sub id=eview_sub><table id=events width=100% class=sortable cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table></div>";
-
               $("#eview").after(tbl);
           }
           break;
 
         // Events level 3
         case "3":
-
           var rowLoke = parts[1];
           urArgs = "type=" + parts[0] + "&object=" + parts + "&ts=" + theWhen;
           $(function(){
@@ -375,7 +370,6 @@ $(document).ready(function(){
                   row += "<div class=b_clsfy title='Classify'>C</div>";
                   row += "</td></tr>";
               }
-              var el3 = i;
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub>X</div>";
               tbl += "<div class=notes id=notes></div>";
               tbl += "<table align=center width=100% cellpadding=0 cellspacing=0>";
@@ -566,7 +560,11 @@ $(document).ready(function(){
               tbl += row;
               tbl += "</td></tr>";
               $("#" + rowLoke).after(tbl);
-              $(".d_row_sub1").fadeTo('0','0.2');
+
+              rC = $(".d_row_sub1").length;
+              if ( rC <= 399 ) {
+                  $(".d_row_sub1").fadeTo('fast','0.2');
+              }
           }
           break;
         }
