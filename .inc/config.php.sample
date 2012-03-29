@@ -10,7 +10,6 @@ $dbHost = '10.13.1.226';
 $dbName = 'sguildb';
 $dbUser = 'readonly';
 $dbPass = 'readonly';
-$dbTime = date("P");
 
 // Where are the rules? If you have multiple dirs, separate each with: ||
 $rulePath = "../.rules/et";
@@ -18,16 +17,12 @@ $rulePath = "../.rules/et";
 // Where is dot installed?
 $dotPath = "/usr/bin/dot";
 
-// Where do you want to land after you log in?
-// sum, sig, ip, query
-$startPage = 'sum';
-
 // DNS server to query
 $dns = "8.8.8.8";
 
 // Timezone offset. If you want UTC use the second option.
-$offset = date("Z");    // Option #1: Local Time
-//$offset = 0;          // Option #2: UTC
+//$offset = date("Z");    // Option #1: Local Time
+$offset = 0;          // Option #2: UTC
 
 // This is for the status drop-down box. Don't touch the indexes. You can change the naming though.
 $statusList = array(

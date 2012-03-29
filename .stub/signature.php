@@ -21,12 +21,16 @@
 
 $stub = "Event Signatures";
 
-$signatures = mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id, signature_gen, MAX(timestamp) as t, COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip)), ip_proto
-                           FROM event
-                           WHERE $when[0]
-                           $loFilter
-                           GROUP BY signature
-                           ORDER BY t DESC");
+$query = "SELECT COUNT(signature) AS c1, signature, signature_id, signature_gen, MAX(timestamp) as t, 
+          COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip)), ip_proto, GROUP_CONCAT(DISTINCT(status))
+          FROM event
+          WHERE $when[0]
+          $loFilter
+          GROUP BY signature
+          ORDER BY t DESC";
+
+$signatures = mysql_query($query);
+
 echo "<h3> $stub</h3>";
 echo "<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
@@ -54,7 +58,7 @@ while ($row = mysql_fetch_row($signatures)) {
     $stampLine = lastTime($stamp);
     $ipp = getProto($row[7]);
 
-    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\">
+    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$row[8]\">
           \r<td class=row>$row[1]</td>
           \r<td class=row>$row[2]</td>
           \r<td class=row>$ipp</td>
@@ -65,9 +69,5 @@ while ($row = mysql_fetch_row($signatures)) {
           \r<td class=rowr><b>$per</b></td></tr>\n";
 }
 
-echo "</table>";
- 
-echo "<table align=right cellpadding=0 cellspacing=0>
-      <tr><td style=\"padding-right: 10px; font-size: 10px; font-weight:bold;\">Viewing: $i of $sigCount signatures</td></tr></table><br><br>";
-
+echo "</table><br><br>";
 ?>

@@ -154,7 +154,7 @@ while ($row = mysql_fetch_row($sensor)) {
     $presentSens [$row[3]] = "$row[0]||$row[1]||$row[2]||$row[4]||$row[5]||$row[6]||$row[7]||$row[8]";
 }
 
-echo "<h3> Event Distribution by Sensor</h3>
+echo "<h3 id=sensor> Event Distribution by Sensor</h3>
       \r<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
       \r<th class=sort width=250>Network</th>
@@ -204,7 +204,7 @@ foreach ($sensorList as $key => $sid) {
 echo "</table><br><br>";
 
 // Events by Category
-echo "<h3> Event Distribution by Category</h3>
+echo "<h3 id=category> Event Distribution by Category</h3>
       \r<table align=center width=960 border=0 cellpadding=0 cellspacing=0 class=sortable style=\"border: 1pt solid #c4c4c4; border-bottom: none;\">\n
       \r<thead><tr>
       \r<th class=sort width=20>#</th>
@@ -241,7 +241,7 @@ foreach ($statusList as $key => $status) {
     }
     $stampLine = lastTime($stamp);
 
-    echo "<tr class=d_row id=\"cat-$shortDesc\">
+    echo "<tr class=d_row id=\"cat-$key\">
           \r<td class=row style=\"background: $class_colour; text-align: center\">$shortDesc</td>
           \r<td class=row>$longDesc</td>
           \r$stampLine

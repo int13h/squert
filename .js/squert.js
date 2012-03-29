@@ -14,12 +14,22 @@ $(document).ready(function(){
       }
     };
 
-    // Put this in the config
-    var emTimeout = 30000;
+    //
+    // Filter by Class
+    //
+
+    $('tr[id^=cat-]').click(function(){
+            rowValue = this.id.replace("cat-","");
+            $('tr[id^=sid-]').hide();
+            $("[data-class*='" + rowValue + "']").fadeIn('slow');
+    });
 
     //
     // Event monitor
     //
+ 
+    // Put this in the config
+    var emTimeout = 30000;
 
     var lastCount = $("#etotal").html();
     var eventCount = lastCount;

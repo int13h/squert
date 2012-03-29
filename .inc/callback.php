@@ -91,7 +91,7 @@ function si() {
     }
 
     if ($wasMatched == 2) {
-        $result = array("ruletxt" => "Generator ID > 100. This event belongs to a preprocessor or the decoder.",
+        $result = array("ruletxt" => "Generator ID > 100. This event belongs to a preprocessor or the decoder. <b>Generator ID:</b> $gID ",
                         "rulefile"  => "n/a",
                         "ruleline"  => "n/a",
         );
@@ -108,7 +108,7 @@ function eg() {
     $sid = mysql_real_escape_string($_REQUEST['object']);
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
 
-    $query = "SELECT COUNT(signature) AS count, CONVERT_TZ(MAX(timestamp),'+00:00','$dbTime') AS maxTime, INET_NTOA(src_ip) AS src_ip, map1.c_long as src_cc,
+    $query = "SELECT COUNT(signature) AS count, MAX(timestamp) AS maxTime, INET_NTOA(src_ip) AS src_ip, map1.c_long as src_cc,
               INET_NTOA(dst_ip) AS dst_ip, map2.c_long as dst_cc
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
@@ -139,7 +139,7 @@ function ed() {
     $src_ip = ip2long($src_ip);
     $dst_ip = ip2long($dst_ip);
 
-    $query = "SELECT status, CONVERT_TZ(timestamp,'+00:00','$dbTime') AS timestamp, INET_NTOA(src_ip) AS src_ip,
+    $query = "SELECT status, timestamp, INET_NTOA(src_ip) AS src_ip,
               src_port, INET_NTOA(dst_ip) AS dst_ip, dst_port, sid, cid, ip_proto
               FROM event
               WHERE $when
