@@ -9,6 +9,19 @@ body {
     background-color: #ffffff;
 }
 
+/*
+canvas.wm1 {
+    border: 1pt solid #c9c9c9;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+*/
+
+div.wm {
+    width: 100%;
+    text-align: center;   
+}
+
 div.body {
     width: 100%;
 }
@@ -16,17 +29,21 @@ div.body {
 html {
     overflow-y: scroll;
 }
+
 table {
     empty-cells: show;
 }
+
 .content, .settings {
     display: none;
 }
+
 div.today{
     float: right;
     padding-bottom: 30px;
     color: #cc0000;
 }
+
 h3 {
     font-size: 12pt;
     font-weight: normal;
@@ -54,7 +71,7 @@ th.sub1 {
 
 th.sub2 {
   background: #c9c9c9;
-  color: #000000;
+  color: #545454;
   padding: 5px 5px 5px 5px;
   font-size: 10px;
   font-weight: bold;
@@ -78,7 +95,7 @@ div.close {
     float: right;
     text-align: center;
     background-color: #CFE3A6;
-    color: #495239;
+    color: #000000;
     margin-top: -1px;
     border-left: 1pt solid #c4c4c4;
     border-bottom: 1pt solid #c4c4c4;
@@ -129,7 +146,7 @@ div.close_sub {
     float: right;
     text-align: center;
     background-color: #E5FABB;
-    color: #495239;
+    color: #000000;
     font-weight: bold;
     margin-top: -1px;
     border-left: 1pt solid #c9c9c9;
@@ -143,7 +160,7 @@ div.close_sub1 {
     float: right;
     text-align: center;
     background-color: #ffffff;
-    color: #495239;
+    color: #000000;
     font-weight: bold;
     margin-top: -1px;
     border-left: 1pt solid #c9c9c9;

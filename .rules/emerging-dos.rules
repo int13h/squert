@@ -1,0 +1,173 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2012, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata.
+#by Daniel Sheperd
+#
+alert udp any any -> any 53 (msg:"ET DOS DNS BIND 9 Dynamic Update DoS attempt"; byte_test:1,&,40,2; byte_test:1,>,0,5; byte_test:1,>,0,1; content:"|00 00 06|"; offset:8; content:"|c0 0c 00 ff|"; distance:2; reference:cve,2009-0696; reference:url,doc.emergingthreats.net/2009701; classtype:attempted-dos; sid:2009701; rev:2;)
+
+#by Kevin Ross, temporary, based on a specific exploit if generated in hping
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET DOS Possible Cisco ASA 5500 Series Adaptive Security Appliance Remote SIP Inspection Device Reload Denial of Service Attempt"; flow:established,to_server; content:"REGISTER"; depth:8; nocase; isdataat:400,relative; pcre:"/REGISTER.{400}/smi"; reference:url,tools.cisco.com/security/center/viewAlert.x?alertId=19915; reference:cve,2010-0569; reference:url,doc.emergingthreats.net/2010817; classtype:attempted-dos; sid:2010817; rev:3;)
+
+#Temporarily disabled until we get a fix for an FP problem
+#
+#alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET DOS Possible Cisco ASA 5500 Series Adaptive Security Appliance Remote SIP Inspection Device Reload Denial of Service Attempt"; content:"REGISTER"; depth:8; nocase; isdataat:400,relative; pcre:"/REGISTER.{400}/smi"; reference:url,tools.cisco.com/security/center/viewAlert.x?alertId=19915; reference:cve,2010-0569; reference:url,doc.emergingthreats.net/2010818; classtype:attempted-dos; sid:2010818; rev:3;)
+
+#Submitted by Cody Hatch
+#
+alert udp $EXTERNAL_NET any -> $HOME_NET 514 (msg:"ET DOS Cisco 514 UDP flood DoS"; content:"|25 25 25 25 25 58 58 25 25 25 25 25|"; reference:url,www.cisco.com/warp/public/707/IOS-cbac-dynacl-pub.shtml; reference:url,doc.emergingthreats.net/bin/view/Main/2000010; classtype:attempted-dos; sid:2000010; rev:11;)
+
+#Submitted by Cody Hatch
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 23 (msg:"ET DOS Catalyst memory leak attack"; flow: to_server,established; content:"|41 41 41 0a|"; depth: 20; reference:url,www.cisco.com/en/US/products/products_security_advisory09186a00800b138e.shtml; reference:url,doc.emergingthreats.net/bin/view/Main/2000011; classtype:attempted-dos; sid:2000011; rev:8;)
+
+#submitted by Cody Hatch
+#
+#alert http $EXTERNAL_NET any -> $HOME_NET $HTTP_PORTS (msg:"ET DOS Cisco Router HTTP DoS"; flow: to_server,established; uricontent:"/%%"; reference:url,www.cisco.com/warp/public/707/cisco-sn-20040326-exploits.shtml; reference:url,doc.emergingthreats.net/bin/view/Main/2000006; classtype:attempted-dos; sid:2000006; rev:12;)
+
+#by kevin ross
+#
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET DOS Cisco 4200 Wireless Lan Controller Long Authorisation Denial of Service Attempt"; flow:to_server,established; content:"GET"; http_method; nocase; content:"/screens/frameset.html"; http_uri; nocase; content:"Authorization|3A 20|Basic"; nocase; content:!"|0a|"; distance:2; within:118; isdataat:120,relative; pcre:"/\x2Fscreens\x2Fframeset\x2Ehtml.+Authorization\x3A Basic.{120}/msi"; reference:url,www.securityfocus.com/bid/35805; reference:url,www.cisco.com/warp/public/707/cisco-amb-20090727-wlc.shtml; reference:cve,2009-1164; reference:url,doc.emergingthreats.net/2010674; classtype:attempted-dos; sid:2010674; rev:6;)
+
+#by Kevin Ross
+#
+alert tcp $EXTERNAL_NET any -> $HOME_NET 6014 (msg:"ET DOS IBM DB2 kuddb2 Remote Denial of Service Attempt"; flow:established,to_server; content:"|00 05 03 31 41|"; reference:url,www.securityfocus.com/bid/38018; reference:url,intevydis.blogspot.com/2010/01/ibm-db2-97-kuddb2-dos.html; reference:url,doc.emergingthreats.net/2010755; classtype:attempted-dos; sid:2010755; rev:4;)
+
+#by Blake Hartstein of Demarc
+#Cleaned up depth/offset/distance - Daniel Clemens
+#
+alert tcp $EXTERNAL_NET any -> $HOME_NET 2049 (msg:"ET DOS FreeBSD NFS RPC Kernel Panic"; flow:to_server,established; content:"|00 01 86 a5|"; offset:16; depth:4; content:"|00 00 00 01|"; distance:4; within:4; content:"|00 00 00 00|"; offset:8; depth:4; content:"|00 00 00 00 00 00|"; offset:0; depth:6; reference:cve,2006-0900; reference:bugtraq,19017; reference:url,doc.emergingthreats.net/bin/view/Main/2002853; classtype:attempted-dos; sid:2002853; rev:4;)
+
+#by Blake Hartstein of Demarc
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 1755 (msg:"ET DOS Microsoft Streaming Server Malformed Request"; flow:established,to_server; content:"MSB "; depth:4; content:"|06 01 07 00 24 00 00 40 00 00 00 00 00 00 01 00 00 00|"; distance:0; within:18; reference:bugtraq,1282; reference:url,www.microsoft.com/technet/security/bulletin/ms00-038.mspx; reference:url,doc.emergingthreats.net/bin/view/Main/2002843; classtype:attempted-dos; sid:2002843; rev:4;)
+
+#From Erik Fichtner:
+#hit on pmtu frames with next-hop mtu not 0 (old RFC shortcut) and (added this so the sig wouldn't trigger missing reference:url, search errors)
+#below a sane value, eg 576 bytes. Adjust to taste.
+#true RFC791 min = 68, true end-to-end pmtu compatble min = 132.
+#real world might even go as high as 1100 bytes min. YMMV.
+#Updated to be 6 in the byte test as per Shane Castle
+#
+#alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET DOS ICMP Path MTU lowered below acceptable threshold"; itype: 3; icode: 4; byte_test:2,<,576,6; byte_test:2,!=,0,7; reference:cve,CAN-2004-1060; reference:url,www.microsoft.com/technet/security/bulletin/MS05-019.mspx; reference:url,isc.sans.org/diary.php?date=2005-04-12; reference:url,doc.emergingthreats.net/bin/view/Main/2001882; classtype:denial-of-service; sid:2001882; rev:10;)
+
+#Submitted by Chris Norton
+#
+#alert tcp $EXTERNAL_NET any -> $SQL_SERVERS 1433 (msg:"ET DOS Possible Microsoft SQL Server Remote Denial Of Service Attempt"; flow: established,to_server; content:"|10 00 00 10 cc|"; depth:5; reference:bugtraq,11265; reference:url,doc.emergingthreats.net/bin/view/Main/2001366; classtype:attempted-dos; sid:2001366; rev:10;)
+
+#By Blake Hartstein at Demarc
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 445 (msg:"ET DOS NetrWkstaUserEnum Request with large Preferred Max Len"; flow:established,to_server; content:"|ff|SMB"; content:"|10 00 00 00|"; distance:0; content:"|02 00|"; distance:14; within:2; byte_jump:4,12,relative,little,multiplier 2; content:"|00 00 00 00 00 00 00 00|"; distance:12; within:8; byte_test:4,>,2,0,relative; reference:cve,2006-6723; reference:url,doc.emergingthreats.net/bin/view/Main/2003236; classtype:attempted-dos; sid:2003236; rev:4;)
+
+#Erik Fichtner
+#
+alert tcp $EXTERNAL_NET any -> $SMTP_SERVERS 25 (msg:"ET DOS Excessive SMTP MAIL-FROM DDoS"; flow: to_server, established; content:"MAIL FROM|3a|"; nocase; window: 0; id:0; threshold: type limit, track by_src, count 30, seconds 60; reference:url,doc.emergingthreats.net/bin/view/Main/2001795; classtype:denial-of-service; sid:2001795; rev:9;)
+
+#by Kevin Ross
+#
+alert tcp $EXTERNAL_NET any -> $HOME_NET 3306 (msg:"ET DOS Possible MYSQL GeomFromWKB() function Denial Of Service Attempt"; flow:to_server,established; content:"SELECT"; nocase; content:"geometrycollectionfromwkb"; distance:0; nocase; pcre:"/SELECT.+geometrycollectionfromwkb/si"; reference:url,www.securityfocus.com/bid/37297/info; reference:url,marc.info/?l=oss-security&m=125881733826437&w=2; reference:url,downloads.securityfocus.com/vulnerabilities/exploits/37297.txt; reference:cve,2009-4019; reference:url,doc.emergingthreats.net/2010491; classtype:attempted-dos; sid:2010491; rev:2;)
+
+#temp disabled till we figure out all options
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 3306 (msg:"ET DOS Possible MYSQL SELECT WHERE to User Variable Denial Of Service Attempt"; flow:to_server,established; content:"SELECT"; nocase; content:"WHERE"; distance:0; nocase; content:"SELECT"; nocase; content:"INTO"; distance:0; nocase; content:"|60|"; within:50; content:"|60|"; pcre:"/SELECT.+WHERE.+SELECT.+\x60/si"; reference:url,www.securityfocus.com/bid/37297/info; reference:url,marc.info/?l=oss-security&m=125881733826437&w=2; reference:url,downloads.securityfocus.com/vulnerabilities/exploits/37297-2.txt; reference:cve,2009-4019; reference:url,doc.emergingthreats.net/2010492; classtype:attempted-dos; sid:2010492; rev:3;)
+
+#by kevin ross
+#
+alert tcp $EXTERNAL_NET any -> $HOME_NET 3306 (msg:"ET DOS Possible MySQL ALTER DATABASE Denial Of Service Attempt"; flow:established,to_server; content:"ALTER "; nocase; content:"DATABASE"; nocase; within:12; content:"|22|."; distance:0; content:"UPGRADE "; nocase; distance:0; content:"DATA"; nocase; within:8; pcre:"/ALTER.+DATABASE.+\x22\x2E(\x22|\x2E\x22|\x2E\x2E\x2F\x22).+UPGRADE.+DATA/si"; reference:url,securitytracker.com/alerts/2010/Jun/1024160.html; reference:url,dev.mysql.com/doc/refman/5.1/en/alter-database.html; reference:cve,2010-2008; reference:url,doc.emergingthreats.net/2011761; classtype:attempted-dos; sid:2011761; rev:2;)
+
+#by kevin ross, mike cox and joel esler
+#
+alert http $EXTERNAL_NET any -> $HOME_NET $HTTP_PORTS (msg:"ET DOS Netgear DG632 Web Management Denial Of Service Attempt"; flow:established,to_server; content:"POST "; nocase; depth:5; uricontent:"/cgi-bin/firmwarecfg"; nocase; reference:url, securitytracker.com/alerts/2009/Jun/1022403.html; reference:cve,2009-2256; reference:url,doc.emergingthreats.net/2010554; classtype:attempted-dos; sid:2010554; rev:3;)
+
+#by Bart Roos
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET $HTTP_PORTS (msg:"ET DOS Large amount of TCP ZeroWindow - Possible Nkiller2 DDos attack"; flags:A; window:0; threshold: type threshold, track by_src,count 100, seconds 60; reference:url,doc.emergingthreats.net/2009414; classtype:attempted-dos; sid:2009414; rev:5;)
+
+#by matt jonkman and waldo kitty
+#
+alert udp $EXTERNAL_NET 123 -> $HOME_NET 123 (msg:"ET DOS Potential Inbound NTP denial-of-service attempt (repeated mode 7 request)"; dsize:1; content:"|17|"; threshold:type limit, count 1, seconds 60, track by_src; reference:url,www.kb.cert.org/vuls/id/568372; reference:cve,2009-3563; reference:url,doc.emergingthreats.net/2010486; classtype:attempted-dos; sid:2010486; rev:2;)
+
+#by matt jonkman and waldo kitty
+#
+alert udp $EXTERNAL_NET 123 -> $HOME_NET 123 (msg:"ET DOS Potential Inbound NTP denial-of-service attempt (repeated mode 7 reply)"; dsize:4; content:"|97 00 00 00|"; threshold:type limit, count 1, seconds 60, track by_src; reference:url,www.kb.cert.org/vuls/id/568372; reference:cve,2009-3563; reference:url,doc.emergingthreats.net/2010487; classtype:attempted-dos; sid:2010487; rev:2;)
+
+#by matt jonkman and waldo kitty
+#
+alert udp $HOME_NET 123 -> $EXTERNAL_NET 123 (msg:"ET DOS Potential Inbound NTP denial-of-service attempt (repeated mode 7 request)"; dsize:1; content:"|17|"; threshold:type limit, count 1, seconds 60, track by_src; reference:url,www.kb.cert.org/vuls/id/568372; reference:cve,2009-3563; reference:url,doc.emergingthreats.net/2010488; classtype:attempted-dos; sid:2010488; rev:2;)
+
+#by matt jonkman and waldo kitty
+#
+alert udp $HOME_NET 123 -> $EXTERNAL_NET 123 (msg:"ET DOS Potential Inbound NTP denial-of-service attempt (repeated mode 7 reply)"; dsize:4; content:"|97 00 00 00|"; threshold:type limit, count 1, seconds 60, track by_src; reference:url,www.kb.cert.org/vuls/id/568372; reference:cve,2009-3563; reference:url,doc.emergingthreats.net/2010489; classtype:attempted-dos; sid:2010489; rev:2;)
+
+#
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 443 (msg:"ET DOS SSL Bomb DoS Attempt"; flow:to_server,established; content:"|16 03 00|"; offset:0; depth:3; content:"|01|"; within:1; distance:2; byte_jump:1,37,relative,align; byte_test:2,>,255,0,relative; reference:cve,CAN-2004-0120; reference:url,www.microsoft.com/technet/security/bulletin/MS04-011.mspx; reference:url,doc.emergingthreats.net/bin/view/Main/2000016; classtype:attempted-dos; sid:2000016; rev:7;)
+
+#by kevin ross
+#
+#alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"ET DOS Possible SolarWinds TFTP Server Read Request Denial Of Service Attempt"; content:"|00 01 01|"; depth:3; content:"NETASCII"; reference:url,www.exploit-db.com/exploits/12683/; reference:url,doc.emergingthreats.net/2011673; classtype:attempted-dos; sid:2011673; rev:3;)
+
+#by kevin ross
+#
+#alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"ET DOS SolarWinds TFTP Server Long Write Request Denial Of Service Attempt"; content:"|00 02|"; depth:2; isdataat:1000,relative; content:!"|0A|"; within:1000; content:"NETASCII"; distance:1000; reference:url,www.exploit-db.com/exploits/13836/; reference:url,doc.emergingthreats.net/2011674; classtype:attempted-dos; sid:2011674; rev:3;)
+
+#by Kevin Ross
+#
+alert tcp $EXTERNAL_NET any -> $HOME_NET 5900 (msg:"ET DOS Possible VNC ClientCutText Message Denial of Service/Memory Corruption Attempt"; flow:established,to_server; content:"|06|"; depth:1; isdataat:1000,relative; content:!"|0A|"; within:1000; reference:url,www.fortiguard.com/encyclopedia/vulnerability/vnc.server.clientcuttext.message.memory.corruption.html; reference:url,doc.emergingthreats.net/2011732; classtype:attempted-dos; sid:2011732; rev:2;)
+
+#
+alert ip $EXTERNAL_NET any -> $HOME_NET any (msg:"GPL DOS IGMP dos attack"; fragbits:M+; ip_proto:2; reference:bugtraq,514; reference:cve,1999-0918; reference:url,www.microsoft.com/technet/security/bulletin/MS99-034.mspx; classtype:attempted-dos; sid:272; rev:10;)
+
+#
+#alert ip $EXTERNAL_NET any -> $HOME_NET any (msg:"GPL DOS Jolt attack"; dsize:408; fragbits:M; reference:cve,1999-0345; classtype:attempted-dos; sid:268; rev:4;)
+
+#
+alert tcp any any -> $HOME_NET 3000 (msg:"ET DOS ntop Basic-Auth DOS inbound"; flow:established,to_server; content:"GET "; nocase; depth:4; content:"/configNtop.html"; distance:0; within:20; nocase; content:"Authorization|3a|"; nocase; content: "Basic"; distance:0; within:20; content:"=="; distance:0; within:100; reference:url,www.securityfocus.com/bid/36074; reference:url,www.securityfocus.com/archive/1/505862; reference:url,www.securityfocus.com/archive/1/505876; classtype:denial-of-service; sid:2011511; rev:1;)
+
+#
+alert tcp $HOME_NET any -> any 3000 (msg:"ET DOS ntop Basic-Auth DOS outbound"; flow:established,to_server; content:"GET "; nocase; depth:4; content:"/configNtop.html"; distance:0; within:20; nocase; content:"Authorization|3a|"; nocase; content: "Basic"; distance:0; within:20; content:"=="; distance:0; within:100; reference:url,www.securityfocus.com/bid/36074; reference:url,www.securityfocus.com/archive/1/505862; reference:url,www.securityfocus.com/archive/1/505876; classtype:denial-of-service; sid:2011512; rev:1;)
+
+#
+alert http $EXTERNAL_NET any -> $HOME_NET 9495 (msg:"ET DOS IBM Tivoli Endpoint Buffer Overflow Attempt"; flow:established,to_server; content:"POST"; http_method; isdataat:261; content:!"|0A|"; depth:261; reference:url, zerodayinitiative.com/advisories/ZDI-11-169/; classtype:denial-of-service; sid:2012938; rev:2;)
+
+#
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET DOS Skype FindCountriesByNamePattern property Buffer Overflow Attempt"; flow:to_client,established; content:"<OBJECT "; nocase; content:"classid"; nocase; distance:0; content:"CLSID"; nocase; distance:0; content:"22C83263-E4B8-4233-82CD-FB047C6BF13E"; nocase; distance:0; content:".FindCountriesByNamePattern"; nocase; pcre:"/<OBJECT\s+[^>]*classid\s*=\s*[\x22\x27]?\s*clsid\s*\x3a\s*\x7B?\s*22C83263-E4B8-4233-82CD-FB047C6BF13E/si"; reference:url,garage4hackers.com/f43/skype-5-x-activex-crash-poc-981.html; classtype:web-application-attack; sid:2013462; rev:2;)
+
+#
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET DOS Skype FindCountriesByNamePattern property Buffer Overflow Attempt Format String Function Call"; flow:to_client,established; content:"ActiveXObject"; nocase; content:"SkypePNRLib.PNR"; nocase; distance:0; content:".FindCountriesByNamePattern"; nocase; reference:url,garage4hackers.com/f43/skype-5-x-activex-crash-poc-981.html; classtype:attempted-user; sid:2013463; rev:2;)
+

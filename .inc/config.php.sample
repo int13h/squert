@@ -12,7 +12,7 @@ $dbUser = 'readonly';
 $dbPass = 'readonly';
 
 // Where are the rules? If you have multiple dirs, separate each with: ||
-$rulePath = "../.rules/et";
+$rulePath = "../.rules";
 
 // Where is dot installed?
 $dotPath = "/usr/bin/dot";

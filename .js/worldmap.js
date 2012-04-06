@@ -26,6 +26,7 @@
  */
 
  function WorldMap(oSettings) {
+
   // create variables
   var oSettings = (oSettings || {});
   oSettings.detail = (oSettings.detail || {});

@@ -1,4 +1,7 @@
 $(document).ready(function(){
+
+    worldMap();
+
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
         "c12":[{"short": "C2", "long": "Unauthorized User Access"}],
@@ -17,11 +20,12 @@ $(document).ready(function(){
     // Filter by Class
     //
 
-    //$('tr[id^=cat-]').click(function(){
-    //        rowValue = this.id.replace("cat-","");
-    //        $('tr[id^=sid-]').hide();
-    //        $("[data-class*='" + rowValue + "']").fadeIn('slow');
-    //});
+    $('tr[id^=cat-]').click(function(){
+            $('html, body').animate({ scrollTop: 0 }, 'slow');
+            rowValue = this.id.replace("cat-","");
+            $('tr[id^=sid-]').hide();
+            $("[data-class*='" + rowValue + "']").show();
+    });
 
     //
     // Event monitor
@@ -68,7 +72,15 @@ $(document).ready(function(){
     //
 
     $("#b_update").click(function() {
-        location.reload();
+        ctab = $('.tab_active').attr('id');
+        switch(ctab) {
+            case 't_map':
+                worldMap();
+                break;
+            case 't_sum':     
+                location.reload();
+                break;
+        }
     });
 
     $("#b_top").click(function() {
@@ -561,6 +573,7 @@ $(document).ready(function(){
               tbl += "</td></tr>";
               $("#" + rowLoke).after(tbl);
 
+              // Turn off fade effect for large results
               rC = $(".d_row_sub1").length;
               if ( rC <= 399 ) {
                   $(".d_row_sub1").fadeTo('fast','0.2');
@@ -570,6 +583,26 @@ $(document).ready(function(){
         }
 
     } 
+
+    //
+    // World Map
+    //
+    
+    function worldMap () {
+
+        WorldMap({ id: "wm1",
+            bgcolor: "#ffffff",
+            fgcolor: "#dddddd",
+            bordercolor: "#aaaaaa",
+            borderwidth: 1,
+            padding: 0,
+            detail: {
+                "us": "#cc0000",
+                "cn": "yellow"
+            }    
+        });
+
+    }
 
 // The End.
 });

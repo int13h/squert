@@ -71,6 +71,9 @@ dbC();
 </div>
 
 <div id=t_map_content class=content>
+<div class=wm>
+<canvas class=wm1 id=wm1 width=970 height=500>[No canvas support]></canvas>
+</div>
 </div>
 
 <div id=debug class=debug>

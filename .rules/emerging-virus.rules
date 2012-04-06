@@ -1,0 +1,172 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2012, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata.
+#From Chris Norton.
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET VIRUS Generic Downloader Outbound HTTP connection - Downloading Code"; flow:established,to_server; content:"User-Agent|3A| PE-"; reference:url,doc.emergingthreats.net/2002695; classtype:trojan-activity; sid:2002695; rev:8;)
+
+#BugBear
+#Submitted by Brad Doctor, 3/8/2005, for BugBear@MM
+#
+#alert tcp $HOME_NET any -> any 139 (msg:"ET VIRUS BugBear@MM virus in Network share"; flow: established; content:"|24 48 fb bb ff e6 63 02 3a 20 41 70 61 63 68 65|"; reference:url,www.symantec.com/avcenter/venc/data/w32.bugbear@mm.html; reference:url,doc.emergingthreats.net/2001765; classtype:misc-activity; sid:2001765; rev:6;)
+
+#by Jonathan Gross. Experimental
+#
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET VIRUS WinUpack Modified PE Header Inbound"; flow:established; content:"|4d 5a 4b 45 52 4e 45 4c 33 32 2e 44 4c 4c 00 00|"; reference:url,doc.emergingthreats.net/bin/view/Main/WinPEHeaders; classtype:bad-unknown; sid:2003614; rev:4;)
+
+#by Jonathan Gross. Experimental
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET VIRUS WinUpack Modified PE Header Outbound"; flow:established; content:"|4d 5a 4b 45 52 4e 45 4c 33 32 2e 44 4c 4c 00 00|"; reference:url,doc.emergingthreats.net/bin/view/Main/WinPEHeaders; classtype:bad-unknown; sid:2003615; rev:4;)
+
+#These are by Vlad Tsyrklevich during presentation at Toorcon 06. These are experimental and will likely be high load.
+#more information at http://toorcon.org/2006/conference.html?id=29
+#These are disabled by default until we learn more about them.
+#
+#alert ip $EXTERNAL_NET any -> $HOME_NET any (msg:"ET VIRUS SHELLCODE CLET polymorphic payload"; dsize: >40; content: "|74 07 eb|"; content: "|e8|"; distance: 1; within: 1; pcre: "/\xeb.[\x58-\x5b]\x31[\xc0\xc9\xd2\xdb][\xb0-\xb3].\x8b.[\x05\x2d\x35\x81\xc1]/sm"; pcre: "/[\x40-\x43\xfd\xff][\x40-\x43\xff][\x40-\x43\x80\xff][\x40-\x43\xe9-\xeb\xff\x80\x2c][\x40-\x43\x48-\x4b\xe9-\xeb\x01\x2c\x80][\x48-\x4c\xe9-\xeb\x02\x2c][\x03\x48-\x4b][\x48-\x4b]\x74\x07\xeb.\xe8.\xff\xff\xff/smR"; reference:url,toorcon.org/2006/conference.html?id=29; reference:url,doc.emergingthreats.net/2003117; classtype:shellcode-detect; sid:2003117; rev:3;)
+
+#These are by Vlad Tsyrklevich during presentation at Toorcon 06. These are experimental and will likely be high load.
+#more information at http://toorcon.org/2006/conference.html?id=29
+#These are disabled by default until we learn more about them.
+#
+#alert ip $EXTERNAL_NET any -> $HOME_NET any (msg:"ET VIRUS SHELLCODE Shikata Ga Nai polymorphic payload"; dsize: >26; content: "|d9 74 24 f4|"; pcre: "/[\x29\x2b\x31\x33]\xc9/sm"; pcre: "/[\xd9-\xdb\xdd].{1,11}\xd9\x74\x24\xf4.{0,10}[\x58\x5a\x5b\x5d-\x5f]/sm"; pcre: "/([\x29\x2b\x31\x33\xb8\xba\xbb\xbe\xbf\xd9-\xdb\xdd][^\x00\xff][^\x00\xff][^\x00][^\x00\xff][^\x00][^\x00\xff][^\x00\xff][^\x00][^\x00][^\x00][^\x00\xff][^\x00\xff][^\x00\xff][^\x00][^\x00][\x31\x83][\x42\x43\x46\x47\x50\x53\x56-\x58\x5a\x5e\x5f\x70\x72\x73\x77\x78\x7a\x7b\x7e\xc0\xc2\xc3\xc6\xc7\xe8\xea\xeb\xee\xef][\x04\x0e\x10\x12\x13\x15\x17\xfc][\x03\x31\x83][\x42\x43\x46\x47\x50\x53\x56-\x58\x5a\x5e\x5f\x70\x72\x73\x77\x78\x7a\x7b\x7e\xc0\xc2\xc3\xc6\xc7\xe8\xea\xeb\xee\xef][\x04\x0a\x0c\x0e-\x13\x15\x17\xfc][\x03\x83]..[^\x1d\xe2][^\x0a\xf5])|([\x29\x2b\x31\x33\xb8\xba\xbb\xbd-\xbf\xd9-\xdb\xdd][^\x00][^\x00][^\x00][^\x00][^\x00][^\x00][^\x00][^\x00][\x24\xb1\xd9-\xdb\xdd][^\x00][\x58\x5a\x5b\x5d-\x5f\xb8\xba\xbb\xbd-\xbf\xd9][^\x00][^\x00][^\x00][^\x00][\x31\x83][\x42\x43\x45-\x47\x50\x53\x55-\x58\x5a\x5d-\x5f\x68\x6a\x6b\x6e-\x70\x72\x73\x75\x77\x78\x7a\x7b\x7d\x7e\xc0\xc2\xc3\xc5-\xc7\xe8\xea\xeb\xed-\xef][\x04\x0e\x12\x17\xfc][\x03\x31\x83][\x42\x43\x45-\x47\x50\x53\x55-\x58\x5a\x5d-\x5f\x68\x6a\x6b\x6e-\x70\x72\x73\x75\x77\x78\x7a\x7b\x7d\x7e\xc0\xc2\xc3\xc5-\xc7\xe8\xea\xeb\xed-\xef][\x04\x0a\x0e\x12\x13\x17\xfc][\x03\x83]..[^\xe2][^\xf5])/sm"; reference:url,toorcon.org/2006/conference.html?id=29; reference:url,doc.emergingthreats.net/2003118; classtype:shellcode-detect; sid:2003118; rev:3;)
+
+#These are by Vlad Tsyrklevich during presentation at Toorcon 06. These are experimental and will likely be high load.
+#more information at http://toorcon.org/2006/conference.html?id=29
+#These are disabled by default until we learn more about them.
+#
+#alert ip $EXTERNAL_NET any -> $HOME_NET any (msg:"ET VIRUS SHELLCODE ADMutate polymorphic payload"; dsize: >45; content: "|e8|"; content: "|ff ff ff|"; distance: 1; within: 3; pcre: "/\xeb[\x26-\x7a].{0,20}(\x5e|\x58\x96|\x58\x89\xc6|\x8b\x34\x24\x83\xec\x04).{0,20}(((\xbb....|\x68....\x5b).{0,20}(\x31\xc9|\x31\xc0\x91))|((\x31\xc9|\x31\xc0\x91).{0,20}(\xbb....|\x68....\x5b))).{0,20}(\xb1.|\x6a.\x58\x89\xc1|\x6a.\x66\x59).{0,20}(\x31\x1e|\x93\x31\x06\x93|\x8b\x06\x09\xd8\x21\x1e\xf7\x16\x21\x06).{0,20}(\x46|\x83\xc6\x01|\x96\x40\x96).{0,20}(\x46|\x83\xc6\x01|\x96\x40\x96).{0,20}(\x46|\x83\xc6\x01|\x96\x40\x96).{0,20}(\x46|\x83\xc6\x01|\x96\x40\x96).{0,20}\xe2[\xa0-\xf9].{0,20}\xeb[\x06-\x20].{0,20}\xe8[\x7f-\xff]\xff\xff\xff/sm"; reference:url,toorcon.org/2006/conference.html?id=29; reference:url,doc.emergingthreats.net/2003119; classtype:shellcode-detect; sid:2003119; rev:3;)
+
+#Sobig
+#Unknown submitter - Sobig E-F downloading goodies
+#
+#alert udp $HOME_NET any -> $EXTERNAL_NET 8998 (msg:"ET VIRUS Sobig.E-F Trojan Site Download Request"; dsize: 8; content:"|5c bf 01 29 ca 62 eb f1|"; reference:url,securityresponse.symantec.com/avcenter/venc/data/w32.sobig.e@mm.html; reference:url,doc.emergingthreats.net/2001547; classtype:trojan-activity; sid:2001547; rev:7;)
+
+#Spy.Win32.Bancos Trojan
+#Submitted by Matt Jonkman for Spy.Win32.Bancos Trojan
+#
+#alert http $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"ET VIRUS Trojan-Spy.Win32.Bancos Download"; flow: established,from_server; content:"[AspackDie!]"; content:"|0f 6d 07 9e 6c 62 6c 68 00 d2 2f 63 6d 64 9d 11 af af 45 c7 72 ac 5f 3138 d0|"; reference:url,securityresponse.symantec.com/avcenter/venc/data/pwsteal.bancos.b.html; reference:url,doc.emergingthreats.net/2001726; classtype:trojan-activity; sid:2001726; rev:9;)
+
+#from castlecops research, http://www.castlecops.com, sig by Matt Jonkman
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET VIRUS AV-Killer.Win32 User Agent Detected (p4r4z1t3v3.one14.J)"; flow:established,to_server; content:"User-Agent|3a| p4r4z1t3v3"; nocase; reference:url,doc.emergingthreats.net/2003638; classtype:trojan-activity; sid:2003638; rev:5;)
+
+#by mr Magic Pants
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET 25 (msg:"ET VIRUS Win32.SMTP-Mailer SMTP Outbound"; flow:to_server,established; content:"Subject|3a 20 3a 20|ZOMBIE"; nocase; content:"X-Library|3a| Indy 9.00.10"; nocase; distance:0; reference:url,research.sunbelt-software.com/threatdisplay.aspx?name=Win32.SMTP-Mailer&threatid=48095; reference:url,www.hauri.net/virus/virusinfo_read.php?code=TRW3000774&start=1; reference:url,doc.emergingthreats.net/2003041; classtype:trojan-activity; sid:2003041; rev:6;)
+
+#Matt Jonkman
+#
+alert tcp $EXTERNAL_NET !$HTTP_PORTS -> $HOME_NET any (msg:"ET VIRUS Hotword Trojan in Transit"; flow: established,from_server; content:"|63 6f 6d 66 69 64 65 6e 74 69 61 6c 20 64 6f 63 75 6d 65 6e 74 20 28 57 6f 72 64 29 20 66 72 6f 6d 20 44 69 67 69 44 6f 63 00 43 4d 20 25 73 20|"; reference:url,securityresponse.symantec.com/avcenter/venc/data/trojan.hotword.html; reference:url,doc.emergingthreats.net/2001959; classtype:trojan-activity; sid:2001959; rev:7;)
+
+#Matt Jonkman
+#
+alert http $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"ET VIRUS Hotword Trojan inbound via http"; flow: established,from_server; content:"|63 6f 6d 66 69 64 65 6e 74 69 61 6c 20 64 6f 63 75 6d 65 6e 74 20 28 57 6f 72 64 29 20 66 72 6f 6d 20 44 69 67 69 44 6f 63 00 43 4d 20 25 73 20|"; reference:url,securityresponse.symantec.com/avcenter/venc/data/trojan.hotword.html; reference:url,doc.emergingthreats.net/2001960; classtype:trojan-activity; sid:2001960; rev:7;)
+
+#Matt Jonkman
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET 21 (msg:"ET VIRUS Hotword Trojan - Possible File Upload CHJO"; flow: to_server,established; content:"STOR __"; content:"-CHJO.DRV"; nocase; within: 100; reference:url,securityresponse.symantec.com/avcenter/venc/data/trojan.hotword.html; reference:url,doc.emergingthreats.net/2001961; classtype:trojan-activity; sid:2001961; rev:9;)
+
+#Matt Jonkman
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET 21 (msg:"ET VIRUS Hotword Trojan - Possible File Upload CFXP"; flow: to_server,established; content:"STOR __"; content:"-CFXP.DRV"; nocase; within: 100; reference:url,securityresponse.symantec.com/avcenter/venc/data/trojan.hotword.html; reference:url,doc.emergingthreats.net/2001962; classtype:trojan-activity; sid:2001962; rev:9;)
+
+#Matt Jonkman
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET 21 (msg:"ET VIRUS Hotword Trojan - Possible FTP File Request pspv.exe"; flow: to_server,established; content:"SIZE pspv.exe"; reference:url,securityresponse.symantec.com/avcenter/venc/data/trojan.hotword.html; reference:url,doc.emergingthreats.net/2001963; classtype:trojan-activity; sid:2001963; rev:9;)
+
+#Matt Jonkman
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET 21 (msg:"ET VIRUS Hotword Trojan - Possible FTP File Request .tea"; flow: to_server,established; content:"LIST "; content:".tea"; nocase; within: 50; reference:url,securityresponse.symantec.com/avcenter/venc/data/trojan.hotword.html; reference:url,doc.emergingthreats.net/2001964; classtype:trojan-activity; sid:2001964; rev:9;)
+
+#Matt Jonkman
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET 21 (msg:"ET VIRUS Hotword Trojan - Possible FTP File Status Upload ___"; flow: to_server,established; content:"|53 54 4f 52 20 5f 5f 5f 0d 0a|"; reference:url,securityresponse.symantec.com/avcenter/venc/data/trojan.hotword.html; reference:url,doc.emergingthreats.net/2001965; classtype:trojan-activity; sid:2001965; rev:9;)
+
+#Matt Jonkman
+#
+alert tcp $HOME_NET any -> $EXTERNAL_NET 21 (msg:"ET VIRUS Hotword Trojan - Possible FTP File Status Check ___"; flow: to_server,established; content:"|53 49 5a 45 20 5f 5f 5f 0d 0a|"; reference:url,securityresponse.symantec.com/avcenter/venc/data/trojan.hotword.html; reference:url,doc.emergingthreats.net/2001966; classtype:trojan-activity; sid:2001966; rev:9;)
+
+#by: Jeremy Conway at sudosecure.net
+#ref: 030500a6ef292ecf6fc4e2a5bf5a424c
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET VIRUS Parite.B GET"; flow:established,to_server; content:"GET "; nocase; depth:4; content:"|0d0a|User-Agent|3a| gomtour|0d0a|"; within:200; reference:url,www.pandasecurity.com/homeusers/security-info/18181/information/Parite.B; reference:url,www.pctools.com/mrc/infections/id/Virus.Parite.B/; reference:url,www.threatexpert.com/threats/w32-parite-b.html; reference:url,doc.emergingthreats.net/2009454; classtype:trojan-activity; sid:2009454; rev:5;)
+
+#Submitted by Brad Doctor
+#
+alert tcp $EXTERNAL_NET any -> $HOME_NET 25 (msg:"ET VIRUS Greeting card gif.exe email incoming SMTP"; flow: established,to_server; content:"postcard.gif.exe"; nocase; reference:url,securityresponse.symantec.com/avcenter/venc/data/vbs.postcard@mm.html; reference:url,doc.emergingthreats.net/2001919; classtype:trojan-activity; sid:2001919; rev:5;)
+
+#Submitted by Brad Doctor
+#
+alert tcp $EXTERNAL_NET 110:220 -> $HOME_NET any (msg:"ET VIRUS Greeting card gif.exe email incoming POP3/IMAP"; flow: established,from_server; content:"postcard.gif.exe"; nocase; reference:url,securityresponse.symantec.com/avcenter/venc/data/vbs.postcard@mm.html; reference:url,doc.emergingthreats.net/2001920; classtype:trojan-activity; sid:2001920; rev:5;)
+
+#Submitted by Brad Doctor
+#
+alert http $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"ET VIRUS Greeting card gif.exe email incoming HTTP"; flow: established,from_server; content:"postcard.gif.exe"; nocase; reference:url,securityresponse.symantec.com/avcenter/venc/data/vbs.postcard@mm.html; reference:url,doc.emergingthreats.net/2001921; classtype:trojan-activity; sid:2001921; rev:6;)
+
+#Matt Jonkman
+#
+#alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET VIRUS Sality Trojan Web Update"; flow:to_server,established; uricontent:"/new_array2.php?speed="; nocase; reference:url,www.sophos.com/security/analyses/w32salityu.html; reference:url,doc.emergingthreats.net/2003424; classtype:trojan-activity; sid:2003424; rev:4;)
+
+#by axn jxn
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET VIRUS Zlob User Agent - updating (internetsecurity)"; flow:established,to_server; content:"|0d 0a|User-Agent|3a| internetsecurity"; reference:url,secubox.aldria.com/topic-post1618.html#post1618; reference:url,doc.emergingthreats.net/2003632; classtype:trojan-activity; sid:2003632; rev:7;)
+
+#by axn jxn
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET VIRUS Zlob User Agent - updating (Winlogon)"; flow:established,to_server; content:"|0d 0a|User-Agent|3a| Winlogon"; reference:url,doc.emergingthreats.net/2006441; classtype:trojan-activity; sid:2006441; rev:6;)
+
+#from sandnet data
+#
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET VIRUS Zlob User Agent - updating (unknown)"; flow:established,to_server; content:"User-Agent|3a| unknown"; http_header; content:!".real.com|0d 0a|"; http_header; content:!".rhapsody.com|0D 0A|"; http_header; reference:url,doc.emergingthreats.net/2007567; classtype:trojan-activity; sid:2007567; rev:9;)
+
+#By Darren Spruell and dxp
+#
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET VIRUS Zlob User Agent - Likely Zlob (securityinternet)"; flow:established,to_server; content:"|0d 0a|User-Agent|3a| securityinternet"; reference:url,www.bitdefender.com/VIRUS-1000328-en--Trojan.Pws.Wow.NCY.html; reference:url,doc.emergingthreats.net/2009022; classtype:trojan-activity; sid:2009022; rev:5;)
+
+#Rbot trojan
+#by M Shirk
+#
+#alert http $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (msg:"ET VIRUS HTTP RBOT Challenge/Response Authentication"; flow: to_server,established; content:"Host|3A 20|"; nocase; content:"|3A 20|Negotiate|20|YIIQegYGKwYBBQUCoIIQbjCCEGqhghBmI4IQYgOCBAEAQUFBQUFBQUFBQUFBQUFB"; nocase; reference:url,isc.sans.org/diary.php?date=2005-06-03; reference:url,www.phreedom.org/solar/exploits/msasn1-bitstring; reference:url,doc.emergingthreats.net/2001985; classtype:trojan-activity; sid:2001985; rev:8;)
+
+#
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET VIRUS VirTool.Win32/VBInject.gen!DM Checkin"; flow:established,to_server; content:"/iLog.php?dl="; http_uri; content:"&log="; http_uri; content:"User-Agent|3a| IE7.0"; http_header; reference:url,microsoft.com/security/portal/Threat/Encyclopedia/Entry.aspx?Name=VirTool%3aWin32/VBInject.gen!DM; classtype:trojan-activity; sid:2013534; rev:5;)
+
+#
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET VIRUS Malicious file BaiduPlayer1.0.21.25.exe download"; flow:established,to_server; content:"GET"; http_method; content:"/BaiduPlayer/BaiduPlayer1.0.21.25.exe"; nocase; http_uri; content:"dl.client.baidu.com"; http_header; nocase; classtype:trojan-activity; sid:2014181; rev:3;)
+
