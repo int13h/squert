@@ -136,8 +136,8 @@ function ed() {
     $comp = mysql_real_escape_string($_REQUEST['object']);
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
     list($type,$ln,$sid,$src_ip,$dst_ip) = explode(",", $comp);
-    $src_ip = ip2long($src_ip);
-    $dst_ip = ip2long($dst_ip);
+    $src_ip = sprintf("%u", ip2long($src_ip));
+    $dst_ip = sprintf("%u", ip2long($dst_ip));
 
     $query = "SELECT status, timestamp, INET_NTOA(src_ip) AS src_ip,
               src_port, INET_NTOA(dst_ip) AS dst_ip, dst_port, sid, cid, ip_proto
@@ -147,7 +147,6 @@ function ed() {
               ORDER BY timestamp DESC";
 
     $result = mysql_query($query);
-
     $rows = array();
 
     while ($row = mysql_fetch_assoc($result)) {
