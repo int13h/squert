@@ -4,7 +4,7 @@ exec tclsh "$0" "$@"
 
 #
 #
-#      Copyright (C) 2010 Paul Halliday <paul.halliday@gmail.com>
+#      Copyright (C) 2012 Paul Halliday <paul.halliday@gmail.com>
 #
 #      This program is free software: you can redistribute it and/or modify
 #      it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ exec tclsh "$0" "$@"
 #
 
 ### Config and Country file
-set configFile "../../.inc/config.php"
-set countryFile "../../.inc/countries.php"
+set configFile "../.inc/config.php"
+set countryFile "../.inc/countries.php"
 
 ### The RIR's
 set site1 "AFRINIC ftp://ftp.afrinic.net/pub/stats/afrinic/ delegated-afrinic-latest"
