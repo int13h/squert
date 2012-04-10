@@ -190,7 +190,7 @@ foreach ($sensorList as $key => $sid) {
     }
 
     $stampLine = lastTime($stamp);
-    echo "<tr class=d_row id=\"nn-$netName-hn-$hostName-at-$agent\"><td class=row>$netName</td>
+    echo "<tr class=d_row><td class=row>$netName</td>
           \r<td class=row>$hostName</td>
           \r<td class=row>$agent</td>
           \r$stampLine
@@ -240,6 +240,10 @@ foreach ($statusList as $key => $status) {
         $stamp = "-";
     }
     $stampLine = lastTime($stamp);
+
+    if (strlen($key) < 2) {
+        $key = 0 . $key;
+    }
 
     echo "<tr class=d_row id=\"cat-$key\">
           \r<td class=row style=\"background: $class_colour; text-align: center\">$shortDesc</td>

@@ -58,7 +58,20 @@ while ($row = mysql_fetch_row($signatures)) {
     $stampLine = lastTime($stamp);
     $ipp = getProto($row[7]);
 
-    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$row[8]\">
+    // Pad sids for filtering
+    $psids = explode(",", $row[8]);
+    $sidList = '';
+ 
+    foreach ($psids as $psid) {
+        if (strlen($psid) < 2) {
+            $psid = 0 . $psid;
+        }
+        $sidList .= $psid . " ";
+    }
+
+    $sidList = rtrim($sidList);
+
+    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\">
           \r<td class=row>$row[1]</td>
           \r<td class=row>$row[2]</td>
           \r<td class=row>$ipp</td>
