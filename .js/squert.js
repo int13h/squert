@@ -21,10 +21,16 @@ $(document).ready(function(){
     //
 
     $('tr[id^=cat-]').click(function(){
-            $('html, body').animate({ scrollTop: 0 }, 'slow');
-            rowValue = this.id.replace("cat-","");
+        $('#t_sig_content').hide();
+        $('#t_sig_content').slideDown('slow');
+        rowValue = this.id.replace("cat-","");
+        if (rowValue == '-1') {
+            $('.d_row').show();
+        } else { 
             $('tr[id^=sid-]').hide();
             $("[data-class*='" + rowValue + "']").show();
+        }
+        var activeClass = rowValue;
     });
 
     //
@@ -64,7 +70,6 @@ $(document).ready(function(){
         }
 
         lastCount = eventCount;
-
     }, emTimeout);
 
     //   
