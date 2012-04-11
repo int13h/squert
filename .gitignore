@@ -1,4 +1,4 @@
-.scripts/Ip2c/*.md5
+.scripts/*.md5
 .inc/config.php
 .scripts/quickscript.tcl
 images
