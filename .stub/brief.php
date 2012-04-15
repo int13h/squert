@@ -223,8 +223,6 @@ foreach ($statusList as $key => $status) {
 
     $rC++;
 
-    if ($key == 42) {continue;}
-
     list($longDesc,$class_colour,$shortDesc) = explode('||', $status);
 
     if (isset($presentCats[$key])) {
@@ -235,17 +233,27 @@ foreach ($statusList as $key => $status) {
         } else {
            $per = 0;
         }
+
     } else {
         $sig = $src = $dst = $numEvents = $per = 0;
         $stamp = "-";
     }
+
+    if ($key == -1) {
+        $numEvents  = $sumEvents;
+        $sig        = $sigCount;
+        $src        = $srcCount[0];
+        $dst        = $dstCount[0];
+        $per        = '100%';
+    }
+
     $stampLine = lastTime($stamp);
 
     if (strlen($key) < 2) {
         $key = 0 . $key;
     }
 
-    echo "<tr class=d_row id=\"cat-$key\">
+    echo "<tr class=d_row id=\"cat-$key\" data-c_ec=\"$numEvents\">
           \r<td class=row style=\"background: $class_colour; text-align: center\">$shortDesc</td>
           \r<td class=row>$longDesc</td>
           \r$stampLine

@@ -90,6 +90,7 @@ dbC();
 </div>
 
 <input id=timestamp type=hidden value="<?php echo strtohex($when[0]);?>" />
+<input id=eventclass type=hidden value="-1" />
 </body>
 </html>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>

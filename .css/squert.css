@@ -119,6 +119,11 @@ tr.d_row {
     background-color: #fafafa;
 }
 
+tr.d_row_highlight {
+    background-color: #F9FAE8;
+    padding: 20px;
+}
+
 tr.d_row_active {
     background-color: #CCC9C6;
     font-weight: bold;
@@ -504,7 +509,7 @@ div.b_detail, div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy {
     
 }
 
-div.b_detail:hover, div.b_tx, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover {
+div.b_detail:hover, div.b_tx:hover, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
@@ -515,21 +520,22 @@ div.b_detail {
 }
 
 div.b_tx {
-    background-color: #c9c9c9;
-    color: #000000;
+    background-color: #000000;
+    color: #e9e9e9;
 }
 
 div.b_hist {
-    background-color: #444444;
-    color: #ffffff;
+    background-color: #f4f4f4;
+    color: #000000;
 }
 
 div.b_notes {
-    background-color: yellow;
+    background-color: lightyellow;
 }
 
 div.b_tag {
-    background-color: orange;
+    background-color: #AE91BF;
+    color: #000000;
 }
 
 div.b_clsfy {

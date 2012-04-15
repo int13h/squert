@@ -21,16 +21,24 @@ $(document).ready(function(){
     //
 
     $('tr[id^=cat-]').click(function(){
-        $('#t_sig_content').hide();
-        $('#t_sig_content').slideDown('slow');
-        rowValue = this.id.replace("cat-","");
-        if (rowValue == '-1') {
-            $('.d_row').show();
-        } else { 
-            $('tr[id^=sid-]').hide();
-            $("[data-class*='" + rowValue + "']").show();
+ 
+        ec = $(this).data("c_ec");
+
+        if (ec !=0) {
+            rowValue = this.id.replace("cat-","");
+            $('#eventclass').val(rowValue);
+            $('tr[id^=cat-]').attr('class', 'd_row');
+            $('#' + this.id).attr('class', 'd_row_highlight');
+            $('#t_sig_content').hide();
+            $('#t_sig_content').slideDown('slow');
+
+            if (rowValue == '-1') {
+                $('.d_row').show();
+            } else { 
+                $('tr[id^=sid-]').hide();
+                $("[data-class*='" + rowValue + "']").show();
+            }
         }
-        var activeClass = rowValue;
     });
 
     //
@@ -206,6 +214,7 @@ $(document).ready(function(){
 
     $(".d_row").click(function(event) {  
 
+        //alert($('#eventclass').val());
         // are we active?
         curClass = $(this).attr('class');
         var curID = this;
