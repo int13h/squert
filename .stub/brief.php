@@ -218,6 +218,7 @@ echo "<h3 id=category> Event Distribution by Category</h3>
       \r<th class=sort width=80>% of Total</th></tr></thead>\n";
 
 $rC = 0;
+$maxStamp = array();
 
 foreach ($statusList as $key => $status) {
 
@@ -228,6 +229,7 @@ foreach ($statusList as $key => $status) {
     if (isset($presentCats[$key])) {
         list($numEvents,$stamp,$sig,$src,$dst) = explode('||', $presentCats[$key]);
         $stamp = formatStamp($stamp,0);
+        $maxStamp[] = $stamp;
         if ($numEvents > 0) {
             $per = round($numEvents / $sumEvents * 100,2) . "%";
         } else {
@@ -239,15 +241,16 @@ foreach ($statusList as $key => $status) {
         $stamp = "-";
     }
 
+    $stampLine = lastTime($stamp);
+
     if ($key == -1) {
+        $stampLine  = lastTime(max($maxStamp));
         $numEvents  = $sumEvents;
         $sig        = $sigCount;
         $src        = $srcCount[0];
         $dst        = $dstCount[0];
         $per        = '100%';
     }
-
-    $stampLine = lastTime($stamp);
 
     if (strlen($key) < 2) {
         $key = 0 . $key;
