@@ -22,21 +22,27 @@ $(document).ready(function(){
 
     $('tr[id^=cat-]').click(function(){
  
+        // Close any open rows
+        closeRow();
+
         ec = $(this).data("c_ec");
 
         if (ec !=0) {
             rowValue = this.id.replace("cat-","");
             $('#eventclass').val(rowValue);
-            $('tr[id^=cat-]').attr('class', 'd_row');
-            $('#' + this.id).attr('class', 'd_row_highlight');
+            $('tr[id^=cat-]').attr('class', 'a_row');
+            $('#' + this.id).attr('class', 'a_row_highlight');
             $('#t_sig_content').hide();
             $('#t_sig_content').slideDown('slow');
 
             if (rowValue == '-1') {
-                $('.d_row').show();
+                $('tr[id^=sid-]').attr('class', 'd_row');
+                $('.d_row').fadeIn('slow');
             } else { 
                 $('tr[id^=sid-]').hide();
-                $("[data-class*='" + rowValue + "']").show();
+                $('tr[id^=sid-]').attr('class', 'a_row');
+                $("[data-class*='" + rowValue + "']").fadeIn('slow');
+                $("[data-class*='" + rowValue + "']").attr('class', 'd_row');
             }
         }
     });
