@@ -115,13 +115,17 @@ td.rowr {
   font-size: 11px;
 }
 
-tr.d_row {
+tr.a_row {
     background-color: #fafafa;
 }
 
-tr.d_row_highlight {
-    background-color: #F9FAE8;
+tr.a_row_highlight {
+    background-color: lightblue;
     padding: 20px;
+}
+
+tr.d_row {
+    background-color: #fafafa;
 }
 
 tr.d_row_active {
@@ -183,7 +187,7 @@ tr.d_row_active:hover {
     text-decoration: none;
 }
 
-tr.d_row:hover {
+tr.d_row:hover, tr.a_row:hover {
     background-color: #f4f4f4;
     cursor: pointer;
 }
