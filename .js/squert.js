@@ -32,8 +32,6 @@ $(document).ready(function(){
             $('#eventclass').val(rowValue);
             $('tr[id^=cat-]').attr('class', 'a_row');
             $('#' + this.id).attr('class', 'a_row_highlight');
-            $('#t_sig_content').hide();
-            $('#t_sig_content').slideDown('slow');
 
             if (rowValue == '-1') {
                 $('tr[id^=sid-]').attr('class', 'd_row');
@@ -41,8 +39,8 @@ $(document).ready(function(){
             } else { 
                 $('tr[id^=sid-]').hide();
                 $('tr[id^=sid-]').attr('class', 'a_row');
-                $("[data-class*='" + rowValue + "']").fadeIn('slow');
                 $("[data-class*='" + rowValue + "']").attr('class', 'd_row');
+                $("[data-class*='" + rowValue + "']").fadeIn('slow');
             }
         }
     });
@@ -220,7 +218,6 @@ $(document).ready(function(){
 
     $(".d_row").click(function(event) {  
 
-        //alert($('#eventclass').val());
         // are we active?
         curClass = $(this).attr('class');
         var curID = this;
@@ -249,7 +246,7 @@ $(document).ready(function(){
                 sigfile = sigData.rulefile;
                 sigline = sigData.ruleline; 
 
-                signature = "<div id=ev_close class=close>X</div><div class=sigtxt>" + sigtxt + " <b>File:</b> " + sigfile + " <b>Line:</b> " + sigline + "</div>";
+                signature = "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div><div class=sigtxt>" + sigtxt + " <b>File:</b> " + sigfile + " <b>Line:</b> " + sigline + "</div>";
                 var tbl = '';
                 tbl += "<tr class=eview id=active_eview><td colspan=9><div id=eview class=eview>";
                 tbl += signature;
@@ -344,7 +341,6 @@ $(document).ready(function(){
                   row += "<div class=b_hist title='Event History'>H</div>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
-                  row += "<div class=b_clsfy title='Classify'>C</div>";
                   row += "</td></tr>";
               }
               tbl += "<div class=eview_sub id=eview_sub><table id=events width=100% class=sortable cellpadding=0 cellspacing=0>";
@@ -396,13 +392,11 @@ $(document).ready(function(){
                   row += "<td class=sub>" + theData[i].dst_port + "</td>";
                   row += "<td class=sub_act>";
                   row += "<div class=b_detail id=" + rid + " title='More Detail'>D</div>";
-                  row += "<div class=b_tx title='Transcript'>X</div>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
-                  row += "<div class=b_clsfy title='Classify'>C</div>";
                   row += "</td></tr>";
               }
-              tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub>X</div>";
+              tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
               tbl += "<div class=notes id=notes></div>";
               tbl += "<table align=center width=100% cellpadding=0 cellspacing=0>";
               tbl += head;
@@ -586,7 +580,7 @@ $(document).ready(function(){
               row += "<td class=sub><samp>" + p_ascii + "<samp></td>";
               row += "</td></tr></table>";
                     
-              tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=8><div id=ev_close_sub1 class=close_sub1>X</div>";
+              tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=8><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
               tbl += "<div class=notes_sub2 id=notes></div>";
               tbl += head;
               tbl += row;

@@ -42,11 +42,11 @@ dbC();
 <body>
 <div id=tab_group class=tab_group>
 <div id=t_sum class=tab_active>Main</div>
-<div id=t_sig class=tab>Signature</div>
-<div id=t_ip class=tab>IP</div>
+<!--<div id=t_sig class=tab>Signature</div>
+<div id=t_ip class=tab>IP</div-->
 <div id=t_map class=tab>Map</div>
-<div id=t_stats class=stats></div>
 <div id=t_usr class=user>Welcome <b><?php echo $sUser;?></b> | <span id=settings class=links>Settings</span> | <span id=logout class=links>Logout</span></div>
+<div id=t_search class=search>Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000>&nbsp;&nbsp;?</div>
 <?php echo $timeLinks;?>
 </div>
 <br>
