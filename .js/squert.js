@@ -46,6 +46,22 @@ $(document).ready(function(){
     });
 
     //
+    // Inline filter signatures based on search box
+    //
+    jQuery.expr[':'].Contains = function(a,i,m){
+        return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
+    };
+
+    $('#search').keyup(function(){
+        closeRow();
+        $('.d_row').hide();
+        searchString = $('#search').val();
+        $('tr[id^=sid-]').attr('class', 'a_row');
+        $("[data-signature]:Contains('" + searchString + "')").attr('class', 'd_row');
+        $("[data-signature]:Contains('" + searchString + "')").show();
+    });
+
+    //
     // Event monitor
     //
  

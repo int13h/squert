@@ -46,7 +46,9 @@ dbC();
 <div id=t_ip class=tab>IP</div-->
 <div id=t_map class=tab>Map</div>
 <div id=t_usr class=user>Welcome <b><?php echo $sUser;?></b> | <span id=settings class=links>Settings</span> | <span id=logout class=links>Logout</span></div>
-<div id=t_search class=search>Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000>&nbsp;&nbsp;?</div>
+<form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
+<div id=t_search class=search>Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000></div>
+</form>
 <?php echo $timeLinks;?>
 </div>
 <br>
