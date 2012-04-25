@@ -7,16 +7,6 @@ Home: [http://www.squertproject.org](http://www.squertproject.org)
 
 SQueRT is a tool that is used to query event data.
 
-
-## Demo
-
-URL: [https://94.23.230.171:9123/squert](https://94.23.230.171:9123/squert)
-
-User: demo
-
-Pass: squert
-
-
 ## Requirements
 
 * PHP5 with CLI
