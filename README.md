@@ -38,7 +38,7 @@ SQueRT is a tool that is used to query event data.
 
 4) Create additional tables:
 
-`cat squert/.scripts/db/squert.sql | mysql -uroot -p -U sguildb`
+`cat squert/.scripts/squert.sql | mysql -uroot -p -U sguildb`
 
 5) Create a mysql user account with readonly access to sguildb (what you set in step 2):
 
@@ -54,7 +54,7 @@ SQueRT is a tool that is used to query event data.
 
 8) Now populate the ip2c table:
 
-`squert/.scripts/Ip2c/ip2c.tcl`
+`squert/.scripts/ip2c.tcl`
 
 9) Create a scheduled task to keep the mappings tables up to date:
 
@@ -69,21 +69,14 @@ If you want to map everything in your DB you can do this:
 It maps about 10 addresses/second. This is not a requirement. If you are doing queries in the past and want country
 info you can just perform the mappings through the web interface as needed.
 
-10) We need to modify sguils user_info table. If you are running sguil version 0.7, do this:
+10) We need to modify sguils user_info table. 
 
-`cat squert/.scripts/db/v0.7.sql | mysql -uroot -p -U sguildb`
+`cat squert/.scripts/v0.8.sql | mysql -uroot -p -U sguildb`
 
-This will create a user 'squert' with the password 'squert'. If you want to use an existing user, take a look in
-sguild.users and swap the user information with what you see in there. 
-
-If you are running 0.8, do this:
-
-`cat squert/.scripts/db/v0.8.sql | mysql -uroot -p -U sguildb`
-
-This will just add the extra columns. Your existing users can now login.
+Your existing users can now login.
 
 11) The images directory needs to be writable by the owner of the web process:
 
 `sudo chmod 777 images`
 
-That's it. Point your browser to http(s)://yourhost/squert/p-login.php
+That's it. Point your browser to http(s)://yourhost/squert
