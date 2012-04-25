@@ -2,9 +2,6 @@
 
 // -- SQueRT Settings
 
-// Slimit
-$sLimit = 50;
-
 // DB Info.
 $dbHost = '10.13.1.226';
 $dbName = 'sguildb';
@@ -13,13 +10,6 @@ $dbPass = 'readonly';
 
 // Where are the rules? If you have multiple dirs, separate each with: ||
 $rulePath = "../.rules";
-
-// Where is dot installed?
-$dotPath = "/usr/bin/dot";
-
-// Where do you want to land after you log in?
-// sum, sig, ip, query
-$startPage = 'sum';
 
 // DNS server to query
 $dns = "8.8.8.8";
@@ -51,9 +41,6 @@ $statusList = array(
 //$debug = 'yes';
 $debug = 'no';
 
-// You should never have to load all of these. Use a filter!
-$recLimit = '5000';
-
 // Map foreground, background and line Colours
 $mapFGC = '#ffffff';
 $mapBGC = '#bbccdd';
@@ -67,24 +54,4 @@ $mapEC = '#000000';
 // Severity Start and end colours
 $startHex =     'ffffff'; //Examples: 60BB22  FFDE00 D5E1DD
 $endHex =       '000000'; //Examples: CC0000  CC0000 22335A
-
-// ---- EDV Settings
-
-// Graphviz arguments. nColor=white
-$dotArgs = "-Goutputorder=edgesfirst -Gpad=1 -Gsplines=true";
-
-// Afterglow
-$glowPath = realpath('../.glow/afterglow.pl');
-$glowArgs = " -p0 -a";
-
-// Results Limit. 
-//$LIMIT = 'LIMIT 1000';
-$LIMIT = ''; // No limit.
-
-// Image scaling defaults.
-$width = 900;
-$height = 800;
-
-// Debug. This will output the dot files and afterglows output to .debug
-$glowDebug = "no";
 ?>
