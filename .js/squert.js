@@ -46,8 +46,9 @@ $(document).ready(function(){
     });
 
     //
-    // Inline filter signatures based on search box
+    // Simple signature show/hide via the search input box
     //
+
     jQuery.expr[':'].Contains = function(a,i,m){
         return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
     };
@@ -271,6 +272,7 @@ $(document).ready(function(){
                 // Fade other results and show this
                 $(curID).attr('class','d_row_active');
                 $(curID).find('td').css('background', '#CFE3A6');
+                $(curID).find('td').css('color', '#000000');
                 $(curID).after(tbl);
                 eventList("2-" + rowValue);
                 $("#eview").show();
