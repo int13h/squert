@@ -125,7 +125,7 @@ td.totals {
   color: #545454;
   padding: 3px 5px 3px 5px;
   font-size: 13px;
-  cursor: pointer;
+  cursor: default;
 }
 
 tr.a_row {

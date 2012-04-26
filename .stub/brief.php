@@ -168,7 +168,7 @@ echo "<h3 id=sensor> Event Distribution by Sensor</h3>
       \r<th class=sort width=80>Count</th>
       \r<th class=sort width=80>% of Total</th></tr></thead>\n";
 
-$rC = 0;
+$rC = $sumPer = 0;
 
 foreach ($sensorList as $key => $sid) {
 
@@ -181,6 +181,7 @@ foreach ($sensorList as $key => $sid) {
         $stamp = formatStamp($stamp,0);
         if ($numEvents > 0) {
             $per = round($numEvents / $sumEvents * 100,2) . "%";
+            $sumPer += $numEvents / $sumEvents * 100;
         } else {
             $per = 0;
         }
@@ -200,6 +201,16 @@ foreach ($sensorList as $key => $sid) {
           \r<td class=rowr><b>$numEvents</b></td>
           \r<td class=rowr><b>$per</b></td></tr>\n";
 }
+
+$sumPer = abs($sumPer);
+
+echo "<tfoot><tr class=a_row>
+          \r<td class=totals colspan=5>Totals:</td>
+          \r<td class=totals>$sigCount</td>
+          \r<td class=totals>$srcCount[0]</td>
+          \r<td class=totals>$dstCount[0]</td>
+          \r<td class=totals>$sumEvents</td>
+          \r<td class=totals>$sumPer%</td></tr></tfoot>\n";
 
 echo "</table><br><br>";
 
@@ -258,6 +269,8 @@ foreach ($statusList as $key => $status) {
           \r<td class=rowr><b>$numEvents</b></td>
           \r<td class=rowr><b>$per</b></td></tr>\n";
 }
+
+$sumPer = abs($sumPer);
 
 echo "<tfoot><tr class=a_row>
           \r<td class=totals colspan=4>Totals:</td>
