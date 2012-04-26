@@ -29,18 +29,21 @@ $(document).ready(function(){
 
         if (ec !=0) {
             rowValue = this.id.replace("cat-","");
-            $('#eventclass').val(rowValue);
-            $('tr[id^=cat-]').attr('class', 'a_row');
-            $('#' + this.id).attr('class', 'a_row_highlight');
+            oldValue = $('#eventclass').val();
 
-            if (rowValue == '-1') {
+            if (rowValue == oldValue) {
+                $('tr[id^=cat-]').attr('class', 'd_row');
                 $('tr[id^=sid-]').attr('class', 'd_row');
-                $('.d_row').fadeIn('slow');
-            } else { 
+                $('.d_row').show();
+                $('#eventclass').val('-1');
+            } else {
+                $('#eventclass').val(rowValue);
+                $('tr[id^=cat-]').attr('class', 'a_row');
+                $('#' + this.id).attr('class', 'a_row_highlight');
                 $('tr[id^=sid-]').hide();
                 $('tr[id^=sid-]').attr('class', 'a_row');
                 $("[data-class*='" + rowValue + "']").attr('class', 'd_row');
-                $("[data-class*='" + rowValue + "']").fadeIn('slow');
+                $("[data-class*='" + rowValue + "']").show();
             }
         }
     });
@@ -49,6 +52,7 @@ $(document).ready(function(){
     // Simple signature show/hide via the search input box
     //
 
+    // Case insensitive contains
     jQuery.expr[':'].Contains = function(a,i,m){
         return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
     };
