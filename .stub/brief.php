@@ -217,7 +217,7 @@ echo "<h3 id=category> Event Distribution by Category</h3>
       \r<th class=sort width=80>Count</th>
       \r<th class=sort width=80>% of Total</th></tr></thead>\n";
 
-$rC = 0;
+$rC = $sumPer = 0;
 $maxStamp = array();
 
 foreach ($statusList as $key => $status) {
@@ -232,6 +232,7 @@ foreach ($statusList as $key => $status) {
         $maxStamp[] = $stamp;
         if ($numEvents > 0) {
             $per = round($numEvents / $sumEvents * 100,2) . "%";
+            $sumPer += $numEvents / $sumEvents * 100; 
         } else {
            $per = 0;
         }
@@ -242,15 +243,6 @@ foreach ($statusList as $key => $status) {
     }
 
     $stampLine = lastTime($stamp);
-
-    if ($key == -1) {
-        $stampLine  = lastTime(max($maxStamp));
-        $numEvents  = $sumEvents;
-        $sig        = $sigCount;
-        $src        = $srcCount[0];
-        $dst        = $dstCount[0];
-        $per        = '100%';
-    }
 
     if (strlen($key) < 2) {
         $key = 0 . $key;
@@ -265,8 +257,15 @@ foreach ($statusList as $key => $status) {
           \r<td class=rowr>$dst</td>
           \r<td class=rowr><b>$numEvents</b></td>
           \r<td class=rowr><b>$per</b></td></tr>\n";
- 
 }
+
+echo "<tfoot><tr class=a_row>
+          \r<td class=totals colspan=4>Totals:</td>
+          \r<td class=totals>$sigCount</td>
+          \r<td class=totals>$srcCount[0]</td>
+          \r<td class=totals>$dstCount[0]</td>
+          \r<td class=totals>$sumEvents</td>
+          \r<td class=totals>$sumPer%</td></tr></tfoot>\n";
 
 echo "</table>";
 

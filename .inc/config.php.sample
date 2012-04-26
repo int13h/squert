@@ -30,7 +30,6 @@ $statusList = array(
                     17 => "Malware||#CC66FF||C7",
                      2 => "Escalated Event||pink||ES",
                      1 => "Expired Event||lightblue||NA",
-                  '-1' => "All Events||#e9e9e9||*",
 );
 
 //
