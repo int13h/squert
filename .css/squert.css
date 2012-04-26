@@ -622,5 +622,17 @@ div.b_close:hover {
   font-weight: bold;
 }
 
+span.clear {
+  font-weight: bold;
+  font-family: verdana;
+  font-size: 14px;
+  text-decoration: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+span.clear:hover {
+  color: #e9e9e9;
+}
 
 

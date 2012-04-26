@@ -47,7 +47,12 @@ dbC();
 <div id=t_map class=tab>Map</div>
 <div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=settings class=links>Settings</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=logout class=links>Logout</span></div>
 <form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
-<div id=t_search class=search><span id=settings class=links>Saved</span>&nbsp;&nbsp;|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000></div>
+<div id=t_search class=search>
+<span id=settings class=links>Saved</span>
+&nbsp;&nbsp;|&nbsp;&nbsp;Search:&nbsp;
+<input class=search id=search type=text size=50 maxlength=1000>
+<span id=clear_search class=clear>&#x21BA;</span>
+</div>
 </form>
 <?php echo $timeLinks;?>
 </div>

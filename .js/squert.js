@@ -62,9 +62,19 @@ $(document).ready(function(){
         $('.d_row').hide();
         searchString = $('#search').val();
         $('tr[id^=sid-]').attr('class', 'a_row');
-        $("[data-signature]:Contains('" + searchString + "')").attr('class', 'd_row');
-        $("[data-signature]:Contains('" + searchString + "')").show();
+        $("'tr[id^=sid-]':Contains('" + searchString + "')").attr('class', 'd_row');
+        $("'tr[id^=sid-]':Contains('" + searchString + "')").show();
     });
+
+    // I don't love this, need to fix
+    $('#clear_search').click(function() {
+        if ($('#search').val() != '') {
+            $('#search').val('');
+            $('tr[id^=sid-]').attr('class','d_row');
+            $('tr[id^=sid-]').show();
+        }
+    });
+
 
     //
     // Event monitor

@@ -71,7 +71,7 @@ while ($row = mysql_fetch_row($signatures)) {
 
     $sidList = rtrim($sidList);
 
-    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\" data-signature=\"$row[1]\">
+    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\">
           \r<td class=row>$row[1]</td>
           \r<td class=row>$row[2]</td>
           \r<td class=row>$ipp</td>
