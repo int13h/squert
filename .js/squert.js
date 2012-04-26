@@ -32,7 +32,7 @@ $(document).ready(function(){
             oldValue = $('#eventclass').val();
 
             if (rowValue == oldValue) {
-                $('tr[id^=cat-]').attr('class', 'd_row');
+                $('tr[id^=cat-]').attr('class', 'a_row');
                 $('tr[id^=sid-]').attr('class', 'd_row');
                 $('.d_row').show();
                 $('#eventclass').val('-1');
