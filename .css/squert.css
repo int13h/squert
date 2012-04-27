@@ -134,6 +134,7 @@ tr.a_row {
 
 tr.a_row_highlight {
     background-color: #D3D9E0;
+    cursor: pointer;
 }
 
 tr.d_row {
@@ -267,6 +268,7 @@ div.sigtxt {
     background-color: #fafafa;
     font-weight: normal;
     font-size: 10pt;
+    word-wrap: break-word;
 }
 
 div.notes {

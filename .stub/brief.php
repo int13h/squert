@@ -202,7 +202,7 @@ foreach ($sensorList as $key => $sid) {
           \r<td class=rowr><b>$per</b></td></tr>\n";
 }
 
-$sumPer = abs($sumPer);
+$sumPer = round($sumPer,0);
 
 echo "<tfoot><tr class=a_row>
           \r<td class=totals colspan=5>Totals:</td>
@@ -270,7 +270,7 @@ foreach ($statusList as $key => $status) {
           \r<td class=rowr><b>$per</b></td></tr>\n";
 }
 
-$sumPer = abs($sumPer);
+$sumPer = round($sumPer,0);
 
 echo "<tfoot><tr class=a_row>
           \r<td class=totals colspan=4>Totals:</td>
