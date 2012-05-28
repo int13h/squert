@@ -3,7 +3,7 @@
 // -- SQueRT Settings
 
 // DB Info.
-$dbHost = '10.13.1.226';
+$dbHost = '127.0.0.1';
 $dbName = 'sguildb';
 $dbUser = 'readonly';
 $dbPass = 'readonly';
@@ -15,8 +15,8 @@ $rulePath = "../.rules";
 $dns = "8.8.8.8";
 
 // Timezone offset. If you want UTC use the second option.
-$offset = date("Z");    // Option #1: Local Time
-//$offset = 0;          // Option #2: UTC
+$offset = date("P");    // Option #1: Local Time
+//$offset = "+00:00";   // Option #2: UTC
 
 // This is for the status drop-down box. Don't touch the indexes. You can change the naming though.
 $statusList = array(
@@ -29,16 +29,11 @@ $statusList = array(
                     16 => "Reconnaissance||#FFCC00||C6",
                     17 => "Malware||#CC66FF||C7",
                      2 => "Escalated Event||pink||ES",
-                     1 => "Expired Event||lightblue||NA",
-);
+                     1 => "Expired Event||lightblue||NA");
 
 //
 // You shouldnt need to change anything below this line. (you can though)
 //
-
-// Show query text
-//$debug = 'yes';
-$debug = 'no';
 
 // Map foreground, background and line Colours
 $mapFGC = '#ffffff';
@@ -53,4 +48,24 @@ $mapEC = '#000000';
 // Severity Start and end colours
 $startHex =     'ffffff'; //Examples: 60BB22  FFDE00 D5E1DD
 $endHex =       '000000'; //Examples: CC0000  CC0000 22335A
+
+// ---- EDV Settings
+
+// Graphviz arguments. nColor=white
+$dotArgs = "-Goutputorder=edgesfirst -Gpad=1 -Gsplines=true";
+
+// Afterglow
+$glowPath = realpath('../.glow/afterglow.pl');
+$glowArgs = " -p0 -a";
+
+// Results Limit. 
+//$LIMIT = 'LIMIT 1000';
+$LIMIT = ''; // No limit.
+
+// Image scaling defaults.
+$width = 900;
+$height = 800;
+
+// Debug. This will output the dot files and afterglows output to .debug
+$glowDebug = "no";
 ?>

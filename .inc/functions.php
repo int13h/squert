@@ -46,32 +46,6 @@ function retSD($x) {
     return $answer;
 }
 
-function cCheck() {
-    if (file_exists('.inc/config.php')) {
-        global $dbHost,$dbName,$dbUser,$dbPass;
-        $link = mysql_connect($dbHost,$dbUser,$dbPass);
-
-        if (!$link) {
-            die('Connection failed: ' . mysql_error());
-        }
-
-        $db = mysql_select_db($dbName,$link);
-    
-        if (!$db) {
-            die('Database selection failed: ' . mysql_error());
-        }
-
-        mysql_close($link);
-    } else {
-        echo "<center>
-              <b>Configuration file not found</b><br>
-              Edit 'config.php.sample' to taste and then rename it to 'config.php'
-              </center>";
-        die();
-    }
-
-}
-
 function dbC() {
     if (file_exists('.inc/config.php')) {
         global $dbHost,$dbName,$dbUser,$dbPass;
@@ -100,32 +74,18 @@ function dbC() {
 // Query date and time
 function fixTime($sDate, $sTime, $eDate, $eTime) {
     global $offset;
-    $_start = strtotime("$sDate $sTime");
-    $_end = strtotime("$eDate $eTime");
-    if ($offset[0] == "-") {
-        $start = $_start - $offset;
-        $end = $_end - $offset;
-    } else {
-        $start = $_start + $offset;
-        $end = $_end + $offset;
-    }
-
+    $start = strtotime("$sDate $sTime");
+    $end = strtotime("$eDate $eTime");
     $startDate = date("Y-m-d H:i:s", $start);
     $endDate = date("Y-m-d H:i:s", $end);
-    $when = "timestamp BETWEEN '$startDate' AND '$endDate'";
+    $when = "timestamp BETWEEN CONVERT_TZ('$startDate','$offset','+00:00') AND CONVERT_TZ('$endDate','$offset','+00:00')";
 
-    // Report Date
-    $rstart = date("l M j, Y H:i:s", strtotime("$sDate $sTime"));
-    $rend = date("l M j, Y H:i:s", strtotime("$eDate $eTime"));
-    $dispDate = "Between $rstart and $rend";
-    $dDay = round(($_end - $_start) / 86400,2);
-    $dHour = round(($_end - $_start) / 3600,2);
-    return array($when,$dispDate,$dDay,$dHour,$startDate);
+    return $when;
 }
 
-// If not GMT, adjust timestamps
+// Format timestamps
 function formatStamp($dateTime,$type) {
-    global $offset;
+
     switch ($type) {
         case 0: $format = 'y-m-d H:i:s'; break;
         case 1: $format = 'd H:i'; break;
@@ -134,11 +94,7 @@ function formatStamp($dateTime,$type) {
         case 4: $format = 'H:i:s'; break;
     }
 
-    if ($offset === 0) {
-       return date($format,strtotime($dateTime));
-    } else {
-       return date($format,strtotime($dateTime . "$offset seconds"));
-    }
+    return date($format,strtotime($dateTime));
 }
 
 // This builds a select box

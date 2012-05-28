@@ -21,10 +21,11 @@
 
 $stub = "Event Signatures";
 
-$query = "SELECT COUNT(signature) AS c1, signature, signature_id, signature_gen, MAX(timestamp) as t, 
-          COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip)), ip_proto, GROUP_CONCAT(DISTINCT(status))
+$query = "SELECT COUNT(signature) AS c1, signature, signature_id, signature_gen, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) as t, 
+          COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip)), ip_proto, 
+          GROUP_CONCAT(DISTINCT(status)), GROUP_CONCAT(DISTINCT(sid))
           FROM event
-          WHERE $when[0]
+          WHERE $when
           $loFilter
           GROUP BY signature
           ORDER BY t DESC";
@@ -69,9 +70,21 @@ while ($row = mysql_fetch_row($signatures)) {
         $sidList .= $psid . " ";
     }
 
+    // Pad sensor ID's for filtering
+    $psensors = explode(",", $row[9]);
+    $sensorList = '';
+
+    foreach ($psensors as $psensor) {
+        if (strlen($psensor) < 2) {
+            $psensor = 0 . $psensor;
+        }
+        $sensorList .= $psensor . " ";
+    }
+
+
     $sidList = rtrim($sidList);
 
-    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\">
+    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\" data-sid=\"$sensorList\">
           \r<td class=row>$row[1]</td>
           \r<td class=row>$row[2]</td>
           \r<td class=row>$ipp</td>

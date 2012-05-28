@@ -41,9 +41,8 @@ dbC();
 </head>
 <body>
 <div id=tab_group class=tab_group>
-<div id=t_sum class=tab_active>Main</div>
-<!--<div id=t_sig class=tab>Signature</div>
-<div id=t_ip class=tab>IP</div-->
+<div id=t_dash class=tab>Dashboard</div>
+<div id=t_sum class=tab_active>Events</div>
 <div id=t_map class=tab>Map</div>
 <div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=settings class=links>Watchlist</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=settings class=links>Settings</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=logout class=links>Logout</span></div>
 <form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
@@ -92,8 +91,9 @@ dbC();
 <div id=b_top class=b_top>top</div>
 </div>
 
-<input id=timestamp type=hidden value="<?php echo strtohex($when[0]);?>" />
-<input id=eventclass type=hidden value="-1" />
+<input id=timestamp type=hidden value="<?php echo strtohex($when);?>" />
+<input id=sel_class type=hidden value="-1" />
+<input id=sel_sensor type=hidden value="-1" />
 </body>
 </html>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>

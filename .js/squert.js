@@ -17,35 +17,43 @@ $(document).ready(function(){
     };
 
     //
-    // Filter by Class
+    // Row filtering
     //
 
-    $('tr[id^=cat-]').click(function(){
- 
-        // Close any open rows
-        closeRow();
-
-        ec = $(this).data("c_ec");
+    function filterRows(caller,type,ec) {
 
         if (ec !=0) {
-            rowValue = this.id.replace("cat-","");
-            oldValue = $('#eventclass').val();
+            closeRow();
+            rowValue = caller.replace(type,"");
+            oldValue = $('#sel_class').val();
 
             if (rowValue == oldValue) {
-                $('tr[id^=cat-]').attr('class', 'a_row');
+                $('tr[id^=' + type + ']').attr('class', 'a_row');
                 $('tr[id^=sid-]').attr('class', 'd_row');
                 $('.d_row').show();
-                $('#eventclass').val('-1');
+                $('#sel_class').val('-1');
             } else {
-                $('#eventclass').val(rowValue);
-                $('tr[id^=cat-]').attr('class', 'a_row');
-                $('#' + this.id).attr('class', 'a_row_highlight');
+                $('#sel_class').val(rowValue);
+                $('tr[id^=' + type + ']').attr('class', 'a_row');
+                $('#' + caller).attr('class', 'a_row_highlight');
                 $('tr[id^=sid-]').hide();
                 $('tr[id^=sid-]').attr('class', 'a_row');
                 $("[data-class*='" + rowValue + "']").attr('class', 'd_row');
                 $("[data-class*='" + rowValue + "']").show();
+                $("[data-sid*='" + rowValue + "']").attr('class', 'd_row');
+                $("[data-sid*='" + rowValue + "']").show();
             }
         }
+    };
+
+    $('tr[id^=cat-]').click(function(){
+        ec = $(this).data("c_ec");
+        filterRows(this.id,"cat-",ec);
+    });
+
+    $('tr[id^=sen-]').click(function(){
+        ec = $(this).data("c_ec");
+        filterRows(this.id,"sen-",ec);
     });
 
     //
@@ -277,7 +285,7 @@ $(document).ready(function(){
                 sigfile = sigData.rulefile;
                 sigline = sigData.ruleline; 
 
-                signature = "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div><div class=sigtxt>" + sigtxt + " <b>File:</b> " + sigfile + " <b>Line:</b> " + sigline + "</div>";
+                signature = "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div><div class=sigtxt>" + sigtxt + " <br><br><b>File:</b> " + sigfile + " <b>Line:</b> " + sigline + "</div>";
                 var tbl = '';
                 tbl += "<tr class=eview id=active_eview><td colspan=9><div id=eview class=eview>";
                 tbl += signature;

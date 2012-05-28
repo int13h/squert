@@ -26,7 +26,7 @@
 $ltCols = array("#cc0000","#FAB005","#F2E766","#D5E4F5","#c9c9c9");
 
 function lastTime($stamp) {
-    global $today, $startDate, $endDate, $ltCols;
+    global $today, $startDate, $endDate, $ltCols, $offset;
     $sSecs = strtotime($startDate);
     $eSecs = strtotime($endDate);
     $tSces = strtotime($today);
@@ -71,10 +71,10 @@ function lastTime($stamp) {
 }
 
 // Event Categories
-$category	=  mysql_query("SELECT COUNT(signature) as c1, status, MAX(timestamp), 
+$category	=  mysql_query("SELECT COUNT(signature) as c1, status, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')), 
                                 COUNT(DISTINCT(signature)), COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip))
                                 FROM event
-                                WHERE $when[0]
+                                WHERE $when
                                 $loFilter
                                 GROUP BY status");
 
@@ -82,22 +82,22 @@ $category	=  mysql_query("SELECT COUNT(signature) as c1, status, MAX(timestamp),
 
 $sources	=  mysql_query("SELECT COUNT(DISTINCT(src_ip)) 
                                 FROM event
-                                WHERE $when[0]
+                                WHERE $when
                                 $loFilter");
 
 // Distinct Destinations
 
 $destinations	=  mysql_query("SELECT COUNT(DISTINCT(dst_ip))
                                 FROM event
-                                WHERE $when[0]
+                                WHERE $when
                                 $loFilter");
 
 // Event Distribution (sensor)
 
-$sensor         = mysql_query("SELECT st.net_name, st.hostname, st.agent_type, st.sid, COUNT(signature) AS c1,MAX(timestamp),
+$sensor         = mysql_query("SELECT st.net_name, st.hostname, st.agent_type, st.sid, COUNT(signature) AS c1, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')),
                                COUNT(DISTINCT(signature)), COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip))
                                FROM event LEFT JOIN sensor AS st ON event.sid = st.sid
-                               WHERE $when[0]
+                               WHERE $when
                                AND signature NOT REGEXP '^URL'
                                GROUP BY event.sid");
 
@@ -111,7 +111,7 @@ $sensors        = mysql_query("SELECT net_name, hostname, agent_type, sid
 
 $signatures	= mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id
                                FROM event
-                               WHERE $when[0]
+                               WHERE $when
                                $loFilter
                                GROUP BY signature
                                ORDER BY c1 DESC");
@@ -190,8 +190,12 @@ foreach ($sensorList as $key => $sid) {
         $stamp = "-";
     }
 
+    if (strlen($key) < 2) {
+        $key = 0 . $key;
+    }
+
     $stampLine = lastTime($stamp);
-    echo "<tr class=a_row><td class=row>$netName</td>
+    echo "<tr class=a_row id=\"sen-$key\" data-c_ec=\"$numEvents\"><td class=row>$netName</td>
           \r<td class=row>$hostName</td>
           \r<td class=row>$agent</td>
           \r$stampLine

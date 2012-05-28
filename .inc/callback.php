@@ -104,11 +104,11 @@ function si() {
 
 function eg() {
 
-    global $dbTime;
+    global $offset;
     $sid = mysql_real_escape_string($_REQUEST['object']);
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
 
-    $query = "SELECT COUNT(signature) AS count, MAX(timestamp) AS maxTime, INET_NTOA(src_ip) AS src_ip, map1.c_long as src_cc,
+    $query = "SELECT COUNT(signature) AS count, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) AS maxTime, INET_NTOA(src_ip) AS src_ip, map1.c_long as src_cc,
               INET_NTOA(dst_ip) AS dst_ip, map2.c_long as dst_cc
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
@@ -132,14 +132,14 @@ function eg() {
 
 function ed() {
 
-    global $dbTime;
+    global $offset;
     $comp = mysql_real_escape_string($_REQUEST['object']);
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
     list($type,$ln,$sid,$src_ip,$dst_ip) = explode(",", $comp);
     $src_ip = sprintf("%u", ip2long($src_ip));
     $dst_ip = sprintf("%u", ip2long($dst_ip));
 
-    $query = "SELECT status, timestamp, INET_NTOA(src_ip) AS src_ip,
+    $query = "SELECT status, CONVERT_TZ(timestamp,'+00:00','$offset') AS timestamp, INET_NTOA(src_ip) AS src_ip,
               src_port, INET_NTOA(dst_ip) AS dst_ip, dst_port, sid, cid, ip_proto
               FROM event
               WHERE $when
@@ -159,11 +159,12 @@ function ed() {
 
 function pd() {
 
+    global $offset;
     $comp = mysql_real_escape_string($_REQUEST['object']);
     list($type,$ln,$sid,$cid) = explode(",", $comp);
 
     $query = "SELECT INET_NTOA(src_ip), INET_NTOA(dst_ip), ip_ver, ip_hlen, ip_tos, ip_len, ip_id,ip_flags,
-             ip_off, ip_ttl, ip_csum, src_port, dst_port, ip_proto, signature, signature_id, timestamp
+             ip_off, ip_ttl, ip_csum, src_port, dst_port, ip_proto, signature, signature_id, CONVERT_TZ(timestamp,'+00:00','$offset')
              FROM event
              WHERE sid='$sid' and cid='$cid'";
 

@@ -28,7 +28,7 @@ function math($stamp) {
 $c1 = '#545454';
 
 $query = "SELECT COUNT(signature) AS count, SUBSTRING(timestamp,12,5) AS time, sid FROM event 
-          WHERE $when[0]
+          WHERE $when
           GROUP BY sid,time 
           ORDER BY timestamp";
 
