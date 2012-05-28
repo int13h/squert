@@ -1,6 +1,7 @@
 # SQueRT - A Simple Query and Report Tool
 
 Home: [http://www.squertproject.org](http://www.squertproject.org)
+
 Demo: [https://demo.sguil.net](https://demo.sguil.net)
 * Login: sguil
 * Password: demo
