@@ -3,7 +3,7 @@
 // -- SQueRT Settings
 
 // DB Info.
-$dbHost = '127.0.0.1';
+$dbHost = '10.13.1.226';
 $dbName = 'sguildb';
 $dbUser = 'readonly';
 $dbPass = 'readonly';
@@ -36,14 +36,13 @@ $statusList = array(
 //
 
 // Map foreground, background and line Colours
-$mapFGC = '#ffffff';
-$mapBGC = '#bbccdd';
-$mapBGC = '#f4f4f4';
-$mapLNC = '#c4c4c4';
+$mapFGC = '#dddddd';
+$mapBGC = '#ffffff';
+$mapLNC = '#aaaaaa';
 
 // Map event start and end colours.
-$mapSC = '#cc0000';
-$mapEC = '#000000';
+$mapSC = '#c9c9c9';
+$mapEC = '#8a0000';
 
 // Severity Start and end colours
 $startHex =     'ffffff'; //Examples: 60BB22  FFDE00 D5E1DD

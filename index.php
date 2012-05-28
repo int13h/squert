@@ -23,6 +23,7 @@ include_once '.inc/session.php';
 include_once '.inc/config.php';
 include_once '.inc/functions.php';
 include_once '.inc/ribbon.php';
+include_once '.inc/map.php';
 
 $loFilter = "";
 dbC();
@@ -74,7 +75,7 @@ dbC();
 
 <div id=t_map_content class=content>
 <div class=wm>
-<canvas class=wm1 id=wm1 width=970 height=500>[No canvas support]></canvas>
+<?php include_once '.stub/map.php';?>
 </div>
 </div>
 

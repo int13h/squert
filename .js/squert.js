@@ -1,7 +1,5 @@
 $(document).ready(function(){
 
-    worldMap();
-
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
         "c12":[{"short": "C2", "long": "Unauthorized User Access"}],
@@ -637,26 +635,6 @@ $(document).ready(function(){
         }
 
     } 
-
-    //
-    // World Map
-    //
-    
-    function worldMap () {
-
-        WorldMap({ id: "wm1",
-            bgcolor: "#ffffff",
-            fgcolor: "#dddddd",
-            bordercolor: "#aaaaaa",
-            borderwidth: 1,
-            padding: 0,
-            detail: {
-                "us": "#cc0000",
-                "cn": "yellow"
-            }    
-        });
-
-    }
 
 // The End.
 });

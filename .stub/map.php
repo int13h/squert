@@ -23,7 +23,7 @@ $scc = "SELECT COUNT(src_ip) as count, map1.cc as src_cc, map1.c_long
           FROM event
           LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip   
           LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip   
-          WHERE $when[0]
+          WHERE $when
           AND signature NOT REGEXP '^URL'
           AND src_ip NOT BETWEEN 167772160 AND 184549375  
           AND src_ip NOT BETWEEN 2886729728 AND 2886795263
@@ -35,7 +35,7 @@ $dcc = "SELECT COUNT(dst_ip) as count, map2.cc as dst_cc, map2.c_long
           FROM event
           LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
           LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
-          WHERE $when[0]
+          WHERE $when
           AND signature NOT REGEXP '^URL'
           AND dst_ip NOT BETWEEN 167772160 AND 184549375
           AND dst_ip NOT BETWEEN 2886729728 AND 2886795263
@@ -43,7 +43,6 @@ $dcc = "SELECT COUNT(dst_ip) as count, map2.cc as dst_cc, map2.c_long
           AND map2.cc IS NOT Null
           GROUP BY map2.cc
           ORDER BY count DESC";
-
 
 $sccQuery = mysql_query($scc);
 $dccQuery = mysql_query($dcc);

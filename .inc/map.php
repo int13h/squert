@@ -88,42 +88,19 @@ function doWorld($sccQuery,$dccQuery) {
         $cSum = array_sum($c1);
         array_multisort($c1, SORT_DESC, $c2, $c3);
         $th = $c1;
-        $wmThres = ret95($th);
+        $wmThres = retAV($th);
     }
 
     $cBan = "<b>Total</b>: $cSum Events, $cItems Countries.";
 
-   // Map Canvas
+    // Map Canvas
     echo "\r<center>
-          \r<table width=100% border=0 cellpadding=1 cellspacing=0>
+          \r<table width=950 border=0 cellpadding=1 cellspacing=0>
           \r<tr>
-          \r<td style=\"font-size: .8em;\" align=center colspan=2><b>Event Distribution by Country</b></td>
-          \r</tr><tr>
-          \r<td align=center colspan=2><canvas class=round style=\"border: 1pt solid #c9c9c9;\" id=\"wm1\" width=\"950\" height=\"500\">[No canvas support]></canvas></td>
+          \r<td align=center colspan=2><canvas id=wm1 width=950 height=500>[No canvas support]></canvas></td>
           \r</tr>
           \r</table>
           \r</center>";
-
-    // Scale <-- this needs to be normalized!!
-    echo "\r<table width=150 cellpadding=0 cellspacing=0 style=\"padding-left: 40px;\">
-          \r<tr><td colspan=27 align=left style=\"font-size: .6em; padding: none;\">EVENTS</td></tr>
-          \r<tr><td align=center colspan=27 style=\"font-size: .2em; padding: none;\">
-          \r<hr style=\"border: none; border-top: 1pt solid gray;\"></td></tr>
-          \r<tr><td align=center style=\"font-size: .5em;\">1&nbsp;</td>";
-
-    $iter = 25;
-    $sth = 25;
-    if ($c1[0] <= $iter) {
-        $iter = $c1[0] + 1;
-        $sth = $wmThres;
-    }
-
-    for ($i = 1; $i < $iter; $i++) {
-        $colour = getSeverity($i,$iter,$mapSC,$mapEC);
-        echo "\r<td width=10 style=\"background: $colour; padding: 0px 0px 0px 5px;\"></td>";
-    }
-
-    echo "<td align=center style=\"font-size: .6em;\">&nbsp;$c1[0]</td></tr></table><br>";
 
     // Map Logic
     echo "\r<script type=\"text/javascript\">
@@ -156,16 +133,16 @@ function doWorld($sccQuery,$dccQuery) {
 
     echo "<center>
           <table width=100% border=0 cellpadding=1 cellspacing=0><tr>
-          <td align=center style=\"font-size: .7em; padding-top: 10px;\">$aBan $bBan $cBan</td>
+          <td align=center style=\"font-size: .9em; padding-top: 10px;\">$aBan $bBan $cBan</td>
           </tr></table>
-          <table class=sortable width=100% border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
+          <table class=sortable width=950 border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
           <thead><tr>
-          <th class=sort width=39%>Country</th>
+          <th class=sort>Country</th>
           <th class=sorttable_nosort width=1%></th>
-          <th class=sort width=15%>Country Code</th>
-          <th class=sort width=15%>Source</th>
-          <th class=sort width=15%>Destination</th>
-          <th class=sort width=15%>Total</th>
+          <th class=sort width=100>Code</th>
+          <th class=sort width=100>Src</th>
+          <th class=sort width=100>Dst</th>
+          <th class=sort width=100>Total</th>
           </tr></thead>";
  
     if ($cHit == 'yes') {
@@ -189,16 +166,16 @@ function doWorld($sccQuery,$dccQuery) {
 
             $cellCol = getSeverity($c1[$i],$wmThres,$mapSC,$mapEC);
 
-            echo "<tr class=lines>
-                  <td class=sort name=cm-ccc-$i id=cm-ccc-$i>$country</td>
-                  <td class=tros style=\"border-bottom: none; background: $cellCol;\"></td>
-                  <td class=tros>$cc</td>
-                  <td class=tros><b>$acount</b></td>
-                  <td class=tros><b>$bcount</b></td>
-                  <td class=tros><b>$ccount</b></td></tr>";
+            echo "<tr class=c_row>
+                  <td class=row name=cm-ccc-$i id=cm-ccc-$i>$country</td>
+                  <td class=row style=\"border-bottom: none; background: $cellCol;\"></td>
+                  <td class=row>$cc</td>
+                  <td class=rowr><b>$acount</b></td>
+                  <td class=rowr><b>$bcount</b></td>
+                  <td class=rowr><b>$ccount</b></td></tr>";
         }
     } else {
-        echo "<tr><td class=tros colspan=6>
+        echo "<tr><td class=row colspan=6>
               No Result. If you were expecting to see something here try expanding the ip2c section
               and click the 'create mappings' button. When the mappings are complete, click on the main submit button again.
               </td></tr>";
