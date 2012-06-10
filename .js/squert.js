@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+    currentTab = $('#sel_tab').val();
+   // alert(currentTab);
+
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
         "c12":[{"short": "C2", "long": "Unauthorized User Access"}],
@@ -63,16 +66,26 @@ $(document).ready(function(){
         return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
     };
 
-    $('#search').keyup(function(){
-        closeRow();
-        $('.d_row').hide();
-        searchString = $('#search').val();
-        $('tr[id^=sid-]').attr('class', 'a_row');
-        $("'tr[id^=sid-]':Contains('" + searchString + "')").attr('class', 'd_row');
-        $("'tr[id^=sid-]':Contains('" + searchString + "')").show();
+    $('#live_search').click(function(){
+        currentVal = $('#sel_search').val();
+        if (currentVal == '-1') {
+            newClass = 'links_enabled';
+            $('#sel_search').val('1');
+        } else {
+            newClass = 'links';
+            $('#sel_search').val('-1');
+        }
+ 
+        $('#live_search').attr('class', newClass);
+        doSearch();
     });
 
-    // I don't love this, need to fix
+    $('#search').keyup(function(){
+        if ($('#sel_search').val()  == 1) {
+            doSearch();
+        }
+    });
+
     $('#clear_search').click(function() {
         if ($('#search').val() != '') {
             $('#search').val('');
@@ -80,6 +93,15 @@ $(document).ready(function(){
             $('tr[id^=sid-]').show();
         }
     });
+
+    function doSearch() {
+        closeRow();
+        $('.d_row').hide();
+        searchString = $('#search').val();
+        $('tr[id^=sid-]').attr('class', 'a_row');
+        $("'tr[id^=sid-]':Contains('" + searchString + "')").attr('class', 'd_row');
+        $("'tr[id^=sid-]':Contains('" + searchString + "')").show();
+    }
 
 
     //
@@ -126,22 +148,25 @@ $(document).ready(function(){
     //
 
     $("#b_update").click(function() {
+
         ctab = $('.tab_active').attr('id');
-        switch(ctab) {
-            case 't_map':
-                worldMap();
-                break;
-            case 't_sum':     
-                location.reload();
-                break;
-        }
+        var urArgs = "type=" + 5 + "&tab=" + ctab;
+        $.get(".inc/callback.php?" + urArgs, {}, function(){}, "script");
+     
+        //alert("Test: " + ctab);
+
+        location.reload();
     });
+
 
     $("#b_top").click(function() {
         $('html, body').animate({ scrollTop: 0 }, 'slow');
     });
         
+    //
     // Tab manipulations
+    //
+
     $(".tab,.tab_active").mouseover(function(event) {
         $(this).css('color','#ffffff');
         $(this).css('background-color','#000000');
@@ -156,6 +181,7 @@ $(document).ready(function(){
     $(".tab,.tab_active").click(function(event) {
         var active = $(".tab_active").attr('id');
         var content = $(".content_active").attr('id');
+
         if ( this.id != active ) {
             $("#" + active).removeClass('tab_active');
             $("#" + active).addClass('tab');
@@ -164,7 +190,6 @@ $(document).ready(function(){
             $(this).attr('class','tab_active');         
             $("#" + content).attr('class','content');
             $("#" + this.id + "_content").attr('class','content_active');
-          
         }
     });
 

@@ -23,7 +23,6 @@ include_once '.inc/session.php';
 include_once '.inc/config.php';
 include_once '.inc/functions.php';
 include_once '.inc/ribbon.php';
-include_once '.inc/map.php';
 
 $loFilter = "";
 dbC();
@@ -45,9 +44,10 @@ dbC();
 <div id=t_dash class=tab>Dashboard</div>
 <div id=t_sum class=tab_active>Events</div>
 <div id=t_map class=tab>Map</div>
-<div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=settings class=links>Watchlist</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=settings class=links>Settings</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=logout class=links>Logout</span></div>
+
+<div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=settings class=links>Watchlist</span>|<span id=settings class=links>Settings</span>|<span id=logout class=links>Logout</span></div>
 <form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
-<div id=t_search class=search><span id=settings class=links>Saved</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=settings class=links>Live</span>&nbsp;&nbsp;|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
+<div id=t_search class=search><span id=settings class=links>Saved</span>|<span id=live_search class=links>Live</span>|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
 </div>
 </form>
 <?php echo $timeLinks;?>
@@ -62,16 +62,6 @@ dbC();
 </td></tr></table>
 </div>
 <br>
-
-<div id=t_sig_content class=content>
-<table width=970 align=center><tr><td>
-</td></tr></table>
-</div>
-
-<div id=t_ip_content class=content>
-<table width=970 align=center><tr><td>
-</td></tr></table>
-</div>
 
 <div id=t_map_content class=content>
 <div class=wm>
@@ -95,6 +85,8 @@ dbC();
 <input id=timestamp type=hidden value="<?php echo strtohex($when);?>" />
 <input id=sel_class type=hidden value="-1" />
 <input id=sel_sensor type=hidden value="-1" />
+<input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>" />
+<input id=sel_search type=hidden value="-1" />
 </body>
 </html>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>

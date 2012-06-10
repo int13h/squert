@@ -14,6 +14,7 @@ $types = array(
                  2 => "eg",
                  3 => "ed",
                  4 => "pd",
+                 5 => "tb",
 );
 
 $type = $types[$type];
@@ -222,6 +223,13 @@ function pd() {
     echo $theJSON;
 
 }
+
+function tb() {
+    session_start();
+    $tab = $_REQUEST['tab'];
+    $_SESSION['sTab'] = $tab;
+}
+
 
 $type();
 
