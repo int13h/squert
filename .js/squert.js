@@ -1,8 +1,5 @@
 $(document).ready(function(){
 
-
-    $('#stub_brief').hide();
-
     currentTab = $('#sel_tab').val();
    // alert(currentTab);
 
