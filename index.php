@@ -47,7 +47,7 @@ dbC();
 
 <div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=settings class=links>Watchlist</span>|<span id=settings class=links>Settings</span>|<span id=logout class=links>Logout</span></div>
 <form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
-<div id=t_search class=search><span id=settings class=links>Saved</span>|<span id=live_search class=links>Live</span>|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
+<div id=t_search class=search><span id=settings class=links>Saved</span>|<span id=live_search class=links_enabled>Live</span>|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
 </div>
 </form>
 <?php echo $timeLinks;?>
@@ -57,7 +57,7 @@ dbC();
 <div id=t_sum_content class=content_active>
 <table width=970 align=center><tr><td>
 <?php echo $todayLink;?><br>
-<?php include_once '.stub/brief.php';?>
+<div id=stub_brief><?php include_once '.stub/brief.php';?></div>
 <?php include_once '.stub/signature.php';?>
 </td></tr></table>
 </div>
@@ -82,11 +82,13 @@ dbC();
 <div id=b_top class=b_top>top</div>
 </div>
 
+
 <input id=timestamp type=hidden value="<?php echo strtohex($when);?>" />
+<input id=sel_ec type=hidden value="0" />
 <input id=sel_class type=hidden value="-1" />
 <input id=sel_sensor type=hidden value="-1" />
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>" />
-<input id=sel_search type=hidden value="-1" />
+<input id=sel_search type=hidden value="1" />
 </body>
 </html>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>

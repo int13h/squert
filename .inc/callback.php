@@ -43,6 +43,12 @@ function ec() {
 
 function si() {
 
+    function urlMkr($line) {
+        $pattern = '/reference:url,([^;]+)/';
+        $answer = preg_replace($pattern, 'reference:url,<a class=rref href="http://$1" target=rule>$1</a>',  $line);
+        return $answer;
+    }
+
     $object = $_REQUEST['sid'];
     list($sigID, $gID) = explode("-", $object);
     global $rulePath;
@@ -68,7 +74,10 @@ function si() {
                         $searchCount = preg_match("/sid\:\s*$sigID\s*\;/",$line);
 
                         if($searchCount > 0) {
-                            $tempMsg = preg_match("/\bmsg\s*:\s*\"(.+?)\"\s*;/i",$line,$ruleMsg);                            
+                            $tempMsg = preg_match("/\bmsg\s*:\s*\"(.+?)\"\s*;/i",$line,$ruleMsg);
+
+                            $line = urlMkr($line);
+                            
                             $result = array("ruletxt"	=> $line,
                                             "rulefile"	=> $ruleFile,
                                             "ruleline"	=> $lineNumber,

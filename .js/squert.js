@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+
+    $('#stub_brief').hide();
+
     currentTab = $('#sel_tab').val();
    // alert(currentTab);
 
@@ -108,8 +111,7 @@ $(document).ready(function(){
     // Event monitor
     //
  
-    // Put this in the config
-    var emTimeout = 30000;
+    var emTimeout = 15000;
 
     var lastCount = $("#etotal").html();
     var eventCount = lastCount;
