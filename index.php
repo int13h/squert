@@ -77,8 +77,8 @@ dbC();
 </div>
 
 <div id=bottom class=bottom>
-<div id=b_tray class=b_tray>Hidden: &nbsp;&nbsp;</div>
-<div id=b_event class=b_event>events synchronized</div>
+<div id=b_tray class=b_tray><b>Hidden:</b> <span id=tray_empty>&nbsp;None</span>&nbsp;&nbsp;</div>
+<div id=b_event class=b_event><b>Events:</b> &nbsp;synchronized</div>
 <div id=b_update class=b_update>update</div>
 <div id=b_top class=b_top>top</div>
 </div>

@@ -1,8 +1,5 @@
 $(document).ready(function(){
 
-    // hmm?
-    $(".toggle-label").css('display','none');
-
     currentTab = $('#sel_tab').val();
     // alert(currentTab);
 
@@ -114,6 +111,7 @@ $(document).ready(function(){
         sectionName = this.id.split("-");
         $('#table-' + sectionName[1]).toggle();
         $('#b_tray').append("<span id=b-" +  sectionName[1] + " class=toggle-button>" + sectionName[1] + "</span>");
+        $('#tray_empty').hide();
     });
 
     $(".live").mouseover(function() {
@@ -131,13 +129,16 @@ $(document).ready(function(){
         $('#table-' + sectionName[1]).toggle();
         $('#b-' + sectionName[1]).remove();
 
+        if (!$(".toggle-button")[0]) {
+            $('#tray_empty').show();
+        }
     });
 
     //
     // Event monitor
     //
  
-    var emTimeout = 15000;
+    var emTimeout = 30000;
 
     var lastCount = $("#etotal").html();
     var eventCount = lastCount;
@@ -159,12 +160,7 @@ $(document).ready(function(){
 
         if ( lastCount < eventCount ) {
             eventCount = eventCount - lastCount;
-            if ( eventCount == 1 ) {
-                ess = '';
-            } else {
-                ess = 's';
-            }
-            $("#b_event").html(eventCount + " new event" + ess);
+            $("#b_event").html("<b>Events:</b> " + eventCount + " new");
         }
 
         lastCount = eventCount;
