@@ -1,7 +1,10 @@
 $(document).ready(function(){
 
+    // hmm?
+    $(".toggle-label").css('display','none');
+
     currentTab = $('#sel_tab').val();
-   // alert(currentTab);
+    // alert(currentTab);
 
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
@@ -103,6 +106,32 @@ $(document).ready(function(){
         $("'tr[id^=sid-]':Contains('" + searchString + "')").show();
     }
 
+    //
+    // Toggle sections
+    //
+
+    $('.live').click(function() {
+        sectionName = this.id.split("-");
+        $('#table-' + sectionName[1]).toggle();
+        $('#b_tray').append("<span id=b-" +  sectionName[1] + " class=toggle-button>" + sectionName[1] + "</span>");
+    });
+
+    $(".live").mouseover(function() {
+        sectionName = this.id.split("-");
+        $('#label-' + sectionName[1]).toggle();
+    });
+
+    $(".live").mouseout(function() {
+        sectionName = this.id.split("-");
+        $('#label-' + sectionName[1]).toggle();
+    });
+
+    $(".toggle-button").live("click", function(){
+        sectionName = this.id.split("-");
+        $('#table-' + sectionName[1]).toggle();
+        $('#b-' + sectionName[1]).remove();
+
+    });
 
     //
     // Event monitor
@@ -135,7 +164,6 @@ $(document).ready(function(){
             } else {
                 ess = 's';
             }
-            $("#b_event").fadeTo('slow',0.8);
             $("#b_event").html(eventCount + " new event" + ess);
         }
 
@@ -212,7 +240,6 @@ $(document).ready(function(){
          $("#set_content").attr('class','content');
          $("#" + old_content).attr('class','content_active');
     });
-
     
     //
     // Rows

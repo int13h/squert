@@ -130,14 +130,16 @@ $sigCount = mysql_num_rows($signatures);
 $srcCount = mysql_fetch_row($sources);
 $dstCount = mysql_fetch_row($destinations);
 
-echo "<table class=null width=960 align=center>\n
+echo "<div class=toggle id=table-Brief>
+      \r\r<h3 class=live id=h-Brief> Brief</h3>
+      \r<table class=null width=960 align=center>\n
       \r<tr>\n
       \r<td align=center><div class=big>Total Events</div><div id=etotal class=box>$sumEvents</div></td>\n
       \r<td align=center><div class=big>Total Signatures</div><div class=box>$sigCount</div></td>\n
       \r<td align=center><div class=big>Total Sources</div><div class=box>$srcCount[0]</div></td>\n
       \r<td align=center><div class=big>Total Destinations</div><div class=box>$dstCount[0]</div></td>\n
       \r</tr>\n
-      </table><br><br>\n";
+      </table></div>\n";
 
 // Events by sensor
 
@@ -154,7 +156,8 @@ while ($row = mysql_fetch_row($sensor)) {
     $presentSens [$row[3]] = "$row[0]||$row[1]||$row[2]||$row[4]||$row[5]||$row[6]||$row[7]||$row[8]";
 }
 
-echo "<h3 id=sensor> Event Distribution by Sensor</h3>
+echo "<div class=toggle id=table-Sensor>
+      \r<h3 class=live id=h-Sensor> Event Distribution by Sensor</h3>
       \r<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
       \r<th class=sort width=250>Network</th>
@@ -215,11 +218,11 @@ echo "<tfoot><tr class=a_row>
           \r<td class=totals>$dstCount[0]</td>
           \r<td class=totals>$sumEvents</td>
           \r<td class=totals>$sumPer%</td></tr></tfoot>\n";
-
-echo "</table><br><br>";
+echo "</table></div>";
 
 // Events by Category
-echo "<h3 id=category> Event Distribution by Category</h3>
+echo "<div class=toggle id=table-Category>
+      \r<h3 class=live id=h-Category> Event Distribution by Category</h3>
       \r<table align=center width=960 border=0 cellpadding=0 cellspacing=0 class=sortable style=\"border: 1pt solid #c4c4c4; border-bottom: none;\">\n
       \r<thead><tr>
       \r<th class=sort width=20>#</th>
@@ -284,10 +287,11 @@ echo "<tfoot><tr class=a_row>
           \r<td class=totals>$sumEvents</td>
           \r<td class=totals>$sumPer%</td></tr></tfoot>\n";
 
-echo "</table>";
+echo "</table></div>";
 
 // The legend is only visible on the current date
-if (strtotime($today) == strtotime($endDate)) {
+//if (strtotime($today) == strtotime($endDate)) {
+if (0==1) {
 
     // Legend
     echo "<table align=right cellpadding=0 cellspacing=0 style=\"border: 1pt solid #c9c9c9; margin-top: 10px;\"><tr>\n
@@ -302,10 +306,6 @@ if (strtotime($today) == strtotime($endDate)) {
           \r<td width=10 align=right style=\"font-size: 10px; background: $ltCols[4]; border: 2pt solid #f4f4f4;\"></td>
           \r<td width=60 align=left style=\"font-size: 10px; background: #f4f4f4;\">&gt; 60 min</td>
           \r</tr></table><br><br>\n";
-} else {
-
-    echo "<br><br>";
-
 }
 
 ?>

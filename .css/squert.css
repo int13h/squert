@@ -44,11 +44,18 @@ div.today{
 }
 
 h3 {
-    font-size: 12pt;
+    font-size: 11pt;
     font-weight: normal;
 }
 
+h3.live {
+    cursor: pointer;
+}
 
+h3.live:hover {
+    color: gray;
+}
+    
 /* Event expansion */
 th.sub {
   background: #e9e9e9;
@@ -352,49 +359,76 @@ div.bottom {
     left:0;
     position: fixed;
     color: #ffffff;
-    background-color: transparent;
+    background-color: #333333;
     clear: both;
+    padding-left: 10px;
+}
+
+div.b_tray {
+    width: 60%;
+    height: 30px;
+    background-color: #333333;
+    text-align: left;
+    font-weight: normal;
+    float: left;
+    padding-top: 11px;
 }
 
 div.b_event {
-    width: 90%;
-    height: 20px;
+    width: 26%;
+    height: 30px;
     background-color: #333333;
-    opacity: 0.3;
-    padding: 5px 0px 5px 0px;
     text-decoration: underline;
     text-align: center;
-    font-weight: bold;
+    font-weight: normal;
     float: left;
+    padding-top: 10px;
 }
 
 div.b_update {
-    width: 5%;
-    height: 20px;
+    width: 7%;
+    height: 30px;
     background-color: #800000;
-    opacity: 0.7;
     cursor: pointer;
-    padding: 5px 0px 5px 0px;
     text-align: center;
     font-weight: normal;
     float: left;
+    padding-top: 11px;
 }
 
 div.b_top {
-    width: 5%;
-    height: 20px;
+    width: 7%;
+    height: 30px;
     background-color: #800000;
-    opacity: 0.7;
     cursor: pointer;
-    padding: 5px 0px 5px 0px;
     text-align: center;
     font-weight: normal;
     float: left;
+    padding-top: 11px;
 }
 
 div.b_update:hover, div.b_top:hover {
-    opacity: 0.9;
+    opacity: 0.8;
     text-decoration: underline;
+}
+
+.toggle-button {
+    margin-right: 10px;
+    padding: 0px 10px 0px 10px;
+    font-weight: normal;
+    background: #e9e9e9;
+    color: #000000;
+    border: 1pt solid gray;
+    border-radius: 4px;
+}
+
+.toggle-button:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.toggle-label {
+    display: none;
 }
 
 /* Date Ribbon */
@@ -432,7 +466,7 @@ td.cday {
     padding: 2px 0px 2px 0px;
     background: #c9c9c9;
     font-weight: bold;
-    border-bottom: 1pt solid #000000; 
+    border-bottom: 1pt solid #000000;
 }
 td.tday {
     text-align: center;
@@ -448,8 +482,8 @@ a.month {
 }
 a.day {
     text-decoration: none;
-    color: #545454;
     background-color: none;
+    color: #000000;
 }
 
 a.month:hover, a.day:hover{
@@ -536,7 +570,7 @@ div.b_detail, div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy {
     border: 1pt solid gray;
     margin-left: 4px;
     margin-right: 4px;
-    border-radius: 5px;    
+    border-radius: 3px;
 }
 
 div.b_detail:hover, div.b_tx:hover, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover {
@@ -581,7 +615,7 @@ div.b_close {
     text-align: center;
     border: 1pt solid gray;
     padding: 0px 2px 0px 3px;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 div.b_close:hover {
@@ -626,4 +660,8 @@ span.clear:hover {
   color: #e9e9e9;
 }
 
-
+td.cday {
+    border: 2pt solid black;
+    border-top: none;
+    background: #ffffff;
+}

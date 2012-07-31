@@ -77,11 +77,11 @@ dbC();
 </div>
 
 <div id=bottom class=bottom>
-<div id=b_event class=b_event></div>
+<div id=b_tray class=b_tray>Hidden: &nbsp;&nbsp;</div>
+<div id=b_event class=b_event>events synchronized</div>
 <div id=b_update class=b_update>update</div>
 <div id=b_top class=b_top>top</div>
 </div>
-
 
 <input id=timestamp type=hidden value="<?php echo strtohex($when);?>" />
 <input id=sel_ec type=hidden value="0" />

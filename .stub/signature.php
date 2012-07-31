@@ -32,8 +32,9 @@ $query = "SELECT COUNT(signature) AS c1, signature, signature_id, signature_gen,
 
 $signatures = mysql_query($query);
 
-echo "<h3> $stub</h3>";
-echo "<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
+echo "<div class=toggle id=table-Signature>
+      \r<h3 class=live id=h-Signature> $stub</h3>
+      \r<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
       \r<th class=sort>Signature</th>
       \r<th class=sort width=80>ID</th>
@@ -95,5 +96,5 @@ while ($row = mysql_fetch_row($signatures)) {
           \r<td class=rowr><b>$per</b></td></tr>\n";
 }
 
-echo "</table><br><br>";
+echo "</table></div><br><br>";
 ?>
