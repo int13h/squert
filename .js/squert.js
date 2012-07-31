@@ -1,8 +1,5 @@
 $(document).ready(function(){
 
-    currentTab = $('#sel_tab').val();
-    // alert(currentTab);
-
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
         "c12":[{"short": "C2", "long": "Unauthorized User Access"}],
@@ -107,21 +104,13 @@ $(document).ready(function(){
     // Toggle sections
     //
 
+    // Brief Sensor Category Signature
+    
     $('.live').click(function() {
         sectionName = this.id.split("-");
         $('#table-' + sectionName[1]).toggle();
         $('#b_tray').append("<span id=b-" +  sectionName[1] + " class=toggle-button>" + sectionName[1] + "</span>");
         $('#tray_empty').hide();
-    });
-
-    $(".live").mouseover(function() {
-        sectionName = this.id.split("-");
-        $('#label-' + sectionName[1]).toggle();
-    });
-
-    $(".live").mouseout(function() {
-        sectionName = this.id.split("-");
-        $('#label-' + sectionName[1]).toggle();
     });
 
     $(".toggle-button").live("click", function(){
@@ -171,14 +160,9 @@ $(document).ready(function(){
     //
 
     $("#b_update").click(function() {
-
-        ctab = $('.tab_active').attr('id');
+        var ctab = $('#sel_tab').val();
         var urArgs = "type=" + 5 + "&tab=" + ctab;
-        $.get(".inc/callback.php?" + urArgs, {}, function(){}, "script");
-     
-        //alert("Test: " + ctab);
-
-        location.reload();
+        $.get(".inc/callback.php?" + urArgs, function(){location.reload()});
     });
 
 
@@ -190,10 +174,15 @@ $(document).ready(function(){
     // Tab manipulations
     //
 
+    var tab_cached = $("#sel_tab").val();
+    $('#' + tab_cached).attr('class','tab_active');
+    $("#" + tab_cached + "_content").attr('class','content_active');
+
     $(".tab,.tab_active").mouseover(function(event) {
         $(this).css('color','#ffffff');
         $(this).css('background-color','#000000');
     });
+
     $(".tab,.tab_active").mouseout(function(event) {
         var curClass = $(this).attr('class');
         if ( curClass != "tab_active" ) {
@@ -201,6 +190,7 @@ $(document).ready(function(){
             $(this).css('background-color','#333333');
         }
     });
+
     $(".tab,.tab_active").click(function(event) {
         var active = $(".tab_active").attr('id');
         var content = $(".content_active").attr('id');
@@ -213,6 +203,8 @@ $(document).ready(function(){
             $(this).attr('class','tab_active');         
             $("#" + content).attr('class','content');
             $("#" + this.id + "_content").attr('class','content_active');
+            activeTab = $(".tab_active").attr('id')
+            $('#sel_tab').val(activeTab);
         }
     });
 

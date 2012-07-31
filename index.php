@@ -42,7 +42,7 @@ dbC();
 <body>
 <div id=tab_group class=tab_group>
 <div id=t_dash class=tab>Dashboard</div>
-<div id=t_sum class=tab_active>Events</div>
+<div id=t_sum class=tab>Events</div>
 <div id=t_map class=tab>Map</div>
 
 <div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=settings class=links>Watchlist</span>|<span id=settings class=links>Settings</span>|<span id=logout class=links>Logout</span></div>
@@ -54,7 +54,7 @@ dbC();
 </div>
 <br>
 
-<div id=t_sum_content class=content_active>
+<div id=t_sum_content class=content>
 <table width=970 align=center><tr><td>
 <?php echo $todayLink;?><br>
 <div id=stub_brief><?php include_once '.stub/brief.php';?></div>
@@ -88,6 +88,7 @@ dbC();
 <input id=sel_class type=hidden value="-1" />
 <input id=sel_sensor type=hidden value="-1" />
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>" />
+<input id=sel_sect type=hidden value="<?php echo $_SESSION['sSect'];?>" />
 <input id=sel_search type=hidden value="1" />
 </body>
 </html>
