@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $_SESSION['sEmail']	= $userEmail;
                 $_SESSION['sType']      = $userType;
                 $_SESSION['sTime']	= $userTime;
-                $_SESSION['sTab']       = 'e'; 
+                $_SESSION['sTab']       = 't_sum'; 
                 $_SESSION['id']         = $id;
                 
 	        header ("Location: index.php?id=$id");
