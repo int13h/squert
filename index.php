@@ -38,16 +38,16 @@ dbC();
 <script type="text/javascript" src=".js/squert.js"></script>
 <script type="text/javascript" src=".js/sorttable.js"></script>
 <script type="text/javascript" src=".js/worldmap.js"></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.common.core.js" ></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.bar.js" ></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.pie.js" ></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.scatter.js" ></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.common.context.js" ></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.common.tooltips.js"></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.common.zoom.js"></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.common.key.js"></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.common.dynamic.js"></script>
-<script type="text/javascript" src="/.js/RGraph/libraries/RGraph.common.effects.js"></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.pie.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.scatter.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.context.js" ></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.tooltips.js"></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.zoom.js"></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.key.js"></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.dynamic.js"></script>
+<script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.effects.js"></script>
 <title>squert</title>
 </head>
 <body>
