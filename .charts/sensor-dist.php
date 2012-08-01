@@ -27,9 +27,9 @@ function math($stamp) {
 
 $c1 = '#cc0000';
 
-$query = "SELECT COUNT(signature) AS count, SUBSTRING(timestamp,12,5) AS time, sid FROM event 
+$query = "SELECT COUNT(signature) AS count, SUBSTRING(timestamp,12,5) AS time FROM event 
           WHERE $when
-          GROUP BY sid,time 
+          GROUP BY time 
           ORDER BY timestamp";
 
 $results = mysql_query($query);

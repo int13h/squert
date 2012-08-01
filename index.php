@@ -69,6 +69,8 @@ dbC();
 <table width=970 align=center><tr><td>
 <h3>Events grouped by minute</h3>
 <?php include_once '.charts/sensor-dist.php';?>
+<h3>Top signatures</h3>
+<?php include_once '.charts/sigsum.php';?>
 <h3>Top source and destination IPs</h3>
 <?php include_once '.charts/ip.php';?>
 <h3>Top source and destination Countries</h3>

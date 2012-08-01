@@ -33,7 +33,7 @@ $query = "SELECT COUNT(signature) AS c1, signature, signature_id, signature_gen,
 $signatures = mysql_query($query);
 
 echo "<div class=toggle id=table-Signature>
-      \r<h3 class=live id=h-Signature>$stub</h3>
+      \r<h3 class=live id=h-Signature> $stub</h3>
       \r<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
       \r<th class=sort>Signature</th>

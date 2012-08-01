@@ -421,9 +421,6 @@ div.b_update:hover, div.b_top:hover {
     border-radius: 4px;
 }
 
-.toggle {
-}
-
 .toggle-button:hover {
     opacity: 0.8;
     cursor: pointer;
