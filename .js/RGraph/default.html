@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <title>Javascript charts for your website with RGraph</title>
+
+    <link rel="stylesheet" href="css/website.css" type="text/css" media="screen" />
+    <link rel="alternate" type="application/rss+xml" title="Javascript charts for your website with RGraph" href="http://www.rgraph.net/news.xml">
+    
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    
+    <script src="libraries/RGraph.common.core.js" ></script>
+    <script src="libraries/RGraph.common.dynamic.js" ></script>
+    <script src="libraries/RGraph.common.effects.js" ></script>
+    <script src="libraries/RGraph.common.tooltips.js" ></script>
+    <script src="libraries/RGraph.bar.js" ></script>
+    
+    <script>
+        window.onload = function ()
+        {
+            var bar = new RGraph.Bar('cvs_bar', [[45,-60],[-65,-30],[40,80],[59,-48]]);
+            bar.Set('chart.colors', ['rgba(255, 176, 176, 0.5)', 'rgba(153, 208, 249,0.5)']); 
+            bar.Set('chart.labels', ['Luis', 'Kevin', 'John', 'Gregory']);
+            bar.Set('chart.tooltips', ['Luis','Luis','Kevin','Kevin','John','John','Gregory','Gregory']);
+            bar.Set('chart.tooltips.event', 'onmousemove');
+            bar.Set('chart.ymax', 100);
+            bar.Set('chart.strokestyle', '#ccc');
+            bar.Set('chart.hmargin.grouped', 2);
+            bar.Set('chart.units.pre', '£');
+            bar.Set('chart.gutter.left', 40);
+            bar.Set('chart.gutter.right', 15);
+            bar.Set('chart.xaxispos', 'center');
+            RGraph.Effects.Fade.In(bar, {'duration': 250});
+            RGraph.Effects.Bar.Wave(bar);
+        }
+    </script>
+</head>
+<body>
+
+    <h1>Javascript <span>charts and graphs for your website with RGraph</span></h1>
+
+    <canvas width="600" height="250" id="cvs_bar" style="float: right"></canvas>
+
+    <h2>Demos <span>of charts</span></h2>
+        <p>
+            Demos of some of the various charts and features provided by RGraph
+        </p>
+        
+        <p align="left">
+            <a href="./demos/"><b>Go to the demos (local) &raquo;</b></a>
+        </p>
+
+    <h2>Example <span>Charts</span></h2>
+        <p>
+            Examples of various different types of charts along with sample code is available on the website:
+        </p>
+        
+        <p align="left">
+            <a href="http://www.rgraph.net/examples/index.html"><b>Go to the examples on rgraph.net &raquo;</b></a>
+        </p>
+
+    
+    <h2>Documentation <span>for charts</span></h2>
+        <p>
+            Documentation for for the charts is available here:
+        </p>
+        
+        <p align="left">
+            <a href="http://www.rgraph.net/docs/index.html"><b>Go to the documentation on rgraph.net &raquo;</b></a>
+        </p>
+    
+    <h2>HOWTO <span>guides</span></h2>
+        <p>
+            Straight-forward HOWTO guides that show you how to do common tasks are part of the
+            <a href="http://www.rgraph.net/docs/index.html#howto.guides"><b>documentation</b></a>. They offer straight forward information
+            along with example code.
+        </p>
+    
+    <h2>Basic <span>examples</span></h2>
+        <p>
+            The <a href="http://www.rgraph.net/docs/index.html#basic.examples"><b>basic examples</b></a> show simple and stripped down examples of a few things.
+            If you're having trouble with the concepts these should help.
+        </p>
+
+</body>
+</html>
