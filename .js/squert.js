@@ -105,27 +105,41 @@ $(document).ready(function(){
     //
 
     // Brief Sensor Category Signature
-    
+
+    sectionOff('Brief');
+    sectionOff('Category');
+    sectionOff('Sensor');
+
     $('.live').click(function() {
         sectionName = this.id.split("-");
-        $('#table-' + sectionName[1]).toggle();
-        $('#b_tray').append("<span id=b-" +  sectionName[1] + " class=toggle-button>" + sectionName[1] + "</span>");
-        $('#tray_empty').hide();
+        sectionOff(sectionName[1]);
     });
 
     $(".toggle-button").live("click", function(){
         sectionName = this.id.split("-");
-        $('#table-' + sectionName[1]).toggle();
-        $('#b-' + sectionName[1]).remove();
+        sectionOn(sectionName[1]);
+    });
+
+    function sectionOff(sectionName) {
+        $('#table-' + sectionName).hide();
+        $('#b_tray').append("<span id=b-" +  sectionName + " class=toggle-button>" + sectionName + "</span>");
+        $('#tray_empty').hide();    
+    }
+
+    function sectionOn(sectionName) {
+        $('#table-' + sectionName).show();
+        $('#b-' + sectionName).remove();
 
         if (!$(".toggle-button")[0]) {
             $('#tray_empty').show();
         }
-    });
+    }
 
     //
     // Event monitor
     //
+
+    // logic is flawed. fix!
  
     var emTimeout = 30000;
 
@@ -205,6 +219,9 @@ $(document).ready(function(){
             $("#" + this.id + "_content").attr('class','content_active');
             activeTab = $(".tab_active").attr('id')
             $('#sel_tab').val(activeTab);
+            var ctab = $('#sel_tab').val();
+            var urArgs = "type=" + 5 + "&tab=" + ctab;
+            $.get(".inc/callback.php?" + urArgs, function(){Null});
         }
     });
 

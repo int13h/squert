@@ -53,7 +53,7 @@ h3.live {
 }
 
 h3.live:hover {
-    color: gray;
+    color: #cc0000;
 }
   
 /* Event expansion */
@@ -419,6 +419,9 @@ div.b_update:hover, div.b_top:hover {
     color: #000000;
     border: 1pt solid gray;
     border-radius: 4px;
+}
+
+.toggle {
 }
 
 .toggle-button:hover {
