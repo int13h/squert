@@ -67,7 +67,7 @@ dbC();
 
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
-<h3>Events grouped by minute</h3>
+<h3>Events grouped by hour and minute</h3>
 <?php include_once '.charts/sensor-dist.php';?>
 <h3>Top signatures</h3>
 <?php include_once '.charts/sigsum.php';?>

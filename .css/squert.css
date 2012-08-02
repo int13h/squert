@@ -465,7 +465,7 @@ td.cday {
     padding: 2px 0px 2px 0px;
     background: #c9c9c9;
     font-weight: bold;
-    border-bottom: 1pt solid #000000;
+    border-bottom: 10pt solid #000000;
 }
 td.tday {
     text-align: center;

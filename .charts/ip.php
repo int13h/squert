@@ -96,6 +96,7 @@ if ($siE != 1) {
             bar1.Set('chart.background.grid.autofit', true);
             bar1.Set('chart.background.grid.vlines', true);
             bar1.Set('chart.background.grid.width', .5);
+            bar1.Set('chart.background.grid.autofit.align', true);
             bar1.Set('chart.labels', [$src_lbl]);
             bar1.Set('chart.text.angle', 45);
             bar1.Set('chart.colors', ['#e9e9e9','#000000','#cc0000']);
@@ -111,7 +112,6 @@ if ($siE != 1) {
             bar1.Set('chart.key.background', 'rgba(255,255,255,0.3)');
             bar1.Set('chart.key.position', 'gutter');
             bar1.Set('chart.key.position.y', bar1.canvas.height -15);
-            bar1.Set('chart.background.grid.autofit.align', true);
  
             var src_s1 = new RGraph.Scatter('daily_sip', [$src_s1]);
             src_s1.Set('chart.gutter.left', 75);
