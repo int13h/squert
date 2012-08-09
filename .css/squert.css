@@ -94,18 +94,6 @@ td.row {
   font-size: 11px;
 }
 
-div.close {
-    padding: 3px 10px 3px 10px;
-    float: right;
-    text-align: center;
-    background-color: #CFE3A6;
-    color: #000000;
-    margin-top: -1px;
-    border-left: 1pt solid #c4c4c4;
-    border-bottom: 1pt solid #c4c4c4;
-    border-bottom-left-radius: 5px;
-}
-
 td.rowr {
   background: transparent;
   border: 1pt solid #c4c4c4;
@@ -145,9 +133,15 @@ tr.d_row, tr.s_row {
     background-color: #fafafa;
 }
 
-tr.d_row_active, tr.s_row_active {
-    background-color: #CCC9C6;
+tr.d_row_active {
+    border-top: 3px solid green;
     font-weight: bold;
+}
+
+tr.s_row_active {
+    border-top: 10px solid green;
+    font-weight: bold;
+    padding: 20px;
 }
 
 tr.d_row_sub {
@@ -165,6 +159,43 @@ tr.d_row_sub1 {
 
 tr.d_row_sub1_active {
     font-weight: bold;
+}
+
+div.close_sig {
+    padding: 3px 10px 3px 10px;
+    float: right;
+    text-align: center;
+    background-color: #BBCC99;
+    color: #000000;
+    margin-top: -1px;
+    border-left: 1pt solid #c4c4c4;
+    border-bottom: 1pt solid #c4c4c4;
+    border-bottom-left-radius: 5px;
+}
+
+div.close {
+    padding: 3px 10px 3px 10px;
+    float: right;
+    text-align: center;
+    background-color: #CFE3A6;
+    color: #000000;
+    margin-top: -1px;
+    border-left: 1pt solid #c4c4c4;
+    border-bottom: 1pt solid #c4c4c4;
+    border-bottom-left-radius: 5px;
+}
+
+div.close_sub {
+    padding: 3px 10px 3px 10px;
+    float: right;
+    text-align: center;
+    background-color: #E5FABB;
+    color: #000000;
+    font-weight: bold;
+    margin-top: -1px;
+    border-left: 1pt solid #c9c9c9;
+    border-bottom: 1pt solid #c9c9c9;
+    border-bottom-left-radius: 5px;
 }
 
 div.close_sub {

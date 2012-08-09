@@ -332,7 +332,7 @@ $(document).ready(function(){
                 rowValue = this.id.replace("ccc-","");
                 // Fade other results and show this
                 $(curID).attr('class','s_row_active');
-                $(curID).find('td').css('background', '#CFE3A6');
+                $(curID).find('td').css('background', '#BBCC99');
                 $(curID).find('td').css('color', '#000000');
                 eventList("6-" + this.id);
                 $(".s_row").fadeTo('0','0.2');
@@ -438,7 +438,8 @@ $(document).ready(function(){
 
         switch (parts[0]) {
 
-        // Events level 1
+        // Events level 1 - Grouped by Signature
+
         case "6":
 
           urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen;
@@ -483,7 +484,7 @@ $(document).ready(function(){
               }
 
               tbl += "<tr class=sview id=active_sview><td colspan=6>";
-              tbl += "<div id=sig_close class=close><div class=b_close title='Close'>X</div></div>";
+              tbl += "<div id=sig_close class=close_sig><div class=b_close title='Close'>X</div></div>";
               tbl += "<table id=events width=100% class=sortable cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
@@ -492,7 +493,7 @@ $(document).ready(function(){
           }
           break;
 
-        // Events level 2
+        // Events level 2 - Grouped by signature, source, destination
         case "2":
           urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen;
           $(function(){
@@ -539,7 +540,7 @@ $(document).ready(function(){
           }
           break;
 
-        // Events level 3
+        // Events level 3 - No grouping, individual events
         case "3":
           var rowLoke = parts[1];
           urArgs = "type=" + parts[0] + "&object=" + parts + "&ts=" + theWhen;
