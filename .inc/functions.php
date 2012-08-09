@@ -19,6 +19,13 @@
 //
 //
 
+
+function math($stamp) {
+    list($a,$b) = explode(":",$stamp);
+    $c = $a * 60 + $b;
+    return $c;
+}
+
 function retAv($x) {
     $y = array_sum($x);
     if ($y > 0) {

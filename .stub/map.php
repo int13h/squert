@@ -2,7 +2,7 @@
 
 //
 //
-//      Copyright (C) 2010 Paul Halliday <paul.halliday@gmail.com>
+//      Copyright (C) 2010, 2012 Paul Halliday <paul.halliday@gmail.com>
 //
 //      This program is free software: you can redistribute it and/or modify
 //      it under the terms of the GNU General Public License as published by
@@ -19,34 +19,49 @@
 //
 //
 
-$scc = "SELECT COUNT(src_ip) as count, map1.cc as src_cc, map1.c_long
-          FROM event
-          LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
-          LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
-          WHERE $when
-          AND signature NOT REGEXP '^URL'
-          AND src_ip NOT BETWEEN 167772160 AND 184549375
-          AND src_ip NOT BETWEEN 2886729728 AND 2886795263
-          AND src_ip NOT BETWEEN 3232235520 AND 3232301055
-          AND map1.cc IS NOT NULL
-          GROUP BY map1.cc
-          ORDER BY count DESC";
-$dcc = "SELECT COUNT(dst_ip) as count, map2.cc as dst_cc, map2.c_long
-          FROM event
-          LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
-          LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
-          WHERE $when
-          AND signature NOT REGEXP '^URL'
-          AND dst_ip NOT BETWEEN 167772160 AND 184549375
-          AND dst_ip NOT BETWEEN 2886729728 AND 2886795263
-          AND dst_ip NOT BETWEEN 3232235520 AND 3232301055
-          AND map2.cc IS NOT Null
-          GROUP BY map2.cc
-          ORDER BY count DESC";
+$scc = "SELECT COUNT(src_ip) as count, map1.cc AS src_cc, map1.c_long
+        FROM event 
+        LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
+        LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
+        WHERE $when
+        AND src_ip NOT BETWEEN 167772160 AND 184549375
+        AND src_ip NOT BETWEEN 2886729728 AND 2886795263
+        AND src_ip NOT BETWEEN 3232235520 AND 3232301055
+        AND map1.cc IS NOT NULL
+        GROUP BY map1.cc
+        ORDER BY count DESC";
+
+$dcc = "SELECT COUNT(dst_ip) as count, map2.cc AS dst_cc, map2.c_long 
+        FROM event
+        LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
+        LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
+        WHERE $when
+        AND dst_ip NOT BETWEEN 167772160 AND 184549375
+        AND dst_ip NOT BETWEEN 2886729728 AND 2886795263
+        AND dst_ip NOT BETWEEN 3232235520 AND 3232301055
+        AND map2.cc IS NOT NULL
+        GROUP BY map2.cc
+        ORDER BY count DESC";
 
 $sccQuery = mysql_query($scc);
 $dccQuery = mysql_query($dcc);
-doWorld($sccQuery,$dccQuery);
+
+function getFlag($cc) {
+
+    if (file_exists(".flags/$cc.png")) {
+
+        $answer = "<span class=flag><img src=\".flags/$cc.png\"></span>";
+
+    } else {
+ 
+        $answer = "<span class=flag><span class=noflag></span></span>";
+
+    }
+
+    return $answer;
+
+}
+
 
 function doWorld($sccQuery,$dccQuery) {
 
@@ -164,44 +179,47 @@ function doWorld($sccQuery,$dccQuery) {
           <table width=100% border=0 cellpadding=1 cellspacing=0><tr>
           <td align=center style=\"font-size: .9em; padding-top: 10px;\">$aBan $bBan $cBan</td>
           </tr></table>
-          <table class=sortable width=950 border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
+          <table class=sortable width=960 border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
           <thead><tr>
           <th class=sort>Country</th>
-          <th class=sorttable_nosort width=1%></th>
+          <th class=sort width=1%></th>
           <th class=sort width=100>Code</th>
-          <th class=sort width=100>Src</th>
-          <th class=sort width=100>Dst</th>
-          <th class=sort width=100>Total</th>
+          <th class=sort width=75>Src Events</th>
+          <th class=sort width=75>Dst Events</th>
+          <th class=sort width=75>Total</th>
           </tr></thead>";
  
     if ($cHit == 'yes') {
 
         for ($i=0; $i<$cItems; $i++) {
-            $ccount = $c1[$i];
-            $cc = $c2[$i];
-            $country = $c3[$i];
-            $akey = array_search($cc, $a2);
-            $bkey = array_search($cc, $b2);
+
+            $ccount	= $c1[$i];
+            $cc		= $c2[$i];
+            $flag	= getFlag($cc);
+            $country	= $c3[$i];
+            $akey	= array_search($cc, $a2);
+            $bkey	= array_search($cc, $b2);
+
             if ($akey === FALSE) {
-                $acount = 0;
+                $srcEventCount = 0;
             } else {
-                $acount = $a1[$akey];
+                $srcEventCount	= $a1[$akey];
             }
             if ($bkey === FALSE) {
-                $bcount = 0;
+                $dstEventCount = 0;
             } else {
-                $bcount = $b1[$bkey];
-            }
+                $dstEventCount	= $b1[$bkey];
+            }            
 
             $cellCol = getSeverity($c1[$i],$wmThres,$mapSC,$mapEC);
 
-            echo "<tr class=c_row>
-                  <td class=row name=cm-ccc-$i id=cm-ccc-$i>$country</td>
-                  <td class=row style=\"border-bottom: none; background: $cellCol;\"></td>
+            echo "<tr class=s_row id=\"ccc-$cc\">
+                  <td class=row>$flag$country</td>
+                  <td class=row style=\"background: $cellCol;\"></td>
                   <td class=row>$cc</td>
-                  <td class=rowr><b>$acount</b></td>
-                  <td class=rowr><b>$bcount</b></td>
-                  <td class=rowr><b>$ccount</b></td></tr>";
+                  <td class=row><b>$srcEventCount</b></td>
+                  <td class=row><b>$dstEventCount</b></td>
+                  <td class=row><b>$ccount</b></td></tr>";
         }
     } else {
         echo "<tr><td class=row colspan=6>
@@ -212,7 +230,10 @@ function doWorld($sccQuery,$dccQuery) {
 
     echo "\r</table>
           \r</center>
-          \r<br>";
+          \r<br><br><br>";
 
 }
+
+doWorld($sccQuery,$dccQuery);
+
 ?>

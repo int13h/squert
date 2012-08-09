@@ -250,6 +250,15 @@ $(document).ready(function(){
     // Rows
     //
 
+    function closeSigRow() {
+        $("#active_sview").remove();
+        $("#" + this.id).attr('class','s_row');
+        $(".s_row").css('opacity','1');
+        $(".s_row_active").find('td').css('color', '#c9c9c9');
+        $(".s_row_active").find('td').css('background', 'transparent');
+        $(".s_row_active").attr('class','s_row');
+    }
+
     function closeRow() {
         $("#active_eview").remove();
         $("#" + this.id).attr('class','d_row');
@@ -279,11 +288,6 @@ $(document).ready(function(){
         $(".d_row_sub1_active").attr('class','d_row_sub1');
     }
 
-    // not sure if this is right
-    $(".item").live("click", function(){
-        eventList(this.id);
-    });
-
     // Reset if headings are clicked
     $("th.sort").click(function() {
         closeRow();
@@ -291,6 +295,10 @@ $(document).ready(function(){
 
     
     // Close open views
+    $("#sig_close").live("click", function(event) {
+        closeSigRow();
+    });
+
     $("#ev_close").live("click", function(event) {
         closeRow();
     });
@@ -306,10 +314,42 @@ $(document).ready(function(){
     });
 
     //
+    // Signature event view
+    //
+
+    $(".s_row").click(function(event) {
+    
+        // are we active?
+        curClass = $(this).attr('class');
+        var curID = this;
+
+        rowType = this.id.substr(0,3);
+ 
+        switch (rowType) {
+
+        case "ccc":
+            if (!$(".s_row_active")[0]) {
+                rowValue = this.id.replace("ccc-","");
+                // Fade other results and show this
+                $(curID).attr('class','s_row_active');
+                $(curID).find('td').css('background', '#CFE3A6');
+                $(curID).find('td').css('color', '#000000');
+                eventList("6-" + this.id);
+                $(".s_row").fadeTo('0','0.2');
+            }
+        break;
+
+        case "box":
+            alert("bye");
+        break;
+        }
+    });
+
+    //
     // Main event view
     //
 
-    $(".d_row").click(function(event) {  
+    $(".d_row").live("click", function(event) {  
 
         // are we active?
         curClass = $(this).attr('class');
@@ -394,9 +434,63 @@ $(document).ready(function(){
     //
 
     function eventList (type) {
-
         var parts = type.split("-");
+
         switch (parts[0]) {
+
+        // Events level 1
+        case "6":
+
+          urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen;
+
+          $(function(){
+              $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
+          });
+
+          function cb1(data){
+              eval("theData=" + data);
+              tbl = '';
+              head = '';
+              row = '';
+              head += "<thead><tr><th class=sub>Signature</th>";
+              head += "<th class=sub width=80>ID</th>";
+              head += "<th class=sub width=60>Proto</th>";
+              head += "<th class=sub width=90>Last Event</th>";
+              head += "<th class=sub width=1></th>";
+              head += "<th class=sub width=25>Src</th>";
+              head += "<th class=sub width=25>Dst</th>";
+              head += "<th class=sub width=80>Events</th>";
+              head += "<th class=sub width=70>% of Total</th>";
+              head += "</tr></thead>";
+             
+              for (var i=0; i<theData.length; i++) {
+                  rid = "r" + i + "-" + parts[1];
+                  row += "<tr class=d_row id=sid-" + theData[i].f3 + "-" + i + ">";
+                  row += "<td class=row>" + theData[i].f2 + "</td>";
+                  row += "<td class=row>" + theData[i].f3 + "</td>";
+                  row += "<td class=row>" + theData[i].f8 + "</td>";
+
+                  timeParts = theData[i].f5.split(" ");
+                  timeStamp = timeParts[1];
+
+                  row += "<td class=row>" + timeStamp + "</td>";
+                  row += "<td class=row>1</td>";
+                  row += "<td class=row>" + theData[i].f6 + "</td>";
+                  row += "<td class=row>" + theData[i].f7 + "</td>";
+                  row += "<td class=row><b>" + theData[i].f1 + "</b></td>";
+                  row += "<td class=row><b>0</b></td>";
+                  row += "</td></tr>";
+              }
+
+              tbl += "<tr class=sview id=active_sview><td colspan=6>";
+              tbl += "<div id=sig_close class=close><div class=b_close title='Close'>X</div></div>";
+              tbl += "<table id=events width=100% class=sortable cellpadding=0 cellspacing=0>";
+              tbl += head;
+              tbl += row;
+              tbl += "</table></div></tr>";
+              $('#' + parts[1] + '-' + parts[2]).after(tbl);
+          }
+          break;
 
         // Events level 2
         case "2":

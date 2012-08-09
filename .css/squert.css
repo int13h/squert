@@ -52,9 +52,9 @@ h3.live {
     cursor: pointer;
 }
 
-h3.live:hover {
+/*h3.live:hover {
     color: #cc0000;
-}
+}*/
   
 /* Event expansion */
 th.sub {
@@ -141,11 +141,11 @@ tr.a_row_highlight {
     cursor: pointer;
 }
 
-tr.d_row {
+tr.d_row, tr.s_row {
     background-color: #fafafa;
 }
 
-tr.d_row_active {
+tr.d_row_active, tr.s_row_active {
     background-color: #CCC9C6;
     font-weight: bold;
 }
@@ -202,7 +202,7 @@ tr.d_row_active:hover {
     text-decoration: none;
 }
 
-tr.d_row:hover, tr.a_row:hover {
+tr.d_row:hover, tr.a_row:hover, tr.s_row:hover {
     background-color: #f4f4f4;
     cursor: pointer;
 }
@@ -362,6 +362,7 @@ div.bottom {
     background-color: #333333;
     clear: both;
     padding-left: 10px;
+    border-top: 1pt solid #333333;
 }
 
 div.b_tray {
@@ -387,7 +388,8 @@ div.b_event {
 div.b_update {
     width: 7%;
     height: 30px;
-    background-color: #800000;
+    background-color: #d4d4d4;
+    color: #000000;
     cursor: pointer;
     text-align: center;
     font-weight: normal;
@@ -398,7 +400,8 @@ div.b_update {
 div.b_top {
     width: 7%;
     height: 30px;
-    background-color: #800000;
+    background-color: #d4d4d4;
+    color: #000000;
     cursor: pointer;
     text-align: center;
     font-weight: normal;
@@ -446,8 +449,8 @@ td.cmonth {
     width: 70px;
     text-align: center;
     padding: 2px 0px 2px 0px;
-    background: #cc0000;
-    color: #ffffff;
+    background: yellow;
+    color: #000000;
 }
 tr.day {
     background-color: #e9e9e9;
@@ -463,14 +466,15 @@ td.day {
 td.cday {
     text-align: center;
     padding: 2px 0px 2px 0px;
-    background: #c9c9c9;
+    background: yellow;
     font-weight: bold;
-    border-bottom: 10pt solid #000000;
+    border-bottom: 1pt solid #000000;
 }
 td.tday {
     text-align: center;
     padding: 2px 0px 2px 0px;
     color: #000000;
+    font-weight: bold;;
     border-right: 2pt solid #000000;
     border-bottom: 1pt solid #000000;
 }
@@ -479,6 +483,12 @@ a.month {
     color: #adadad;
     background-color: none;
 }
+
+a.cday {
+    color: #000000;
+    text-decoration: none;
+}
+
 a.day {
     text-decoration: none;
     background-color: none;
@@ -659,8 +669,22 @@ span.clear:hover {
   color: #e9e9e9;
 }
 
-td.cday {
-    border: 2pt solid black;
-    border-top: none;
-    background: #ffffff;
+span.hide {
+    color: gray;
+    padding-right: 10px;
+}
+
+span.hide:hover {
+    color: #cc0000;
+}
+
+span.flag {
+    padding-right: 10px;
+}
+
+span.noflag {
+    background: #f4f4f4;
+    border: 1pt solid black;
+    padding: 0px 8px 0px 8px;
+    
 }

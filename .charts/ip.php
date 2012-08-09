@@ -107,7 +107,7 @@ if ($siE != 1) {
             bar1.Set('chart.text.size', 8);
             bar1.Set('chart.text.font', 'verdana');
             bar1.Set('chart.ylabels.count', 10);
-            bar1.Set('chart.key', ['< Events', '> Destinations', '> Signatures']);
+            bar1.Set('chart.key', ['Src Events', 'Distinct Dst', 'Signatures']);
             bar1.Set('chart.key.text.size', 8);
             bar1.Set('chart.key.background', 'rgba(255,255,255,0.3)');
             bar1.Set('chart.key.position', 'gutter');
@@ -161,7 +161,7 @@ if ($diE != 1) {
             bar2.Set('chart.text.size', 8);
             bar2.Set('chart.text.font', 'verdana');
             bar2.Set('chart.ylabels.count', 10);
-            bar2.Set('chart.key', ['< Events', '> Sources', '> Signatures']);
+            bar2.Set('chart.key', ['Dst Events', 'Distinct Src', 'Signatures']);
             bar2.Set('chart.key.text.size', 8);
             bar2.Set('chart.key.background', 'rgba(255,255,255,0.3)');
             bar2.Set('chart.key.position', 'gutter'); 

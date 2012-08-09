@@ -128,17 +128,20 @@ function mkLinks() {
         $lbl = date('Dd', strtotime($link));
         if ($link == $today) {
             $dClass = "tday";
+            $aClass = "day";
         } else {
             $dClass = "day";
+            $aClass = "day";
         }
 
         if ($link == $startDate) {
             $dClass = "cday";
+            $aClass = "cday";
         }
 
         if ($link <= $today) {
             $href="$page?id=$id&s=$link&e=$link";
-            $html .= "<td class=$dClass><a class=day href=\"$href\">${lbl}</a></td>\n";
+            $html .= "<td class=$dClass><a class=$aClass href=\"$href\">${lbl}</a></td>\n";
         } else {
             $html .= "<td class=$dClass>${lbl}</td>\n";
         }

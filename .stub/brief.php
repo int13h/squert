@@ -42,7 +42,7 @@ function lastTime($stamp) {
 
     if ($tDiff >= 86400)  {
         $timeResult = $stamp;
-        $timeStyle = "rowr";
+        $timeStyle = "row";
     } else {
         if ($stamp != "-") {
             list($date,$time) = explode(" ", $stamp);
@@ -50,7 +50,7 @@ function lastTime($stamp) {
         } else {
             $timeResult = '-';
         }
-        $timeStyle = "rowr";
+        $timeStyle = "row";
     }        
 
     if ($tDiff == 0 && $endDate == $today || $tDiff >= 86400 && $endDate == $today) {
@@ -66,7 +66,7 @@ function lastTime($stamp) {
         $bgcol = "#e9e9e9";
     }
 
-    $stampLine = "<td class=$timeStyle>$timeResult</td><td class=rowr style=\"background: $bgcol;\"></td>";
+    $stampLine = "<td class=$timeStyle>$timeResult</td><td class=row style=\"background: $bgcol;\"></td>";
     return $stampLine;
 }
 
@@ -98,7 +98,6 @@ $sensor         = mysql_query("SELECT st.net_name, st.hostname, st.agent_type, s
                                COUNT(DISTINCT(signature)), COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip))
                                FROM event LEFT JOIN sensor AS st ON event.sid = st.sid
                                WHERE $when
-                               AND signature NOT REGEXP '^URL'
                                GROUP BY event.sid");
 
 $sensors        = mysql_query("SELECT net_name, hostname, agent_type, sid
@@ -131,7 +130,7 @@ $srcCount = mysql_fetch_row($sources);
 $dstCount = mysql_fetch_row($destinations);
 
 echo "<div class=toggle id=table-Brief>
-      \r\r<h3 class=live id=h-Brief> Brief</h3>
+      \r\r<h3 class=live id=h-Brief> <span class=hide>[-]</span>Brief</h3>
       \r<table class=null width=960 align=center>\n
       \r<tr>\n
       \r<td align=center><div class=big>Total Events</div><div id=etotal class=box>$sumEvents</div></td>\n
@@ -157,7 +156,7 @@ while ($row = mysql_fetch_row($sensor)) {
 }
 
 echo "<div class=toggle id=table-Sensor>
-      \r<h3 class=live id=h-Sensor> Event Distribution by Sensor</h3>
+      \r<h3 class=live id=h-Sensor> <span class=hide>[-]</span>Event Distribution by Sensor</h3>
       \r<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
       \r<th class=sort width=250>Network</th>
@@ -202,11 +201,11 @@ foreach ($sensorList as $key => $sid) {
           \r<td class=row>$hostName</td>
           \r<td class=row>$agent</td>
           \r$stampLine
-          \r<td class=rowr>$sig</td>
-          \r<td class=rowr>$src</td>
-          \r<td class=rowr>$dst</td>
-          \r<td class=rowr><b>$numEvents</b></td>
-          \r<td class=rowr><b>$per</b></td></tr>\n";
+          \r<td class=row>$sig</td>
+          \r<td class=row>$src</td>
+          \r<td class=row>$dst</td>
+          \r<td class=row><b>$numEvents</b></td>
+          \r<td class=row><b>$per</b></td></tr>\n";
 }
 
 $sumPer = round($sumPer,0);
@@ -222,7 +221,7 @@ echo "</table></div>";
 
 // Events by Category
 echo "<div class=toggle id=table-Category>
-      \r<h3 class=live id=h-Category> Event Distribution by Category</h3>
+      \r<h3 class=live id=h-Category> <span class=hide>[-]</span>Event Distribution by Category</h3>
       \r<table align=center width=960 border=0 cellpadding=0 cellspacing=0 class=sortable style=\"border: 1pt solid #c4c4c4; border-bottom: none;\">\n
       \r<thead><tr>
       \r<th class=sort width=20>#</th>
@@ -270,11 +269,11 @@ foreach ($statusList as $key => $status) {
           \r<td class=row style=\"background: $class_colour; text-align: center\">$shortDesc</td>
           \r<td class=row>$longDesc</td>
           \r$stampLine
-          \r<td class=rowr>$sig</td>
-          \r<td class=rowr>$src</td>
-          \r<td class=rowr>$dst</td>
-          \r<td class=rowr><b>$numEvents</b></td>
-          \r<td class=rowr><b>$per</b></td></tr>\n";
+          \r<td class=row>$sig</td>
+          \r<td class=row>$src</td>
+          \r<td class=row>$dst</td>
+          \r<td class=row><b>$numEvents</b></td>
+          \r<td class=row><b>$per</b></td></tr>\n";
 }
 
 $sumPer = round($sumPer,0);

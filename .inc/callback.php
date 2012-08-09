@@ -15,6 +15,7 @@ $types = array(
                  3 => "ed",
                  4 => "pd",
                  5 => "tb",
+                 6 => "es",
 );
 
 $type = $types[$type];
@@ -110,6 +111,37 @@ function si() {
     $theJSON = json_encode($result);
     echo $theJSON;
 
+}
+
+function es() {
+    
+    global $offset;
+    $object = mysql_real_escape_string($_REQUEST['object']);
+    $parts = explode('-', $object);
+    $filter = "AND (map1.cc = '$parts[2]' OR map2.cc = '$parts[2]')";
+    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
+ 
+    $query = "SELECT COUNT(event.signature) AS f1, event.signature AS f2, event.signature_id AS f3, event.signature_gen AS f4,
+              MAX(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS f5,
+              COUNT(DISTINCT(event.src_ip)) AS f6, COUNT(DISTINCT(event.dst_ip)) AS f7, event.ip_proto AS f8,
+              GROUP_CONCAT(DISTINCT(event.status)) AS f9, GROUP_CONCAT(DISTINCT(event.sid)) AS f10
+              FROM event
+              LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
+              LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
+              WHERE $when
+              $filter
+              GROUP BY f3
+              ORDER BY f5 DESC";
+
+    $result = mysql_query($query);
+
+    $rows = array();
+
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
+    $theJSON = json_encode($rows);
+    echo $theJSON;
 }
 
 function eg() {
@@ -238,7 +270,6 @@ function tb() {
     $tab = $_REQUEST['tab'];
     $_SESSION['sTab'] = $tab;
 }
-
 
 $type();
 
