@@ -130,7 +130,7 @@ $srcCount = mysql_fetch_row($sources);
 $dstCount = mysql_fetch_row($destinations);
 
 echo "<div class=toggle id=table-Brief>
-      \r\r<h3 class=live id=h-Brief> <span class=hide>[-]</span>Brief</h3>
+      \r\r<h3 class=live id=h-Brief> [-] Brief</h3>
       \r<table class=null width=960 align=center>\n
       \r<tr>\n
       \r<td align=center><div class=big>Total Events</div><div id=etotal class=box>$sumEvents</div></td>\n
@@ -156,7 +156,7 @@ while ($row = mysql_fetch_row($sensor)) {
 }
 
 echo "<div class=toggle id=table-Sensor>
-      \r<h3 class=live id=h-Sensor> <span class=hide>[-]</span>Event Distribution by Sensor</h3>
+      \r<h3 class=live id=h-Sensor> [-] Event Distribution by Sensor</h3>
       \r<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
       \r<th class=sort width=250>Network</th>
@@ -221,7 +221,7 @@ echo "</table></div>";
 
 // Events by Category
 echo "<div class=toggle id=table-Category>
-      \r<h3 class=live id=h-Category> <span class=hide>[-]</span>Event Distribution by Category</h3>
+      \r<h3 class=live id=h-Category> [-] Event Distribution by Category</h3>
       \r<table align=center width=960 border=0 cellpadding=0 cellspacing=0 class=sortable style=\"border: 1pt solid #c4c4c4; border-bottom: none;\">\n
       \r<thead><tr>
       \r<th class=sort width=20>#</th>

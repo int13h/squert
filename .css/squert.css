@@ -52,9 +52,9 @@ h3.live {
     cursor: pointer;
 }
 
-/*h3.live:hover {
+h3.live:hover {
     color: #cc0000;
-}*/
+}
   
 /* Event expansion */
 th.sub {
@@ -130,18 +130,18 @@ tr.a_row_highlight {
 }
 
 tr.d_row, tr.s_row {
+    background: transparent;
     background-color: #fafafa;
 }
 
 tr.d_row_active {
-    border-top: 3px solid green;
+    background: transparent;
     font-weight: bold;
 }
 
 tr.s_row_active {
-    border-top: 10px solid green;
+    background: transparent;
     font-weight: bold;
-    padding: 20px;
 }
 
 tr.d_row_sub {
@@ -233,13 +233,9 @@ tr.d_row_active:hover {
     text-decoration: none;
 }
 
-tr.d_row:hover, tr.a_row:hover, tr.s_row:hover {
+tr.d_row:hover, tr.a_row:hover, tr.s_row:hover, tr.d_row_sub:hover, tr.d_row_sub1:hover {
     background-color: #f4f4f4;
     cursor: pointer;
-}
-
-tr.d_row_sub:hover, tr.d_row_sub1:hover {
-    background-color: #f4f4f4;
 }
 
 td.sub {
@@ -329,6 +325,7 @@ div.tab_group {
     background-color: #333333;
     color: #adadad;
     float: left;
+    z-index: 10;
 }
 div.tab {
     width: 100px;
@@ -602,7 +599,7 @@ div.big {
 }
 
 /* Event Actions */
-div.b_detail, div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy {
+div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy {
     float: left;
     padding: 0px 7px 0px 7px;
     font-weight: normal;
@@ -613,14 +610,10 @@ div.b_detail, div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy {
     border-radius: 3px;
 }
 
-div.b_detail:hover, div.b_tx:hover, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover {
+div.b_tx:hover, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
-}
-
-div.b_detail {
-    background-color: lightblue;
 }
 
 div.b_tx {
@@ -629,7 +622,7 @@ div.b_tx {
 }
 
 div.b_hist {
-    background-color: #f4f4f4;
+    background-color: lightblue;
     color: #000000;
 }
 
@@ -698,15 +691,6 @@ span.clear {
 
 span.clear:hover {
   color: #e9e9e9;
-}
-
-span.hide {
-    color: gray;
-    padding-right: 10px;
-}
-
-span.hide:hover {
-    color: #cc0000;
 }
 
 span.flag {

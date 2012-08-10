@@ -230,22 +230,6 @@ $(document).ready(function(){
          $.get(".inc/session.php?id=0", function(){location.reload()});
     });
     
-    // Settings
-    $("#settings").click(function(event) {
-         $("#page").fadeOut('fast', function() {
-             var content = $(".content_active").attr('id');
-             old_content = content;
-             $("#" + content).attr('class','content');
-             $("#set_content").attr('class','content_active');
-         });
-    });
-
-    $("#set_close").click(function(event) {
-         $("#page").fadeTo('slow',1);
-         $("#set_content").attr('class','content');
-         $("#" + old_content).attr('class','content_active');
-    });
-    
     //
     // Rows
     //
@@ -254,7 +238,7 @@ $(document).ready(function(){
         $("#active_sview").remove();
         $("#" + this.id).attr('class','s_row');
         $(".s_row").css('opacity','1');
-        $(".s_row_active").find('td').css('color', '#c9c9c9');
+        $(".s_row_active").find('td').css('color', 'gray');
         $(".s_row_active").find('td').css('background', 'transparent');
         $(".s_row_active").attr('class','s_row');
     }
@@ -263,7 +247,7 @@ $(document).ready(function(){
         $("#active_eview").remove();
         $("#" + this.id).attr('class','d_row');
         $(".d_row").css('opacity','1');
-        $(".d_row_active").find('td').css('color', '#c9c9c9');
+        $(".d_row_active").find('td').css('color', 'gray');
         $(".d_row_active").find('td').css('background', 'transparent');
         $(".d_row_active").attr('class','d_row');
     }
@@ -272,7 +256,7 @@ $(document).ready(function(){
         $("#eview_sub1").remove();
         $("#" + this.id).attr('class','d_row_sub');
         $(".d_row_sub").css('opacity','1');
-        $(".d_row_sub_active").find('td.sub').css('color', '#c9c9c9');
+        $(".d_row_sub_active").find('td.sub').css('color', 'gray');
         $(".d_row_sub_active").find('td').css('border-top', 'none');
         $(".d_row_sub_active").find('td').css('background', 'transparent');
         $(".d_row_sub_active").attr('class','d_row_sub');
@@ -282,7 +266,7 @@ $(document).ready(function(){
         $("#eview_sub2").remove();
         $("#" + this.id).attr('class','d_row_sub1');
         $(".d_row_sub1").css('opacity','1');
-        $(".d_row_sub1_active").find('td.sub').css('color', '#c9c9c9');
+        $(".d_row_sub1_active").find('td.sub').css('color', 'gray');
         $(".d_row_sub1_active").find('td').css('border-top', 'none');
         $(".d_row_sub1_active").find('td.sub').css('background', 'transparent');
         $(".d_row_sub1_active").attr('class','d_row_sub1');
@@ -396,37 +380,25 @@ $(document).ready(function(){
             }
         }
     });
-
-    //
-    // Buttons
-    //
-
-    // More detail
-    $(".b_detail").live("click", function() {
-
-        switch (this.id[0]) {
-
-        case "r":
-          if (!$(".d_row_sub_active")[0]) {        
-              rowcall = this.id.split("-");
-              callerID = rowcall[0];
-              $("#" + callerID).attr('class','d_row_sub_active');
-              $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
-              eventList("3-" + this.id);
-          }
-          break;
-
-        case "s":
-          if (!$(".d_row_sub1_active")[0]) {
-              rowcall = this.id.split("-");
-              callerID = rowcall[0];
-              $("#" + callerID).attr('class','d_row_sub1_active');
-              $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
-              eventList("4-" + this.id);
-          }
-          break;
+ 
+    $(".d_row_sub").live("click", function() {
+        if (!$(".d_row_sub_active")[0]) {        
+            rowcall = this.id.split("-");
+            callerID = rowcall[0];
+            $("#" + callerID).attr('class','d_row_sub_active');
+            $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+            eventList("3-" + this.id);
         }
-        
+    });
+
+    $(".d_row_sub1").live("click", function() {
+        if (!$(".d_row_sub1_active")[0]) {
+            rowcall = this.id.split("-");
+            callerID = rowcall[0];
+            $("#" + callerID).attr('class','d_row_sub1_active');
+            $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+            eventList("4-" + this.id);
+        }
     });
 
     //
@@ -495,6 +467,7 @@ $(document).ready(function(){
 
         // Events level 2 - Grouped by signature, source, destination
         case "2":
+
           urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
@@ -517,7 +490,7 @@ $(document).ready(function(){
               for (var i=0; i<theData.length; i++) {
 
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
-                  row += "<tr class=d_row_sub id=r" + i + "><td class=sub>" + theData[i].count + "</td>";
+                  row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\"><td class=sub>" + theData[i].count + "</td>";
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
                   row += "<td class=sub>" + theData[i].src_ip + "</td>";
                   if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub"; }
@@ -526,7 +499,6 @@ $(document).ready(function(){
                   if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub"; }
                   row += "<td class=" + sclass + ">" + theData[i].dst_cc + "</td>";
                   row += "<td class=sub_act>";
-                  row += "<div class=b_detail id=" + rid + " title='More Detail'>D</div>";
                   row += "<div class=b_hist title='Event History'>H</div>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
@@ -543,7 +515,8 @@ $(document).ready(function(){
         // Events level 3 - No grouping, individual events
         case "3":
           var rowLoke = parts[1];
-          urArgs = "type=" + parts[0] + "&object=" + parts + "&ts=" + theWhen;
+          var filter = $('#' + parts[1]).data('filter');
+          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
           });
@@ -568,7 +541,7 @@ $(document).ready(function(){
 
                   rid = "s" + i + "-" + theData[i].sid + "-" + theData[i].cid;
                   eid = theData[i].sid + "." + theData[i].cid;
-                  row += "<tr class=d_row_sub1 id=s" + i + ">";
+                  row += "<tr class=d_row_sub1 id=s" + i + " data-filter=\"" + eid + "\">";
                   tclass = "c" + theData[i].status;
                   cv = classifications.class[tclass][0].short;
                   
@@ -580,7 +553,6 @@ $(document).ready(function(){
                   row += "<td class=sub>" + theData[i].dst_ip + "</td>";
                   row += "<td class=sub>" + theData[i].dst_port + "</td>";
                   row += "<td class=sub_act>";
-                  row += "<div class=b_detail id=" + rid + " title='More Detail'>D</div>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
                   row += "</td></tr>";
@@ -598,9 +570,12 @@ $(document).ready(function(){
 
         // Packet Data
         case "4":
-
           var rowLoke = parts[1];
-          urArgs = "type=" + parts[0] + "&object=" + parts + "&ts=" + theWhen;
+
+          var filter = $('#' + parts[1]).data('filter');
+
+          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
+
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb3(data)});
           });
