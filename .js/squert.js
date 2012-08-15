@@ -1,5 +1,15 @@
 $(document).ready(function(){
 
+    function getFlag(cc) {
+
+        if (cc != "LO" && cc != null) {
+            answer = "<span class=flag><img src=\".flags/" + cc + ".png\"></span>"
+        } else {
+            answer = ""
+        }
+        return answer;
+    }
+
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
         "c12":[{"short": "C2", "long": "Unauthorized User Access"}],
@@ -240,6 +250,8 @@ $(document).ready(function(){
         $(".s_row").css('opacity','1');
         $(".s_row_active").find('td').css('color', 'gray');
         $(".s_row_active").find('td').css('background', 'transparent');
+        ltCol = $(".s_row_active").find('td.lt').html();
+        $(".s_row_active").find('td.lt').css('background', ltCol);
         $(".s_row_active").attr('class','s_row');
     }
 
@@ -249,7 +261,10 @@ $(document).ready(function(){
         $(".d_row").css('opacity','1');
         $(".d_row_active").find('td').css('color', 'gray');
         $(".d_row_active").find('td').css('background', 'transparent');
+        ltCol = $(".d_row_active").find('td.lt').html();
+        $(".d_row_active").find('td.lt').css('background', ltCol);
         $(".d_row_active").attr('class','d_row');
+        
     }
 
     function closeSubRow() {
@@ -494,10 +509,12 @@ $(document).ready(function(){
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
                   row += "<td class=sub>" + theData[i].src_ip + "</td>";
                   if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub"; }
-                  row += "<td class=" + sclass + ">" + theData[i].src_cc + "</td>";
+                  sflag = getFlag(theData[i].srcc)
+                  row += "<td class=" + sclass + ">" + sflag + theData[i].src_cc + "</td>";
                   row += "<td class=sub>" + theData[i].dst_ip + "</td>";
                   if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub"; }
-                  row += "<td class=" + sclass + ">" + theData[i].dst_cc + "</td>";
+                  dflag = getFlag(theData[i].dstc)
+                  row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
                   row += "<td class=sub_act>";
                   row += "<div class=b_hist title='Event History'>H</div>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";

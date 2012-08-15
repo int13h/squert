@@ -94,6 +94,17 @@ td.row {
   font-size: 11px;
 }
 
+td.lt {
+  background: transparent;
+  border: 1pt solid #c4c4c4;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  color: transparent;
+  padding: 2px;
+  font-size: 0px;
+}
+
 td.rowr {
   background: transparent;
   border: 1pt solid #c4c4c4;
@@ -106,7 +117,7 @@ td.rowr {
   font-size: 11px;
 }
 
-td.totals {
+td.totalsr {
   background: #e9e9e9;
   font-weight: bold;
   border: 1pt solid #c4c4c4;
@@ -114,6 +125,20 @@ td.totals {
   border-right: none;
   border-left: none;
   text-align: right;
+  color: #545454;
+  padding: 3px 5px 3px 5px;
+  font-size: 13px;
+  cursor: default;
+}
+
+td.totals {
+  background: #e9e9e9;
+  font-weight: bold;
+  border: 1pt solid #c4c4c4;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  text-align: left;
   color: #545454;
   padding: 3px 5px 3px 5px;
   font-size: 13px;

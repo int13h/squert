@@ -66,7 +66,7 @@ function lastTime($stamp) {
         $bgcol = "#e9e9e9";
     }
 
-    $stampLine = "<td class=$timeStyle>$timeResult</td><td class=row style=\"background: $bgcol;\"></td>";
+    $stampLine = "<td class=$timeStyle>$timeResult</td><td class=lt style=\"background: $bgcol;\">$bgcol</td>";
     return $stampLine;
 }
 
@@ -211,7 +211,7 @@ foreach ($sensorList as $key => $sid) {
 $sumPer = round($sumPer,0);
 
 echo "<tfoot><tr class=a_row>
-          \r<td class=totals colspan=5>Totals:</td>
+          \r<td class=totalsr colspan=5>Totals:</td>
           \r<td class=totals>$sigCount</td>
           \r<td class=totals>$srcCount[0]</td>
           \r<td class=totals>$dstCount[0]</td>
@@ -279,7 +279,7 @@ foreach ($statusList as $key => $status) {
 $sumPer = round($sumPer,0);
 
 echo "<tfoot><tr class=a_row>
-          \r<td class=totals colspan=4>Totals:</td>
+          \r<td class=totalsr colspan=4>Totals:</td>
           \r<td class=totals>$sigCount</td>
           \r<td class=totals>$srcCount[0]</td>
           \r<td class=totals>$dstCount[0]</td>

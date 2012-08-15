@@ -150,8 +150,10 @@ function eg() {
     $sid = mysql_real_escape_string($_REQUEST['object']);
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
 
-    $query = "SELECT COUNT(signature) AS count, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) AS maxTime, INET_NTOA(src_ip) AS src_ip, map1.c_long as src_cc,
-              INET_NTOA(dst_ip) AS dst_ip, map2.c_long as dst_cc
+    $query = "SELECT COUNT(signature) AS count, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) AS maxTime, 
+              INET_NTOA(src_ip) AS src_ip, map1.c_long AS src_cc,
+              INET_NTOA(dst_ip) AS dst_ip, map2.c_long AS dst_cc,
+              map1.cc AS srcc, map2.cc AS dstc
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
               LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip

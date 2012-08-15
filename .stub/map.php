@@ -182,7 +182,7 @@ function doWorld($sccQuery,$dccQuery) {
           <table class=sortable width=960 border=0 cellpadding=0 cellspacing=0 style=\"border: 1pt solid gray;\">
           <thead><tr>
           <th class=sort>Country</th>
-          <th class=sort width=1%></th>
+          <th class=sort width=1></th>
           <th class=sort width=100>Code</th>
           <th class=sort width=75>Src Events</th>
           <th class=sort width=75>Dst Events</th>
@@ -215,7 +215,7 @@ function doWorld($sccQuery,$dccQuery) {
 
             echo "<tr class=s_row id=\"ccc-$cc\">
                   <td class=row>$flag$country</td>
-                  <td class=row style=\"background: $cellCol;\"></td>
+                  <td class=lt style=\"background: $cellCol;\">$cellCol</td>
                   <td class=row>$cc</td>
                   <td class=row><b>$srcEventCount</b></td>
                   <td class=row><b>$dstEventCount</b></td>
