@@ -205,7 +205,7 @@ function pd() {
 
     global $offset;
     $comp = mysql_real_escape_string($_REQUEST['object']);
-    list($sid,$cid) = explode(".", $comp);
+    list($sid,$cid) = explode("-", $comp);
 
     $query = "SELECT INET_NTOA(src_ip), INET_NTOA(dst_ip), ip_ver, ip_hlen, ip_tos, ip_len, ip_id,ip_flags,
              ip_off, ip_ttl, ip_csum, src_port, dst_port, ip_proto, signature, signature_id, CONVERT_TZ(timestamp,'+00:00','$offset')

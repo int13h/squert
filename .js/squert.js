@@ -148,8 +148,6 @@ $(document).ready(function(){
     //
     // Event monitor
     //
-
-    // logic is flawed. fix!
  
     var emTimeout = 30000;
 
@@ -291,7 +289,6 @@ $(document).ready(function(){
     $("th.sort").click(function() {
         closeRow();
     });
-
     
     // Close open views
     $("#sig_close").live("click", function(event) {
@@ -443,7 +440,7 @@ $(document).ready(function(){
               head += "<thead><tr><th class=sub>Signature</th>";
               head += "<th class=sub width=80>ID</th>";
               head += "<th class=sub width=60>Proto</th>";
-              head += "<th class=sub width=90>Last Event</th>";
+              head += "<th class=sub>Last Event</th>";
               head += "<th class=sub width=1></th>";
               head += "<th class=sub width=25>Src</th>";
               head += "<th class=sub width=25>Dst</th>";
@@ -499,7 +496,6 @@ $(document).ready(function(){
               head += "<th class=sub width=170>Country</th>";
               head += "<th class=sub width=100>Destination IP</th>";
               head += "<th class=sub width=170>Country</th>";
-              head += "<th class=sub>Actions</th>";
               head += "</tr></thead>";
 
               for (var i=0; i<theData.length; i++) {
@@ -515,11 +511,7 @@ $(document).ready(function(){
                   if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub"; }
                   dflag = getFlag(theData[i].dstc)
                   row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
-                  row += "<td class=sub_act>";
-                  row += "<div class=b_hist title='Event History'>H</div>";
-                  row += "<div class=b_notes title='Add Notes'>N</div>";
-                  row += "<div class=b_tag title='Add Tag'>T</div>";
-                  row += "</td></tr>";
+                  row += "</tr>";
               }
               tbl += "<div class=eview_sub id=eview_sub><table id=events width=100% class=sortable cellpadding=0 cellspacing=0>";
               tbl += head;
@@ -533,6 +525,7 @@ $(document).ready(function(){
         case "3":
           var rowLoke = parts[1];
           var filter = $('#' + parts[1]).data('filter');
+
           urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
@@ -557,26 +550,26 @@ $(document).ready(function(){
               for (var i=0; i<theData.length; i++) {
 
                   rid = "s" + i + "-" + theData[i].sid + "-" + theData[i].cid;
-                  eid = theData[i].sid + "." + theData[i].cid;
+                  eid = theData[i].sid + "-" + theData[i].cid;
                   row += "<tr class=d_row_sub1 id=s" + i + " data-filter=\"" + eid + "\">";
                   tclass = "c" + theData[i].status;
                   cv = classifications.class[tclass][0].short;
                   
                   row += "<td class=" + cv + ">" + cv + "</td>";
                   row += "<td class=sub>" + theData[i].timestamp + "</td>";
-                  row += "<td class=sub>" + eid + "</td>";
+                  row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
                   row += "<td class=sub>" + theData[i].src_ip + "</td>";
                   row += "<td class=sub>" + theData[i].src_port + "</td>";
                   row += "<td class=sub>" + theData[i].dst_ip + "</td>";
                   row += "<td class=sub>" + theData[i].dst_port + "</td>";
-                  row += "<td class=sub_act>";
+                  row += "<td class=sub>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
                   row += "</td></tr>";
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
               tbl += "<div class=notes id=notes></div>";
-              tbl += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+              tbl += "<table class=sortable align=center width=100% cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table></td></tr>";
@@ -588,7 +581,6 @@ $(document).ready(function(){
         // Packet Data
         case "4":
           var rowLoke = parts[1];
-
           var filter = $('#' + parts[1]).data('filter');
 
           urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
@@ -762,7 +754,7 @@ $(document).ready(function(){
               row += "</td></tr></table>";
                     
               tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=8><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
-              tbl += "<div class=notes_sub2 id=notes></div>";
+              tbl += "<div class=notes_sub2 id=notes><b>Notes:</b> None.</div>";
               tbl += head;
               tbl += row;
               tbl += "</td></tr>";

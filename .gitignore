@@ -1,6 +1,6 @@
 .scripts/*.md5
 .inc/config.php
-.scripts/quickscript.tcl
+.scripts/cliscript.tcl
 .rules
 .images
 .js/config.js
