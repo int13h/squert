@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
+    header ("Location: session.php?id=0");
+}
+
 $base = dirname(__FILE__);
 include_once "$base/config.php";
 include_once "$base/functions.php";

@@ -39,7 +39,7 @@ echo "<div class=toggle id=table-Signature>
       \r<th class=sort>Signature</th>
       \r<th class=sort width=80>ID</th>
       \r<th class=sort width=60>Proto</th>
-      \r<th class=sort width=90>Last Event</th>
+      \r<th class=sort>Last Event</th>
       \r<th class=sorttable_nosort width=1></th>
       \r<th class=sort width=20>Src</th>
       \r<th class=sort width=20>Dst</th>

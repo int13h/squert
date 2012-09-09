@@ -501,14 +501,15 @@ $(document).ready(function(){
               for (var i=0; i<theData.length; i++) {
 
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
-                  row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\"><td class=sub>" + theData[i].count + "</td>";
+                  row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
+                  row += "<td class=sub>" + theData[i].count + "</td>";
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
-                  row += "<td class=sub>" + theData[i].src_ip + "</td>";
-                  if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub"; }
+                  row += "<td class=sub_act>" + theData[i].src_ip + "</td>";
+                  if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_act"; }
                   sflag = getFlag(theData[i].srcc)
                   row += "<td class=" + sclass + ">" + sflag + theData[i].src_cc + "</td>";
-                  row += "<td class=sub>" + theData[i].dst_ip + "</td>";
-                  if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub"; }
+                  row += "<td class=sub_act>" + theData[i].dst_ip + "</td>";
+                  if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_act"; }
                   dflag = getFlag(theData[i].dstc)
                   row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
                   row += "</tr>";
@@ -518,6 +519,7 @@ $(document).ready(function(){
               tbl += row;
               tbl += "</table></div>";
               $("#eview").after(tbl);
+              sorttable();
           }
           break;
 
@@ -556,12 +558,12 @@ $(document).ready(function(){
                   cv = classifications.class[tclass][0].short;
                   
                   row += "<td class=" + cv + ">" + cv + "</td>";
-                  row += "<td class=sub>" + theData[i].timestamp + "</td>";
-                  row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
-                  row += "<td class=sub>" + theData[i].src_ip + "</td>";
-                  row += "<td class=sub>" + theData[i].src_port + "</td>";
-                  row += "<td class=sub>" + theData[i].dst_ip + "</td>";
-                  row += "<td class=sub>" + theData[i].dst_port + "</td>";
+                  row += "<td class=sub_act>" + theData[i].timestamp + "</td>";
+                  row += "<td class=sub_act title=\"Generate Transcript\">" + theData[i].sid + "." + theData[i].cid + "</td>";
+                  row += "<td class=sub_act>" + theData[i].src_ip + "</td>";
+                  row += "<td class=sub_act>" + theData[i].src_port + "</td>";
+                  row += "<td class=sub_act>" + theData[i].dst_ip + "</td>";
+                  row += "<td class=sub_act>" + theData[i].dst_port + "</td>";
                   row += "<td class=sub>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";

@@ -14,7 +14,6 @@
   Licenced as X11: http://www.kryogenix.org/code/browser/licence.html
   This basically means: do what you want with it.
 */
-
  
 var stIsIE = /*@cc_on!@*/false;
 

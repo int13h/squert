@@ -297,8 +297,13 @@ td.sub_light {
   font-style: italic;
 }
 
+td.sub_act:hover, td.sub_light:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 tr.eview {
-    border-bottom: 2pt solid #545454;
+    border-bottom: 1pt solid gray;
 }
 
 div.eview {
