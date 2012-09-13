@@ -34,12 +34,12 @@ $signatures = mysql_query($query);
 
 echo "<div class=toggle id=table-Signature>
       \r<h3 class=live id=h-Signature> [-] $stub</h3>
-      \r<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
+      \r<table id=sort-signature width=960 cellpadding=0 cellspacing=0 class=tablesorter style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
       \r<th class=sort>Signature</th>
       \r<th class=sort width=80>ID</th>
       \r<th class=sort width=60>Proto</th>
-      \r<th class=sort>Last Event</th>
+      \r<th class=sort>Last</th>
       \r<th class=sorttable_nosort width=1></th>
       \r<th class=sort width=20>Src</th>
       \r<th class=sort width=20>Dst</th>

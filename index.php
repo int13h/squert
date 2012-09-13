@@ -34,9 +34,10 @@ dbC();
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href=".css/squert.css" />
+<link rel="stylesheet" type="text/css" href=".css/table.css" />
 <script type="text/javascript" src=".js/jq.js"></script>
+<script type="text/javascript" src=".js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src=".js/squert.js"></script>
-<script type="text/javascript" src=".js/sorttable.js"></script>
 <script type="text/javascript" src=".js/worldmap.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
@@ -56,7 +57,7 @@ dbC();
 <div id=t_sum class=tab>Events</div>
 <div id=t_map class=tab>Map</div>
 
-<div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=settings class=links>Watchlist</span>|<span id=settings class=links>Settings</span>|<span id=logout class=links>Logout</span></div>
+<div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=settings class=links>Watchlist</span>|<span id=logout class=links>Logout</span></div>
 <form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
 <div id=t_search class=search><span id=settings class=links>Saved</span>|<span id=live_search class=links_enabled>Live</span>|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
 </div>

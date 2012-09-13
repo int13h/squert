@@ -64,6 +64,7 @@ th.sub {
   font-size: 10px;
   text-align: left;
   border: none;
+  cursor: pointer;
 }
 
 th.sub1 {  background: #e9e9e9;
@@ -72,6 +73,7 @@ th.sub1 {  background: #e9e9e9;
   font-size: 10px;
   text-align: left;
   border: none;
+  cursor: pointer;
 }
 
 th.sub2 {
@@ -81,6 +83,7 @@ th.sub2 {
   font-size: 10px;
   font-weight: bold;
   text-align: left;
+  cursor: pointer;
 }
 
 td.row {
@@ -731,5 +734,5 @@ span.noflag {
     background: #f4f4f4;
     border: 1pt solid black;
     padding: 0px 8px 0px 8px;
-    
 }
+

@@ -157,7 +157,7 @@ while ($row = mysql_fetch_row($sensor)) {
 
 echo "<div class=toggle id=table-Sensor>
       \r<h3 class=live id=h-Sensor> [-] Event Distribution by Sensor</h3>
-      \r<table width=960 cellpadding=0 cellspacing=0 class=sortable style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
+      \r<table id=sort-sensor width=960 cellpadding=0 cellspacing=0 class=tablesorter style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       \r<thead><tr>
       \r<th class=sort width=250>Network</th>
       \r<th class=sort width=200>Hostname</th>
@@ -222,7 +222,7 @@ echo "</table></div>";
 // Events by Category
 echo "<div class=toggle id=table-Category>
       \r<h3 class=live id=h-Category> [-] Event Distribution by Category</h3>
-      \r<table align=center width=960 border=0 cellpadding=0 cellspacing=0 class=sortable style=\"border: 1pt solid #c4c4c4; border-bottom: none;\">\n
+      \r<table id=sort-category align=center width=960 border=0 cellpadding=0 cellspacing=0 class=tablesorter style=\"border: 1pt solid #c4c4c4; border-bottom: none;\">\n
       \r<thead><tr>
       \r<th class=sort width=20>#</th>
       \r<th class=sort width=530>Category</th>

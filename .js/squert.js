@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+    $('[id^=sort-]').tablesorter();
+    
+    
+
     function getFlag(cc) {
 
         if (cc != "LO" && cc != null) {
@@ -469,17 +473,17 @@ $(document).ready(function(){
 
               tbl += "<tr class=sview id=active_sview><td colspan=6>";
               tbl += "<div id=sig_close class=close_sig><div class=b_close title='Close'>X</div></div>";
-              tbl += "<table id=events width=100% class=sortable cellpadding=0 cellspacing=0>";
+              tbl += "<table id=tl1 width=100% class=sortable cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table></div></tr>";
               $('#' + parts[1] + '-' + parts[2]).after(tbl);
+              $("#tl1").tablesorter({ headers: { 4: {sorter:"false"} } });
           }
           break;
 
         // Events level 2 - Grouped by signature, source, destination
         case "2":
-
           urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
@@ -514,12 +518,13 @@ $(document).ready(function(){
                   row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
                   row += "</tr>";
               }
-              tbl += "<div class=eview_sub id=eview_sub><table id=events width=100% class=sortable cellpadding=0 cellspacing=0>";
+              aTet = "aaa";
+              tbl += "<div class=eview_sub id=eview_sub><table id=tl2 width=100% class=tablesorter cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table></div>";
               $("#eview").after(tbl);
-              sorttable();
+              $("#tl2").tablesorter({ headers: { 2: {sorter:"ipAddress"}, 4: {sorter:"ipAddress"} } });
           }
           break;
 
@@ -571,12 +576,13 @@ $(document).ready(function(){
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
               tbl += "<div class=notes id=notes></div>";
-              tbl += "<table class=sortable align=center width=100% cellpadding=0 cellspacing=0>";
+              tbl += "<table id=tl3 class=tablesorter align=center width=100% cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table></td></tr>";
               $("#" + rowLoke).after(tbl);
               $(".d_row_sub").fadeTo('0','0.2');
+              $("#tl3").tablesorter({ headers: { 3: {sorter:"ipAddress"}, 5: {sorter:"ipAddress"}, 7: {sorter:"false"} } });
           }
           break;
 
