@@ -4,7 +4,7 @@ exec tclsh "$0" "$@"
 
 #
 #
-#      Copyright (C) 2012 Paul Halliday <paul.halliday@gmail.com>
+#      Copyright (C) 2006-2012 Paul Halliday <paul.halliday@gmail.com>
 #
 #      This program is free software: you can redistribute it and/or modify
 #      it under the terms of the GNU General Public License as published by
@@ -348,26 +348,28 @@ if {$fail == "no"} {
                 }
             }
 
-            if {$state == 1 && $fdc >=0} {
-                ### Afrinic formats their MD5's funny
-                if {$siteDesc == "AFRINIC"} {
-                    set fiveLoke 0
-                } else {
-                    set fiveLoke 3   
-                }
-          
+            if {$state == 1 && $fdc >=0} {          
                 set fp [open "$siteFile\_current.md5" r]
                 set data [read $fp]
                 close $fp
 
-                set fileMD5 [string toupper [lindex $data $fiveLoke]]
-                puts -nonewline "Verifying transfer.. "
+                if { [regexp -expanded {
+                        ([0-9a-f]{32})
+                    } $data match _fileMD5] } {
 
-                if {$curMD5 == $fileMD5} {
-                    puts "Looks good, processing.."
-                    proData $OUTFILE $fileID
+                    set fileMD5 [string toupper $_fileMD5]
+
+                    puts -nonewline "Verifying transfer.. "
+    
+                    if {$curMD5 == $fileMD5} {
+                        puts "Looks good, processing.."
+                        proData $OUTFILE $fileID
+                    } else {
+                        puts "Checksum Mismatch. Retrying..\n"
+                        set x [expr $x - 1]
+                    }
                 } else {
-                    puts "Checksum Mismatch. Retrying..\n"
+                    puts "Checksum not found. Retrying..\n"
                     set x [expr $x - 1]
                 }
             }       

@@ -736,3 +736,13 @@ span.noflag {
     padding: 0px 8px 0px 8px;
 }
 
+table.tablesorter thead tr .headerSortUp {
+    background-repeat: no-repeat;
+    background-position: center right;
+    background-image: url(asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+    background-repeat: no-repeat;
+    background-position: center right;
+    background-image: url(desc.gif);
+}
