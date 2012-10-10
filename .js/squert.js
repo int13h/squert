@@ -1,8 +1,7 @@
 $(document).ready(function(){
 
     $('[id^=sort-]').tablesorter();
-    
-    
+    $('#sort-signature').tablesorter({sortList: [[3,1]]});
 
     function getFlag(cc) {
 
@@ -120,7 +119,7 @@ $(document).ready(function(){
 
     // Brief Sensor Category Signature
 
-    sectionOff('Brief');
+    //sectionOff('Brief');
     sectionOff('Category');
     sectionOff('Sensor');
 
@@ -444,7 +443,7 @@ $(document).ready(function(){
               head += "<thead><tr><th class=sub>Signature</th>";
               head += "<th class=sub width=80>ID</th>";
               head += "<th class=sub width=60>Proto</th>";
-              head += "<th class=sub>Last Event</th>";
+              head += "<th class=sub>Last</th>";
               head += "<th class=sub width=1></th>";
               head += "<th class=sub width=25>Src</th>";
               head += "<th class=sub width=25>Dst</th>";
@@ -564,7 +563,7 @@ $(document).ready(function(){
                   
                   row += "<td class=" + cv + ">" + cv + "</td>";
                   row += "<td class=sub_act>" + theData[i].timestamp + "</td>";
-                  row += "<td class=sub_act title=\"Generate Transcript\">" + theData[i].sid + "." + theData[i].cid + "</td>";
+                  row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
                   row += "<td class=sub_act>" + theData[i].src_ip + "</td>";
                   row += "<td class=sub_act>" + theData[i].src_port + "</td>";
                   row += "<td class=sub_act>" + theData[i].dst_ip + "</td>";
@@ -572,6 +571,7 @@ $(document).ready(function(){
                   row += "<td class=sub>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
+                  row += "<div class=b_tx title='Generate Transcript'>X</div>";
                   row += "</td></tr>";
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";

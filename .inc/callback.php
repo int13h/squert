@@ -21,6 +21,7 @@ $types = array(
                  4 => "pd",
                  5 => "tb",
                  6 => "es",
+                 7 => "tx",
 );
 
 $type = $types[$type];
@@ -276,6 +277,34 @@ function tb() {
     session_start();
     $tab = $_REQUEST['tab'];
     $_SESSION['sTab'] = $tab;
+}
+
+function tx() {
+
+    global $offset;
+    $comp = mysql_real_escape_string($_REQUEST['object']);
+    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
+    list($ln,$sid,$src_ip,$dst_ip) = explode("-", $comp);
+    $src_ip = sprintf("%u", ip2long($src_ip));
+    $dst_ip = sprintf("%u", ip2long($dst_ip));
+
+    $query = "SELECT status, CONVERT_TZ(timestamp,'+00:00','$offset') AS timestamp, INET_NTOA(src_ip) AS src_ip,
+              src_port, INET_NTOA(dst_ip) AS dst_ip, dst_port, sid, cid, ip_proto
+              FROM event
+              WHERE $when
+              AND (signature_id = '$sid' AND src_ip = '$src_ip' AND dst_ip = '$dst_ip')
+              ORDER BY timestamp DESC";
+
+    $result = mysql_query($query);
+    $rows = array();
+
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
+    $theJSON = json_encode($rows);
+    echo $theJSON;
+
+
 }
 
 $type();

@@ -34,8 +34,8 @@ proc DisplayUsage { cmdName } {
 
     puts "Usage: $cmdName \[-s <server>\] \[-p <port>\] \[-u <username>\]"
     puts "  \[-o <filename>\] \[-sensor <sensorname>\] \[-timestamp  <timestamp>\]"
-    puts "  \[-sid <sensorid>\] \[-srcip <srcip>\] \[-dstip <dstip>\]"
-    puts "  \[-srcport <srcport>\] \[-dstport <dstport>\]\n"
+    puts "  \[-sid <sensorid>\] \[-sip <sip>\] \[-dip <dip>\]"
+    puts "  \[-spt <spt>\] \[-dpt <dpt>\]\n"
     puts "  -s         <servername>: Hostname of sguild server."
     puts "  -p         <port>: Port of sguild server."
     puts "  -u         <username>: Username to connect as."
@@ -43,10 +43,10 @@ proc DisplayUsage { cmdName } {
     puts "  -sensor    <sensorname>: The sensor name."
     puts "  -timestamp <\"timestamp\">: Event timestamp. e.g.: \"2012-08-18 16:28:00\""
     puts "  -sid       <sensorid>: The sensor ID."
-    puts "  -srcip     <srcip>: Source IP."
-    puts "  -dstip     <dstip>: Destination IP."
-    puts "  -srcport   <srcport>: Source port."
-    puts "  -dstport   <dstport>: Destination port."
+    puts "  -sip       <sip>: Source IP."
+    puts "  -dip       <dip>: Destination IP."
+    puts "  -spt       <spt>: Source port."
+    puts "  -dpt       <dpt>: Destination port.\n"
     exit 1
 
 }
@@ -66,10 +66,10 @@ foreach arg $argv {
                 -sensor { set state sensorname }
                 -timestamp { set state timestamp }
                 -sid { set state sensorid }
-                -srcip { set state srcip }
-                -dstip { set state dstip }
-                -srcport { set state srcport }
-                -dstport { set state dstport }
+                -sip { set state sip }
+                -dip { set state dip }
+                -spt { set state spt }
+                -dpt { set state dpt }
                 default { DisplayUsage $argv0 }
             }
         }
@@ -81,10 +81,10 @@ foreach arg $argv {
         sensorname { set SENSORNAME $arg; set state flag }
         timestamp { set TIMESTAMP $arg; set state flag }
         sensorid { set SENSORID $arg; set state flag }
-        srcip { set SRCIP $arg; set state flag }
-        dstip { set DSTIP $arg; set state flag }
-        srcport { set SRCPORT $arg; set state flag }
-        dstport { set DSTPORT $arg; set state flag }
+        sip { set SRCIP $arg; set state flag }
+        dip { set DSTIP $arg; set state flag }
+        spt { set SRCPORT $arg; set state flag }
+        dpt { set DSTPORT $arg; set state flag }
         default { DisplayUsage $argv0 }
 
     }
@@ -279,6 +279,10 @@ if { $authResults == "INVALID" } {
 
 # Send info to Sguild
 SendToSguild $socketID [list CliScript $eventInfo]
+
+# DeleteEventIDList 14 none 2.3995041
+# DeleteEventIDList 12 none {2.3995048 2.3995046 2.3995044 2.3995043 2.3995042 2.3995039}
+
 
 set SESSION_STATE DEBUG
 

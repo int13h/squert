@@ -28,6 +28,9 @@ include_once '.inc/countries.php';
 $loFilter = "";
 dbC();
 
+// Start timing
+$st = microtime(true);
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -65,7 +68,6 @@ dbC();
 <?php echo $timeLinks;?>
 </div>
 <br>
-
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
 <h3>Events grouped by minute and hour</h3>
@@ -81,7 +83,7 @@ dbC();
 
 <div id=t_sum_content class=content>
 <table width=970 align=center><tr><td>
-<?php echo $todayLink;?><br>
+<?php echo "$todayLink";?><br>
 <?php include_once '.stub/brief.php';?>
 <?php include_once '.stub/signature.php';?>
 </td></tr></table>
@@ -101,9 +103,16 @@ dbC();
 <span id=set_close>Settings</span>
 </div>
 
+<?php
+// Stop Timing
+$et = microtime(true);
+$time = $et - $st;
+$rt = sprintf("%01.3f",$time);
+?>
+
 <div id=bottom class=bottom>
 <div id=b_tray class=b_tray><b>Hidden:</b> <span id=tray_empty>&nbsp;None</span>&nbsp;&nbsp;</div>
-<div id=b_event class=b_event><b>Events:</b> &nbsp;synchronized</div>
+<div id=b_event class=b_event><b>Events:</b> &nbsp;synchronized (<?php echo "${rt}s";?>)</div>
 <div id=b_update class=b_update>update</div>
 <div id=b_top class=b_top>top</div>
 </div>

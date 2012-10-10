@@ -41,9 +41,9 @@ echo "<div class=toggle id=table-Signature>
       \r<th class=sort width=60>Proto</th>
       \r<th class=sort>Last</th>
       \r<th class=sorttable_nosort width=1></th>
-      \r<th class=sort width=20>Src</th>
-      \r<th class=sort width=20>Dst</th>
-      \r<th class=sort width=80>Count</th>
+      \r<th class=sort width=40>Src</th>
+      \r<th class=sort width=40>Dst</th>
+      \r<th class=sort width=60>Count</th>
       \r<th class=sort width=80>% of Total</th></tr></thead>\n";
 
 $i = 0;

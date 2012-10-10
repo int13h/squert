@@ -427,7 +427,7 @@ div.bottom {
 }
 
 div.b_tray {
-    width: 70%;
+    width: 68%;
     height: 30px;
     background-color: #333333;
     text-align: left;
@@ -437,7 +437,7 @@ div.b_tray {
 }
 
 div.b_event {
-    width: 16%;
+    width: 18%;
     height: 30px;
     background-color: #333333;
     text-align: left;
@@ -650,8 +650,8 @@ div.b_tx:hover, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsf
 }
 
 div.b_tx {
-    background-color: #000000;
-    color: #e9e9e9;
+    background-color: #c9c9c9;
+    color: #000000;
 }
 
 div.b_hist {
