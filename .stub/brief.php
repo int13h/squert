@@ -197,7 +197,8 @@ foreach ($sensorList as $key => $sid) {
     }
 
     $stampLine = lastTime($stamp);
-    echo "<tr class=a_row id=\"sen-$key\" data-c_ec=\"$numEvents\"><td class=row>$netName</td>
+    echo "<tr class=a_row id=\"sen-$key\" data-c_ec=\"$numEvents\">
+          \r<td class=row_active>$netName</td>
           \r<td class=row>$hostName</td>
           \r<td class=row>$agent</td>
           \r$stampLine
@@ -211,7 +212,7 @@ foreach ($sensorList as $key => $sid) {
 $sumPer = round($sumPer,0);
 
 echo "<tfoot><tr class=a_row>
-          \r<td class=totalsr colspan=5>Totals:</td>
+          \r<td class=totals colspan=5>Totals:</td>
           \r<td class=totals>$sigCount</td>
           \r<td class=totals>$srcCount[0]</td>
           \r<td class=totals>$dstCount[0]</td>
@@ -267,7 +268,7 @@ foreach ($statusList as $key => $status) {
 
     echo "<tr class=a_row id=\"cat-$key\" data-c_ec=\"$numEvents\">
           \r<td class=row style=\"background: $class_colour; text-align: center\">$shortDesc</td>
-          \r<td class=row>$longDesc</td>
+          \r<td class=row_active>$longDesc</td>
           \r$stampLine
           \r<td class=row>$sig</td>
           \r<td class=row>$src</td>
@@ -279,7 +280,7 @@ foreach ($statusList as $key => $status) {
 $sumPer = round($sumPer,0);
 
 echo "<tfoot><tr class=a_row>
-          \r<td class=totalsr colspan=4>Totals:</td>
+          \r<td class=totals colspan=4>Totals:</td>
           \r<td class=totals>$sigCount</td>
           \r<td class=totals>$srcCount[0]</td>
           \r<td class=totals>$dstCount[0]</td>

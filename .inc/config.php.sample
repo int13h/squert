@@ -3,13 +3,16 @@
 // -- SQueRT Settings
 
 // DB Info.
-$dbHost = '10.13.1.226';
+$dbHost = '127.0.0.1';
 $dbName = 'sguildb';
 $dbUser = 'readonly';
 $dbPass = 'readonly';
 
+// Hide sections on load
+$sections = 'BriefSensorCategory';
+
 // Where are the rules? If you have multiple dirs, separate each with: ||
-$rulePath = "../.rules";
+$rulePath = "../.rules/rules";
 
 // DNS server to query
 $dns = "8.8.8.8";
@@ -41,7 +44,7 @@ $mapBGC = '#ffffff';
 $mapLNC = '#aaaaaa';
 
 // Map event start and end colours.
-$mapSC = '#c9c9c9';
+$mapSC = '#919191';
 $mapEC = '#8a0000';
 
 // Severity Start and end colours

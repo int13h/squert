@@ -1,7 +1,6 @@
 $(document).ready(function(){
 
     $('[id^=sort-]').tablesorter();
-    $('#sort-signature').tablesorter({sortList: [[3,1]]});
 
     function getFlag(cc) {
 
@@ -26,6 +25,8 @@ $(document).ready(function(){
         "c0":[{"short": "UN", "long": "Unclassified"}]
       }
     };
+
+    var loaderImg = "<img id=loader src=\".css/load.gif\">";
 
     //
     // Row filtering
@@ -117,25 +118,40 @@ $(document).ready(function(){
     // Toggle sections
     //
 
-    // Brief Sensor Category Signature
+    // Hide anything carried over after new load
+    var flaggedSections = $('#sel_section').val();
+    if (flaggedSections != '') {
+        if (flaggedSections.match("Brief")) { sectionOff("Brief");}
+        if (flaggedSections.match("Sensor")) { sectionOff("Sensor");}
+        if (flaggedSections.match("Category")) { sectionOff("Category");}
+        if (flaggedSections.match("Signature")) { sectionOff("Signature");}
+    }
 
-    //sectionOff('Brief');
-    sectionOff('Category');
-    sectionOff('Sensor');
-
+    // Click section titles to hide
     $('.live').click(function() {
         sectionName = this.id.split("-");
         sectionOff(sectionName[1]);
+        var trayContent = $("#b_tray_items").text();
+        $('#sel_section').val(trayContent);
+        var urArgs = "type=" + 8 + "&sections=" + trayContent;
+        // Add current state to session
+        $.get(".inc/callback.php?" + urArgs, function(){Null});
     });
 
+    // Click newly created buttons to show again
     $(".toggle-button").live("click", function(){
         sectionName = this.id.split("-");
         sectionOn(sectionName[1]);
+        var trayContent = $("#b_tray_items").html().replace(/(<([^>]+)>)/ig,"");
+        $('#sel_section').val(trayContent);
+        var urArgs = "type=" + 8 + "&sections=" + trayContent;
+        // Add current state to session
+        $.get(".inc/callback.php?" + urArgs, function(){Null}); 
     });
 
     function sectionOff(sectionName) {
         $('#table-' + sectionName).hide();
-        $('#b_tray').append("<span id=b-" +  sectionName + " class=toggle-button>" + sectionName + "</span>");
+        $('#b_tray_items').append("<span id=b-" +  sectionName + " class=toggle-button>" + sectionName + "</span>");
         $('#tray_empty').hide();    
     }
 
@@ -345,22 +361,19 @@ $(document).ready(function(){
     });
 
     //
-    // Main event view
+    // Main event views
     //
 
-    $(".d_row").live("click", function(event) {  
-
-        // are we active?
-        curClass = $(this).attr('class');
-        var curID = this;
-
+    $(".row_active").live("click", function(event) {  
+        var curID = $(this).parent().attr('id');        
         // What type of row are we?
-        rowType = this.id.substr(0,3);
+        rowType = curID.substr(0,3);
 
+        // Make sure no other instances are open
         if (!$(".d_row_active")[0] && rowType == 'sid') {          
-
+ 
             // This leaves us with sid-gid
-            rowValue = this.id.replace("sid-","");
+            rowValue = curID.replace("sid-","");
 
             // Lookup rule
             urArgs = "type=" + 1 + "&sid=" + rowValue;
@@ -385,10 +398,10 @@ $(document).ready(function(){
                 tbl += "</div></td></div></tr>";
 
                 // Fade other results and show this
-                $(curID).attr('class','d_row_active');
-                $(curID).find('td').css('background', '#CFE3A6');
-                $(curID).find('td').css('color', '#000000');
-                $(curID).after(tbl);
+                $("#" + curID).attr('class','d_row_active');
+                $("#" + curID).find('td').css('background', '#CFE3A6');
+                $("#" + curID).find('td').css('color', '#000000');
+                $("#" + curID).after(tbl);
                 eventList("2-" + rowValue);
                 $("#eview").show();
                 $(".d_row").fadeTo('0','0.2');
@@ -396,23 +409,27 @@ $(document).ready(function(){
         }
     });
  
-    $(".d_row_sub").live("click", function() {
-        if (!$(".d_row_sub_active")[0]) {        
-            rowcall = this.id.split("-");
+    $(".sub_active").live("click", function() {
+        if (!$(".d_row_sub_active")[0]) {
+            baseID = $(this).parent().attr('id');
+            rowcall = baseID.split("-");
             callerID = rowcall[0];
             $("#" + callerID).attr('class','d_row_sub_active');
             $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
-            eventList("3-" + this.id);
-        }
+            $(this).append(loaderImg);
+            eventList("3-" + baseID);
+        }  
     });
 
-    $(".d_row_sub1").live("click", function() {
+    $(".sub1_active").live("click", function() {
         if (!$(".d_row_sub1_active")[0]) {
-            rowcall = this.id.split("-");
+            baseID = $(this).parent().attr('id');
+            rowcall = baseID.split("-");
             callerID = rowcall[0];
             $("#" + callerID).attr('class','d_row_sub1_active');
             $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
-            eventList("4-" + this.id);
+            $(this).append(loaderImg);
+            eventList("4-" + baseID);
         }
     });
 
@@ -493,8 +510,8 @@ $(document).ready(function(){
               tbl = '';
               head = '';
               row = '';
-              head += "<thead><tr><th class=sub width=50>Count</th>";
-              head += "<th class=sub width=140>Last Event</th>";
+              head += "<thead><tr><th class=sub width=70>Count</th>";
+              head += "<th class=sub width=120>Last Event</th>";
               head += "<th class=sub width=100>Source IP</th>";
               head += "<th class=sub width=170>Country</th>";
               head += "<th class=sub width=100>Destination IP</th>";
@@ -505,14 +522,14 @@ $(document).ready(function(){
 
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
-                  row += "<td class=sub>" + theData[i].count + "</td>";
+                  row += "<td class=sub_active id=l2-" + i + "><div class=b_ec>" + theData[i].count + "</div></td>";
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
-                  row += "<td class=sub_act>" + theData[i].src_ip + "</td>";
-                  if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_act"; }
+                  row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
+                  if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
                   sflag = getFlag(theData[i].srcc)
                   row += "<td class=" + sclass + ">" + sflag + theData[i].src_cc + "</td>";
-                  row += "<td class=sub_act>" + theData[i].dst_ip + "</td>";
-                  if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_act"; }
+                  row += "<td class=sub_active>" + theData[i].dst_ip + "</td>";
+                  if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
                   dflag = getFlag(theData[i].dstc)
                   row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
                   row += "</tr>";
@@ -524,6 +541,7 @@ $(document).ready(function(){
               tbl += "</table></div>";
               $("#eview").after(tbl);
               $("#tl2").tablesorter({ headers: { 2: {sorter:"ipAddress"}, 4: {sorter:"ipAddress"} } });
+              $("#loader").remove();
           }
           break;
 
@@ -562,12 +580,12 @@ $(document).ready(function(){
                   cv = classifications.class[tclass][0].short;
                   
                   row += "<td class=" + cv + ">" + cv + "</td>";
-                  row += "<td class=sub_act>" + theData[i].timestamp + "</td>";
+                  row += "<td class=sub1_active id=l3-" + i + ">" + theData[i].timestamp + "</td>";
                   row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
-                  row += "<td class=sub_act>" + theData[i].src_ip + "</td>";
-                  row += "<td class=sub_act>" + theData[i].src_port + "</td>";
-                  row += "<td class=sub_act>" + theData[i].dst_ip + "</td>";
-                  row += "<td class=sub_act>" + theData[i].dst_port + "</td>";
+                  row += "<td class=sub1_active>" + theData[i].src_ip + "</td>";
+                  row += "<td class=sub1_active>" + theData[i].src_port + "</td>";
+                  row += "<td class=sub1_active>" + theData[i].dst_ip + "</td>";
+                  row += "<td class=sub1_active>" + theData[i].dst_port + "</td>";
                   row += "<td class=sub>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
@@ -583,6 +601,7 @@ $(document).ready(function(){
               $("#" + rowLoke).after(tbl);
               $(".d_row_sub").fadeTo('0','0.2');
               $("#tl3").tablesorter({ headers: { 3: {sorter:"ipAddress"}, 5: {sorter:"ipAddress"}, 7: {sorter:"false"} } });
+              $("#loader").remove();
           }
           break;
 
@@ -773,12 +792,11 @@ $(document).ready(function(){
               if ( rC <= 399 ) {
                   $(".d_row_sub1").fadeTo('fast','0.2');
               }
+              $("#loader").remove();
           }
           break;
         }
-
     } 
-
 // The End.
 });
 

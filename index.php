@@ -111,7 +111,7 @@ $rt = sprintf("%01.3f",$time);
 ?>
 
 <div id=bottom class=bottom>
-<div id=b_tray class=b_tray><b>Hidden:</b> <span id=tray_empty>&nbsp;None</span>&nbsp;&nbsp;</div>
+<div id=b_tray class=b_tray><span class=prb>Hidden:</span><span id=tray_empty> None</span><span id=b_tray_items><span></div>
 <div id=b_event class=b_event><b>Events:</b> &nbsp;synchronized (<?php echo "${rt}s";?>)</div>
 <div id=b_update class=b_update>update</div>
 <div id=b_top class=b_top>top</div>
@@ -122,7 +122,7 @@ $rt = sprintf("%01.3f",$time);
 <input id=sel_class type=hidden value="-1" />
 <input id=sel_sensor type=hidden value="-1" />
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>" />
-<input id=sel_sect type=hidden value="<?php echo $_SESSION['sSect'];?>" />
+<input id=sel_section type=hidden value="<?php echo $_SESSION['sSection'];?>" />
 <input id=sel_search type=hidden value="1" />
 </body>
 </html>

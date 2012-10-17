@@ -22,6 +22,7 @@ $types = array(
                  5 => "tb",
                  6 => "es",
                  7 => "tx",
+                 8 => "se",
 );
 
 $type = $types[$type];
@@ -277,6 +278,12 @@ function tb() {
     session_start();
     $tab = $_REQUEST['tab'];
     $_SESSION['sTab'] = $tab;
+}
+
+function se() {
+    session_start();
+    $sections = $_REQUEST['sections'];
+    $_SESSION['sSection'] = $sections;
 }
 
 function tx() {

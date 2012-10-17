@@ -39,12 +39,13 @@ if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
 }
 
 // Session variables
-if (!isset($_SESSION['sUser']))  { sInt(); }  	else { $sUser  = $_SESSION['sUser'];}
-if (!isset($_SESSION['sEmail'])) { sInt(); }  	else { $sEmail = $_SESSION['sEmail'];}
-if (!isset($_SESSION['sType']))  { sInt(); }  	else { $sType  = $_SESSION['sType'];}
-if (!isset($_SESSION['sTime']))  { sInt(); }	else { $sTime  = $_SESSION['sTime'];}
-if (!isset($_SESSION['sTab']))   { sInt(); }	else { $sTab   = $_SESSION['sTab'];}
-if (!isset($_REQUEST['id']))     { $id = 0; }	else { $id     = $_REQUEST['id'];}
+if (!isset($_SESSION['sUser'])) { sInt(); } else { $sUser  = $_SESSION['sUser'];}
+if (!isset($_SESSION['sEmail'])) { sInt(); } else { $sEmail = $_SESSION['sEmail'];}
+if (!isset($_SESSION['sType'])) { sInt(); } else { $sType  = $_SESSION['sType'];}
+if (!isset($_SESSION['sTime'])) { sInt(); } else { $sTime  = $_SESSION['sTime'];}
+if (!isset($_SESSION['sTab'])) { sInt(); } else { $sTab   = $_SESSION['sTab'];}
+if (!isset($_SESSION['sSection'])) { sInt(); } else { $sSection  = $_SESSION['sSection'];}
+if (!isset($_REQUEST['id'])) { $id = 0; } else { $id     = $_REQUEST['id'];}
 
 // Kill the session if the ids dont match.
 if ($id != $_SESSION['id']) {
