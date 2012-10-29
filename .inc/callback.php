@@ -1,5 +1,7 @@
 <?php
+
 session_start();
+
 if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
     header ("Location: session.php?id=0");
 }
@@ -275,13 +277,13 @@ function pd() {
 }
 
 function tb() {
-    session_start();
+    //session_start();
     $tab = $_REQUEST['tab'];
     $_SESSION['sTab'] = $tab;
 }
 
 function se() {
-    session_start();
+    //session_start();
     $sections = $_REQUEST['sections'];
     $_SESSION['sSection'] = $sections;
 }

@@ -604,13 +604,13 @@ div.big {
 
 div.b_ec {
     float: left;
-    font-weight: normal;
+    font-weight: bold;
     text-align: center;
     border: 1pt solid #545454;
-    border-radius: 5px;
-    background: #FCECA2;
+    border-radius: 3px;
+    background: #dcdcdc;
     color: #000000;
-    width: 50px;
+    width: 45px;
 }
 
 div.b_ec:hover {
@@ -620,7 +620,7 @@ div.b_ec:hover {
 }
 
 /* Event Actions */
-div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy {
+div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
     float: left;
     padding: 0px 7px 0px 7px;
     font-weight: normal;
@@ -631,7 +631,7 @@ div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy {
     border-radius: 3px;
 }
 
-div.b_tx:hover, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover {
+div.b_tx:hover, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover, div.b_asset:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
@@ -659,6 +659,11 @@ div.b_tag {
 div.b_clsfy {
     background-color: #cc0000;
     color: #ffffff;
+}
+
+div.b_asset {
+    background-color: #AAAAFF;
+    color: #000000;
 }
 
 div.b_close {

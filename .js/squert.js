@@ -361,10 +361,10 @@ $(document).ready(function(){
     });
 
     //
-    // Main event views
+    //  Level 1
     //
 
-    $(".row_active").live("click", function(event) {  
+    $(".row_active").live("click", function(event) {
         var curID = $(this).parent().attr('id');        
         // What type of row are we?
         rowType = curID.substr(0,3);
@@ -409,6 +409,10 @@ $(document).ready(function(){
         }
     });
  
+    //
+    //  Level 2
+    //
+
     $(".sub_active").live("click", function() {
         if (!$(".d_row_sub_active")[0]) {
             baseID = $(this).parent().attr('id');
@@ -420,6 +424,10 @@ $(document).ready(function(){
             eventList("3-" + baseID);
         }  
     });
+
+    //
+    //  Level 3
+    //
 
     $(".sub1_active").live("click", function() {
         if (!$(".d_row_sub1_active")[0]) {
@@ -434,7 +442,7 @@ $(document).ready(function(){
     });
 
     //
-    // Sub event views
+    // Create the views
     //
 
     function eventList (type) {
@@ -589,6 +597,7 @@ $(document).ready(function(){
                   row += "<td class=sub>";
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
+                  row += "<div class=b_asset title='Asset Info'>A</div>";
                   row += "<div class=b_tx title='Generate Transcript'>X</div>";
                   row += "</td></tr>";
               }

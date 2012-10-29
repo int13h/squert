@@ -37,7 +37,6 @@ $st = microtime(true);
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href=".css/squert.css" />
-<link rel="stylesheet" type="text/css" href=".css/table.css" />
 <script type="text/javascript" src=".js/jq.js"></script>
 <script type="text/javascript" src=".js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src=".js/squert.js"></script>
