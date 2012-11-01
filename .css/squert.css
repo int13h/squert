@@ -243,6 +243,15 @@ td.row_active:hover {
     text-decoration: underline;
 }
 
+div.txtext {
+  width: 930px;
+  background: transparent;
+  color: #000000;
+  font-size: 11px;
+  word-wrap: break-word;
+  padding: 10px;
+}
+
 td.sub, td.sub_active, td.sub1_active {
   background: transparent;
   border: 1pt solid #c4c4c4;
@@ -619,6 +628,20 @@ div.b_ec:hover {
     cursor: pointer;
 }
 
+div.b_ec_class {
+    float: right;
+    font-weight: bold;
+    text-align: center;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-right: 1pt solid #545454;
+    border-top: 1pt solid #545454;
+    border-bottom: 1pt solid #545454;
+    background: #545454;
+    color: #ffffff;
+    width: 10px;
+}
+
 /* Event Actions */
 div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
     float: left;
@@ -677,34 +700,55 @@ div.b_close {
     border-radius: 4px;
 }
 
-div.b_close:hover {
+div.b_close_r {
+    background-color: #f4f4f4;
+    color: #000000;
+    float: right;
+    font-weight: bold;
+    text-align: center;
+    border: 1pt solid gray;
+    padding: 0px 2px 0px 3px;
+    border-radius: 2px;
+}
+
+div.b_close:hover, div.b_close_r:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
 }
 
 /* Event Classes */
-.C1 { background-color: #cc0000;}
-.C2 { background-color: #ff6600;}
-.C3 { background-color: #ff9900;}
-.C4 { background-color: #cc9900;}
-.C5 { background-color: #9999cc;}
-.C6 { background-color: #ffcc00;}
-.C7 { background-color: #cc66ff;}
-.ES { background-color: pink;}
-.NA { background-color: lightblue;}
-.UN { background-color: red;}
-
-.C1,.C2,.C3,.C4,.C5,.C6,.C7,.ES,.NA,.UN {
-  border: 1pt solid #c4c4c4;
-  border-top: none;
-  border-right: none;
-  border-left: none;
-  padding: 3px 5px 3px 5px;
-  font-size: 11px;
-  text-align: center;
-  font-weight: bold;
+.b_C1, .b_C2, .b_C3, .b_C4, .b_C5, .b_C6, .b_C7, .b_ES, .b_NS, .b_UN {
+    float: left;
+    font-weight: bold;
+    text-align: center;
+    border: 1pt solid #545454;
+    padding: 0px 7px 0px 7px;
+    border-radius: 3px;
+    color: #000000;
 }
+
+.b_C1 { background-color: #cc0000;}
+.b_C2 { background-color: #ff6600;}
+.b_C3 { background-color: #ff9900;}
+.b_C4 { background-color: #cc9900;}
+.b_C5 { background-color: #9999cc;}
+.b_C6 { background-color: #ffcc00;}
+.b_C7 { background-color: #cc66ff;}
+.b_ES { background-color: pink;}
+.b_NA { background-color: lightblue;}
+.b_UN { background-color: red;}
+
+.b_C1:hover, .b_C2:hover, .b_C3:hover, .b_C4:hover, .b_C5:hover, .b_C6:hover, .b_C7:hover, 
+.b_ES:hover, .b_NS:hover, .b_UN:hover {
+    background: #ffffff;
+    color: #000000;
+    cursor: pointer;
+}
+
+
+}
+
 
 span.clear {
   font-weight: bold;

@@ -2,6 +2,33 @@ $(document).ready(function(){
 
     $('[id^=sort-]').tablesorter();
 
+    function d2h(d) {
+        return d.toString(16);
+    }
+
+    function h2d (h) {
+        return parseInt(h, 16);
+    }
+
+    function s2h (tmp) {
+        var str = '', i = 0, tmp_len = tmp.length, c;
+     
+        for (; i < tmp_len; i += 1) {
+            c = tmp.charCodeAt(i);
+            str += d2h(c);
+        }
+        return str;
+    }
+
+    function h2s (tmp) {
+        var arr = tmp.split(' '), str = '', i = 0, arr_len = arr.length, c;
+        for (; i < arr_len; i += 1) {
+            c = String.fromCharCode( h2d( arr[i] ) );
+            str += c;
+        }
+        return str;
+    }
+
     function getFlag(cc) {
 
         if (cc != "LO" && cc != null) {
@@ -304,6 +331,10 @@ $(document).ready(function(){
         $(".d_row_sub1_active").attr('class','d_row_sub1');
     }
 
+    function closeSubRow2() {
+        $("#eview_sub3").remove();
+    }
+
     // Reset if headings are clicked
     $("th.sort").click(function() {
         closeRow();
@@ -327,6 +358,11 @@ $(document).ready(function(){
     $("#ev_close_sub1").live("click", function(event) {
         closeSubRow1();
     });
+
+    // Close open packet data
+    $("#ev_close_sub2").live("click", function(event) {
+        closeSubRow2();
+    })
 
     //
     // Signature event view
@@ -586,8 +622,9 @@ $(document).ready(function(){
                   row += "<tr class=d_row_sub1 id=s" + i + " data-filter=\"" + eid + "\">";
                   tclass = "c" + theData[i].status;
                   cv = classifications.class[tclass][0].short;
+                  txdata = "s" + i + "-" + theData[i].cid + "-" + s2h(theData[i].sid + "|" + theData[i].timestamp + "|" + theData[i].src_ip + "|" + theData[i].src_port + "|" + theData[i].dst_ip + "|" + theData[i].dst_port);
                   
-                  row += "<td class=" + cv + ">" + cv + "</td>";
+                  row += "<td class=sub><div class=b_" + cv + ">" + cv + "</div></td>";
                   row += "<td class=sub1_active id=l3-" + i + ">" + theData[i].timestamp + "</td>";
                   row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
                   row += "<td class=sub1_active>" + theData[i].src_ip + "</td>";
@@ -598,7 +635,7 @@ $(document).ready(function(){
                   row += "<div class=b_notes title='Add Notes'>N</div>";
                   row += "<div class=b_tag title='Add Tag'>T</div>";
                   row += "<div class=b_asset title='Asset Info'>A</div>";
-                  row += "<div class=b_tx title='Generate Transcript'>X</div>";
+                  row += "<div class=b_tx data-tx=" + txdata + " title='Generate Transcript'>X</div>";
                   row += "</td></tr>";
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
@@ -806,6 +843,45 @@ $(document).ready(function(){
           break;
         }
     } 
-// The End.
+
+    //
+    // Request for transcript
+    //
+
+    $(".b_tx").live("click", function(event) {
+        if (!$(".eview_sub3")[0]) {
+            $(this).after(loaderImg);
+            composite = $(this).data('tx').split("-");
+            rowLoke = composite[0];
+            cid = composite[1];
+            txdata = composite[2];
+         
+            // See if a transcript is available
+            urArgs = "type=" + 7 + "&txdata=" + txdata;
+
+            $(function(){
+                $.get(".inc/callback.php?" + urArgs, function(data){cb4(data)});
+            });
+
+            function cb4(data){
+                eval("txRaw=" + data);
+                txCMD    = txRaw.cmd;
+                txResult = txRaw.tx;
+
+                var row = '',tbl = '';
+                row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+                row += "<tr>";
+                row += "<td class=sub colspan=8><div class=txtext><div id=ev_close_sub2 class=b_close_r title='Close'>X</div>";
+                row += "<b><u>Transcript for event #" + cid + "</b></u><br><br>" + txResult;
+                row += "</div></td></tr></table>";
+
+                tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=8>";
+                tbl += row;
+                tbl += "</td></tr>";
+                $("#" + rowLoke).after(tbl);
+                $("#loader").remove();
+            }
+        }
+    });
 });
 

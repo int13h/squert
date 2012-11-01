@@ -21,12 +21,13 @@
 
 $stub = "Event Signatures";
 
-$query = "SELECT COUNT(signature) AS c1, signature, signature_id, signature_gen, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) as t, 
+$query = "SELECT COUNT(event.signature) AS c1, event.signature, signature_id, signature_gen, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) as t,
           COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip)), ip_proto, 
-          GROUP_CONCAT(DISTINCT(status)), GROUP_CONCAT(DISTINCT(sid))
+          GROUP_CONCAT(DISTINCT(status)), GROUP_CONCAT(DISTINCT(event.sid))
           FROM event
+          LEFT JOIN sensor AS s ON event.sid = s.sid
           WHERE $when
-          $loFilter
+          AND agent_type = 'snort'
           GROUP BY signature
           ORDER BY t DESC";
 

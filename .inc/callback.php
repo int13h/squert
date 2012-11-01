@@ -38,7 +38,9 @@ function ec() {
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
 
     $query = "SELECT COUNT(*) AS count FROM event
-              WHERE $when";
+              LEFT JOIN sensor AS s ON event.sid = s.sid
+              WHERE $when
+              AND agent_type = 'snort'";
 
     $result = mysql_query($query);
 
@@ -291,29 +293,33 @@ function se() {
 function tx() {
 
     global $offset;
-    $comp = mysql_real_escape_string($_REQUEST['object']);
-    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
-    list($ln,$sid,$src_ip,$dst_ip) = explode("-", $comp);
-    $src_ip = sprintf("%u", ip2long($src_ip));
-    $dst_ip = sprintf("%u", ip2long($dst_ip));
+    $txdata = hextostr($_REQUEST['txdata']);
+    list($sid, $timestamp, $sip, $spt, $dip, $dpt) = explode("|", $txdata);
 
-    $query = "SELECT status, CONVERT_TZ(timestamp,'+00:00','$offset') AS timestamp, INET_NTOA(src_ip) AS src_ip,
-              src_port, INET_NTOA(dst_ip) AS dst_ip, dst_port, sid, cid, ip_proto
-              FROM event
-              WHERE $when
-              AND (signature_id = '$sid' AND src_ip = '$src_ip' AND dst_ip = '$dst_ip')
-              ORDER BY timestamp DESC";
+    // Lookup sensorname
+    $query = "SELECT hostname FROM sensor
+              WHERE sid = '$sid'";
 
-    $result = mysql_query($query);
-    $rows = array();
+    $qResult = mysql_query($query);
+    
+    $sensorName = mysql_result($qResult, 0);
+ 
 
-    while ($row = mysql_fetch_assoc($result)) {
-        $rows[] = $row;
+    if ($offset != "+00:00") {
+        $timestamp = gmdate("Y-m-d H:i:s", strtotime($timestamp));
     }
-    $theJSON = json_encode($rows);
+
+    $cmd = "cliscript.tcl -sensor \"$sensorName\" -timestamp \"$timestamp\" -sid $sid -sip $sip -spt $spt -dip $dip -dpt $dpt";
+
+    exec("../.scripts/$cmd",$_raw);
+    $_raw = htmlspecialchars(implode("^|||br3ak|||^",$_raw));
+    $raw = str_replace("^|||br3ak|||^", "<br>", $_raw);
+
+    $result = array("tx"  => "$raw",
+                    "cmd" => "$cmd");
+
+    $theJSON = json_encode($result);
     echo $theJSON;
-
-
 }
 
 $type();

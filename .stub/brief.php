@@ -74,49 +74,48 @@ function lastTime($stamp) {
 $category	=  mysql_query("SELECT COUNT(signature) as c1, status, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')), 
                                 COUNT(DISTINCT(signature)), COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip))
                                 FROM event
+                                LEFT JOIN sensor AS s ON event.sid = s.sid
                                 WHERE $when
-                                $loFilter
+                                AND agent_type = 'snort'
                                 GROUP BY status");
 
 // Distinct Sources
-
 $sources	=  mysql_query("SELECT COUNT(DISTINCT(src_ip)) 
                                 FROM event
+                                LEFT JOIN sensor AS s ON event.sid = s.sid
                                 WHERE $when
-                                $loFilter");
+                                AND agent_type = 'snort'");
 
 // Distinct Destinations
-
 $destinations	=  mysql_query("SELECT COUNT(DISTINCT(dst_ip))
                                 FROM event
+                                LEFT JOIN sensor AS s ON event.sid = s.sid
                                 WHERE $when
-                                $loFilter");
+                                AND agent_type = 'snort'");
 
 // Event Distribution (sensor)
-
 $sensor         = mysql_query("SELECT st.net_name, st.hostname, st.agent_type, st.sid, COUNT(signature) AS c1, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')),
                                COUNT(DISTINCT(signature)), COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip))
-                               FROM event LEFT JOIN sensor AS st ON event.sid = st.sid
+                               FROM event 
+                               LEFT JOIN sensor AS st ON event.sid = st.sid
                                WHERE $when
+                               AND agent_type = 'snort'
                                GROUP BY event.sid");
 
 $sensors        = mysql_query("SELECT net_name, hostname, agent_type, sid
-                               FROM sensor
-                               WHERE (agent_type != 'pcap'
-                               AND agent_type != 'http'
-                               AND agent_type != 'sancp')");
+                               FROM sensor 
+                               WHERE agent_type = 'snort'");
 
 // Signatures
-
 $signatures	= mysql_query("SELECT COUNT(signature) AS c1, signature, signature_id
                                FROM event
+                               LEFT JOIN sensor AS s ON event.sid = s.sid
                                WHERE $when
-                               $loFilter
+                               AND agent_type = 'snort' 
                                GROUP BY signature
                                ORDER BY c1 DESC");
 
 // Brief
-
 $presentCats = array();
 $sumEvents = 0;
 

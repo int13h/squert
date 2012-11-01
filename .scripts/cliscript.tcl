@@ -1,6 +1,4 @@
-#!/bin/sh
-# Run tcl from users PATH \
-exec tclsh "$0" "$@"
+#!/usr/local/bin/tclsh
 
 # cliscript.tcl - Based on "quickscript.tcl"
 # Portions Copyright (C) 2012 Paul Halliday <paul.halliday@gmail.com>
@@ -288,6 +286,7 @@ set SESSION_STATE DEBUG
 
 # Xscript data comes in the format XscriptMainMsg window message
 # Tags are HDR, SRC, and DST. They are sent when state changes.
+
 while { 1 } {
 
     if { [eof $socketID] } { puts "ERROR: Lost connection to server."; exit 1 }
@@ -313,6 +312,11 @@ while { 1 } {
         ERROR   { set SESSION_STATE ERROR }
         default { puts "${SESSION_STATE}: [lindex $msg 2]" }
 
+    }
+
+    # Exit if agent returns no data after debug
+    if { $SESSION_STATE == "DEBUG" && $data == "" } {
+        break
     }
 
 }
