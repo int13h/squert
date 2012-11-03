@@ -243,13 +243,17 @@ td.row_active:hover {
     text-decoration: underline;
 }
 
-div.txtext {
-  width: 930px;
+td.txtext {
   background: transparent;
   color: #000000;
   font-size: 11px;
-  word-wrap: break-word;
   padding: 10px;
+}
+
+div.txtext {
+  width: 100%;
+  float: left;
+  word-wrap: break-word;
 }
 
 td.sub, td.sub_active, td.sub1_active {
@@ -281,24 +285,13 @@ td.sub_active:hover, td.sub1_active:hover, td.sub_light:hover {
 }
 
 tr.eview {
-    border-bottom: 1pt solid gray;
+    border-bottom: solid gray;
 }
 
-div.eview {
-    width: 100%;    
-    display: '';
-    background-color: #ffffff;
-    border-bottom: 1pt solid #c9c9c9;
-    color: #545454;
-    float: left;
-    font-weight: bold;
-    clear: both;
+tr.eview_sub {
+    border-bottom: solid gray;
+    width: 100%;
 }
-
-div.eview_sub {
-    clear: both;
-}
-
 
 div.sigtxt {
     width: 940px;
@@ -336,7 +329,7 @@ div.tab_group {
     z-index: 10;
 }
 div.tab {
-    width: 100px;
+    width: 90px;
     background-color: #333333;
     color: #adadad;
     font-weight: normal;
@@ -347,7 +340,7 @@ div.tab {
     cursor: pointer;
 }
 div.tab_active {
-    width: 100px;
+    width: 90px;
     background-color: #000000;
     color: #ffffff;
     font-weight: normal;
@@ -701,14 +694,14 @@ div.b_close {
 }
 
 div.b_close_r {
-    background-color: #f4f4f4;
-    color: #000000;
+    background-color: #000000;
+    color: #f4f4f4;
     float: right;
     font-weight: bold;
     text-align: center;
     border: 1pt solid gray;
     padding: 0px 2px 0px 3px;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 div.b_close:hover, div.b_close_r:hover {
