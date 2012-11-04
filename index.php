@@ -70,13 +70,13 @@ $st = microtime(true);
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
 <h3>Events grouped by minute and hour</h3>
-<!--?php include_once '.charts/interval.php';?-->
+<?php include_once '.charts/interval.php';?>
 <h3>Top signatures</h3>
-<!--?php include_once '.charts/sigsum.php';?-->
+<?php include_once '.charts/sigsum.php';?>
 <h3>Top source and destination IPs</h3>
-<!--?php include_once '.charts/ip.php';?-->
+<?php include_once '.charts/ip.php';?>
 <h3>Top source and destination Countries</h3>
-<!--?php include_once '.charts/country.php';?-->
+<?php include_once '.charts/country.php';?>
 </td></tr></table>
 </div>
 
@@ -91,7 +91,7 @@ $st = microtime(true);
 
 <div id=t_map_content class=content>
 <div class=wm>
-<!--?php include_once '.stub/map.php';?-->
+<?php include_once '.stub/map.php';?>
 </div>
 </div>
 

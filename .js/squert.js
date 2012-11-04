@@ -427,17 +427,11 @@ $(document).ready(function(){
                 sigfile = sigData.rulefile;
                 sigline = sigData.ruleline; 
 
+                signature = "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div><div class=sigtxt>" + sigtxt + " <br><br><b>File:</b> " + sigfile + " <b>Line:</b> " + sigline + "</div>";
                 var tbl = '';
-                tbl += "<tr class=eview id=active_eview><td colspan=9>";
-                tbl += "<div id=eview class=eview>";
-                tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
-                tbl += "<div class=sigtxt>";
-                tbl += sigtxt;
-                tbl += "<br><br><b>File:</b> ";
-                tbl += sigfile;
-                tbl += "<b>Line:</b> ";
-                tbl += sigline;
-                tbl += "</div></div></td></tr>";
+                tbl += "<tr class=eview id=active_eview><td colspan=9><div id=eview class=eview>";
+                tbl += signature;
+                tbl += "</div></td></div></tr>";
 
                 // Fade other results and show this
                 $("#" + curID).attr('class','d_row_active');
@@ -584,12 +578,11 @@ $(document).ready(function(){
                   row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
                   row += "</tr>";
               }
-              //tbl += "<div class=eview_sub id=eview_sub><table id=tl2 width=100% class=tablesorter cellpadding=0 cellspacing=0>";
-              tbl += "<tr class=eview_sub id=eview_sub><td><table id=tl2 width=960px class=tablesorter cellpadding=0 cellspacing=0>";
+              aTet = "aaa";
+              tbl += "<div class=eview_sub id=eview_sub><table id=tl2 width=100% class=tablesorter cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
-              tbl += "</table></td></tr>";
-              //tbl += "</table></div>";
+              tbl += "</table></div>";
               $("#eview").after(tbl);
               $("#tl2").tablesorter({ headers: { 2: {sorter:"ipAddress"}, 4: {sorter:"ipAddress"} } });
               $("#loader").remove();
@@ -876,9 +869,9 @@ $(document).ready(function(){
                 txResult = txRaw.tx;
 
                 var row = '',tbl = '';
-                row += "<table width=100% align=center cellpadding=0 cellspacing=0>";
+                row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
                 row += "<tr>";
-                row += "<td class=sub><div class=txtext><div id=ev_close_sub2 class=b_close_r title='Close'>X</div>";
+                row += "<td class=sub colspan=8><div class=txtext><div id=ev_close_sub2 class=b_close_r title='Close'>X</div>";
                 row += "<b><u>Transcript for event #" + cid + "</b></u><br><br>" + txResult;
                 row += "</div></td></tr></table>";
 
