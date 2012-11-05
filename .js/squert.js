@@ -578,8 +578,7 @@ $(document).ready(function(){
                   row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
                   row += "</tr>";
               }
-              aTet = "aaa";
-              tbl += "<div class=eview_sub id=eview_sub><table id=tl2 width=100% class=tablesorter cellpadding=0 cellspacing=0>";
+              tbl += "<div class=eview_sub id=eview_sub style='width: 100%;'><table id=tl2 width=100% class=tablesorter cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table></div>";

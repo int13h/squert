@@ -244,7 +244,6 @@ td.row_active:hover {
 }
 
 div.txtext {
-  width: 930px;
   background: transparent;
   color: #000000;
   font-size: 11px;
@@ -296,6 +295,7 @@ div.eview {
 }
 
 div.eview_sub {
+    width: 100%;
     clear: both;
 }
 
