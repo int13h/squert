@@ -304,7 +304,6 @@ function tx() {
     
     $sensorName = mysql_result($qResult, 0);
  
-
     if ($offset != "+00:00") {
         $timestamp = gmdate("Y-m-d H:i:s", strtotime($timestamp));
     }
@@ -314,7 +313,6 @@ function tx() {
     exec("../.scripts/$cmd",$_raw);
     $_raw = htmlspecialchars(implode("^|||br3ak|||^",$_raw));
     $raw = str_replace("^|||br3ak|||^", "<br>", $_raw);
-
     $result = array("tx"  => "$raw",
                     "cmd" => "$cmd");
 

@@ -1,3 +1,4 @@
+
 /* top right bottom left */
 /* Misc */
 body {
@@ -313,7 +314,8 @@ div.notes {
     padding: 15px;
     background-color: #e9e9e9;
     font-weight: normal;
-    font-size: 10pt;
+    font-size: 10px;
+    color: blue;
 }
 
 div.notes_sub2 {
@@ -643,7 +645,19 @@ div.b_ec_class {
 }
 
 /* Event Actions */
-div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
+div.b_load {
+    float: right;
+    padding: 0px 7px 0px 7px;
+    font-weight: normal;
+    text-align: center;
+    margin-left: 4px;
+    margin-right: 4px;
+    border-radius: 3px;
+}
+
+
+/* Event Actions */
+div.b_pl, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
     float: left;
     padding: 0px 7px 0px 7px;
     font-weight: normal;
@@ -654,10 +668,15 @@ div.b_hist, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
     border-radius: 3px;
 }
 
-div.b_tx:hover, div.b_hist:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover, div.b_asset:hover {
+div.b_tx:hover, div.b_pl:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover, div.b_asset:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
+}
+
+div.b_pl {
+    background-color: lightblue;
+    color: #000000;
 }
 
 div.b_tx {
@@ -701,14 +720,14 @@ div.b_close {
 }
 
 div.b_close_r {
-    background-color: #f4f4f4;
-    color: #000000;
+    background-color: #a80000;
+    color: #ffffff;
     float: right;
     font-weight: bold;
     text-align: center;
     border: 1pt solid gray;
     padding: 0px 2px 0px 3px;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 div.b_close:hover, div.b_close_r:hover {

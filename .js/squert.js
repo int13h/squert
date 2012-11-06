@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
 
     $('[id^=sort-]').tablesorter();
@@ -465,14 +466,14 @@ $(document).ready(function(){
     //  Level 3
     //
 
-    $(".sub1_active").live("click", function() {
+    $(".b_pl").live("click", function() {
         if (!$(".d_row_sub1_active")[0]) {
-            baseID = $(this).parent().attr('id');
+            baseID = $(this).data('eidl');
             rowcall = baseID.split("-");
             callerID = rowcall[0];
             $("#" + callerID).attr('class','d_row_sub1_active');
             $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
-            $(this).append(loaderImg);
+            $(this).parent().append(loaderImg);
             eventList("4-" + baseID);
         }
     });
@@ -624,21 +625,22 @@ $(document).ready(function(){
                   txdata = "s" + i + "-" + theData[i].cid + "-" + s2h(theData[i].sid + "|" + theData[i].timestamp + "|" + theData[i].src_ip + "|" + theData[i].src_port + "|" + theData[i].dst_ip + "|" + theData[i].dst_port);
                   
                   row += "<td class=sub><div class=b_" + cv + ">" + cv + "</div></td>";
-                  row += "<td class=sub1_active id=l3-" + i + ">" + theData[i].timestamp + "</td>";
+                  row += "<td class=sub>" + theData[i].timestamp + "</td>";
                   row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
-                  row += "<td class=sub1_active>" + theData[i].src_ip + "</td>";
-                  row += "<td class=sub1_active>" + theData[i].src_port + "</td>";
-                  row += "<td class=sub1_active>" + theData[i].dst_ip + "</td>";
-                  row += "<td class=sub1_active>" + theData[i].dst_port + "</td>";
+                  row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
+                  row += "<td class=sub_active>" + theData[i].src_port + "</td>";
+                  row += "<td class=sub_active>" + theData[i].dst_ip + "</td>";
+                  row += "<td class=sub_active>" + theData[i].dst_port + "</td>";
                   row += "<td class=sub>";
-                  row += "<div class=b_notes title='Add Notes'>N</div>";
-                  row += "<div class=b_tag title='Add Tag'>T</div>";
-                  row += "<div class=b_asset title='Asset Info'>A</div>";
+                  //row += "<div class=b_notes title='Add Notes'>N</div>";
+                  //row += "<div class=b_tag title='Add Tag'>T</div>";
+                  row += "<div class=b_pl data-eidl=s" + i + " title='View Payload'>P</div>";
                   row += "<div class=b_tx data-tx=" + txdata + " title='Generate Transcript'>X</div>";
+                  row += "<div class=b_asset title='Asset Info'>A</div>";
                   row += "</td></tr>";
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
-              tbl += "<div class=notes id=notes></div>";
+              tbl += "<div class=notes id=notes><u>bulk classify</u></div>";
               tbl += "<table id=tl3 class=tablesorter align=center width=100% cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
