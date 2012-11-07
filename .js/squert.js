@@ -54,7 +54,7 @@ $(document).ready(function(){
       }
     };
 
-    var loaderImg = "<img id=loader src=\".css/load.gif\">";
+    var loaderImg = "<img id=loader class=loader src=\".css/load.gif\">";
 
     //
     // Row filtering
@@ -640,7 +640,7 @@ $(document).ready(function(){
                   row += "</td></tr>";
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
-              tbl += "<div class=notes id=notes><u>bulk classify</u></div>";
+              tbl += "<div class=notes id=notes><u>bulk classification</u></div>";
               tbl += "<table id=tl3 class=tablesorter align=center width=100% cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
@@ -828,7 +828,7 @@ $(document).ready(function(){
               row += "</td></tr></table>";
                     
               tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=8><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
-              tbl += "<div class=notes_sub2 id=notes><b>Notes:</b> None.</div>";
+              tbl += "<div class=notes_sub2 id=notes></div>";
               tbl += head;
               tbl += row;
               tbl += "</td></tr>";

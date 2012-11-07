@@ -1,6 +1,3 @@
-
-/* top right bottom left */
-/* Misc */
 body {
     font-family: tahoma, calibri, helvetica, sans;
     font-size: 10pt;
@@ -10,12 +7,10 @@ body {
     background-color: #ffffff;
 }
 
-/*
-canvas.wm1 {
-    border: 1pt solid #c9c9c9;
-    border-radius: 5px;
+.loader {
+  vertical-align: middle;
+  padding-left: 10px;  
 }
-*/
 
 div.wm {
     width: 100%;
@@ -245,6 +240,8 @@ td.row_active:hover {
 }
 
 div.txtext {
+  overflow: hidden;
+  width: inherit;
   background: transparent;
   color: #000000;
   font-size: 11px;
@@ -645,18 +642,6 @@ div.b_ec_class {
 }
 
 /* Event Actions */
-div.b_load {
-    float: right;
-    padding: 0px 7px 0px 7px;
-    font-weight: normal;
-    text-align: center;
-    margin-left: 4px;
-    margin-right: 4px;
-    border-radius: 3px;
-}
-
-
-/* Event Actions */
 div.b_pl, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
     float: left;
     padding: 0px 7px 0px 7px;
@@ -764,10 +749,6 @@ div.b_close:hover, div.b_close_r:hover {
     color: #000000;
     cursor: pointer;
 }
-
-
-}
-
 
 span.clear {
   font-weight: bold;
