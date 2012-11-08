@@ -316,7 +316,7 @@ $(document).ready(function(){
         $("#eview_sub1").remove();
         $("#" + this.id).attr('class','d_row_sub');
         $(".d_row_sub").css('opacity','1');
-        $(".d_row_sub_active").find('td.sub').css('color', 'gray');
+        $(".d_row_sub_active").find('td').css('color', 'gray');
         $(".d_row_sub_active").find('td').css('border-top', 'none');
         $(".d_row_sub_active").find('td').css('background', 'transparent');
         $(".d_row_sub_active").attr('class','d_row_sub');
@@ -325,15 +325,23 @@ $(document).ready(function(){
     function closeSubRow1() {
         $("#eview_sub2").remove();
         $("#" + this.id).attr('class','d_row_sub1');
-        $(".d_row_sub1").css('opacity','1');
-        $(".d_row_sub1_active").find('td.sub').css('color', 'gray');
-        $(".d_row_sub1_active").find('td').css('border-top', 'none');
-        $(".d_row_sub1_active").find('td.sub').css('background', 'transparent');
-        $(".d_row_sub1_active").attr('class','d_row_sub1');
+        if (!$("#eview_sub3")[0]) {
+            $(".d_row_sub1").css('opacity','1');
+            $(".d_row_sub1_active").find('td').css('border-top', 'none');
+            $(".d_row_sub1_active").attr('class','d_row_sub1');
+        }
     }
 
     function closeSubRow2() {
+
         $("#eview_sub3").remove();
+        $("#" + this.id).attr('class','d_row_sub1');
+
+        if (!$("#eview_sub2")[0]) {
+            $(".d_row_sub1").css('opacity','1');
+            $(".d_row_sub1_active").find('td').css('border-top', 'none');
+            $(".d_row_sub1_active").attr('class','d_row_sub1');
+        }
     }
 
     // Reset if headings are clicked
@@ -467,7 +475,9 @@ $(document).ready(function(){
     //
 
     $(".b_pl").live("click", function() {
-        if (!$(".d_row_sub1_active")[0]) {
+ 
+        //if (!$(".d_row_sub1_active")[0]) {
+        if (!$("#eview_sub2")[0]) {
             baseID = $(this).data('eidl');
             rowcall = baseID.split("-");
             callerID = rowcall[0];
@@ -854,6 +864,9 @@ $(document).ready(function(){
             $(this).after(loaderImg);
             composite = $(this).data('tx').split("-");
             rowLoke = composite[0];
+            $("#" + rowLoke).attr('class','d_row_sub1_active');
+            $("#" + rowLoke).find('td').css('border-top', '1pt solid #c9c9c9');
+
             cid = composite[1];
             txdata = composite[2];
          
@@ -881,6 +894,13 @@ $(document).ready(function(){
                 tbl += row;
                 tbl += "</td></tr>";
                 $("#" + rowLoke).after(tbl);
+
+                // Turn off fade effect for large results
+                rC = $(".d_row_sub1").length;
+                if ( rC <= 399 ) {
+                    $(".d_row_sub1").fadeTo('fast','0.2');
+                }
+
                 $("#loader").remove();
             }
         }
