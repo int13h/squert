@@ -872,11 +872,12 @@ $(document).ready(function(){
                 var row = '',tbl = '';
                 row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
                 row += "<tr>";
-                row += "<td class=sub colspan=8><div class=txtext><div id=ev_close_sub2 class=b_close_r title='Close'>X</div>";
+                row += "<td class=txtext colspan=8>";
                 row += "<b><u>Transcript for event #" + cid + "</b></u><br><br>" + txResult;
-                row += "</div></td></tr></table>";
+                row += "</td></tr></table>";
 
-                tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=8>";
+
+                tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=8><div id=ev_close_sub2 class=close_sub1><div class=b_close title='Close'>X</div></div>";
                 tbl += row;
                 tbl += "</td></tr>";
                 $("#" + rowLoke).after(tbl);

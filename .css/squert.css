@@ -239,7 +239,7 @@ td.row_active:hover {
     text-decoration: underline;
 }
 
-div.txtext {
+td.txtext {
   overflow: hidden;
   width: inherit;
   background: transparent;
@@ -247,6 +247,8 @@ div.txtext {
   font-size: 11px;
   word-wrap: break-word;
   padding: 10px;
+  padding-top: none;
+  border-bottom: 1pt solid #c9c9c9;
 }
 
 td.sub, td.sub_active, td.sub1_active {
