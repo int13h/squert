@@ -419,7 +419,7 @@ $(document).ready(function(){
  
             // This leaves us with sid-gid
             rowValue = curID.replace("sid-","");
-
+     
             // Lookup rule
             urArgs = "type=" + 1 + "&sid=" + rowValue;
 
@@ -429,6 +429,12 @@ $(document).ready(function(){
 
             $(".d_row_active").attr('class', 'd_row');
             $("#active_eview").attr('class','d_row');
+            
+            // This is now the active row
+            $("#" + curID).attr('class','d_row_active');
+
+            // Set the class count
+            curclasscount = $('.d_row_active').data('event_count');
 
             function cb(data){
                 eval("sigData=" + data);
@@ -440,10 +446,20 @@ $(document).ready(function(){
                 var tbl = '';
                 tbl += "<tr class=eview id=active_eview><td colspan=9><div id=eview class=eview>";
                 tbl += signature;
-                tbl += "</div></td></div></tr>";
+                tbl += "<div class=effs><div class=left>&nbsp;</div>";
+                tbl += "<div class=b_null>F1</div><div class=b_null>F2</div><div class=b_null>F3</div>";
+                tbl += "<div class=b_null>F4</div><div class=b_null>F5</div><div class=b_null>F6</div>";
+                tbl += "<div class=b_null>F7</div><div class=b_null>F8</div><div class=b_null>F9</div>";
+                tbl += "</div>";
+                tbl += "<div class=event_class><div class=left>categorize <span class=bold id=class_count>" + curclasscount + "</span> event(s):</div>";
+                tbl += "<div class=b_C1>C1</div><div class=b_C2>C2</div><div class=b_C3>C3</div>";
+                tbl += "<div class=b_C4>C4</div><div class=b_C5>C5</div><div class=b_C6>C6</div>";
+                tbl += "<div class=b_C7>C7</div><div class=b_NA>NA</div><div class=b_ES>ES</div>";
+                tbl += "</div></td></tr>";
 
                 // Fade other results and show this
-                $("#" + curID).attr('class','d_row_active');
+                //$("#" + curID).attr('class','d_row_active');
+ 
                 $("#" + curID).find('td').css('background', '#CFE3A6');
                 $("#" + curID).find('td').css('color', '#000000');
                 $("#" + curID).after(tbl);
@@ -650,7 +666,7 @@ $(document).ready(function(){
                   row += "</td></tr>";
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
-              tbl += "<div class=notes id=notes><u>bulk classification</u></div>";
+              tbl += "<div class=notes></div>";
               tbl += "<table id=tl3 class=tablesorter align=center width=100% cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;

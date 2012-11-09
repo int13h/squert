@@ -86,7 +86,7 @@ while ($row = mysql_fetch_row($signatures)) {
 
     $sidList = rtrim($sidList);
 
-    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\" data-sid=\"$sensorList\">
+    echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\" data-sid=\"$sensorList\" data-event_count=\"$row[0]\">
           \r<td class=row_active>$row[1]</td>
           \r<td class=row>$row[2]</td>
           \r<td class=row>$ipp</td>

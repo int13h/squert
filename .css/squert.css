@@ -246,8 +246,9 @@ td.txtext {
   color: #000000;
   font-size: 11px;
   word-wrap: break-word;
-  padding: 10px;
-  padding-top: none;
+  padding-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   border-bottom: 1pt solid #c9c9c9;
 }
 
@@ -286,7 +287,7 @@ tr.eview {
 div.eview {
     width: 100%;    
     display: '';
-    background-color: #ffffff;
+    background-color: #fafafa;
     border-bottom: 1pt solid #c9c9c9;
     color: #545454;
     float: left;
@@ -307,6 +308,7 @@ div.sigtxt {
     font-weight: normal;
     font-size: 10pt;
     word-wrap: break-word;
+    border-bottom: 1pt solid #e9e9e9;    
 }
 
 div.notes {
@@ -314,14 +316,30 @@ div.notes {
     background-color: #e9e9e9;
     font-weight: normal;
     font-size: 10px;
-    color: blue;
 }
 
 div.notes_sub2 {
     padding: 15px;
     background-color: #e9e9e9;
     font-weight: normal;
-    font-size: 10pt;
+    font-size: 10px;
+}
+
+div.event_class {
+  clear: right;
+  float: right;
+  padding-right: 10px;
+  background-color: #fafafa;
+  font-weight: normal;
+  padding-bottom: 10px;
+}
+
+div.effs {
+  padding-right: 10px;
+  padding-bottom: 2px;
+  float: right;
+  background-color: #fafafa;
+  font-weight: normal;
 }
 
 /* Tabs */
@@ -724,7 +742,33 @@ div.b_close:hover, div.b_close_r:hover {
 }
 
 /* Event Classes */
-.b_C1, .b_C2, .b_C3, .b_C4, .b_C5, .b_C6, .b_C7, .b_ES, .b_NS, .b_UN {
+.left {
+  float: left;
+  text-align: right;
+  color: #545454;
+  padding-right: 5px;
+  font-size: 11px;
+  width: 180px;
+}
+
+span.bold {
+  font-weight: bold;
+  color: #000000;
+}
+
+.b_null {
+    float: left;
+    text-align: center;
+    padding: 0px 7px 0px 7px;
+    border: 1pt solid transparent;
+    color: gray;
+    margin-left: 4px;
+    margin-right: 4px;
+    font-size: 8px;
+    width: 15px;
+}
+
+.b_C1, .b_C2, .b_C3, .b_C4, .b_C5, .b_C6, .b_C7, .b_ES, .b_NA, .b_UN {
     float: left;
     font-weight: bold;
     text-align: center;
@@ -732,6 +776,10 @@ div.b_close:hover, div.b_close_r:hover {
     padding: 0px 7px 0px 7px;
     border-radius: 3px;
     color: #000000;
+    margin-left: 4px;
+    margin-right: 4px;
+    font-size: 10px;
+    width: 15px;
 }
 
 .b_C1 { background-color: #cc0000;}
@@ -746,7 +794,7 @@ div.b_close:hover, div.b_close_r:hover {
 .b_UN { background-color: red;}
 
 .b_C1:hover, .b_C2:hover, .b_C3:hover, .b_C4:hover, .b_C5:hover, .b_C6:hover, .b_C7:hover, 
-.b_ES:hover, .b_NS:hover, .b_UN:hover {
+.b_ES:hover, .b_NA:hover, .b_UN:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
