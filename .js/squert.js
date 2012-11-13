@@ -1,5 +1,6 @@
-
 $(document).ready(function(){
+
+    var lastclasscount = 0;
 
     $('[id^=sort-]').tablesorter();
 
@@ -55,6 +56,20 @@ $(document).ready(function(){
     };
 
     var loaderImg = "<img id=loader class=loader src=\".css/load.gif\">";
+
+    function catBar(count) {
+        bar =  "<div class=effs><div class=left>&nbsp;</div>";
+        bar += "<div class=b_null>F1</div><div class=b_null>F2</div><div class=b_null>F3</div>";
+        bar += "<div class=b_null>F4</div><div class=b_null>F5</div><div class=b_null>F6</div>";
+        bar += "<div class=b_null>F7</div><div class=b_null>F8</div><div class=b_null>F9</div>";
+        bar += "</div>";
+        bar += "<div class=event_class><div class=left>categorize <span class=bold id=class_count>" + count + "</span> event(s):</div>";
+        bar += "<div class=b_C1>C1</div><div class=b_C2>C2</div><div class=b_C3>C3</div>";
+        bar += "<div class=b_C4>C4</div><div class=b_C5>C5</div><div class=b_C6>C6</div>";
+        bar += "<div class=b_C7>C7</div><div class=b_NA>NA</div><div class=b_ES>ES</div>";
+        bar += "</div>";
+        return bar;
+    }
 
     //
     // Row filtering
@@ -167,7 +182,7 @@ $(document).ready(function(){
     });
 
     // Click newly created buttons to show again
-    $(".toggle-button").live("click", function(){
+    $(document).on("click", ".toggle-button", function(){
         sectionName = this.id.split("-");
         sectionOn(sectionName[1]);
         var trayContent = $("#b_tray_items").html().replace(/(<([^>]+)>)/ig,"");
@@ -309,7 +324,8 @@ $(document).ready(function(){
         ltCol = $(".d_row_active").find('td.lt').html();
         $(".d_row_active").find('td.lt').css('background', ltCol);
         $(".d_row_active").attr('class','d_row');
-        
+        // update class_count
+        $("#class_count").html(lastclasscount);
     }
 
     function closeSubRow() {
@@ -320,6 +336,8 @@ $(document).ready(function(){
         $(".d_row_sub_active").find('td').css('border-top', 'none');
         $(".d_row_sub_active").find('td').css('background', 'transparent');
         $(".d_row_sub_active").attr('class','d_row_sub');
+        // update class_count
+        $("#class_count").html(lastclasscount);
     }
 
     function closeSubRow1() {
@@ -350,26 +368,26 @@ $(document).ready(function(){
     });
     
     // Close open views
-    $("#sig_close").live("click", function(event) {
+    $(document).on("click", "#sig_close", function(event) {
         closeSigRow();
     });
 
-    $("#ev_close").live("click", function(event) {
+    $(document).on("click", "#ev_close", function(event) {
         closeRow();
     });
 
     // Close open sub views
-    $("#ev_close_sub").live("click", function(event) {
+    $(document).on("click", "#ev_close_sub", function(event) {
         closeSubRow();
     });
 
     // Close open packet data
-    $("#ev_close_sub1").live("click", function(event) {
+    $(document).on("click", "#ev_close_sub1", function(event) {
         closeSubRow1();
     });
 
     // Close open packet data
-    $("#ev_close_sub2").live("click", function(event) {
+    $(document).on("click", "#ev_close_sub2", function(event) {
         closeSubRow2();
     })
 
@@ -409,7 +427,7 @@ $(document).ready(function(){
     //  Level 1
     //
 
-    $(".row_active").live("click", function(event) {
+    $(document).on("click", ".row_active", function(event) {
         var curID = $(this).parent().attr('id');        
         // What type of row are we?
         rowType = curID.substr(0,3);
@@ -433,33 +451,29 @@ $(document).ready(function(){
             // This is now the active row
             $("#" + curID).attr('class','d_row_active');
 
-            // Set the class count
+            // Set the class count (counted again after load)
             curclasscount = $('.d_row_active').data('event_count');
 
             function cb(data){
                 eval("sigData=" + data);
                 sigtxt = sigData.ruletxt;
                 sigfile = sigData.rulefile;
-                sigline = sigData.ruleline; 
+                sigline = sigData.ruleline;
 
-                signature = "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div><div class=sigtxt>" + sigtxt + " <br><br><b>File:</b> " + sigfile + " <b>Line:</b> " + sigline + "</div>";
                 var tbl = '';
                 tbl += "<tr class=eview id=active_eview><td colspan=9><div id=eview class=eview>";
-                tbl += signature;
-                tbl += "<div class=effs><div class=left>&nbsp;</div>";
-                tbl += "<div class=b_null>F1</div><div class=b_null>F2</div><div class=b_null>F3</div>";
-                tbl += "<div class=b_null>F4</div><div class=b_null>F5</div><div class=b_null>F6</div>";
-                tbl += "<div class=b_null>F7</div><div class=b_null>F8</div><div class=b_null>F9</div>";
-                tbl += "</div>";
-                tbl += "<div class=event_class><div class=left>categorize <span class=bold id=class_count>" + curclasscount + "</span> event(s):</div>";
-                tbl += "<div class=b_C1>C1</div><div class=b_C2>C2</div><div class=b_C3>C3</div>";
-                tbl += "<div class=b_C4>C4</div><div class=b_C5>C5</div><div class=b_C6>C6</div>";
-                tbl += "<div class=b_C7>C7</div><div class=b_NA>NA</div><div class=b_ES>ES</div>";
-                tbl += "</div></td></tr>";
+                tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
+                tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
+                tbl += "<span class=small>";
+                tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span>";
+                tbl += "first seen: <span class=boldtab>" + "2012-11-11 01:15:21" + "</span>";
+                tbl += "involved: <span class=boldtab>" + "2 src / 10 dst" + "</span>";
+                tbl += "total events: <span class=boldtab>" + "9001" + "</span>";
+                tbl += "views: <span class=boldtab>" + "15" + "</span>";
+                tbl += "probability: <span class=boldtab>" + "1.633%" + "</span></span></div>";
+                tbl += catBar(curclasscount);
+                tbl += "</td></tr>";
 
-                // Fade other results and show this
-                //$("#" + curID).attr('class','d_row_active');
- 
                 $("#" + curID).find('td').css('background', '#CFE3A6');
                 $("#" + curID).find('td').css('color', '#000000');
                 $("#" + curID).after(tbl);
@@ -474,7 +488,7 @@ $(document).ready(function(){
     //  Level 2
     //
 
-    $(".sub_active").live("click", function() {
+    $(document).on("click", ".sub_active", function() {
         if (!$(".d_row_sub_active")[0]) {
             baseID = $(this).parent().attr('id');
             rowcall = baseID.split("-");
@@ -490,7 +504,7 @@ $(document).ready(function(){
     //  Level 3
     //
 
-    $(".b_pl").live("click", function() {
+    $(document).on("click", ".b_pl", function() {
  
         //if (!$(".d_row_sub1_active")[0]) {
         if (!$("#eview_sub2")[0]) {
@@ -588,9 +602,10 @@ $(document).ready(function(){
               head += "<th class=sub width=100>Destination IP</th>";
               head += "<th class=sub width=170>Country</th>";
               head += "</tr></thead>";
+              var curclasscount = 0;
 
               for (var i=0; i<theData.length; i++) {
-
+                  curclasscount += parseInt(theData[i].count);
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
                   row += "<td class=sub_active id=l2-" + i + "><div class=b_ec>" + theData[i].count + "</div></td>";
@@ -605,6 +620,11 @@ $(document).ready(function(){
                   row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
                   row += "</tr>";
               }
+
+              // update class_count
+              $("#class_count").html(curclasscount);
+              lastclasscount = $("#class_count").html();
+
               tbl += "<div class=eview_sub id=eview_sub style='width: 100%;'><table id=tl2 width=100% class=tablesorter cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
@@ -641,6 +661,10 @@ $(document).ready(function(){
               head += "<th class=sub1 width=40>Port</th>";
               head += "<th class=sub1 width=180>Actions</th>";
               head += "</tr></thead>";
+              
+              // update class_count
+              $("#class_count").html(theData.length);
+
               for (var i=0; i<theData.length; i++) {
 
                   rid = "s" + i + "-" + theData[i].sid + "-" + theData[i].cid;
@@ -650,7 +674,7 @@ $(document).ready(function(){
                   cv = classifications.class[tclass][0].short;
                   txdata = "s" + i + "-" + theData[i].cid + "-" + s2h(theData[i].sid + "|" + theData[i].timestamp + "|" + theData[i].src_ip + "|" + theData[i].src_port + "|" + theData[i].dst_ip + "|" + theData[i].dst_port);
                   
-                  row += "<td class=sub><div class=b_" + cv + ">" + cv + "</div></td>";
+                  row += "<td class=sub><div id=cat data-catid=" + eid + " data-bclass=b_" + cv + " class=b_" + cv + ">" + cv + "</div></td>";
                   row += "<td class=sub>" + theData[i].timestamp + "</td>";
                   row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
                   row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
@@ -875,7 +899,7 @@ $(document).ready(function(){
     // Request for transcript
     //
 
-    $(".b_tx").live("click", function(event) {
+    $(document).on("click", ".b_tx", function(event) {
         if (!$(".eview_sub3")[0]) {
             $(this).after(loaderImg);
             composite = $(this).data('tx').split("-");
@@ -921,5 +945,31 @@ $(document).ready(function(){
             }
         }
     });
+
+
+    //
+    // Single cats
+    //
+
+    $(document).on("click", "#cat", function(event) {
+
+        baseClass = $(this).data("bclass");
+        baseTxt = $(this).data("bclass").split("_");
+        curClass = $(this).attr("class");
+        
+        if ( curClass == baseClass) {
+            $(this).html("");
+            $(this).attr("class", "b_SE");
+            $(this).html("&rarr;");            
+        } else {
+            $(this).attr("class", baseClass);
+            $(this).html(baseTxt[1]);
+        }
+
+        // update class_count
+        $("#class_count").html($(".b_SE").length);
+
+    });
+
 });
 

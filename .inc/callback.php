@@ -164,13 +164,14 @@ function eg() {
     $query = "SELECT COUNT(signature) AS count, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) AS maxTime, 
               INET_NTOA(src_ip) AS src_ip, map1.c_long AS src_cc,
               INET_NTOA(dst_ip) AS dst_ip, map2.c_long AS dst_cc,
-              map1.cc AS srcc, map2.cc AS dstc
+              map1.cc AS srcc, map2.cc AS dstc,
+              GROUP_CONCAT(sid) AS c_sid, GROUP_CONCAT(cid) AS c_cid
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
               LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
               WHERE $when
               AND signature_id = '$sid'
-              GROUP BY src_ip, src_cc, dst_ip, dst_cc
+              GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
               ORDER BY maxTime DESC";
 
     $result = mysql_query($query);

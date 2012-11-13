@@ -127,12 +127,11 @@ tr.a_row_highlight {
 }
 
 tr.d_row, tr.s_row {
-    background: transparent;
     background-color: #fafafa;
 }
 
 tr.d_row_active {
-    background: transparent;
+    background-color: #fafafa;;
     font-weight: bold;
 }
 
@@ -751,9 +750,19 @@ div.b_close:hover, div.b_close_r:hover {
   width: 180px;
 }
 
+span.small {
+  font-size: 10px;
+}
+
 span.bold {
   font-weight: bold;
   color: #000000;
+}
+
+span.boldtab {
+  font-weight: bold;
+  color: #000000;
+  padding-right: 2em;
 }
 
 .b_null {
@@ -782,6 +791,21 @@ span.bold {
     width: 15px;
 }
 
+.b_SE {
+  float: left;
+  text-align: center;
+  padding: 0px 7px 0px 7px;
+  color: #ffffff;
+  background-color: #000000;
+  border: 1pt solid #000000;
+  border-radius: 3px;
+  margin-left: 4px;
+  margin-right: 4px;
+  font-size: 10px;
+  font-weight: bold;
+  width: 15px;
+}
+
 .b_C1 { background-color: #cc0000;}
 .b_C2 { background-color: #ff6600;}
 .b_C3 { background-color: #ff9900;}
@@ -794,7 +818,7 @@ span.bold {
 .b_UN { background-color: red;}
 
 .b_C1:hover, .b_C2:hover, .b_C3:hover, .b_C4:hover, .b_C5:hover, .b_C6:hover, .b_C7:hover, 
-.b_ES:hover, .b_NA:hover, .b_UN:hover {
+.b_ES:hover, .b_NA:hover, .b_UN:hover, .b_SE:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
