@@ -700,7 +700,7 @@ $(document).ready(function(){
                   cv = classifications.class[tclass][0].short;
                   txdata = "s" + i + "-" + theData[i].cid + "-" + s2h(theData[i].sid + "|" + theData[i].timestamp + "|" + theData[i].src_ip + "|" + theData[i].src_port + "|" + theData[i].dst_ip + "|" + theData[i].dst_port);
                   
-                  row += "<td class=sub><div id=cat data-catid=" + eid + " data-bclass=b_" + cv + " class=b_" + cv + ">" + cv + "</div></td>";
+                  row += "<td class=sub><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv + " class=b_" + cv + ">" + cv + "</div></td>";
                   row += "<td class=sub>" + theData[i].timestamp + "</td>";
                   row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
                   row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
@@ -990,7 +990,7 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on("click", "#cat", function(event) {
+    $(document).on("click", "#classcat", function(event) {
 
         baseClass = $(this).data("bclass");
         baseTxt = $(this).data("bclass").split("_");
@@ -1032,13 +1032,18 @@ $(document).ready(function(){
             // update counts
             newclasscount = thisclasscount - selclasscount;
             $("#l2l" + activeParent[1]).find(".b_ec_hot").html(newclasscount);
+
+            if ( newclasscount == 0 ) {
+                 $("#l2l" + activeParent[1]).find(".b_ec_hot").attr("class","b_ec_cold");
+            }
+
             $("#class_count").html(0);
             curclasscount = 0;
         }
         if (curclasscount > 0) {
-            $('[id*="cat"]').html(selTxt[1]);
-            $('[id*="cat"]').data("bclass", selClass);
-            $('[id*="cat"]').attr("class", selClass);
+            $('[id*="classcat"]').html(selTxt[1]);
+            $('[id*="classcat"]').data("bclass", selClass);
+            $('[id*="classcat"]').attr("class", selClass);
 
             if (!$(".d_row_sub1")[0]) {
                 $('[class*="b_ec_hot"]').html("0");
