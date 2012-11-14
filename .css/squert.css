@@ -629,35 +629,32 @@ div.big {
   padding-bottom: 5px;
 }
 
-div.b_ec {
+div.b_ec_n {
     float: left;
     font-weight: bold;
     text-align: center;
     border: 1pt solid #545454;
     border-radius: 3px;
-    background: #dcdcdc;
-    color: #000000;
+    background: #666666;
+    color: #ffffff;
     width: 45px;
 }
 
-div.b_ec:hover {
+div.b_ec_t {
+    float: left;
+    font-weight:normal;
+    text-align: center;
+    border: 1pt solid #545454;
+    border-radius: 3px;
+    background: #dcdcdc;
+    color: gray;
+    width: 45px;
+}
+
+div.b_ec_n:hover, div.b_ec_t:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
-}
-
-div.b_ec_class {
-    float: right;
-    font-weight: bold;
-    text-align: center;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-right: 1pt solid #545454;
-    border-top: 1pt solid #545454;
-    border-bottom: 1pt solid #545454;
-    background: #545454;
-    color: #ffffff;
-    width: 10px;
 }
 
 /* Event Actions */

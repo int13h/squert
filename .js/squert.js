@@ -50,7 +50,7 @@ $(document).ready(function(){
         "c16":[{"short": "C6", "long": "Reconnaissance"}],
         "c17":[{"short": "C7", "long": "Malware"}],
         "c2":[{"short": "ES", "long": "Escalated Event"}],
-        "c1":[{"short": "NA", "long": "Expired Event"}],
+        "c1":[{"short": "NA", "long": "No Action Req'd."}],
         "c0":[{"short": "UN", "long": "Unclassified"}]
       }
     };
@@ -64,9 +64,15 @@ $(document).ready(function(){
         bar += "<div class=b_null>F7</div><div class=b_null>F8</div><div class=b_null>F9</div>";
         bar += "</div>";
         bar += "<div class=event_class><div class=left>categorize <span class=bold id=class_count>" + count + "</span> event(s):</div>";
-        bar += "<div class=b_C1>C1</div><div class=b_C2>C2</div><div class=b_C3>C3</div>";
-        bar += "<div class=b_C4>C4</div><div class=b_C5>C5</div><div class=b_C6>C6</div>";
-        bar += "<div class=b_C7>C7</div><div class=b_NA>NA</div><div class=b_ES>ES</div>";
+        bar += "<div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>";
+        bar += "<div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>";
+        bar += "<div id=b_class-13 class=b_C3 title='Attempted Unauthorized Access'>C3</div>";
+        bar += "<div id=b_class-14 class=b_C4 title='Denial of Service Attack'>C4</div>";
+        bar += "<div id=b_class-15 class=b_C5 title='Policy Violation'>C5</div>";
+        bar += "<div id=b_class-16 class=b_C6 title='Reconnaissance'>C6</div>";
+        bar += "<div id=b_class-17 class=b_C7 title='Malware'>C7</div>";
+        bar += "<div id=b_class-1  class=b_NA title='No Action Req&#x2019;d.'>NA</div>";
+        bar += "<div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>";
         bar += "</div>";
         return bar;
     }
@@ -338,6 +344,7 @@ $(document).ready(function(){
         $(".d_row_sub_active").attr('class','d_row_sub');
         // update class_count
         $("#class_count").html(lastclasscount);
+        curclasscount = lastclasscount;
     }
 
     function closeSubRow1() {
@@ -495,7 +502,7 @@ $(document).ready(function(){
             callerID = rowcall[0];
             $("#" + callerID).attr('class','d_row_sub_active');
             $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
-            $(this).append(loaderImg);
+            $("#l2" + rowcall[0]).append(loaderImg);
             eventList("3-" + baseID);
         }  
     });
@@ -595,20 +602,22 @@ $(document).ready(function(){
               tbl = '';
               head = '';
               row = '';
-              head += "<thead><tr><th class=sub width=70>Count</th>";
-              head += "<th class=sub width=120>Last Event</th>";
-              head += "<th class=sub width=100>Source IP</th>";
-              head += "<th class=sub width=170>Country</th>";
-              head += "<th class=sub width=100>Destination IP</th>";
-              head += "<th class=sub width=170>Country</th>";
+              head += "<thead><tr><th class=sub width=50>New</th>";
+              head += "<th class=sub width=70>Total</th>";
+              head += "<th class=sub width=110>Last Event</th>";
+              head += "<th class=sub width=110>Source IP</th>";
+              head += "<th class=sub width=145>Country</th>";
+              head += "<th class=sub width=110>Destination IP</th>";
+              head += "<th class=sub width=145>Country</th>";
               head += "</tr></thead>";
-              var curclasscount = 0;
+              curclasscount = 0;
 
               for (var i=0; i<theData.length; i++) {
                   curclasscount += parseInt(theData[i].count);
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
-                  row += "<td class=sub_active id=l2-" + i + "><div class=b_ec>" + theData[i].count + "</div></td>";
+                  row += "<td class=sub_active id=l2l-" + i + "><div class=b_ec_n>" + theData[i].count + "</div></td>";
+                  row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_t>" + theData[i].count + "</div></td>";
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
                   row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
                   if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
@@ -622,7 +631,7 @@ $(document).ready(function(){
               }
 
               // update class_count
-              $("#class_count").html(curclasscount);
+              $("#class_count").html(curclasscount);            
               lastclasscount = $("#class_count").html();
 
               tbl += "<div class=eview_sub id=eview_sub style='width: 100%;'><table id=tl2 width=100% class=tablesorter cellpadding=0 cellspacing=0>";
@@ -685,7 +694,7 @@ $(document).ready(function(){
                   //row += "<div class=b_notes title='Add Notes'>N</div>";
                   //row += "<div class=b_tag title='Add Tag'>T</div>";
                   row += "<div class=b_pl data-eidl=s" + i + " title='View Payload'>P</div>";
-                  row += "<div class=b_tx data-tx=" + txdata + " title='Generate Transcript'>X</div>";
+                  row += "<div class=b_tx data-tx=" + txdata + " title='Generate Transcript'>T</div>";
                   row += "<div class=b_asset title='Asset Info'>A</div>";
                   row += "</td></tr>";
               }
@@ -948,8 +957,22 @@ $(document).ready(function(){
 
 
     //
-    // Single cats
+    // Event classification
     //
+
+    $(document).keyup(function(event){
+        switch (event.keyCode) {
+            case 112: $('#b_class-11').click(); break;
+            case 113: $('#b_class-12').click(); break;
+            case 114: $('#b_class-13').click(); break;
+            case 115: $('#b_class-14').click(); break;
+            case 116: $('#b_class-15').click(); break;
+            case 117: $('#b_class-16').click(); break;
+            case 118: $('#b_class-17').click(); break;
+            case 119: $('#b_class-1').click(); break;
+            case 120: $('#b_class-2').click(); break;
+        }
+    });
 
     $(document).on("click", "#cat", function(event) {
 
@@ -970,6 +993,35 @@ $(document).ready(function(){
         $("#class_count").html($(".b_SE").length);
 
     });
+
+    $(document).on("click", "[id*=\"b_class-\"]", function() {
+        eClass(this);
+    });
+
+    function eClass(caller) {
+
+        curclasscount = $("#class_count").html();
+        status_number = $(caller).data("sno");
+        selClass = $(caller).attr("class");
+        selTxt = selClass.split("_");
+
+        if ($(".b_SE")[0]) {
+            $(".b_SE").html(selTxt[1]);
+            $(".b_SE").data("bclass", selClass);
+            $(".b_SE").attr("class", selClass);
+            // update class_count
+            $("#class_count").html(0);
+            curclasscount = 0;
+        }
+        if (curclasscount > 0) {
+            $('[id*="cat"]').html(selTxt[1]);
+            $('[id*="cat"]').data("bclass", selClass);
+            $('[id*="cat"]').attr("class", selClass);
+            // update class_count
+            $("#class_count").html(0);
+            curclasscount = 0;
+        }
+    }
 
 });
 

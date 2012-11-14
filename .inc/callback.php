@@ -165,7 +165,8 @@ function eg() {
               INET_NTOA(src_ip) AS src_ip, map1.c_long AS src_cc,
               INET_NTOA(dst_ip) AS dst_ip, map2.c_long AS dst_cc,
               map1.cc AS srcc, map2.cc AS dstc,
-              GROUP_CONCAT(sid) AS c_sid, GROUP_CONCAT(cid) AS c_cid
+              GROUP_CONCAT(event.sid) AS c_sid, GROUP_CONCAT(event.cid) AS c_cid,
+              GROUP_CONCAT(event.status) AS c_status
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
               LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
