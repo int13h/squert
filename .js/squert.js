@@ -613,10 +613,27 @@ $(document).ready(function(){
               curclasscount = 0;
 
               for (var i=0; i<theData.length; i++) {
-                  curclasscount += parseInt(theData[i].count);
+
+                  rt = theData[i].c_status.split(",");
+
+                  var unclass = 0;
+                  
+                  $.each(rt, function(a,b) {
+                      switch (b) {
+                          case "0": unclass++; break;
+                      }
+                  });
+                  
+                  if ( unclass > 0 ) {
+                      rtClass = "b_ec_hot";
+                  } else {
+                      rtClass = "b_ec_cold";
+                  }
+
+                  curclasscount += parseInt(unclass);
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
-                  row += "<td class=sub_active id=l2l-" + i + "><div class=b_ec_n>" + theData[i].count + "</div></td>";
+                  row += "<td class=sub_active id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
                   row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_t>" + theData[i].count + "</div></td>";
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
                   row += "<td class=sub_active>" + theData[i].src_ip + "</td>";

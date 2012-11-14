@@ -629,13 +629,24 @@ div.big {
   padding-bottom: 5px;
 }
 
-div.b_ec_n {
+div.b_ec_cold {
     float: left;
     font-weight: bold;
     text-align: center;
     border: 1pt solid #545454;
     border-radius: 3px;
-    background: #666666;
+    background: #1A611D;
+    color: #ffffff;
+    width: 45px;
+}
+
+div.b_ec_hot {
+    float: left;
+    font-weight: bold;
+    text-align: center;
+    border: 1pt solid #545454;
+    border-radius: 3px;
+    background: #800000;
     color: #ffffff;
     width: 45px;
 }
