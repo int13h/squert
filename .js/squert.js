@@ -602,8 +602,8 @@ $(document).ready(function(){
               tbl = '';
               head = '';
               row = '';
-              head += "<thead><tr><th class=sub width=50>New</th>";
-              head += "<th class=sub width=70>Total</th>";
+              head += "<thead><tr><th class=sub width=45>New</th>";
+              head += "<th class=sub width=75>Total</th>";
               head += "<th class=sub width=110>Last Event</th>";
               head += "<th class=sub width=110>Source IP</th>";
               head += "<th class=sub width=145>Country</th>";
@@ -614,16 +614,16 @@ $(document).ready(function(){
 
               for (var i=0; i<theData.length; i++) {
 
+                  // How many events are not categorized?
                   rt = theData[i].c_status.split(",");
-
-                  var unclass = 0;
-                  
+                  var unclass = 0;                  
                   $.each(rt, function(a,b) {
                       switch (b) {
                           case "0": unclass++; break;
                       }
                   });
-                  
+                 
+                  // Colour based on event presence
                   if ( unclass > 0 ) {
                       rtClass = "b_ec_hot";
                   } else {
@@ -972,7 +972,6 @@ $(document).ready(function(){
         }
     });
 
-
     //
     // Event classification
     //
@@ -1021,12 +1020,18 @@ $(document).ready(function(){
         status_number = $(caller).data("sno");
         selClass = $(caller).attr("class");
         selTxt = selClass.split("_");
+        activeParent = $(".d_row_sub_active").attr("id").split("r");
+        thisclasscount = $("#l2l" + activeParent[1]).find(".b_ec_hot").text();
 
         if ($(".b_SE")[0]) {
+            selclasscount = $(".b_SE").length;
             $(".b_SE").html(selTxt[1]);
             $(".b_SE").data("bclass", selClass);
             $(".b_SE").attr("class", selClass);
-            // update class_count
+
+            // update counts
+            newclasscount = thisclasscount - selclasscount;
+            $("#l2l" + activeParent[1]).find(".b_ec_hot").html(newclasscount);
             $("#class_count").html(0);
             curclasscount = 0;
         }
@@ -1034,6 +1039,18 @@ $(document).ready(function(){
             $('[id*="cat"]').html(selTxt[1]);
             $('[id*="cat"]').data("bclass", selClass);
             $('[id*="cat"]').attr("class", selClass);
+
+            if (!$(".d_row_sub1")[0]) {
+                $('[class*="b_ec_hot"]').html("0");
+                $('[class*="b_ec_hot"]').attr("class","b_ec_cold");
+            }
+
+            if ($(".d_row_sub1")[0]) {
+                $("#l2l" + activeParent[1]).find(".b_ec_hot").html("0");
+                $("#l2l" + activeParent[1]).find(".b_ec_hot").attr("class","b_ec_cold");
+                lastclasscount = lastclasscount - curclasscount;
+            }
+
             // update class_count
             $("#class_count").html(0);
             curclasscount = 0;
