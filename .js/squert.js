@@ -1047,6 +1047,11 @@ $(document).ready(function(){
             if ( newclasscount == 0 ) {
                  $("#l2l" + activeParent[1]).find(".b_ec_hot").attr("class","b_ec_cold");
             }
+           
+            catCount = $("#class_count").text();
+            $("#class_count").html(0);
+            curclasscount = 0;
+            categorizeEvents(catCount);
         }
 
         // bulk
@@ -1067,19 +1072,22 @@ $(document).ready(function(){
 
                 lastclasscount = lastclasscount - curclasscount;
             }
-        }
 
-        // Check for success and display message
-        categorized = $("#class_count").text();
-        $("span.class_msg").text(categorized + " event(s) successfully categorized");
+            catCount = $("#class_count").text();
+            $("#class_count").html(0);
+            curclasscount = 0;
+            categorizeEvents(catCount);
+        }
+    }
+
+    function categorizeEvents(count) {
+        $("span.class_msg").text(count + " event(s) successfully categorized");
         $("span.class_msg").fadeIn('slow', function() {
             setTimeout(function(){
                 $(".class_msg").fadeOut('slow');
             }, 3000);
         });
-
-        $("#class_count").html(0);
-        curclasscount = 0;
     }
+
 });
 
