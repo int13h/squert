@@ -651,7 +651,7 @@ div.b_ec_hot {
     width: 45px;
 }
 
-div.b_ec_t {
+div.b_ec_total {
     float: left;
     font-weight:normal;
     text-align: center;
@@ -662,7 +662,7 @@ div.b_ec_t {
     width: 45px;
 }
 
-div.b_ec_n:hover, div.b_ec_t:hover {
+div.b_ec_n:hover, div.b_ec_total:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
@@ -763,11 +763,28 @@ span.small {
 }
 
 span.bold {
+  font-size: 11px;
   font-weight: bold;
   color: #000000;
 }
 
+span.class_msg {
+  color: #000000;
+  display: none;
+  background-color: #f9edbe;
+  padding: 0px 25px 0px 25px;
+  border-radius: 3px;
+  border: 1pt solid #f0c36d;
+}
+
+div.class_msg_cont {
+  font-weight: normal;
+  font-size: 12px;
+  float: left;
+}
+
 span.boldtab {
+  font-size: 11px;
   font-weight: bold;
   color: #000000;
   padding-right: 2em;

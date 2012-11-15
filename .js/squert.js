@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
     var lastclasscount = 0;
 
     $('[id^=sort-]').tablesorter();
@@ -63,7 +62,9 @@ $(document).ready(function(){
         bar += "<div class=b_null>F4</div><div class=b_null>F5</div><div class=b_null>F6</div>";
         bar += "<div class=b_null>F7</div><div class=b_null>F8</div><div class=b_null>F9</div>";
         bar += "</div>";
-        bar += "<div class=event_class><div class=left>categorize <span class=bold id=class_count>" + count + "</span> event(s):</div>";
+        bar += "<div class=event_class>";
+        bar += "<div class=class_msg_cont><span class=class_msg></span>&nbsp;</div>";
+        bar += "<div class=left>categorize <span class=bold id=class_count>" + count + "</span> event(s):</div>";
         bar += "<div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>";
         bar += "<div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>";
         bar += "<div id=b_class-13 class=b_C3 title='Attempted Unauthorized Access'>C3</div>";
@@ -626,15 +627,17 @@ $(document).ready(function(){
                   // Colour based on event presence
                   if ( unclass > 0 ) {
                       rtClass = "b_ec_hot";
+                      isActive = "sub_active";
                   } else {
                       rtClass = "b_ec_cold";
+                      isActive = "sub";
                   }
 
                   curclasscount += parseInt(unclass);
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
-                  row += "<td class=sub_active id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
-                  row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_t>" + theData[i].count + "</div></td>";
+                  row += "<td class=" + isActive + " id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
+                  row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_total>" + theData[i].count + "</div></td>";
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
                   row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
                   if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
@@ -976,7 +979,9 @@ $(document).ready(function(){
     // Event classification
     //
 
-    $(document).keyup(function(event){
+    $(document).keypress(function(event){
+        event.preventDefault();
+        event.stopPropagation();
         switch (event.keyCode) {
             case 112: $('#b_class-11').click(); break;
             case 113: $('#b_class-12').click(); break;
@@ -990,6 +995,7 @@ $(document).ready(function(){
         }
     });
 
+    // individual selects
     $(document).on("click", "#classcat", function(event) {
 
         baseClass = $(this).data("bclass");
@@ -1011,56 +1017,69 @@ $(document).ready(function(){
     });
 
     $(document).on("click", "[id*=\"b_class-\"]", function() {
-        eClass(this);
+            eClass(this);
+        
     });
 
     function eClass(caller) {
-
-        curclasscount = $("#class_count").html();
+        curclasscount = $("#class_count").text();
         status_number = $(caller).data("sno");
         selClass = $(caller).attr("class");
         selTxt = selClass.split("_");
-        activeParent = $(".d_row_sub_active").attr("id").split("r");
-        thisclasscount = $("#l2l" + activeParent[1]).find(".b_ec_hot").text();
+        
+  
+        if ($(".d_row_sub1")[0]) {
+            activeParent = $(".d_row_sub_active").attr("id").split("r");
+            thisclasscount = $("#l2l" + activeParent[1]).find(".b_ec_hot").text();
+        }
 
+        // singles
         if ($(".b_SE")[0]) {
             selclasscount = $(".b_SE").length;
             $(".b_SE").html(selTxt[1]);
             $(".b_SE").data("bclass", selClass);
             $(".b_SE").attr("class", selClass);
 
-            // update counts
             newclasscount = thisclasscount - selclasscount;
             $("#l2l" + activeParent[1]).find(".b_ec_hot").html(newclasscount);
+            lastclasscount = lastclasscount - curclasscount; 
 
             if ( newclasscount == 0 ) {
                  $("#l2l" + activeParent[1]).find(".b_ec_hot").attr("class","b_ec_cold");
             }
-
-            $("#class_count").html(0);
-            curclasscount = 0;
         }
+
+        // bulk
         if (curclasscount > 0) {
             $('[id*="classcat"]').html(selTxt[1]);
             $('[id*="classcat"]').data("bclass", selClass);
             $('[id*="classcat"]').attr("class", selClass);
 
             if (!$(".d_row_sub1")[0]) {
-                $('[class*="b_ec_hot"]').html("0");
-                $('[class*="b_ec_hot"]').attr("class","b_ec_cold");
+                $('[class="b_ec_hot"]').html(0);
+                $('[class="b_ec_hot"]').attr("class","b_ec_cold");
             }
 
             if ($(".d_row_sub1")[0]) {
                 $("#l2l" + activeParent[1]).find(".b_ec_hot").html("0");
                 $("#l2l" + activeParent[1]).find(".b_ec_hot").attr("class","b_ec_cold");
+                $("#l2l" + activeParent[1]).attr("class","sub");
+
                 lastclasscount = lastclasscount - curclasscount;
             }
-
-            // update class_count
-            $("#class_count").html(0);
-            curclasscount = 0;
         }
-    }
 
+        // Check for success and display message
+        categorized = $("#class_count").text();
+        $("span.class_msg").text(categorized + " event(s) successfully categorized");
+        $("span.class_msg").fadeIn('slow', function() {
+            setTimeout(function(){
+                $(".class_msg").fadeOut('slow');
+            }, 3000);
+        });
+
+        $("#class_count").html(0);
+        curclasscount = 0;
+    }
 });
 
