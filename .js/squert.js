@@ -122,11 +122,6 @@ $(document).ready(function(){
     // Simple signature show/hide via the search input box
     //
 
-    // Case insensitive contains
-    jQuery.expr[':'].Contains = function(a,i,m){
-        return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
-    };
-
     $('#live_search').click(function(){
         currentVal = $('#sel_search').val();
         if (currentVal == '-1') {
@@ -141,12 +136,6 @@ $(document).ready(function(){
         doSearch();
     });
 
-    $('#search').keyup(function(){
-        if ($('#sel_search').val()  == 1) {
-            doSearch();
-        }
-    });
-
     $('#clear_search').click(function() {
         if ($('#search').val() != '') {
             $('#search').val('');
@@ -155,13 +144,27 @@ $(document).ready(function(){
         }
     });
 
+    // Only live search if live is on
+    $('#search').keyup(function(){
+        if ($('#sel_search').val()  ==  1) {
+            doSearch();
+        }
+    });
+
+    $.expr[":"].Contains = $.expr.createPseudo(function(arg) {
+        return function( elem ) {
+            return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+        };
+    });
+
     function doSearch() {
         closeRow();
         $('.d_row').hide();
         searchString = $('#search').val();
+        alert(searchString);
         $('tr[id^=sid-]').attr('class', 'a_row');
-        $("'tr[id^=sid-]':Contains('" + searchString + "')").attr('class', 'd_row');
-        $("'tr[id^=sid-]':Contains('" + searchString + "')").show();
+        $("'tr[id^=sid-]':contains('" + searchString + "')").attr('class', 'd_row');
+        $("'tr[id^=sid-]':contains('" + searchString + "')").show();
     }
 
     //
@@ -400,7 +403,7 @@ $(document).ready(function(){
     })
 
     //
-    // Signature event view
+    //  Level 0
     //
 
     $(".s_row").click(function(event) {
@@ -499,12 +502,19 @@ $(document).ready(function(){
     $(document).on("click", ".sub_active", function() {
         if (!$(".d_row_sub_active")[0]) {
             baseID = $(this).parent().attr('id');
+            columnType = this.id[2];
+
+            switch (columnType) {
+                case "l": adqp = s2h("AND event.status = 0"); break;
+                case "r": adqp = s2h("empty"); break;
+            }
+
             rowcall = baseID.split("-");
             callerID = rowcall[0];
             $("#" + callerID).attr('class','d_row_sub_active');
             $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
             $("#l2" + rowcall[0]).append(loaderImg);
-            eventList("3-" + baseID);
+            eventList("3-" + baseID + "-" + adqp);
         }  
     });
 
@@ -527,7 +537,7 @@ $(document).ready(function(){
     });
 
     //
-    // Create the views
+    // This creates the views for each level
     //
 
     function eventList (type) {
@@ -535,7 +545,7 @@ $(document).ready(function(){
 
         switch (parts[0]) {
 
-        // Events level 1 - Grouped by Signature
+        // Level 0 view - Grouped by Signature
 
         case "6":
 
@@ -591,7 +601,8 @@ $(document).ready(function(){
           }
           break;
 
-        // Events level 2 - Grouped by signature, source, destination
+        // Level 1 view - Grouped by signature, source, destination
+
         case "2":
           urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen;
           $(function(){
@@ -664,12 +675,13 @@ $(document).ready(function(){
           }
           break;
 
-        // Events level 3 - No grouping, individual events
-        case "3":
-          var rowLoke = parts[1];
-          var filter = $('#' + parts[1]).data('filter');
+        // Level 2 view - No grouping, individual events
 
-          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
+        case "3":
+          rowLoke = parts[1];
+          filter = $('#' + parts[1]).data('filter');
+
+          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2];
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
           });
@@ -731,7 +743,8 @@ $(document).ready(function(){
           }
           break;
 
-        // Packet Data
+        // Level 3 view - Packet Data
+
         case "4":
           var rowLoke = parts[1];
           var filter = $('#' + parts[1]).data('filter');
@@ -954,12 +967,13 @@ $(document).ready(function(){
                 var row = '',tbl = '';
                 row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
                 row += "<tr>";
-                row += "<td class=txtext colspan=8>";
-                row += "<b><u>Transcript for event #" + cid + "</b></u><br><br>" + txResult;
+                row += "<td class=txtext>";
+                row += txResult;
                 row += "</td></tr></table>";
 
 
                 tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=8><div id=ev_close_sub2 class=close_sub1><div class=b_close title='Close'>X</div></div>";
+                tbl += "<div class=txtext_head><b><u>Transcript for event #" + cid + "</b></u></div>";
                 tbl += row;
                 tbl += "</td></tr>";
                 $("#" + rowLoke).after(tbl);
@@ -980,8 +994,8 @@ $(document).ready(function(){
     //
 
     $(document).keypress(function(event){
-        event.preventDefault();
-        event.stopPropagation();
+        //event.preventDefault();
+        //event.stopPropagation();
         switch (event.keyCode) {
             case 112: $('#b_class-11').click(); break;
             case 113: $('#b_class-12').click(); break;
@@ -1045,7 +1059,9 @@ $(document).ready(function(){
             lastclasscount = lastclasscount - curclasscount; 
 
             if ( newclasscount == 0 ) {
+                 //$("#l2l" + activeParent[1]).find(".b_ec_hot").html("0");
                  $("#l2l" + activeParent[1]).find(".b_ec_hot").attr("class","b_ec_cold");
+                 $("#l2l" + activeParent[1]).attr("class","sub");
             }
            
             catCount = $("#class_count").text();
@@ -1063,6 +1079,7 @@ $(document).ready(function(){
             if (!$(".d_row_sub1")[0]) {
                 $('[class="b_ec_hot"]').html(0);
                 $('[class="b_ec_hot"]').attr("class","b_ec_cold");
+                $('[class="b_ec_cold"]').parent().attr("class","sub");
             }
 
             if ($(".d_row_sub1")[0]) {
@@ -1081,11 +1098,15 @@ $(document).ready(function(){
     }
 
     function categorizeEvents(count) {
-        $("span.class_msg").text(count + " event(s) successfully categorized");
+        ess = '';
+        if ( count > 1 ) {
+            ess = 's';
+        }
+        $("span.class_msg").text(count + " event" + ess + " successfully categorized");
         $("span.class_msg").fadeIn('slow', function() {
             setTimeout(function(){
                 $(".class_msg").fadeOut('slow');
-            }, 3000);
+            }, 2000);
         });
     }
 

@@ -192,6 +192,12 @@ function ed() {
     global $offset;
     $comp = mysql_real_escape_string($_REQUEST['object']);
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
+    $adqp = hextostr(mysql_real_escape_string($_REQUEST['adqp']));
+
+    if ($adqp === "empty") {
+        $adqp = "";
+    }
+
     list($ln,$sid,$src_ip,$dst_ip) = explode("-", $comp);
     $src_ip = sprintf("%u", ip2long($src_ip));
     $dst_ip = sprintf("%u", ip2long($dst_ip));
@@ -200,6 +206,7 @@ function ed() {
               src_port, INET_NTOA(dst_ip) AS dst_ip, dst_port, sid, cid, ip_proto
               FROM event
               WHERE $when
+              $adqp
               AND (signature_id = '$sid' AND src_ip = '$src_ip' AND dst_ip = '$dst_ip')
               ORDER BY timestamp DESC";
 
@@ -312,9 +319,15 @@ function tx() {
 
     $cmd = "cliscript.tcl -sensor \"$sensorName\" -timestamp \"$timestamp\" -sid $sid -sip $sip -spt $spt -dip $dip -dpt $dpt";
 
-    exec("../.scripts/$cmd",$_raw);
-    $_raw = htmlspecialchars(implode("^|||br3ak|||^",$_raw));
-    $raw = str_replace("^|||br3ak|||^", "<br>", $_raw);
+    exec("../.scripts/$cmd",$raw);
+    $raw = htmlspecialchars(implode("^|||br3ak|||^",$raw));
+    $raw = str_replace("^|||br3ak|||^", "<br>", $raw);
+    $dst = '/\DST:/';
+    $src = '/\SRC:/';
+    $hdr = '/\HDR:/';
+    $raw = preg_replace($hdr, "<span class=txtext_hdr>$0</span>", $raw);
+    $raw = preg_replace($src, "<span class=txtext_src>$0</span>", $raw);
+    $raw = preg_replace($dst, "<span class=txtext_dst>$0</span>", $raw);
     $result = array("tx"  => "$raw",
                     "cmd" => "$cmd");
 

@@ -239,8 +239,6 @@ td.row_active:hover {
 }
 
 td.txtext {
-  overflow: hidden;
-  width: inherit;
   background: transparent;
   color: #000000;
   font-size: 11px;
@@ -248,8 +246,37 @@ td.txtext {
   padding-bottom: 20px;
   padding-left: 10px;
   padding-right: 10px;
+  padding-top: 20px;
   border-bottom: 1pt solid #c9c9c9;
+  background-color: #f4f4f4
+  word-wrap: break-word;
+  word-break: break-all;
+  display: inline-block;
 }
+
+div.txtext_head {
+    padding: 25px 10px 25px 10px;
+    background-color: #4f4f4;
+    color: #545454;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+.txtext_src {
+  font-weight: bold;
+  color: #cc0000;
+}
+
+.txtext_dst {
+  font-weight: bold;
+  color: #22335a;
+}
+
+.txtext_hdr {
+  font-weight: bold;
+  color: #000000;
+}
+
 
 td.sub, td.sub_active, td.sub1_active {
   background: transparent;
