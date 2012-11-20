@@ -76,9 +76,7 @@ for ($a = 0; $a < sizeof($comp); ++ $a) {
 $data = ltrim($_data,",");
 
 // Chart Logic
-
-echo "
-<canvas id=\"scatter1\" width=\"940\" height=\"300\">[No canvas support]</canvas>
+echo "<canvas id=\"scatter1\" width=\"940\" height=\"300\">[No canvas support]</canvas>
 <script>
 
 function clicked (e, bar) {

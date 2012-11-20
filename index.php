@@ -40,6 +40,7 @@ $st = microtime(true);
 <script type="text/javascript" src=".js/jq.js"></script>
 <script type="text/javascript" src=".js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src=".js/squert.js"></script>
+<script type="text/javascript" src=".js/charts.js"></script>
 <script type="text/javascript" src=".js/worldmap.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
@@ -70,13 +71,13 @@ $st = microtime(true);
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
 <h3>Events grouped by minute and hour</h3>
-<!--?php include_once '.charts/interval.php';?-->
+<?php include_once '.charts/interval.php';?>
 <h3>Top signatures</h3>
-<!--?php include_once '.charts/sigsum.php';?-->
+<?php include_once '.charts/sigsum.php';?>
 <h3>Top source and destination IPs</h3>
-<!--?php include_once '.charts/ip.php';?-->
+<?php include_once '.charts/ip.php';?>
 <h3>Top source and destination Countries</h3>
-<!--?php include_once '.charts/country.php';?-->
+<?php include_once '.charts/country.php';?>
 </td></tr></table>
 </div>
 

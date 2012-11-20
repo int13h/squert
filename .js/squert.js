@@ -1,3 +1,6 @@
+
+/* Copyright (C) 2012 Paul Halliday <paul.halliday@gmail.com> */
+
 $(document).ready(function(){
     var lastclasscount = 0;
 
@@ -482,15 +485,16 @@ $(document).ready(function(){
                 tbl += "total events: <span class=boldtab>" + "9001" + "</span>";
                 tbl += "views: <span class=boldtab>" + "15" + "</span>";
                 tbl += "probability: <span class=boldtab>" + "1.633%" + "</span></span></div>";
+                tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
                 tbl += catBar(curclasscount);
                 tbl += "</td></tr>";
-
                 $("#" + curID).find('td').css('background', '#CFE3A6');
                 $("#" + curID).find('td').css('color', '#000000');
                 $("#" + curID).after(tbl);
                 eventList("2-" + rowValue);
                 $("#eview").show();
                 $(".d_row").fadeTo('0','0.2');
+
             }
         }
     });
@@ -623,6 +627,7 @@ $(document).ready(function(){
               head += "<th class=sub width=145>Country</th>";
               head += "</tr></thead>";
               curclasscount = 0;
+              timeValues = "";
 
               for (var i=0; i<theData.length; i++) {
 
@@ -643,6 +648,9 @@ $(document).ready(function(){
                       rtClass = "b_ec_cold";
                       isActive = "sub";
                   }
+ 
+                  // Aggregate time values
+                  timeValues += theData[i].c_ts + ",";
 
                   curclasscount += parseInt(unclass);
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
@@ -660,6 +668,9 @@ $(document).ready(function(){
                   row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
                   row += "</tr>";
               }
+
+              // Pass timestamps for chart creation
+              chartInterval(timeValues);
 
               // update class_count
               $("#class_count").html(curclasscount);            
@@ -954,7 +965,6 @@ $(document).ready(function(){
          
             // See if a transcript is available
             urArgs = "type=" + 7 + "&txdata=" + txdata;
-
             $(function(){
                 $.get(".inc/callback.php?" + urArgs, function(data){cb4(data)});
             });
@@ -993,19 +1003,23 @@ $(document).ready(function(){
     // Event classification
     //
 
-    $(document).keypress(function(event){
-        //event.preventDefault();
-        //event.stopPropagation();
+    $(document).keyup(function(event){
+
+        function stopOthers() {    
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
         switch (event.keyCode) {
-            case 112: $('#b_class-11').click(); break;
-            case 113: $('#b_class-12').click(); break;
-            case 114: $('#b_class-13').click(); break;
-            case 115: $('#b_class-14').click(); break;
-            case 116: $('#b_class-15').click(); break;
-            case 117: $('#b_class-16').click(); break;
-            case 118: $('#b_class-17').click(); break;
-            case 119: $('#b_class-1').click(); break;
-            case 120: $('#b_class-2').click(); break;
+            case 112: $('#b_class-11').click(); stopOthers(); break;
+            case 113: $('#b_class-12').click(); stopOthers(); break;
+            case 114: $('#b_class-13').click(); stopOthers(); break;
+            case 115: $('#b_class-14').click(); stopOthers(); break;
+            case 116: $('#b_class-15').click(); stopOthers(); break;
+            case 117: $('#b_class-16').click(); stopOthers(); break;
+            case 118: $('#b_class-17').click(); stopOthers(); break;
+            case 119: $('#b_class-1').click();  stopOthers(); break;
+            case 120: $('#b_class-2').click();  stopOthers(); break;
         }
     });
 
@@ -1056,10 +1070,12 @@ $(document).ready(function(){
 
             newclasscount = thisclasscount - selclasscount;
             $("#l2l" + activeParent[1]).find(".b_ec_hot").html(newclasscount);
-            lastclasscount = lastclasscount - curclasscount; 
+            
+            if (lastclasscount > 0) {
+                lastclasscount = lastclasscount - curclasscount; 
+            }
 
             if ( newclasscount == 0 ) {
-                 //$("#l2l" + activeParent[1]).find(".b_ec_hot").html("0");
                  $("#l2l" + activeParent[1]).find(".b_ec_hot").attr("class","b_ec_cold");
                  $("#l2l" + activeParent[1]).attr("class","sub");
             }
@@ -1087,7 +1103,9 @@ $(document).ready(function(){
                 $("#l2l" + activeParent[1]).find(".b_ec_hot").attr("class","b_ec_cold");
                 $("#l2l" + activeParent[1]).attr("class","sub");
 
-                lastclasscount = lastclasscount - curclasscount;
+                if (lastclasscount > 0) {
+                    lastclasscount = lastclasscount - curclasscount;
+                }
             }
 
             catCount = $("#class_count").text();

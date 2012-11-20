@@ -239,7 +239,8 @@ td.row_active:hover {
 }
 
 td.txtext {
-  background: transparent;
+  width: 940px;
+  background: #ffffff;
   color: #000000;
   font-size: 11px;
   word-wrap: break-word;
@@ -256,7 +257,7 @@ td.txtext {
 
 div.txtext_head {
     padding: 25px 10px 10px 10px;
-    background-color: #4f4f4;
+    background-color: #ffffff;
     color: #545454;
     font-weight: normal;
     font-size: 12px;
@@ -264,17 +265,17 @@ div.txtext_head {
 
 .txtext_src {
   font-weight: bold;
-  color: #cc0000;
+  color: #800000;
 }
 
 .txtext_dst {
   font-weight: bold;
-  color: #22335a;
+  color: navy;
 }
 
 .txtext_hdr {
   font-weight: bold;
-  color: green;
+  color: #BF9108;
 }
 
 
@@ -911,4 +912,7 @@ table.tablesorter thead tr .headerSortDown {
     background-image: url(desc.gif);
 }
 
+#chart_timestamps {
+  float: right;
 
+}

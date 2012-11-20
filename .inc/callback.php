@@ -166,7 +166,8 @@ function eg() {
               INET_NTOA(dst_ip) AS dst_ip, map2.c_long AS dst_cc,
               map1.cc AS srcc, map2.cc AS dstc,
               GROUP_CONCAT(event.sid) AS c_sid, GROUP_CONCAT(event.cid) AS c_cid,
-              GROUP_CONCAT(event.status) AS c_status
+              GROUP_CONCAT(event.status) AS c_status,
+              GROUP_CONCAT(SUBSTR(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5)) AS c_ts
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
               LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
@@ -322,12 +323,13 @@ function tx() {
     exec("../.scripts/$cmd",$raw);
     $raw = htmlspecialchars(implode("^|||br3ak|||^",$raw));
     $raw = str_replace("^|||br3ak|||^", "<br>", $raw);
-    $dst = '/\DST:/';
-    $src = '/\SRC:/';
-    $hdr = '/\HDR:/';
+    $dst = '/DST: /';
+    $src = '/SRC: /';
+    $hdr = '/HDR: /';
     $raw = preg_replace($hdr, "<span class=txtext_hdr>$0</span>", $raw);
     $raw = preg_replace($src, "<span class=txtext_src>$0</span>", $raw);
     $raw = preg_replace($dst, "<span class=txtext_dst>$0</span>", $raw);
+
     $result = array("tx"  => "$raw",
                     "cmd" => "$cmd");
 
