@@ -255,7 +255,7 @@ td.txtext {
 }
 
 div.txtext_head {
-    padding: 25px 10px 25px 10px;
+    padding: 25px 10px 10px 10px;
     background-color: #4f4f4;
     color: #545454;
     font-weight: normal;
@@ -274,7 +274,7 @@ div.txtext_head {
 
 .txtext_hdr {
   font-weight: bold;
-  color: #000000;
+  color: green;
 }
 
 
@@ -689,7 +689,7 @@ div.b_ec_total {
     width: 45px;
 }
 
-div.b_ec_n:hover, div.b_ec_total:hover {
+div.b_ec_n:hover, div.b_ec_total:hover, div.b_ec_hot:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
