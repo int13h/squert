@@ -494,6 +494,7 @@ $(document).ready(function(){
                 eventList("2-" + rowValue);
                 $("#eview").show();
                 $(".d_row").fadeTo('0','0.2');
+                
 
             }
         }

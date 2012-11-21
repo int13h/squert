@@ -17,16 +17,16 @@ function chartInterval(data) {
         parts = b.split(":");
 
         switch (parts[0]) {
-            case '00': hours[0] = hours[0] + 1; break;
-            case '01': hours[1] = hours[1] + 1;  break;
-            case '02': hours[2] = hours[2] + 1;  break;
-            case '03': hours[3] = hours[3] + 1;  break;
-            case '04': hours[4] = hours[4] + 1;  break;
-            case '05': hours[5] = hours[5] + 1;  break;
-            case '06': hours[6] = hours[6] + 1;  break;
-            case '07': hours[7] = hours[7] + 1;  break;
-            case '08': hours[8] = hours[8] + 1;  break;
-            case '09': hours[9] = hours[9] + 1;  break;
+            case '00': hours[0]  = hours[0] + 1;  break;
+            case '01': hours[1]  = hours[1] + 1;  break;
+            case '02': hours[2]  = hours[2] + 1;  break;
+            case '03': hours[3]  = hours[3] + 1;  break;
+            case '04': hours[4]  = hours[4] + 1;  break;
+            case '05': hours[5]  = hours[5] + 1;  break;
+            case '06': hours[6]  = hours[6] + 1;  break;
+            case '07': hours[7]  = hours[7] + 1;  break;
+            case '08': hours[8]  = hours[8] + 1;  break;
+            case '09': hours[9]  = hours[9] + 1;  break;
             case '10': hours[10] = hours[10] + 1; break;
             case '11': hours[11] = hours[11] + 1; break;
             case '12': hours[12] = hours[12] + 1; break;
@@ -49,7 +49,7 @@ function chartInterval(data) {
     bar.Set('chart.gutter.bottom', 50);
     bar.Set('chart.gutter.left', 50);
     bar.Set('chart.gutter.right', 50);
-    bar.Set('chart.strokestyle', '#c9c9c9');
+    bar.Set('chart.strokestyle', '#c4c4c4');
     bar.Set('chart.colors', ['rgba(0, 0, 0, 0.1)']);
     bar.Set('chart.labels.above', 'true');
     bar.Set('chart.text.font', 'verdana');
@@ -58,5 +58,6 @@ function chartInterval(data) {
     bar.Set('chart.background.grid', true);
     bar.Set('chart.background.grid.autofit', true);
     bar.Set('chart.background.grid.autofit.align', true);
+    bar.Set('chart.hmargin', 8);
     bar.Draw();
 }
