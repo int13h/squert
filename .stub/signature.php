@@ -21,9 +21,11 @@
 
 $stub = "Event Signatures";
 
-$query = "SELECT COUNT(event.signature) AS c1, event.signature, signature_id, signature_gen, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) as t,
+$query = "SELECT COUNT(event.signature) AS c1, event.signature, signature_id, signature_gen, 
+          MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) as t,
           COUNT(DISTINCT(src_ip)), COUNT(DISTINCT(dst_ip)), ip_proto, 
-          GROUP_CONCAT(DISTINCT(status)), GROUP_CONCAT(DISTINCT(event.sid))
+          GROUP_CONCAT(DISTINCT(status)), GROUP_CONCAT(DISTINCT(event.sid)),
+          GROUP_CONCAT(status)
           FROM event
           LEFT JOIN sensor AS s ON event.sid = s.sid
           WHERE $when
@@ -33,19 +35,22 @@ $query = "SELECT COUNT(event.signature) AS c1, event.signature, signature_id, si
 
 $signatures = mysql_query($query);
 
+echo $query;
+
 echo "<div class=toggle id=table-Signature>
-      \r<h3 class=live id=h-Signature> [-] $stub</h3>
-      \r<table id=sort-signature width=960 cellpadding=0 cellspacing=0 class=tablesorter style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
-      \r<thead><tr>
-      \r<th class=sort>Signature</th>
-      \r<th class=sort width=80>ID</th>
-      \r<th class=sort width=60>Proto</th>
-      \r<th class=sort>Last</th>
-      \r<th class=sorttable_nosort width=1></th>
-      \r<th class=sort width=40>Src</th>
-      \r<th class=sort width=40>Dst</th>
-      \r<th class=sort width=60>Count</th>
-      \r<th class=sort width=80>% of Total</th></tr></thead>\n";
+      <h3 class=live id=h-Signature> [-] $stub</h3>
+      <table id=sort-signature width=960 cellpadding=0 cellspacing=0 class=tablesorter style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
+      <thead><tr>
+      <th class=sort>Signature</th>
+      <th class=sort width=80>ID</th>
+      <th class=sort width=60>Proto</th>
+      <th class=sort>Last</th>
+      <th class=sorttable_nosort width=1></th>
+      <th class=sort width=40>Src</th>
+      <th class=sort width=40>Dst</th>
+      <th class=sort width=60><span class=new>NEW</span></th>
+      <th class=sort width=60>Total</th>
+      <th class=sort width=60>% Total</th></tr></thead>\n";
 
 $i = 0;
 
@@ -83,18 +88,30 @@ while ($row = mysql_fetch_row($signatures)) {
         $sensorList .= $psensor . " ";
     }
 
+    // How many events are not categorized?
+    $unClass = substr_count($row[10], '0');
+
+    // Colour based on event presence
+    if ( $unClass > 0 ) {
+        $rtClass = "b_ec_hot";
+        $isActive = "row_active";
+    } else {
+        $rtClass = "b_ec_cold";
+        $isActive = "row";
+    }
 
     $sidList = rtrim($sidList);
 
     echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\" data-sid=\"$sensorList\" data-event_count=\"$row[0]\">
-          \r<td class=row_active>$row[1]</td>
-          \r<td class=row>$row[2]</td>
-          \r<td class=row>$ipp</td>
-          \r$stampLine
-          \r<td class=row>$row[5]</td>
-          \r<td class=row>$row[6]</td>
-          \r<td class=row><b>$row[0]</b></td>
-          \r<td class=row><b>$per</b></td></tr>\n";
+          <td class=row>$row[1]</td>
+          <td class=row>$row[2]</td>
+          <td class=row>$ipp</td>
+          $stampLine
+          <td class=row>$row[5]</td>
+          <td class=row>$row[6]</td>
+          <td class=$isActive><div class=$rtClass>$unClass</div></td>
+          <td class=row_active><div class=b_ec_total>$row[0]</div></td>
+          <td class=row>$per</td></tr>\n";
 }
 
 echo "</table></div><br><br>";

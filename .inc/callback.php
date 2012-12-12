@@ -321,16 +321,29 @@ function tx() {
     $cmd = "cliscript.tcl -sensor \"$sensorName\" -timestamp \"$timestamp\" -sid $sid -sip $sip -spt $spt -dip $dip -dpt $dpt";
 
     exec("../.scripts/$cmd",$raw);
-    $raw = htmlspecialchars(implode("^|||br3ak|||^",$raw));
-    $raw = str_replace("^|||br3ak|||^", "<br>", $raw);
-    $dst = '/DST: /';
-    $src = '/SRC: /';
-    $hdr = '/HDR: /';
-    $raw = preg_replace($hdr, "<span class=txtext_hdr>$0</span>", $raw);
-    $raw = preg_replace($src, "<span class=txtext_src>$0</span>", $raw);
-    $raw = preg_replace($dst, "<span class=txtext_dst>$0</span>", $raw);
 
-    $result = array("tx"  => "$raw",
+    $fmtd = $debug = '';
+
+    foreach ($raw as $line) {
+
+        $line = htmlspecialchars($line);
+        $type = substr($line, 0,3);
+
+        switch ($type) {
+            case "DEB": $debug .= preg_replace('/^DEBUG:.*$/', "<span class=txtext_dbg>$0</span>", $line) . "<br>"; $line = ''; break;
+            case "HDR": $line = preg_replace('/(^HDR:)(.*$)/', "<span class=txtext_hdr>$2</span>", $line); break;
+            case "DST": $line = preg_replace('/^DST:.*$/', "<span class=txtext_dst>$0</span>", $line); break;
+            case "SRC": $line = preg_replace('/^SRC:.*$/', "<span class=txtext_src>$0</span>", $line); break;
+        }
+
+        if (strlen($line) > 0) {
+            $fmtd  .= $line . "<br>";
+        }
+    }
+
+    $fmtd  .= "<br>" . $debug;
+    $result = array("tx"  => "$fmtd",
+                    "dbg" => "$debug",
                     "cmd" => "$cmd");
 
     $theJSON = json_encode($result);

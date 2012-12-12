@@ -154,9 +154,9 @@ $(document).ready(function(){
         }
     });
 
-    $.expr[":"].Contains = $.expr.createPseudo(function(arg) {
-        return function( elem ) {
-            return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    $.expr[":"].containsi = $.expr.createPseudo(function (selector, context, isXml) {
+        return function (elem) {
+            return (elem.textContent || elem.innerText || $.text(elem)).toLowerCase().indexOf(selector.toLowerCase()) > -1;
         };
     });
 
@@ -164,10 +164,9 @@ $(document).ready(function(){
         closeRow();
         $('.d_row').hide();
         searchString = $('#search').val();
-        alert(searchString);
         $('tr[id^=sid-]').attr('class', 'a_row');
-        $("'tr[id^=sid-]':contains('" + searchString + "')").attr('class', 'd_row');
-        $("'tr[id^=sid-]':contains('" + searchString + "')").show();
+        $("'tr[id^=sid-]':containsi('" + searchString + "')").attr('class', 'd_row');
+        $("'tr[id^=sid-]':containsi('" + searchString + "')").show();
     }
 
     //
@@ -475,7 +474,7 @@ $(document).ready(function(){
                 sigline = sigData.ruleline;
 
                 var tbl = '';
-                tbl += "<tr class=eview id=active_eview><td colspan=9><div id=eview class=eview>";
+                tbl += "<tr class=eview id=active_eview><td colspan=10><div id=eview class=eview>";
                 tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
                 tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
                 tbl += "<span class=small>";
@@ -486,6 +485,7 @@ $(document).ready(function(){
                 tbl += "views: <span class=boldtab>" + "15" + "</span>";
                 tbl += "probability: <span class=boldtab>" + "1.633%" + "</span></span></div>";
                 tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
+                tbl += "<div class=right><span class=link>[show me the past 30 days]</span></div><br>";
                 tbl += catBar(curclasscount);
                 tbl += "</td></tr>";
                 $("#" + curID).find('td').css('background', '#CFE3A6');
@@ -662,11 +662,11 @@ $(document).ready(function(){
                   row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
                   if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
                   sflag = getFlag(theData[i].srcc)
-                  row += "<td class=" + sclass + ">" + sflag + theData[i].src_cc + "</td>";
+                  row += "<td class=" + sclass + ">" + sflag + theData[i].src_cc + " (." + theData[i].srcc.toLowerCase() + ")" + "</td>";
                   row += "<td class=sub_active>" + theData[i].dst_ip + "</td>";
                   if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
                   dflag = getFlag(theData[i].dstc)
-                  row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + "</td>";
+                  row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + " (." + theData[i].dstc.toLowerCase() + ")" + "</td>";
                   row += "</tr>";
               }
 
@@ -984,7 +984,6 @@ $(document).ready(function(){
 
 
                 tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=8><div id=ev_close_sub2 class=close_sub1><div class=b_close title='Close'>X</div></div>";
-                tbl += "<div class=txtext_head><b><u>Transcript for event #" + cid + "</b></u></div>";
                 tbl += row;
                 tbl += "</td></tr>";
                 $("#" + rowLoke).after(tbl);
@@ -1004,7 +1003,7 @@ $(document).ready(function(){
     // Event classification
     //
 
-    $(document).keyup(function(event){
+    $("#testestest").keyup(function(event){
 
         function stopOthers() {    
             event.preventDefault();
@@ -1130,4 +1129,3 @@ $(document).ready(function(){
     }
 
 });
-
