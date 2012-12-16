@@ -30,26 +30,23 @@ $query = "SELECT COUNT(event.signature) AS c1, event.signature, signature_id, si
           LEFT JOIN sensor AS s ON event.sid = s.sid
           WHERE $when
           AND agent_type = 'snort'
-          GROUP BY signature
+          GROUP BY signature_id
           ORDER BY t DESC";
 
 $signatures = mysql_query($query);
-
-echo $query;
 
 echo "<div class=toggle id=table-Signature>
       <h3 class=live id=h-Signature> [-] $stub</h3>
       <table id=sort-signature width=960 cellpadding=0 cellspacing=0 class=tablesorter style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       <thead><tr>
+      <th class=sort width=60>Queued</th>
+      <th class=sort width=60>Total</th>
+      <th class=sort width=100>Last</th>
       <th class=sort>Signature</th>
       <th class=sort width=80>ID</th>
       <th class=sort width=60>Proto</th>
-      <th class=sort>Last</th>
-      <th class=sorttable_nosort width=1></th>
       <th class=sort width=40>Src</th>
       <th class=sort width=40>Dst</th>
-      <th class=sort width=60><span class=new>NEW</span></th>
-      <th class=sort width=60>Total</th>
       <th class=sort width=60>% Total</th></tr></thead>\n";
 
 $i = 0;
@@ -103,14 +100,14 @@ while ($row = mysql_fetch_row($signatures)) {
     $sidList = rtrim($sidList);
 
     echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\" data-sid=\"$sensorList\" data-event_count=\"$row[0]\">
+          <td class=$isActive><div class=$rtClass>$unClass</div></td>
+          <td class=row_active><div class=b_ec_total>$row[0]</div></td>
+          $stampLine
           <td class=row>$row[1]</td>
           <td class=row>$row[2]</td>
           <td class=row>$ipp</td>
-          $stampLine
           <td class=row>$row[5]</td>
           <td class=row>$row[6]</td>
-          <td class=$isActive><div class=$rtClass>$unClass</div></td>
-          <td class=row_active><div class=b_ec_total>$row[0]</div></td>
           <td class=row>$per</td></tr>\n";
 }
 

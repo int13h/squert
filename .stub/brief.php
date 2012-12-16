@@ -23,7 +23,7 @@
 // the rest will use for calculations.
 
 // A simple indicator of how close the last event generated time is to "now"
-$ltCols = array("#cc0000","#FAB005","#F2E766","#D5E4F5","#c9c9c9");
+$ltCols = array("#cc0000","#FAB005","#F2E766","#D5E4F5","#ffffff");
 
 function lastTime($stamp) {
     global $today, $startDate, $endDate, $ltCols, $offset;
@@ -65,8 +65,7 @@ function lastTime($stamp) {
     } else {
         $bgcol = "#e9e9e9";
     }
-
-    $stampLine = "<td class=$timeStyle>$timeResult</td><td class=lt style=\"background: $bgcol;\">$bgcol</td>";
+    $stampLine = "<td class=$timeStyle><div class=b_time style=\"background: $bgcol;\"></div>$timeResult</td>";
     return $stampLine;
 }
 
@@ -162,7 +161,6 @@ echo "<div class=toggle id=table-Sensor>
       \r<th class=sort width=200>Hostname</th>
       \r<th class=sort width=100>Agent Type</th>
       \r<th class=sort width=129>Last Event</th>
-      \r<th class=sorttable_nosort width=1></th>
       \r<th class=sort width=40>Sig</th>
       \r<th class=sort width=40>Src</th>
       \r<th class=sort width=40>Dst</th>
@@ -211,7 +209,7 @@ foreach ($sensorList as $key => $sid) {
 $sumPer = round($sumPer,0);
 
 echo "<tfoot><tr class=a_row>
-          \r<td class=totals colspan=5>Totals:</td>
+          \r<td class=totals colspan=4>Totals:</td>
           \r<td class=totals>$sigCount</td>
           \r<td class=totals>$srcCount[0]</td>
           \r<td class=totals>$dstCount[0]</td>
@@ -227,7 +225,6 @@ echo "<div class=toggle id=table-Category>
       \r<th class=sort width=20>#</th>
       \r<th class=sort width=530>Category</th>
       \r<th class=sort width=129>Last Event</th>
-      \r<th class=sorttable_nosort width=1></th>
       \r<th class=sort width=40>Sig</th>
       \r<th class=sort width=40>Src</th>
       \r<th class=sort width=40>Dst</th>
@@ -279,7 +276,7 @@ foreach ($statusList as $key => $status) {
 $sumPer = round($sumPer,0);
 
 echo "<tfoot><tr class=a_row>
-          \r<td class=totals colspan=4>Totals:</td>
+          \r<td class=totals colspan=3>Totals:</td>
           \r<td class=totals>$sigCount</td>
           \r<td class=totals>$srcCount[0]</td>
           \r<td class=totals>$dstCount[0]</td>

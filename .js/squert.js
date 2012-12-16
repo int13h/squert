@@ -66,7 +66,6 @@ $(document).ready(function(){
         bar += "<div class=b_null>F7</div><div class=b_null>F8</div><div class=b_null>F9</div>";
         bar += "</div>";
         bar += "<div class=event_class>";
-        bar += "<div class=class_msg_cont><span class=class_msg></span>&nbsp;</div>";
         bar += "<div class=left>categorize <span class=bold id=class_count>" + count + "</span> event(s):</div>";
         bar += "<div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>";
         bar += "<div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>";
@@ -82,7 +81,7 @@ $(document).ready(function(){
     }
 
     //
-    // Row filtering
+    // Row filtering by event class
     //
 
     function filterRows(caller,type,ec) {
@@ -619,7 +618,7 @@ $(document).ready(function(){
               tbl = '';
               head = '';
               row = '';
-              head += "<thead><tr><th class=sub width=45>New</th>";
+              head += "<thead><tr><th class=sub width=45>Queued</th>";
               head += "<th class=sub width=75>Total</th>";
               head += "<th class=sub width=110>Last Event</th>";
               head += "<th class=sub width=110>Source IP</th>";
@@ -1124,7 +1123,7 @@ $(document).ready(function(){
         $("span.class_msg").fadeIn('slow', function() {
             setTimeout(function(){
                 $(".class_msg").fadeOut('slow');
-            }, 2000);
+            }, 3000);
         });
     }
 

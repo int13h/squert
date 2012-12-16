@@ -112,6 +112,7 @@ $rt = sprintf("%01.3f",$time);
 
 <div id=bottom class=bottom>
 <div id=b_tray class=b_tray><span class=prb>Hidden:</span><span id=tray_empty> None</span><span id=b_tray_items><span></div>
+<div id=b_class class=b_class><span class=class_msg></span>&nbsp;</div>
 <div id=b_event class=b_event><b>Events:</b> &nbsp;synchronized (<?php echo "${rt}s";?>)</div>
 <div id=b_update class=b_update>update</div>
 <div id=b_top class=b_top>top</div>

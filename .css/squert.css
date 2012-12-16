@@ -466,7 +466,17 @@ div.bottom {
 }
 
 div.b_tray {
-    width: 68%;
+    width: 38%;
+    height: 30px;
+    background-color: #333333;
+    text-align: left;
+    font-weight: normal;
+    float: left;
+    padding-top: 11px;
+}
+
+div.b_class {
+    width: 30%;
     height: 30px;
     background-color: #333333;
     text-align: left;
@@ -672,22 +682,22 @@ div.big {
 
 div.b_ec_cold {
     float: left;
-    font-weight: bold;
+    font-weight: normal;
     text-align: center;
     border: 1pt solid #545454;
     border-radius: 3px;
-    background: #1A611D;
-    color: #ffffff;
+    background: #d6e7f5;
+    color: #000000;
     width: 45px;
 }
 
 div.b_ec_hot {
     float: left;
-    font-weight: bold;
+    font-weight: normal;
     text-align: center;
     border: 1pt solid #545454;
     border-radius: 3px;
-    background: #800000;
+    background: #c8000a;
     color: #ffffff;
     width: 45px;
 }
@@ -719,6 +729,17 @@ div.b_pl, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
     margin-left: 4px;
     margin-right: 4px;
     border-radius: 3px;
+}
+
+div.b_time {
+    padding: 2px 2px 2px 2px;
+    border: .5pt solid black;
+    border-radius: 2px;
+    width: 2px;
+    float: left;
+    text-align: center;
+    margin-top: 5px;
+    margin-right: 4px;
 }
 
 div.b_tx:hover, div.b_pl:hover, div.b_notes:hover, div.b_tag:hover, div.b_clsfy:hover, div.b_asset:hover {
@@ -937,6 +958,3 @@ table.tablesorter thead tr .headerSortDown {
   float: right;
 }
 
-span.new {
-    color: yellow;
-}
