@@ -1,5 +1,5 @@
 
-/* Copyright (C) 2012 Paul Halliday <paul.halliday@gmail.com> */
+/* Copyright (C) 2013 Paul Halliday <paul.halliday@gmail.com> */
 
 $(document).ready(function(){
     var lastclasscount = 0;
@@ -146,28 +146,6 @@ $(document).ready(function(){
         }
     });
 
-    // Only live search if live is on
-    $('#search').keyup(function(){
-        if ($('#sel_search').val()  ==  1) {
-            doSearch();
-        }
-    });
-
-    $.expr[":"].containsi = $.expr.createPseudo(function (selector, context, isXml) {
-        return function (elem) {
-            return (elem.textContent || elem.innerText || $.text(elem)).toLowerCase().indexOf(selector.toLowerCase()) > -1;
-        };
-    });
-
-    function doSearch() {
-        closeRow();
-        $('.d_row').hide();
-        searchString = $('#search').val();
-        $('tr[id^=sid-]').attr('class', 'a_row');
-        $("'tr[id^=sid-]':containsi('" + searchString + "')").attr('class', 'd_row');
-        $("'tr[id^=sid-]':containsi('" + searchString + "')").show();
-    }
-
     //
     // Toggle sections
     //
@@ -178,7 +156,7 @@ $(document).ready(function(){
         if (flaggedSections.match("Brief")) { sectionOff("Brief");}
         if (flaggedSections.match("Sensor")) { sectionOff("Sensor");}
         if (flaggedSections.match("Category")) { sectionOff("Category");}
-        if (flaggedSections.match("Signature")) { sectionOff("Signature");}
+        if (flaggedSections.match("Events")) { sectionOff("Events");}
     }
 
     // Click section titles to hide
@@ -473,18 +451,13 @@ $(document).ready(function(){
                 sigline = sigData.ruleline;
 
                 var tbl = '';
-                tbl += "<tr class=eview id=active_eview><td colspan=10><div id=eview class=eview>";
+                tbl += "<tr class=eview id=active_eview><td colspan=9><div id=eview class=eview>";
                 tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
                 tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
                 tbl += "<span class=small>";
                 tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span>";
-                tbl += "first seen: <span class=boldtab>" + "2012-11-11 01:15:21" + "</span>";
-                tbl += "involved: <span class=boldtab>" + "2 src / 10 dst" + "</span>";
-                tbl += "total events: <span class=boldtab>" + "9001" + "</span>";
-                tbl += "views: <span class=boldtab>" + "15" + "</span>";
-                tbl += "probability: <span class=boldtab>" + "1.633%" + "</span></span></div>";
                 tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
-                tbl += "<div class=right><span class=link>[show me the past 30 days]</span></div><br>";
+                tbl += "<div class=right><span class=link>[show more]</span></div><br>";
                 tbl += catBar(curclasscount);
                 tbl += "</td></tr>";
                 $("#" + curID).find('td').css('background', '#CFE3A6');
@@ -494,7 +467,6 @@ $(document).ready(function(){
                 $("#eview").show();
                 $(".d_row").fadeTo('0','0.2');
                 
-
             }
         }
     });
@@ -619,12 +591,12 @@ $(document).ready(function(){
               head = '';
               row = '';
               head += "<thead><tr><th class=sub width=45>Queued</th>";
-              head += "<th class=sub width=75>Total</th>";
-              head += "<th class=sub width=110>Last Event</th>";
+              head += "<th class=sub width=110>Total</th>";
+              head += "<th class=sub>Last Event</th>";
               head += "<th class=sub width=110>Source IP</th>";
-              head += "<th class=sub width=145>Country</th>";
+              head += "<th class=sub width=160>Country</th>";
               head += "<th class=sub width=110>Destination IP</th>";
-              head += "<th class=sub width=145>Country</th>";
+              head += "<th class=sub width=160>Country</th>";
               head += "</tr></thead>";
               curclasscount = 0;
               timeValues = "";
@@ -1029,7 +1001,7 @@ $(document).ready(function(){
         baseTxt = $(this).data("bclass").split("_");
         curClass = $(this).attr("class");
         
-        if ( curClass == baseClass) {
+        if (curClass == baseClass) {
             $(this).html("");
             $(this).attr("class", "b_SE");
             $(this).html("&rarr;");            

@@ -55,14 +55,14 @@ $st = microtime(true);
 <title>squert</title>
 </head>
 <body>
+<form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
 <div id=tab_group class=tab_group>
 <div id=t_dash class=tab>Dashboard</div>
 <div id=t_sum class=tab>Events</div>
 <div id=t_map class=tab>Map</div>
 
-<div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=settings class=links>Watchlist</span>|<span id=logout class=links>Logout</span></div>
-<form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
-<div id=t_search class=search><span id=settings class=links>Saved</span>|<span id=live_search class=links_enabled>Live</span>|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
+<div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span></div>
+<div id=t_search class=search><span class=links>Saved</span>&nbsp;&nbsp;|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
 </div>
 </form>
 <?php echo $timeLinks;?>
@@ -92,7 +92,7 @@ $st = microtime(true);
 
 <div id=t_map_content class=content>
 <div class=wm>
-<!--?php include_once '.stub/map.php';?-->
+<?php include_once '.stub/map.php';?>
 </div>
 </div>
 
@@ -118,13 +118,13 @@ $rt = sprintf("%01.3f",$time);
 <div id=b_top class=b_top>top</div>
 </div>
 
-<input id=timestamp type=hidden value="<?php echo strtohex($when);?>" />
-<input id=sel_ec type=hidden value="0" />
-<input id=sel_class type=hidden value="-1" />
-<input id=sel_sensor type=hidden value="-1" />
-<input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>" />
-<input id=sel_section type=hidden value="<?php echo $_SESSION['sSection'];?>" />
-<input id=sel_search type=hidden value="1" />
+<input id=timestamp type=hidden value="<?php echo strtohex($when);?>">
+<input id=sel_ec type=hidden value="0">
+<input id=sel_class type=hidden value="-1">
+<input id=sel_sensor type=hidden value="-1">
+<input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
+<input id=sel_section type=hidden value="<?php echo $_SESSION['sSection'];?>">
+<input id=sel_idlist type=hidden value="">
 </body>
 </html>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>

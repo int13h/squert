@@ -23,7 +23,7 @@
 // the rest will use for calculations.
 
 // A simple indicator of how close the last event generated time is to "now"
-$ltCols = array("#cc0000","#FAB005","#F2E766","#D5E4F5","#ffffff");
+$ltCols = array("#cc0000","#FAB005","#F2E766","lightblue","#ffffff");
 
 function lastTime($stamp) {
     global $today, $startDate, $endDate, $ltCols, $offset;
@@ -68,6 +68,7 @@ function lastTime($stamp) {
     $stampLine = "<td class=$timeStyle><div class=b_time style=\"background: $bgcol;\"></div>$timeResult</td>";
     return $stampLine;
 }
+
 
 // Event Categories
 $category	=  mysql_query("SELECT COUNT(signature) as c1, status, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')), 

@@ -235,7 +235,6 @@ tr.d_row:hover, tr.a_row:hover, tr.s_row:hover, tr.d_row_sub:hover, tr.d_row_sub
 
 td.row_active:hover {
     cursor: pointer;
-    text-decoration: underline;
 }
 
 td.txtext {
@@ -293,6 +292,7 @@ td.sub, td.sub_active, td.sub1_active {
   color: #000000;
   padding: 3px 5px 3px 5px;
   font-size: 11px;
+  text-decoration: none;
 }
 
 td.sub_light {
@@ -308,7 +308,7 @@ td.sub_light {
 }
 
 td.sub_active:hover, td.sub1_active:hover, td.sub_light:hover {
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -334,7 +334,7 @@ div.eview_sub {
 
 
 div.sigtxt {
-    width: 940px;
+    width: 930px;
     padding: 10px;
     background-color: #fafafa;
     font-weight: normal;
@@ -386,7 +386,6 @@ div.right {
 div.tab_group {
     top:0;
     left:0;
-    position: fixed;
     width: 100%;
     text-align: center;
     background-color: #333333;
@@ -401,7 +400,7 @@ div.tab {
     font-weight: normal;
     float: left;
     font-size: 10pt;
-    padding: 15px 10px 15px 10px;
+    padding: 10px;
     border-right: 1pt solid #545454;
     cursor: pointer;
 }
@@ -412,14 +411,13 @@ div.tab_active {
     font-weight: normal;
     float: left;
     font-size: 10pt;
-    padding: 15px 10px 15px 10px;
+    padding: 10px;
     border-right: 1pt solid #545454;
 }
 
 div.content_active {
     display: '';
     clear: both;
-    padding-top: 70px;
     padding-bottom: 20px;
 }
 
@@ -430,7 +428,7 @@ div.user {
     font-weight: normal;
     float: left;
     font-size: 8pt;
-    padding: 10px 10px 10px 10px;
+    padding: 10px 0px 0px 10px;
 }
 
 div.search {
@@ -439,13 +437,25 @@ div.search {
     font-weight: normal;
     float: right;
     font-size: 8pt;
-    padding: 10px 10px 10px 50px;
+    padding: 6px 10px 0px 0px;
 }
 
 input.search {
     border: none;
     border: 1pt solid #a4a4a4;
     background-color: #e9e9e9;
+}
+
+span.clear {
+  font-family: verdana;
+  font-size: 14px;
+  text-decoration: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+span.clear:hover {
+  color: #e9e9e9;
 }
 
 span.prb {
@@ -559,8 +569,8 @@ td.cmonth {
     width: 70px;
     text-align: center;
     padding: 2px 0px 2px 0px;
-    background: yellow;
-    color: #000000;
+    background: #696969;
+    color: #ffffff;
 }
 tr.day {
     background-color: #e9e9e9;
@@ -576,9 +586,10 @@ td.day {
 td.cday {
     text-align: center;
     padding: 2px 0px 2px 0px;
-    background: yellow;
+    background: #696969;
     font-weight: bold;
     border-bottom: 1pt solid #000000;
+    color: #ffffff;
 }
 td.tday {
     text-align: center;
@@ -595,7 +606,7 @@ a.month {
 }
 
 a.cday {
-    color: #000000;
+    color: #ffffff;
     text-decoration: none;
 }
 
@@ -686,9 +697,11 @@ div.b_ec_cold {
     text-align: center;
     border: 1pt solid #545454;
     border-radius: 3px;
-    background: #d6e7f5;
-    color: #000000;
+    background: gray;
+    color: #ffffff;
     width: 45px;
+    font-size: 12px;
+    padding: 5px 0px 5px 0px;
 }
 
 div.b_ec_hot {
@@ -700,23 +713,28 @@ div.b_ec_hot {
     background: #c8000a;
     color: #ffffff;
     width: 45px;
+    font-size: 12px;
+    padding: 5px 0px 5px 0px;
 }
 
 div.b_ec_total {
     float: left;
-    font-weight:normal;
+    font-weight: normal;
     text-align: center;
-    border: 1pt solid #545454;
+    border: 1pt solid #757575;
     border-radius: 3px;
-    background: #dcdcdc;
+    background: #e9e9e9;
     color: gray;
     width: 45px;
+    font-size: 12px;
+    padding: 5px 0px 5px 0px;
 }
 
 div.b_ec_n:hover, div.b_ec_total:hover, div.b_ec_hot:hover {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
+    text-decoration: none;
 }
 
 /* Event Actions */
@@ -729,16 +747,17 @@ div.b_pl, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
     margin-left: 4px;
     margin-right: 4px;
     border-radius: 3px;
+    width: 20px;
 }
 
 div.b_time {
-    padding: 2px 2px 2px 2px;
-    border: .5pt solid black;
+    padding: 2px;
+    border: 1pt solid black;
     border-radius: 2px;
-    width: 2px;
+    width: 1px;
     float: left;
     text-align: center;
-    margin-top: 5px;
+    margin-top: 4px;
     margin-right: 4px;
 }
 
@@ -917,19 +936,6 @@ span.link {
     background: #ffffff;
     color: #000000;
     cursor: pointer;
-}
-
-span.clear {
-  font-weight: bold;
-  font-family: verdana;
-  font-size: 14px;
-  text-decoration: none;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-span.clear:hover {
-  color: #e9e9e9;
 }
 
 span.flag {

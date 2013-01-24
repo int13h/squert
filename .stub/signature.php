@@ -19,7 +19,7 @@
 //
 //
 
-$stub = "Event Signatures";
+$stub = "Events";
 
 $query = "SELECT COUNT(event.signature) AS c1, event.signature, signature_id, signature_gen, 
           MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) as t,
@@ -35,19 +35,19 @@ $query = "SELECT COUNT(event.signature) AS c1, event.signature, signature_id, si
 
 $signatures = mysql_query($query);
 
-echo "<div class=toggle id=table-Signature>
-      <h3 class=live id=h-Signature> [-] $stub</h3>
-      <table id=sort-signature width=960 cellpadding=0 cellspacing=0 class=tablesorter style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
+echo "<div class=toggle id=table-Events>
+      <h3 class=live id=h-Events> [-] $stub</h3>
+      <table id=sort-events width=960 cellpadding=0 cellspacing=0 class=tablesorter style=\"border-collapse: collapse; border: 1pt solid #c9c9c9;\">\n
       <thead><tr>
-      <th class=sort width=60>Queued</th>
-      <th class=sort width=60>Total</th>
-      <th class=sort width=100>Last</th>
-      <th class=sort>Signature</th>
+      <th class=sort width=60>QUEUED</th>
+      <th class=sort width=60>ALL</th>
+      <th class=sort width=35>SC</th>
+      <th class=sort width=35>DC</th>
+      <th class=sort width=100>LAST EVENT</th>
+      <th class=sort>SIGNATURE</th>
       <th class=sort width=80>ID</th>
-      <th class=sort width=60>Proto</th>
-      <th class=sort width=40>Src</th>
-      <th class=sort width=40>Dst</th>
-      <th class=sort width=60>% Total</th></tr></thead>\n";
+      <th class=sort width=60>PROTO</th>
+      <th class=sort width=60>% TOTAL</th></tr></thead>\n";
 
 $i = 0;
 
@@ -102,12 +102,12 @@ while ($row = mysql_fetch_row($signatures)) {
     echo "<tr class=d_row id=\"sid-$row[2]-$row[3]\" data-class=\"$sidList\" data-sid=\"$sensorList\" data-event_count=\"$row[0]\">
           <td class=$isActive><div class=$rtClass>$unClass</div></td>
           <td class=row_active><div class=b_ec_total>$row[0]</div></td>
+          <td class=row>$row[5]</td>
+          <td class=row>$row[6]</td>
           $stampLine
           <td class=row>$row[1]</td>
           <td class=row>$row[2]</td>
           <td class=row>$ipp</td>
-          <td class=row>$row[5]</td>
-          <td class=row>$row[6]</td>
           <td class=row>$per</td></tr>\n";
 }
 
