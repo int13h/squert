@@ -442,7 +442,7 @@ $(document).ready(function(){
         switch (parts[0]) {
 
         // Level 0 view - Grouped by Signature
-//b2
+
         case "6":
 
           urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen;
@@ -464,34 +464,11 @@ $(document).ready(function(){
               head += "<th class=sort width=60>PROTO</th>";
               head += "<th class=sort width=60>% TOTAL</th>";
               head += "</tr></thead>";
-      
-              // Sums for boxes 
-              var sumEC = 0, sumSC = 0, sumDC = 0;
-              for (var i=0; i<theData.length; i++) {
-                 sumEC += Number(theData[i].f1);
-                 sumSC += Number(theData[i].f6);
-                 sumDC += Number(theData[i].f7);
-              }
-              
-              sumSI = theData.length;
 
               for (var i=0; i<theData.length; i++) {
-
-                  // How many events are not categorized?
-                  unClass = theData[i].f11.split(",").filter(function(x){return x==0}).length;
-
-                  // Colour based on event presence
-                  if ( unClass > 0 ) {
-                      rtClass = "b_ec_hot";
-                      isActive = "row_active";
-                  } else {
-                      rtClass = "b_ec_cold";
-                      isActive = "row";
-                  }
-
                   rid = "r" + i + "-" + parts[1];
                   row += "<tr class=d_row id=sid-" + theData[i].f3 + "-" + theData[i].f4 + " data-class=" + " data-sid=" + " data-event_count=" + theData[i].f1 + ">";
-                  row += "<td class=" + isActive + "><div class=" + rtClass + ">" + unClass + "</div></td>";
+                  row += "<td class=row_active><div class=b_ec_total>" + 0 + "</div></td>";
                   row += "<td class=row_active><div class=b_ec_total>" + theData[i].f1 + "</div></td>";
                   row += "<td class=row><span class=red>" + theData[i].f6 + "</span></td>";
                   row += "<td class=row><span class=blue>" + theData[i].f7 + "</span></td>";
@@ -503,27 +480,10 @@ $(document).ready(function(){
                   row += "<td class=row>" + theData[i].f2 + "</td>";
                   row += "<td class=row>" + theData[i].f3 + "</td>";
                   row += "<td class=row>" + theData[i].f8 + "</td>";
-                  if( sumEC > 0) {
-                      rowPer = Number(theData[i].f1/sumEC*100).toFixed(3);
-                  } else {
-                      rowPer = "0.000%";
-                  }   
-                  row += "<td class=row><b>" + rowPer + "%</b></td>";
+                  row += "<td class=row><b>0</b></td>";
                   row += "</td></tr>";
               }
 
-
-              tbl += "<table id=tl0 width=960 cellpadding=0 cellspacing=0 align=center>";
-              tbl += "<td align=center><div class=big>Total Events</div><div id=etotal class=box>"; 
-              tbl += sumEC + "</div></td>";
-              tbl += "<td align=center><div class=big>Total Signatures</div><div class=box>";
-              tbl += sumSI + "</div></td>";
-              tbl += "<td align=center><div class=big>Total Sources</div><div class=box>";
-              tbl += sumSC + "</div></td>";
-              tbl += "<td align=center><div class=big>Total Destinations</div><div class=box>";
-              tbl += sumDC + "</div></td>";
-              tbl += "</table><br>";
-              
               tbl += "<table id=tl1 width=960 class=sortable cellpadding=0 cellspacing=0 align=center>";
               tbl += head;
               tbl += row;

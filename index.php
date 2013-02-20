@@ -59,10 +59,9 @@ $st = microtime(true);
 <div id=tab_group class=tab_group>
 <div id=t_dash class=tab>Dashboard</div>
 <div id=t_sum class=tab>Events</div>
-<div id=t_map class=tab>Map</div>
 
 <div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span></div>
-<div id=t_search class=search><span class=links>Saved</span>&nbsp;&nbsp;|&nbsp;&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
+<div id=t_search class=search><span class=links>New</span>&nbsp;|&nbsp;<span class=links>Saved</span>&nbsp;|&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
 </div>
 </form>
 <?php echo $timeLinks;?>
@@ -82,18 +81,7 @@ $st = microtime(true);
 </div>
 
 <div id=t_sum_content class=content>
-<table width=970 align=center><tr><td>
-<?php echo "$todayLink";?><br>
-<?php include_once '.stub/brief.php';?>
-<?php include_once '.stub/signature.php';?>
-</td></tr></table>
-</div>
-<br>
-
-<div id=t_map_content class=content>
-<div class=wm>
-<?php include_once '.stub/map.php';?>
-</div>
+<br><div id=aaa-00 class=aaa></div><br><br>
 </div>
 
 <div id=debug class=debug>
@@ -111,7 +99,7 @@ $rt = sprintf("%01.3f",$time);
 ?>
 
 <div id=bottom class=bottom>
-<div id=b_tray class=b_tray><span class=prb>Hidden:</span><span id=tray_empty> None</span><span id=b_tray_items><span></div>
+<div id=b_tray class=b_tray></span><span id=b_tray_items><span></div>
 <div id=b_class class=b_class><span class=class_msg></span>&nbsp;</div>
 <div id=b_event class=b_event><b>Events:</b> &nbsp;synchronized (<?php echo "${rt}s";?>)</div>
 <div id=b_update class=b_update>update</div>
@@ -123,7 +111,6 @@ $rt = sprintf("%01.3f",$time);
 <input id=sel_class type=hidden value="-1">
 <input id=sel_sensor type=hidden value="-1">
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
-<input id=sel_section type=hidden value="<?php echo $_SESSION['sSection'];?>">
 <input id=sel_idlist type=hidden value="">
 </body>
 </html>

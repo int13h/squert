@@ -24,7 +24,6 @@ $types = array(
                  5 => "tb",
                  6 => "es",
                  7 => "tx",
-                 8 => "se",
 );
 
 $type = $types[$type];
@@ -88,7 +87,7 @@ function si() {
                         if($searchCount > 0) {
                             $tempMsg = preg_match("/\bmsg\s*:\s*\"(.+?)\"\s*;/i",$line,$ruleMsg);
 
-                            $line = urlMkr($line);
+                            $line = urlMkr(htmlspecialchars($line));
                             
                             $result = array("ruletxt"	=> $line,
                                             "rulefile"	=> $ruleFile,
@@ -124,18 +123,33 @@ function si() {
 
 }
 
-function es() {
-    
+function es() {   
     global $offset;
     $object = mysql_real_escape_string($_REQUEST['object']);
     $parts = explode('-', $object);
-    $filter = "AND (map1.cc = '$parts[2]' OR map2.cc = '$parts[2]')";
+
+    switch ($parts[1]) {
+        case 'ccc':
+            $filter = "AND (map1.cc = '$parts[2]' OR map2.cc = '$parts[2]')";
+            break;
+        default:
+            $filter = "";
+            break;
+    }
+
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
  
-    $query = "SELECT COUNT(event.signature) AS f1, event.signature AS f2, event.signature_id AS f3, event.signature_gen AS f4,
+    $query = "SELECT COUNT(event.signature) AS f1,
+              event.signature AS f2,
+              event.signature_id AS f3,
+              event.signature_gen AS f4,
               MAX(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS f5,
-              COUNT(DISTINCT(event.src_ip)) AS f6, COUNT(DISTINCT(event.dst_ip)) AS f7, event.ip_proto AS f8,
-              GROUP_CONCAT(DISTINCT(event.status)) AS f9, GROUP_CONCAT(DISTINCT(event.sid)) AS f10
+              COUNT(DISTINCT(event.src_ip)) AS f6, 
+              COUNT(DISTINCT(event.dst_ip)) AS f7,
+              event.ip_proto AS f8,
+              GROUP_CONCAT(DISTINCT(event.status)) AS f9,
+              GROUP_CONCAT(DISTINCT(event.sid)) AS f10,
+              GROUP_CONCAT(event.status) AS f11
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
               LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
@@ -292,12 +306,6 @@ function tb() {
     //session_start();
     $tab = $_REQUEST['tab'];
     $_SESSION['sTab'] = $tab;
-}
-
-function se() {
-    //session_start();
-    $sections = $_REQUEST['sections'];
-    $_SESSION['sSection'] = $sections;
 }
 
 function tx() {

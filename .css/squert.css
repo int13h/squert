@@ -8,8 +8,8 @@ body {
 }
 
 .loader {
-  vertical-align: middle;
   padding-left: 10px;  
+  vertical-align: middle;
 }
 
 div.wm {
@@ -314,6 +314,8 @@ td.sub_active:hover, td.sub1_active:hover, td.sub_light:hover {
 
 tr.eview {
     border-bottom: 1pt solid gray;
+    margin: 0;
+    padding: none;
 }
 
 div.eview {
@@ -328,8 +330,9 @@ div.eview {
 }
 
 div.eview_sub {
-    width: 100%;
     clear: both;
+    margin: 0;
+    padding: none;
 }
 
 
@@ -647,6 +650,10 @@ span.links_enabled:hover {
 
 /* Main Tables */
 
+table.sortable {
+    border: 1pt solid #c9c9c9;
+}
+
 th.sort {
   background: #000000;
   color: #adadad;
@@ -665,7 +672,7 @@ th.sorttable_nosort {
 }
 
 div.box {
-  width: 150px;
+  width: 120px;
   color: #000000;
   background: #e9e9e9;
   display: table;
@@ -740,14 +747,14 @@ div.b_ec_n:hover, div.b_ec_total:hover, div.b_ec_hot:hover {
 /* Event Actions */
 div.b_pl, div.b_tx, div.b_notes, div.b_tag, div.b_clsfy, div.b_asset {
     float: left;
-    padding: 0px 7px 0px 7px;
+    padding: 0px 5px 0px 5px;
     font-weight: normal;
     text-align: center;
     border: 1pt solid gray;
     margin-left: 4px;
     margin-right: 4px;
     border-radius: 3px;
-    width: 20px;
+    width: 15px;
 }
 
 div.b_time {
@@ -960,7 +967,20 @@ table.tablesorter thead tr .headerSortDown {
     background-image: url(desc.gif);
 }
 
+table.tablesorter {
+    padding: none;
+    margin: none;
+    width: 100%;
+}
+
 #chart_timestamps {
   float: right;
 }
 
+span.blue {
+    color: blue;
+}
+
+span.red {
+    color: red;
+}
