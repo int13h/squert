@@ -46,6 +46,14 @@ $(document).ready(function(){
         return answer;
     }
 
+    
+    function chkPort(port) {
+	if ( port == null) {
+            port = "-"
+        }
+        return port;
+    }
+
     // Classifications
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
@@ -696,20 +704,24 @@ $(document).ready(function(){
                   row += "<tr class=d_row_sub1 id=s" + i + " data-filter=\"" + eid + "\">";
                   tclass = "c" + theData[i].status;
                   cv = classifications.class[tclass][0].short;
+                  src_port = chkPort(theData[i].src_port);
+                  dst_port = chkPort(theData[i].dst_port);
                   txdata = "s" + i + "-" + theData[i].cid + "-" + s2h(theData[i].sid + "|" + theData[i].timestamp + "|" + theData[i].src_ip + "|" + theData[i].src_port + "|" + theData[i].dst_ip + "|" + theData[i].dst_port);
                   
                   row += "<td class=sub><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv + " class=b_" + cv + ">" + cv + "</div></td>";
                   row += "<td class=sub>" + theData[i].timestamp + "</td>";
                   row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
                   row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
-                  row += "<td class=sub_active>" + theData[i].src_port + "</td>";
+                  row += "<td class=sub_active>" + src_port + "</td>";
                   row += "<td class=sub_active>" + theData[i].dst_ip + "</td>";
-                  row += "<td class=sub_active>" + theData[i].dst_port + "</td>";
+                  row += "<td class=sub_active>" + dst_port + "</td>";
                   row += "<td class=sub>";
                   //row += "<div class=b_notes title='Add Notes'>N</div>";
                   //row += "<div class=b_tag title='Add Tag'>T</div>";
                   row += "<div class=b_pl data-eidl=s" + i + " title='View Payload'>P</div>";
-                  row += "<div class=b_tx data-tx=" + txdata + " title='Generate Transcript'>T</div>";
+                  if (src_port != "-" && dst_port != "-") {
+                      row += "<div class=b_tx data-tx=" + txdata + " title='Generate Transcript'>T</div>";
+                  }
                   row += "<div class=b_asset title='Asset Info'>A</div>";
                   row += "</td></tr>";
               }
