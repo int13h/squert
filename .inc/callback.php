@@ -182,7 +182,8 @@ function eg() {
               map1.cc AS srcc, map2.cc AS dstc,
               GROUP_CONCAT(event.sid) AS c_sid, GROUP_CONCAT(event.cid) AS c_cid,
               GROUP_CONCAT(event.status) AS c_status,
-              GROUP_CONCAT(SUBSTR(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5)) AS c_ts
+              GROUP_CONCAT(SUBSTR(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5)) AS c_ts,
+              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(timestamp, '+00:00', '$offset'),12,2)) AS f12
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
               LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip

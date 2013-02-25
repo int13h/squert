@@ -46,7 +46,6 @@ $(document).ready(function(){
         return answer;
     }
 
-    
     function chkPort(port) {
 	if ( port == null) {
             port = "-"
@@ -116,7 +115,6 @@ $(document).ready(function(){
             } else {
                 cells += "<td class=c_off>0</td>"; 
             }
-            //cells += o;
             if (i == 7 || i == 15) {
                 cells += "</tr><tr>";
             }
@@ -302,7 +300,7 @@ $(document).ready(function(){
 
     // Logout
     $("#logout").click(function(event) {
-         $.get(".inc/session.php?id=0", function(){location.reload()});
+         $.get("index.php?id=0", function(){location.reload()});
     });
     
     //
@@ -505,7 +503,7 @@ $(document).ready(function(){
               head += "<th class=sort width=60>ALL</th>";
               head += "<th class=sort width=35>SC</th>";
               head += "<th class=sort width=35>DC</th>";
-              head += "<th class=sort width=60>ACTIVITY</th>";
+              head += "<th class=sort width=70>ACTIVITY</th>";
               head += "<th class=sort width=80>LAST EVENT</th>";
               head += "<th class=sort>SIGNATURE</th>";
               head += "<th class=sort width=80>ID</th>";
@@ -600,6 +598,7 @@ $(document).ready(function(){
               row = '';
               head += "<thead><tr><th class=sub width=45>Queued</th>";
               head += "<th class=sub width=110>Total</th>";
+              head += "<th class=sub width=70>ACTIVITY</th>";
               head += "<th class=sub>Last Event</th>";
               head += "<th class=sub width=110>Source IP</th>";
               head += "<th class=sub width=160>Country</th>";
@@ -631,12 +630,14 @@ $(document).ready(function(){
  
                   // Aggregate time values
                   timeValues += theData[i].c_ts + ",";
+                  cells = mkGrid(theData[i].f12);
 
                   curclasscount += parseInt(unclass);
                   rid = "r" + i + "-" + parts[1] + "-" + theData[i].src_ip + "-" + theData[i].dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
                   row += "<td class=" + isActive + " id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
                   row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_total>" + theData[i].count + "</div></td>";
+                  row += "<td class=sub>" + cells + "</td>";
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
                   row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
                   if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
@@ -725,7 +726,7 @@ $(document).ready(function(){
                   row += "<div class=b_asset title='Asset Info'>A</div>";
                   row += "</td></tr>";
               }
-              tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=7><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
+              tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=8><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
               tbl += "<div class=notes></div>";
               tbl += "<table id=tl3 class=tablesorter align=center width=100% cellpadding=0 cellspacing=0>";
               tbl += head;
