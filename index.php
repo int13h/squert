@@ -61,7 +61,7 @@ $st = microtime(true);
 <div id=t_sum class=tab>Events</div>
 
 <div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span></div>
-<div id=t_search class=search><span class=links>New</span>&nbsp;|&nbsp;<span class=links>Saved</span>&nbsp;|&nbsp;Search:&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
+<div id=t_search class=search><span class=links>New</span>&nbsp;|&nbsp;<span class=links>Saved</span>&nbsp;|&nbsp;<span id=live_search class=links>Search:</span>&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
 </div>
 </form>
 <?php echo $timeLinks;?>
@@ -112,6 +112,7 @@ $rt = sprintf("%01.3f",$time);
 <input id=sel_sensor type=hidden value="-1">
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
 <input id=sel_idlist type=hidden value="">
+<input id=sel_search type=hidden value="-1">
 </body>
 </html>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>

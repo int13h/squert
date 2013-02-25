@@ -700,7 +700,7 @@ div.big {
 
 div.b_ec_cold {
     float: left;
-    font-weight: normal;
+    font-weight: bold;
     text-align: center;
     border: 1pt solid #545454;
     border-radius: 3px;
@@ -713,7 +713,7 @@ div.b_ec_cold {
 
 div.b_ec_hot {
     float: left;
-    font-weight: normal;
+    font-weight: bold;
     text-align: center;
     border: 1pt solid #545454;
     border-radius: 3px;
@@ -726,7 +726,7 @@ div.b_ec_hot {
 
 div.b_ec_total {
     float: left;
-    font-weight: normal;
+    font-weight: bold;
     text-align: center;
     border: 1pt solid #757575;
     border-radius: 3px;
@@ -735,6 +735,33 @@ div.b_ec_total {
     width: 45px;
     font-size: 12px;
     padding: 5px 0px 5px 0px;
+}
+
+table.grid {
+    border-radius: 3px;
+    border: 1pt solid #c9c9c9;
+    background-color: #ffffff;
+    padding: 3px;
+    padding-right: none;
+    padding-left: none;
+}
+
+td.c_on {
+    padding: none;
+    background-color: #545454;
+    padding: 2px;
+    font-size: 0px;
+}
+
+td.c_off {
+    padding: none;
+    background-color: #e9e9e9;
+    padding: 2px;
+    font-size: 0px;
+}
+
+td.c_on:hover {
+    background-color: red;
 }
 
 div.b_ec_n:hover, div.b_ec_total:hover, div.b_ec_hot:hover {
@@ -983,4 +1010,13 @@ span.blue {
 
 span.red {
     color: red;
+}
+
+div.grid_cells {
+    float: left;
+    font-size: 9px;
+    text-align: center;
+    background-color: #e9e9e9;
+    color: gray;
+    width: 40px;
 }

@@ -149,7 +149,8 @@ function es() {
               event.ip_proto AS f8,
               GROUP_CONCAT(DISTINCT(event.status)) AS f9,
               GROUP_CONCAT(DISTINCT(event.sid)) AS f10,
-              GROUP_CONCAT(event.status) AS f11
+              GROUP_CONCAT(event.status) AS f11,
+              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(timestamp, '+00:00', '$offset'),12,2)) AS f12
               FROM event
               LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
               LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip

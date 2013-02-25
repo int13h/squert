@@ -46,6 +46,7 @@ $(document).ready(function(){
         return answer;
     }
 
+    // Classifications
     var classifications = {"class":{  
         "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
         "c12":[{"short": "C2", "long": "Unauthorized User Access"}],
@@ -59,6 +60,7 @@ $(document).ready(function(){
         "c0":[{"short": "UN", "long": "Unclassified"}]
       }
     };
+
 
     var loaderImg = "<img id=loader class=loader src=\".css/load.gif\">";
 
@@ -81,6 +83,40 @@ $(document).ready(function(){
         bar += "<div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>";
         bar += "</div>";
         return bar;
+    }
+
+    //
+    // Grid
+    //
+
+    function mkGrid(values) {
+        
+        cells = "<table class=grid cellspacing=none><tr>";
+        composite = values.split(",");
+        for (var i=0; i<24;) {
+            var n = i;
+	    if (n < 10) {
+                n = "0" + n;                
+            }
+            var o = 0;
+            for (var c = 0; c < composite.length; ++c) {
+                if (composite[c] == n)
+                    o++;
+            }
+            if (o > 0) {
+                cells += "<td class=c_on title=\"" + n + ":00 &#61;&gt; " + o + " events\">1</td>";
+            } else {
+                cells += "<td class=c_off>0</td>"; 
+            }
+            //cells += o;
+            if (i == 7 || i == 15) {
+                cells += "</tr><tr>";
+            }
+       i++; 
+       }
+
+       cells += "</tr></table>";
+       return cells;
     }
 
     //
@@ -124,7 +160,7 @@ $(document).ready(function(){
     });
 
     //
-    // Simple signature show/hide via the search input box
+    // show/hide via the search input box
     //
 
     $('#live_search').click(function(){
@@ -141,6 +177,16 @@ $(document).ready(function(){
         doSearch();
     });
 
+    $('#search').keyup(function(){
+        if ($('#sel_search').val() == 1) {
+            if ($('#search').val().length > 0) { 
+                doSearch();
+            } else {
+                $('tr[id^=sid-]').show();
+            }
+        }
+    });
+
     $('#clear_search').click(function() {
         if ($('#search').val() != '') {
             $('#search').val('');
@@ -148,6 +194,16 @@ $(document).ready(function(){
             $('tr[id^=sid-]').show();
         }
     });
+
+    function doSearch() {
+        closeRow();
+        $('.d_row').hide();
+        searchString = $('#search').val();
+        $('tr[id^=sid-]').attr('class', 'a_row');
+        $("tr[id^=sid-]:contains('" + searchString + "')").attr('class', 'd_row');
+        $("tr[id^=sid-]:contains('" + searchString + "')").show();
+    }
+
 
     //
     // Event monitor
@@ -245,23 +301,12 @@ $(document).ready(function(){
     // Rows
     //
 
-    function closeSigRow() {
-        $("#active_sview").remove();
-        $("#" + this.id).attr('class','s_row');
-        $(".s_row").css('opacity','1');
-        $(".s_row_active").find('td').css('color', 'gray');
-        $(".s_row_active").find('td').css('background', 'transparent');
-        ltCol = $(".s_row_active").find('td.lt').html();
-        $(".s_row_active").find('td.lt').css('background', ltCol);
-        $(".s_row_active").attr('class','s_row');
-    }
-
     function closeRow() {
         $("#active_eview").remove();
         $("#" + this.id).attr('class','d_row');
         $(".d_row").css('opacity','1');
-        $(".d_row_active").find('td').css('color', 'gray');
-        $(".d_row_active").find('td').css('background', 'transparent');
+        $(".d_row_active").find('[class*="row"]').css('color', 'gray');
+        $(".d_row_active").find('[class*="row"]').css('background', 'transparent');
         ltCol = $(".d_row_active").find('td.lt').html();
         $(".d_row_active").find('td.lt').css('background', ltCol);
         $(".d_row_active").attr('class','d_row');
@@ -309,11 +354,6 @@ $(document).ready(function(){
         closeRow();
     });
     
-    // Close open views
-    $(document).on("click", "#sig_close", function(event) {
-        closeSigRow();
-    });
-
     $(document).on("click", "#ev_close", function(event) {
         closeRow();
     });
@@ -371,7 +411,7 @@ $(document).ready(function(){
                 sigline = sigData.ruleline;
 
                 var tbl = '';
-                tbl += "<tr class=eview id=active_eview><td colspan=9><div id=eview class=eview>";
+                tbl += "<tr class=eview id=active_eview><td colspan=10><div id=eview class=eview>";
                 tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
                 tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
                 tbl += "<span class=small>";
@@ -380,8 +420,8 @@ $(document).ready(function(){
                 tbl += "<div class=right><span class=link>[show more]</span></div><br>";
                 tbl += catBar(curclasscount);
                 tbl += "</td></tr>";
-                $("#" + curID).find('td').css('background', '#CFE3A6');
-                $("#" + curID).find('td').css('color', '#000000');
+                $("#" + curID).find('[class*="row"]').css('background', '#CFE3A6');
+                $("#" + curID).find('[class*="row"]').css('color', '#000000');
                 $("#" + curID).after(tbl);
                 eventList("2-" + rowValue);
                 $("#eview").show();
@@ -442,7 +482,6 @@ $(document).ready(function(){
         switch (parts[0]) {
 
         // Level 0 view - Grouped by Signature
-//b2
         case "6":
 
           urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen;
@@ -458,7 +497,8 @@ $(document).ready(function(){
               head += "<th class=sort width=60>ALL</th>";
               head += "<th class=sort width=35>SC</th>";
               head += "<th class=sort width=35>DC</th>";
-              head += "<th class=sort width=100>LAST EVENT</th>";
+              head += "<th class=sort width=60>ACTIVITY</th>";
+              head += "<th class=sort width=80>LAST EVENT</th>";
               head += "<th class=sort>SIGNATURE</th>";
               head += "<th class=sort width=80>ID</th>";
               head += "<th class=sort width=60>PROTO</th>";
@@ -490,7 +530,9 @@ $(document).ready(function(){
                   }
 
                   rid = "r" + i + "-" + parts[1];
-                  row += "<tr class=d_row id=sid-" + theData[i].f3 + "-" + theData[i].f4 + " data-class=" + " data-sid=" + " data-event_count=" + theData[i].f1 + ">";
+                  cells = mkGrid(theData[i].f12);
+                  row += "<tr class=d_row id=sid-" + theData[i].f3 + "-" + theData[i].f4;
+                  row += " data-class=" + " data-sid=" + " data-event_count=" + theData[i].f1 + ">";
                   row += "<td class=" + isActive + "><div class=" + rtClass + ">" + unClass + "</div></td>";
                   row += "<td class=row_active><div class=b_ec_total>" + theData[i].f1 + "</div></td>";
                   row += "<td class=row><span class=red>" + theData[i].f6 + "</span></td>";
@@ -499,20 +541,22 @@ $(document).ready(function(){
                   timeParts = theData[i].f5.split(" ");
                   timeStamp = timeParts[1];
 
+                  row += "<td class=row>" + cells + "</td>";
                   row += "<td class=row>" + timeStamp + "</td>";
                   row += "<td class=row>" + theData[i].f2 + "</td>";
                   row += "<td class=row>" + theData[i].f3 + "</td>";
                   row += "<td class=row>" + theData[i].f8 + "</td>";
+                  
                   if( sumEC > 0) {
                       rowPer = Number(theData[i].f1/sumEC*100).toFixed(3);
                   } else {
                       rowPer = "0.000%";
-                  }   
+                  }
+   
                   row += "<td class=row><b>" + rowPer + "%</b></td>";
                   row += "</td></tr>";
               }
-
-
+              
               tbl += "<table id=tl0 width=960 cellpadding=0 cellspacing=0 align=center>";
               tbl += "<td align=center><div class=big>Total Events</div><div id=etotal class=box>"; 
               tbl += sumEC + "</div></td>";
