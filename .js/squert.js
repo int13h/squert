@@ -3,36 +3,34 @@
 $(document).ready(function(){
 
     var theWhen = $("#timestamp").val();
-    eventList("6-aaa-00");
+    eventList("0-aaa-00");
 
     var lastclasscount = 0;
 
     $('[id^=sort-]').tablesorter();
 
     function d2h(d) {
-        return d.toString(16);
+       return d.toString(16);
     }
 
     function h2d (h) {
-        return parseInt(h, 16);
+       return parseInt(h, 16);
     }
 
     function s2h (tmp) {
-        var str = '', i = 0, tmp_len = tmp.length, c;
+       var str = '', i = 0, tmp_len = tmp.length, c;
      
-        for (; i < tmp_len; i += 1) {
-            c = tmp.charCodeAt(i);
-            str += d2h(c);
-        }
-        return str;
+       for (; i < tmp_len; i += 1) {
+           c = tmp.charCodeAt(i);
+           str += d2h(c);
+       }
+       return str;
     }
 
-    function h2s (tmp) {
-        var arr = tmp.split(' '), str = '', i = 0, arr_len = arr.length, c;
-        for (; i < arr_len; i += 1) {
-            c = String.fromCharCode( h2d( arr[i] ) );
-            str += c;
-        }
+    function h2s(hex) {
+        var str = '';
+        for (var i = 0; i < hex.length; i += 2)
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
         return str;
     }
 
@@ -165,51 +163,11 @@ $(document).ready(function(){
         filterRows(this.id,"sen-",ec);
     });
 
-    //
-    // show/hide via the search input box
-    //
-
-    $('#live_search').click(function(){
-        currentVal = $('#sel_search').val();
-        if (currentVal == '-1') {
-            newClass = 'links_enabled';
-            $('#sel_search').val('1');
-        } else {
-            newClass = 'links';
-            $('#sel_search').val('-1');
-        }
- 
-        $('#live_search').attr('class', newClass);
-        doSearch();
-    });
-
-    $('#search').keyup(function(){
-        if ($('#sel_search').val() == 1) {
-            if ($('#search').val().length > 0) { 
-                doSearch();
-            } else {
-                $('tr[id^=sid-]').show();
-            }
-        }
-    });
-
     $('#clear_search').click(function() {
         if ($('#search').val() != '') {
             $('#search').val('');
-            $('tr[id^=sid-]').attr('class','d_row');
-            $('tr[id^=sid-]').show();
         }
     });
-
-    function doSearch() {
-        closeRow();
-        $('.d_row').hide();
-        searchString = $('#search').val();
-        $('tr[id^=sid-]').attr('class', 'a_row');
-        $("tr[id^=sid-]:contains('" + searchString + "')").attr('class', 'd_row');
-        $("tr[id^=sid-]:contains('" + searchString + "')").show();
-    }
-
 
     //
     // Event monitor
@@ -222,7 +180,7 @@ $(document).ready(function(){
 
     window.setInterval(function(){
 
-        var urArgs = "type=" + 0 + "&ts=" + theWhen;
+        var urArgs = "type=" + 6 + "&ts=" + theWhen;
         $(function(){
             $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
         });
@@ -324,9 +282,9 @@ $(document).ready(function(){
         $("#eview_sub1").remove();
         $("#" + this.id).attr('class','d_row_sub');
         $(".d_row_sub").css('opacity','1');
-        $(".d_row_sub_active").find('td').css('color', 'gray');
-        $(".d_row_sub_active").find('td').css('border-top', 'none');
-        $(".d_row_sub_active").find('td').css('background', 'transparent');
+        $(".d_row_sub_active").find('[class*="sub"]').css('color', 'gray');
+        $(".d_row_sub_active").find('[class*="sub"]').css('border-top', 'none');
+        $(".d_row_sub_active").find('[class*="sub"]').css('background', 'transparent');
         $(".d_row_sub_active").attr('class','d_row_sub');
         // update class_count
         $("#class_count").html(lastclasscount);
@@ -395,7 +353,7 @@ $(document).ready(function(){
             rowValue = curID.replace("sid-","");
      
             // Lookup rule
-            urArgs = "type=" + 1 + "&sid=" + rowValue;
+            urArgs = "type=" + 4 + "&sid=" + rowValue;
 
             $(function(){
                 $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
@@ -429,7 +387,7 @@ $(document).ready(function(){
                 $("#" + curID).find('[class*="row"]').css('background', '#CFE3A6');
                 $("#" + curID).find('[class*="row"]').css('color', '#000000');
                 $("#" + curID).after(tbl);
-                eventList("2-" + rowValue);
+                eventList("1-" + rowValue);
                 $("#eview").show();
                 $(".d_row").fadeTo('0','0.2');
                 
@@ -454,9 +412,9 @@ $(document).ready(function(){
             rowcall = baseID.split("-");
             callerID = rowcall[0];
             $("#" + callerID).attr('class','d_row_sub_active');
-            $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+            $("#" + callerID).find('[class*="sub"]').css('border-top', '1pt solid #c9c9c9');
             $("#l2" + rowcall[0]).append(loaderImg);
-            eventList("3-" + baseID + "-" + adqp);
+            eventList("2-" + baseID + "-" + adqp);
         }  
     });
 
@@ -466,7 +424,6 @@ $(document).ready(function(){
 
     $(document).on("click", ".b_pl", function() {
  
-        //if (!$(".d_row_sub1_active")[0]) {
         if (!$("#eview_sub2")[0]) {
             baseID = $(this).data('eidl');
             rowcall = baseID.split("-");
@@ -474,7 +431,7 @@ $(document).ready(function(){
             $("#" + callerID).attr('class','d_row_sub1_active');
             $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
             $(this).parent().append(loaderImg);
-            eventList("4-" + baseID);
+            eventList("3-" + baseID);
         }
     });
 
@@ -488,7 +445,7 @@ $(document).ready(function(){
         switch (parts[0]) {
 
         // Level 0 view - Grouped by Signature
-        case "6":
+        case "0":
 
           urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen;
           $(function(){
@@ -574,7 +531,7 @@ $(document).ready(function(){
               tbl += sumDC + "</div></td>";
               tbl += "</table><br>";
               
-              tbl += "<table id=tl1 width=960 class=sortable cellpadding=0 cellspacing=0 align=center>";
+              tbl += "<table id=tl1 class=main width=960 cellpadding=0 cellspacing=0 align=center>";
               tbl += head;
               tbl += row;
               tbl += "</table>";
@@ -585,7 +542,7 @@ $(document).ready(function(){
 
         // Level 1 view - Grouped by signature, source, destination
 
-        case "2":
+        case "1":
           urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
@@ -669,7 +626,7 @@ $(document).ready(function(){
 
         // Level 2 view - No grouping, individual events
 
-        case "3":
+        case "2":
           rowLoke = parts[1];
           filter = $('#' + parts[1]).data('filter');
 
@@ -741,7 +698,7 @@ $(document).ready(function(){
 
         // Level 3 view - Packet Data
 
-        case "4":
+        case "3":
           var rowLoke = parts[1];
           var filter = $('#' + parts[1]).data('filter');
 
@@ -1112,4 +1069,187 @@ $(document).ready(function(){
         });
     }
 
+    //
+    // Filters
+    //
+
+    $('#filters').click(function() {
+        $('#usr_filters').toggle();
+        if ($('#usr_filters').css('display') == "none") {
+            $('#filters').css('text-decoration', 'none');
+            $('#filters').css('color', '#adadad');
+            $('.padded').remove();
+        } else {
+            $('#filters').css('text-decoration', 'underline');
+            $('#filters').css('color', '#ffffff'); 
+            
+            var curUser = $('#t_usr').data('c_usr');
+            urArgs = "type=8" + "&user=" + curUser + "&mode=query&data=0";
+
+            $(function(){
+                $.get(".inc/callback.php?" + urArgs, function(data){cb6(data)}); 
+            });
+
+            function cb6(data){
+                eval("theData=" + data);
+                tbl = '';
+                head = '';
+                row = '';
+                head += "<thead><tr>";
+                head += "<th class=sort width=60>ALIAS</th>";
+                head += "<th class=sort width=60></th>";
+                head += "<th class=sort width=200>NAME</th>";
+                head += "<th class=sort>NOTES</th>";
+                head += "<th class=sort width=150>DATE</th>";
+                head += "</tr></thead>";
+                
+                // Create a dummy entry if nothing exists.
+                if (theData.length == 0) {
+                    alias = "ABC";
+                    name = "VLAN 4201";
+                    notes = "This is just a dummy filter to get you started. Click edit to change, or add new filters";
+                    filter = s2h("dst_ip BETWEEN 2886729728 AND 2886795263");
+                    age = "2013-02-01 00:01:02";
+                    row += "<tr class=f_row id=\"tr_" + alias + "\" ";
+                    row += "data-alias=\"" + alias + "\" ";
+                    row += "data-name=\"" + name + "\" ";
+                    row += "data-notes=\"" + notes + "\" ";
+                    row += "data-filter=\"" + filter + "\">";
+                    row += "<td class=row_active>" + alias + "</td>";
+                    row += "<td class=row><span id=\"" + alias + "\" class=\"filter_edit\">edit</span></td>";
+                    row += "<td class=row><b>" + name + "</b></td>";
+                    row += "<td class=row>" + notes + "</td>";
+                    row += "<td class=row>" + age + "</td>";
+                    row += "</tr>";
+                }
+
+                for (var i=0; i<theData.length; i++) {
+                    row += "<tr class=f_row id=\"tr_" + theData[i].alias + "\" ";
+                    row += "data-alias=\"" + theData[i].alias + "\" ";
+                    row += "data-name=\"" + theData[i].name + "\" ";
+                    row += "data-notes=\"" + theData[i].notes + "\" ";
+                    row += "data-filter=\"" + theData[i].filter + "\">";
+                    row += "<td class=row_active>" + theData[i].alias + "</td>";
+                    row += "<td class=row><span id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</span></td>";
+                    row += "<td class=row><b>" + theData[i].name + "</b></td>";
+                    row += "<td class=row>" + theData[i].notes + "</td>";
+                    row += "<td class=row>" + theData[i].age + "</td>";
+                    row += "</tr>";
+                }
+
+                tbl += "<table id=tl4 class=padded width=970 cellpadding=0 cellspacing=0 align=center>";
+                tbl += head;
+                tbl += row;
+                tbl += "</table>";
+                $('#usr_filters').after(tbl);
+                $('#tl4').fadeIn('slow');
+                $("#tl4").tablesorter({ headers: { 1: {sorter:"false"} } }); 
+            }      
+        }
+    });
+
+    function openEdit (cl) {
+        alias = $('#tr_' + cl).data('alias');
+        name = $('#tr_' + cl).data('name');
+        notes = $('#tr_' + cl).data('notes');
+        filter = h2s($('#tr_' + cl).data('filter'));
+        row = '';
+        row += "<tr id=filter_content>";
+        row += "<td class=f_row colspan=5><textarea id=\"txt_" + alias +"\" cols=110 rows=6>";
+        row += "{\n";
+        row += "\"alias\": \"" + alias + "\",\n";
+        row += "\"name\": \"" + name + "\",\n";
+        row += "\"notes\": \"" + notes + "\",\n";
+        row += "\"filter\": \"" + filter + "\"\n";
+        row += "}";
+        row += "</textarea>";
+        row += "<span class=filter_remove>remove</span> <span class=filter_update>update</span>"; 
+        row += "<span class=filter_error><span class=warn><br><br>Format error!</span> ";
+        row += "Please ensure the filter is valid JSON. "; 
+        row += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> "; 
+	row += "pairs. Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except the last ";
+        row += "pair before the closing curly brace <b>\"}\"</b>. Strings must be enclosed within double ";
+        row += "quotes.</span><br>";  
+        row += "</td></tr>";
+
+        $('#tr_' + cl).after(row);
+    }
+
+    // Filter expansion (gives access to edit as well)
+    $(document).on("click", ".filter_edit", function(event) {
+        cl = $(this).attr('id');
+        currentCL = cl;
+
+        if (!$("#filter_content")[0]) {
+            openEdit(cl);
+            $('#' + cl).text('close');
+        } else {
+            if($('#' + cl).text() == 'close') {
+                $("#filter_content").remove();               
+                $('#' + cl).text('edit');
+            }    
+        }
+    });
+
+    // Update (or create new) filter
+    $(document).on("click", ".filter_update", function(event) {
+        // Get the current filter
+        try {
+            var filterTxt = $.parseJSON($('#txt_' + currentCL).val());
+            $('.filter_error').fadeOut();
+            go = 'yes';
+        } catch (err) {
+            $('.filter_error').fadeIn();
+            go = 'no';  
+        }
+
+        if (go == 'yes') {
+             
+            fd = s2h(filterTxt.alias + "||" + filterTxt.name + "||" + filterTxt.notes + "||" + filterTxt.filter);
+            var curUser = $('#t_usr').data('c_usr');
+            urArgs = "type=8&user=" + curUser + "&mode=update&data=" + fd;
+
+            $(function(){
+                $.get(".inc/callback.php?" + urArgs, function(data){cb7(data)}); 
+            });
+
+            function cb7(data){
+                eval("theData=" + data);
+                if (theData.msg) {
+                    alert(theData.msg);
+                } else {
+                    $('#filters').click();
+                    $('#filters').click();
+                }         
+            }
+            
+        }
+    });
+
+    // Remove a filter
+    $(document).on("click", ".filter_remove", function(event) {
+        var oktoRM = confirm("Are you sure you want to remove this filter?");
+        if (oktoRM) {
+            var curUser = $('#t_usr').data('c_usr');
+            urArgs = "type=8&user=" + curUser + "&mode=remove&data=" + currentCL;
+            $(function(){
+                 $.get(".inc/callback.php?" + urArgs, function(data){cb8(data)});
+            }); 
+
+            function cb8(data){
+                eval("theData=" + data);
+                if (theData.msg != '') {
+                    alert(theData.msg);
+                } else {
+                    $("#filter_content").remove();
+                    $("#tr_" + currentCL).fadeOut('slow', function() {
+                        $("#tr_" + currentCL).remove();
+                    });
+                }
+            } 
+        }
+    });
+    
+
+// The End.
 });

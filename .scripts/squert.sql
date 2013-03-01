@@ -41,3 +41,20 @@ CREATE TABLE IF NOT EXISTS mappings
   INDEX c_long (c_long),
   INDEX age (age)
 );
+
+ALTER TABLE user_info
+ADD email VARCHAR(320) NOT NULL DEFAULT 'none',
+ADD type ENUM('ADMIN','USER') NOT NULL DEFAULT 'USER',
+ADD timeout SMALLINT UNSIGNED NOT NULL DEFAULT '5000';
+
+CREATE TABLE IF NOT EXISTS filters
+(
+  name           VARCHAR(255),
+  alias		 VARCHAR(8),
+  username       VARCHAR(16),
+  filter         BLOB,
+  notes		 VARCHAR(255) NOT NULL DEFAULT 'None.',
+  global	 TINYINT(1) NOT NULL DEFAULT 0,
+  age            TIMESTAMP,
+  PRIMARY KEY (username,alias)
+);

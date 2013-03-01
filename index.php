@@ -60,12 +60,12 @@ $st = microtime(true);
 <div id=t_dash class=tab>Dashboard</div>
 <div id=t_sum class=tab>Events</div>
 
-<div id=t_usr class=user>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span></div>
-<div id=t_search class=search><span class=links>New</span>&nbsp;|&nbsp;<span class=links>Saved</span>&nbsp;|&nbsp;<span id=live_search class=links>Search:</span>&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
+<div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span></div>
+<div id=t_search class=search><span id=filters class=links>Filter:</span></span>&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
 </div>
 </form>
 <?php echo $timeLinks;?>
-</div>
+</div></div>
 <br>
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
@@ -81,7 +81,8 @@ $st = microtime(true);
 </div>
 
 <div id=t_sum_content class=content>
-<br><div id=aaa-00 class=aaa></div><br><br>
+<br><div id=usr_filters></div><br>
+<br><div id=aaa-00 class=aaa></div><br>
 </div>
 
 <div id=debug class=debug>
@@ -112,7 +113,6 @@ $rt = sprintf("%01.3f",$time);
 <input id=sel_sensor type=hidden value="-1">
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
 <input id=sel_idlist type=hidden value="">
-<input id=sel_search type=hidden value="-1">
 </body>
 </html>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>

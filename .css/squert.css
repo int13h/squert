@@ -31,7 +31,10 @@ table {
 
 .content, .settings {
     display: none;
+    float: left;
+    text-align: center;
 }
+
 
 div.today{
     float: right;
@@ -619,7 +622,7 @@ a.day {
     color: #000000;
 }
 
-a.month:hover, a.day:hover{
+a.month:hover, a.day:hover {
     text-decoration: underline;
 }
 
@@ -650,10 +653,6 @@ span.links_enabled:hover {
 
 /* Main Tables */
 
-table.sortable {
-    border: 1pt solid #c9c9c9;
-}
-
 th.sort {
   background: #000000;
   color: #adadad;
@@ -664,11 +663,9 @@ th.sort {
   border: none;
 }
 
-th.sorttable_nosort {
-  background: #000000;
-  border: none;
-  color: #ffffff;
-  padding: 0px;
+td.bold {
+    padding-bottom: 5px;
+    font-weight: bold;
 }
 
 div.box {
@@ -741,12 +738,13 @@ table.grid {
     border-radius: 3px;
     border: 1pt solid #c9c9c9;
     background-color: #ffffff;
-    padding: 3px;
+    padding: 0px;
     padding-right: none;
     padding-left: none;
 }
 
 td.c_on {
+    border-radius: 2px;
     padding: none;
     background-color: #545454;
     padding: 2px;
@@ -754,6 +752,7 @@ td.c_on {
 }
 
 td.c_off {
+    border-radius: 2px;
     padding: none;
     background-color: #e9e9e9;
     padding: 2px;
@@ -982,13 +981,17 @@ span.noflag {
     padding: 0px 8px 0px 8px;
 }
 
-table.tablesorter thead tr .headerSortUp {
+table.main {
+    border: 1pt solid #c9c9c9;
+}
+
+table.tablesorter,table.main thead tr .headerSortUp {
     background-repeat: no-repeat;
     background-position: center right;
     background-image: url(asc.gif);
 }
 
-table.tablesorter thead tr .headerSortDown {
+table.tablesorter, table.main thead tr .headerSortDown {
     background-repeat: no-repeat;
     background-position: center right;
     background-image: url(desc.gif);
@@ -1019,4 +1022,85 @@ div.grid_cells {
     background-color: #e9e9e9;
     color: gray;
     width: 40px;
+}
+
+table.padded {
+    border: 1pt solid #c9c9c9;
+    border-bottom: none;
+    display: none;
+}
+
+/* Filters */
+
+tr.f_row {
+    background-color: #fafafa;
+}
+
+tr.f_row:hover {
+    background-color: #f4f4f4;
+}
+
+td.f_row {
+    padding: 10px;
+    border-bottom: 1pt solid #c9c9c9;
+    font-size: 12px;
+    background-color: #f4f4f4;
+}
+
+#usr_filters {
+    display: none;
+}
+
+tr.hidden {
+    display: none;
+}
+
+.filter_edit {
+    cursor: pointer;
+    color: navy;
+    text-decoration: underline;
+}
+
+.filter_update {
+    cursor: pointer;
+    color: navy;
+    padding-right: 10px;
+    text-decoration: underline;
+    float: right;
+}
+
+.filter_remove {
+    cursor: pointer;
+    color: #cc0000;
+    padding-left: 10px;
+    text-decoration: underline;
+    float: right;
+}
+
+.filter_edit:hover, .filter_update:hover {
+    color: blue;
+} 
+
+.filter_remove:hover {
+    color: red;
+}
+
+span.warn {
+    font-weight: bold;
+    color: #cc0000;
+}
+
+span.filter_error {
+    display: none;
+}
+
+textarea {
+    border: none;
+    border: 1pt solid #c9c9c9;
+    border-radius: 5px;
+    background-color: #E6F5E7;
+    color: #000000;
+    font-size: 12px;
+    max-width: 810px;
+
 }

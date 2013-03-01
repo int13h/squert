@@ -4,6 +4,7 @@ session_start();
 
 if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
     header ("Location: session.php?id=0");
+    exit();
 }
 
 $base = dirname(__FILE__);
@@ -16,14 +17,15 @@ $db = mysql_select_db($dbName,$link);
 $type = $_REQUEST['type'];
 
 $types = array(
-                 0 => "ec",
-                 1 => "si",
-                 2 => "eg",
-                 3 => "ed",
-                 4 => "pd",
+                 0 => "es",
+                 1 => "eg",
+                 2 => "ed",
+                 3 => "pd",
+                 4 => "si",
                  5 => "tb",
-                 6 => "es",
+                 6 => "ec",
                  7 => "tx",
+                 8 => "fi",
 );
 
 $type = $types[$type];
@@ -358,6 +360,62 @@ function tx() {
 
     $theJSON = json_encode($result);
     echo $theJSON;
+}
+
+function fi() {   
+    $user = mysql_real_escape_string($_REQUEST['user']);
+    $mode = mysql_real_escape_string($_REQUEST['mode']);
+
+    switch ($mode) {
+        case "query"  : 
+            $query = "SELECT name, alias, HEX(filter) as filter, notes, age
+                      FROM filters
+                      WHERE username = '$user'
+                      ORDER BY name DESC";
+
+            $result = mysql_query($query);
+
+            $rows = array();
+
+            while ($row = mysql_fetch_assoc($result)) {
+                $rows[] = $row;
+            }
+
+            $theJSON = json_encode($rows); 
+
+            break;
+
+        case "update" :
+            $data = hextostr($_REQUEST['data']);
+            list($alias, $name, $notes, $filter) = explode("||", $data); 
+            $filter = mysql_real_escape_string($filter);
+
+            $query = "INSERT INTO filters (name,alias,username,filter,notes)
+                      VALUES ('$name','$alias','$user','$filter','$notes')
+                      ON DUPLICATE KEY UPDATE 
+                      name='$name',alias='$alias',filter='$filter',notes='$notes'";
+
+            mysql_query($query);
+            $result = mysql_error();
+            $return = array("msg" => $result);
+            $theJSON = json_encode($return);
+
+            break;
+
+        case "remove" : 
+            $alias =  mysql_real_escape_string($_REQUEST['data']);  
+            $query = "DELETE FROM filters WHERE username = '$user' AND alias = '$alias'";
+            mysql_query($query);
+            $result = mysql_error();
+            $return = array("msg" => $result);
+            $theJSON = json_encode($return); 
+
+            break;
+
+    }
+
+    echo $theJSON;
+
 }
 
 $type();
