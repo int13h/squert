@@ -1075,23 +1075,23 @@ $(document).ready(function(){
 
     // Create entries
     function mkEntry(entry) {
- 
         if(!entry) {
-            filter = s2h("dst_ip BETWEEN 2886729728 AND 2886795263");
-            entry = {"alias": "DF", "name": "Default", "notes": "<-- Click edit to modify or create filters", "filter": filter, "age": ""};
+            filter = "dst_ip BETWEEN 2886729728 AND 2886795263";
+            entry = {"alias": "New", "name": "New Entry", "notes": "", "filter": filter, "age": "1970-01-01 00:00:00"};
         }
 
+        encFilter = s2h(entry.filter);        
         row = '';
         row += "<tr class=f_row id=\"tr_" + entry.alias + "\" ";
         row += "data-alias=\"" + entry.alias + "\" ";
         row += "data-name=\"" + entry.name + "\" ";
         row += "data-notes=\"" + entry.notes + "\" ";
-        row += "data-filter=\"" + entry.filter + "\">";
+        row += "data-filter=\"" + encFilter + "\">";
         row += "<td class=row_active>" + entry.alias + "</td>";
-        row += "<td class=row><span id=\"" + entry.alias + "\" class=\"filter_edit\">edit</span></td>";
         row += "<td class=row><b>" + entry.name + "</b></td>";
         row += "<td class=row>" + entry.notes + "</td>";
-        row += "<td class=row>" + entry.age + "</td>";
+        row += "<td class=row>now</td>";
+        row += "<td class=row><span id=\"" + entry.alias + "\" class=\"filter_edit\">edit</span></td>";
         row += "</tr>";
         return row;
     }
@@ -1120,16 +1120,11 @@ $(document).ready(function(){
                 row = '';
                 head += "<thead><tr>";
                 head += "<th class=sort width=60>ALIAS</th>";
-                head += "<th class=sort width=60></th>";
                 head += "<th class=sort width=200>NAME</th>";
                 head += "<th class=sort>NOTES</th>";
-                head += "<th class=sort width=150>CREATED</th>";
+                head += "<th class=sort width=150>LAST MODIFIED</th>";
+                head += "<th class=sort width=60><span id=new class=filter_new>+</span></th>";
                 head += "</tr></thead>";
-                
-                // Create a dummy entry if nothing exists.
-                if (theData.length == 0) {
-                    mkEntry();    
-                }
 
                 for (var i=0; i<theData.length; i++) {
                     row += "<tr class=f_row id=\"tr_" + theData[i].alias + "\" ";
@@ -1138,10 +1133,10 @@ $(document).ready(function(){
                     row += "data-notes=\"" + theData[i].notes + "\" ";
                     row += "data-filter=\"" + theData[i].filter + "\">";
                     row += "<td class=row_active>" + theData[i].alias + "</td>";
-                    row += "<td class=row><span id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</span></td>";
                     row += "<td class=row><b>" + theData[i].name + "</b></td>";
                     row += "<td class=row>" + theData[i].notes + "</td>";
                     row += "<td class=row>" + theData[i].age + "</td>";
+                    row += "<td class=row><div id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</div></td>";
                     row += "</tr>";
                 }
 
@@ -1151,7 +1146,7 @@ $(document).ready(function(){
                 tbl += "</table>";
                 $('#usr_filters').after(tbl);
                 $('#tl4').slideDown('slow');
-                $("#tl4").tablesorter({ headers: { 1: {sorter:"false"} } }); 
+                //$("#tl4").tablesorter({ headers: { 4: {sorter:"false"} } });
             }      
         }
     });
@@ -1171,48 +1166,71 @@ $(document).ready(function(){
         row += "\"filter\": \"" + filter + "\"\n";
         row += "}";
         row += "</textarea>";
-        row += "<span class=filter_remove>remove</span> <span class=filter_update>update</span>"; 
-        row += "<span class=filter_error><span class=warn><br>Format error!</span> ";
-        row += "Please ensure the format above is valid JSON. "; 
-        row += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> "; 
-	row += "pairs. Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except the last ";
-        row += "pair before the closing curly brace <b>\"}\"</b>. Strings must be enclosed within double ";
-        row += "quotes.</span><br>";  
+        row += "<div class=filter_bees><div class=filter_remove>remove</div><div class=filter_update>update</div></div>"; 
+        row += "<div class=filter_error></div>";
         row += "</td></tr>";
 
         $('#tr_' + cl).after(row);
     }
 
+    // Create new filter
+    $(document).on("click", ".filter_new", function(event) {
+        // There can be only one :/  
+        if ($('#tr_New').length == 0 && $('#filter_content').length == 0) {
+            newEntry = mkEntry();
+            $('#tl4').prepend(newEntry);
+        }
+    });
+    
     // Filter expansion (gives access to edit as well)
     $(document).on("click", ".filter_edit", function(event) {
-        cl = $(this).attr('id');
-        currentCL = cl;
+        currentCL = $(this).attr('id');
 
         if (!$("#filter_content")[0]) {
-            openEdit(cl);
-            $('#' + cl).text('close');
+            openEdit(currentCL);
+            $('#' + currentCL).text('close');
         } else {
-            if($('#' + cl).text() == 'close') {
+            if($('#' + currentCL).text() == 'close') {
                 $("#filter_content").remove();               
-                $('#' + cl).text('edit');
+                $('#' + currentCL).text('edit');
             }    
         }
     });
 
     // Update (or create new) filter
     $(document).on("click", ".filter_update", function(event) {
+        // Hide any previous errors
+        $('.filter_error').empty();
+        eMsg = '';
         // Get the current filter
         try {
-            var filterTxt = $.parseJSON($('#txt_' + currentCL).val());
-            $('.filter_error').fadeOut();
-            go = 'yes';
+            _filterTxt  = $('#txt_' + currentCL).val().replace(/[|&;$@*`<>()]/g, "");
+            filterTxt = $.parseJSON(_filterTxt);
+            
+            if (filterTxt.alias.length == 0 || filterTxt.alias == "New" || filterTxt.alias.indexOf(' ') >=0) {
+                eMsg += "<span class=warn><br>Error!</span> ";
+                eMsg += "Filter aliases MUST be unique and cannot contain spaces. ";
+                eMsg += "Also, the word \"New\" is reserved and may not be used.";
+                $('.filter_error').append(eMsg);  
+                $('.filter_error').fadeIn();
+            } else {         
+                go = 'yes';
+            }
+
         } catch (err) {
+            eMsg += "<span class=warn><br>Format error!</span> ";
+            eMsg += "Please ensure the format above is valid JSON. ";
+            eMsg += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> ";
+            eMsg += "pairs.<br> Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except";
+            eMsg += "the last pair before the closing curly brace <b>\"}\"</b>.";
+            eMsg += " Strings must be enclosed within double quotes";
+            $('.filter_error').append(eMsg);
             $('.filter_error').fadeIn();
             go = 'no';  
         }
 
         if (go == 'yes') {
-             
+            oldCL = currentCL;
             fd = s2h(filterTxt.alias + "||" + filterTxt.name + "||" + filterTxt.notes + "||" + filterTxt.filter);
             var curUser = $('#t_usr').data('c_usr');
             urArgs = "type=8&user=" + curUser + "&mode=update&data=" + fd;
@@ -1226,14 +1244,29 @@ $(document).ready(function(){
                 if (theData.msg) {
                     alert(theData.msg);
                 } else {
-                    $('#' + cl).text('edit');
+                    $('#' + currentCL).text('edit');
                     $("#filter_content").remove();
-                    newEntry = mkEntry(filterTxt);
-                    $('.f_row').after(newEntry);       
                 }         
             }
+
+            newEntry = mkEntry(filterTxt);
+            $('#' + oldCL).text('edit');
             
+            // If we edited an existing entry update it.
+            if (filterTxt.alias == currentCL) {
+                $('#tr_' + oldCL).attr('id', 'toRemove');
+                $('#toRemove').after(newEntry);
+                $('#toRemove').remove();
+            } else {
+                $('#tr_' + oldCL).before(newEntry);
+            }
+
+            // If we started from a new entry, delete it.
+            if ($('#tr_New').length == 1) {
+                $('#tr_New').remove();
+            }
         }
+
     });
 
     // Remove a filter
@@ -1253,11 +1286,7 @@ $(document).ready(function(){
                 } else {
                     $("#filter_content").remove();
                     $("#tr_" + currentCL).fadeOut('slow', function() {
-                       $("#tr_" + currentCL).remove();
-                       if(!$(".f_row")[0]) {
-                           newEntry = mkEntry();
-                           $('#tl4').append(newEntry);
-                       }
+                        $("#tr_" + currentCL).remove();
                     });
                 }
             }

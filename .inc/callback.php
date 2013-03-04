@@ -154,8 +154,8 @@ function es() {
               GROUP_CONCAT(event.status) AS f11,
               GROUP_CONCAT(SUBSTRING(CONVERT_TZ(timestamp, '+00:00', '$offset'),12,2)) AS f12
               FROM event
-              LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
-              LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
+              LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+              LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               WHERE $when
               $filter
               GROUP BY f3
@@ -178,17 +178,22 @@ function eg() {
     $sid = mysql_real_escape_string($_REQUEST['object']);
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
 
-    $query = "SELECT COUNT(signature) AS count, MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) AS maxTime, 
-              INET_NTOA(src_ip) AS src_ip, map1.c_long AS src_cc,
-              INET_NTOA(dst_ip) AS dst_ip, map2.c_long AS dst_cc,
-              map1.cc AS srcc, map2.cc AS dstc,
-              GROUP_CONCAT(event.sid) AS c_sid, GROUP_CONCAT(event.cid) AS c_cid,
+    $query = "SELECT COUNT(signature) AS count,
+              MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) AS maxTime, 
+              INET_NTOA(src_ip) AS src_ip,
+              msrc.c_long AS src_cc,
+              INET_NTOA(dst_ip) AS dst_ip,
+              mdst.c_long AS dst_cc,
+              msrc.cc AS srcc,
+              mdst.cc AS dstc,
+              GROUP_CONCAT(event.sid) AS c_sid,
+              GROUP_CONCAT(event.cid) AS c_cid,
               GROUP_CONCAT(event.status) AS c_status,
               GROUP_CONCAT(SUBSTR(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5)) AS c_ts,
               GROUP_CONCAT(SUBSTRING(CONVERT_TZ(timestamp, '+00:00', '$offset'),12,2)) AS f12
               FROM event
-              LEFT JOIN mappings AS map1 ON event.src_ip = map1.ip
-              LEFT JOIN mappings AS map2 ON event.dst_ip = map2.ip
+              LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+              LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               WHERE $when
               AND signature_id = '$sid'
               GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc

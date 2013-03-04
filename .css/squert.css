@@ -1041,10 +1041,11 @@ tr.f_row:hover {
 }
 
 td.f_row {
-    padding: 10px;
-    border-bottom: 1pt solid #c9c9c9;
+    padding: 15px;
+    padding-right: none;
+    border-bottom: 1pt solid gray;
+    background-color: #c9c9c9;
     font-size: 12px;
-    background-color: #f4f4f4;
 }
 
 #usr_filters {
@@ -1055,34 +1056,52 @@ tr.hidden {
     display: none;
 }
 
-.filter_edit {
+.filter_edit, .filter_update, .filter_remove {
+    float: right;
+    font-weight: normal;
+    text-align: center;
+    border: 1pt solid #545454;
+    padding: 5px 0px 5px 0px;
+    border-radius: 3px;
+    margin-left: 4px;
+    margin-right: 5px;
+    font-size: 10px;
+    width: 40px;
     cursor: pointer;
-    color: navy;
-    text-decoration: underline;
+}
+
+.filter_edit {
+    background-color: #d4d4d4;
+    color: #000000;
 }
 
 .filter_update {
-    cursor: pointer;
-    color: navy;
-    padding-right: 10px;
-    text-decoration: underline;
-    float: right;
+    background-color: #e9e9e9;
+    color: #000000;
 }
 
 .filter_remove {
-    cursor: pointer;
-    color: #cc0000;
-    padding-left: 10px;
-    text-decoration: underline;
-    float: right;
+    background-color: #cc0000;
+    color: #ffffff;
+    margin-left: 10px;
 }
 
-.filter_edit:hover, .filter_update:hover {
-    color: blue;
+.filter_edit:hover, .filter_update:hover, .filter_remove:hover {
+    background-color: #ffffff;
+    color: #000000;
 } 
 
-.filter_remove:hover {
-    color: red;
+.filter_new {
+    background-color: #f4f4f4;
+    color: #000000;
+    float: right;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    border: 1pt solid #c9c9c9;
+    padding: 0px 2px 0px 3px;
+    margin-right: 5px;
+    border-radius: 3px;
 }
 
 span.warn {
@@ -1090,17 +1109,25 @@ span.warn {
     color: #cc0000;
 }
 
-span.filter_error {
+div.filter_error {
     display: none;
+    width: 100%
+    padding-bottom: 20px;
+}
+
+div.filter_bees {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 textarea {
     border: none;
-    border: 1pt solid #c9c9c9;
+    border: 1pt solid gray;
     border-radius: 5px;
-    background-color: #E6F5E7;
+    background-color: #ffffff; 
     color: #000000;
-    font-size: 12px;
-    max-width: 810px;
+    font-size: 13px;
+    max-width: 900px;
+    max-height: 500px;
 
 }
