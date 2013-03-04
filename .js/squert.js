@@ -1073,6 +1073,29 @@ $(document).ready(function(){
     // Filters
     //
 
+    // Create entries
+    function mkEntry(entry) {
+ 
+        if(!entry) {
+            filter = s2h("dst_ip BETWEEN 2886729728 AND 2886795263");
+            entry = {"alias": "DF", "name": "Default", "notes": "<-- Click edit to modify or create filters", "filter": filter, "age": ""};
+        }
+
+        row = '';
+        row += "<tr class=f_row id=\"tr_" + entry.alias + "\" ";
+        row += "data-alias=\"" + entry.alias + "\" ";
+        row += "data-name=\"" + entry.name + "\" ";
+        row += "data-notes=\"" + entry.notes + "\" ";
+        row += "data-filter=\"" + entry.filter + "\">";
+        row += "<td class=row_active>" + entry.alias + "</td>";
+        row += "<td class=row><span id=\"" + entry.alias + "\" class=\"filter_edit\">edit</span></td>";
+        row += "<td class=row><b>" + entry.name + "</b></td>";
+        row += "<td class=row>" + entry.notes + "</td>";
+        row += "<td class=row>" + entry.age + "</td>";
+        row += "</tr>";
+        return row;
+    }
+
     $('#filters').click(function() {
         $('#usr_filters').toggle();
         if ($('#usr_filters').css('display') == "none") {
@@ -1100,27 +1123,12 @@ $(document).ready(function(){
                 head += "<th class=sort width=60></th>";
                 head += "<th class=sort width=200>NAME</th>";
                 head += "<th class=sort>NOTES</th>";
-                head += "<th class=sort width=150>DATE</th>";
+                head += "<th class=sort width=150>CREATED</th>";
                 head += "</tr></thead>";
                 
                 // Create a dummy entry if nothing exists.
                 if (theData.length == 0) {
-                    alias = "ABC";
-                    name = "VLAN 4201";
-                    notes = "This is just a dummy filter to get you started. Click edit to change, or add new filters";
-                    filter = s2h("dst_ip BETWEEN 2886729728 AND 2886795263");
-                    age = "2013-02-01 00:01:02";
-                    row += "<tr class=f_row id=\"tr_" + alias + "\" ";
-                    row += "data-alias=\"" + alias + "\" ";
-                    row += "data-name=\"" + name + "\" ";
-                    row += "data-notes=\"" + notes + "\" ";
-                    row += "data-filter=\"" + filter + "\">";
-                    row += "<td class=row_active>" + alias + "</td>";
-                    row += "<td class=row><span id=\"" + alias + "\" class=\"filter_edit\">edit</span></td>";
-                    row += "<td class=row><b>" + name + "</b></td>";
-                    row += "<td class=row>" + notes + "</td>";
-                    row += "<td class=row>" + age + "</td>";
-                    row += "</tr>";
+                    mkEntry();    
                 }
 
                 for (var i=0; i<theData.length; i++) {
@@ -1142,7 +1150,7 @@ $(document).ready(function(){
                 tbl += row;
                 tbl += "</table>";
                 $('#usr_filters').after(tbl);
-                $('#tl4').fadeIn('slow');
+                $('#tl4').slideDown('slow');
                 $("#tl4").tablesorter({ headers: { 1: {sorter:"false"} } }); 
             }      
         }
@@ -1164,8 +1172,8 @@ $(document).ready(function(){
         row += "}";
         row += "</textarea>";
         row += "<span class=filter_remove>remove</span> <span class=filter_update>update</span>"; 
-        row += "<span class=filter_error><span class=warn><br><br>Format error!</span> ";
-        row += "Please ensure the filter is valid JSON. "; 
+        row += "<span class=filter_error><span class=warn><br>Format error!</span> ";
+        row += "Please ensure the format above is valid JSON. "; 
         row += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> "; 
 	row += "pairs. Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except the last ";
         row += "pair before the closing curly brace <b>\"}\"</b>. Strings must be enclosed within double ";
@@ -1218,8 +1226,10 @@ $(document).ready(function(){
                 if (theData.msg) {
                     alert(theData.msg);
                 } else {
-                    $('#filters').click();
-                    $('#filters').click();
+                    $('#' + cl).text('edit');
+                    $("#filter_content").remove();
+                    newEntry = mkEntry(filterTxt);
+                    $('.f_row').after(newEntry);       
                 }         
             }
             
@@ -1243,10 +1253,14 @@ $(document).ready(function(){
                 } else {
                     $("#filter_content").remove();
                     $("#tr_" + currentCL).fadeOut('slow', function() {
-                        $("#tr_" + currentCL).remove();
+                       $("#tr_" + currentCL).remove();
+                       if(!$(".f_row")[0]) {
+                           newEntry = mkEntry();
+                           $('#tl4').append(newEntry);
+                       }
                     });
                 }
-            } 
+            }
         }
     });
     
