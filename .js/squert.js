@@ -206,8 +206,9 @@ $(document).ready(function(){
 
     // Reload page
     $("#b_update").click(function() {
-        eventList("0-aaa-00");
         $('#tl0,#tl1').fadeOut();
+        $('#tl0,#tl1').remove();
+        eventList("0-aaa-00");
     });
 
     // Logout
