@@ -1048,11 +1048,7 @@ td.f_row {
     font-size: 12px;
 }
 
-#usr_filters {
-    display: none;
-}
-
-tr.hidden {
+#tl0, #tl1, #usr_filters, tr.hidden {
     display: none;
 }
 
@@ -1086,22 +1082,25 @@ tr.hidden {
     margin-left: 10px;
 }
 
-.filter_edit:hover, .filter_update:hover, .filter_remove:hover {
+.filter_new:hover, .filter_refresh:hover, .filter_edit:hover, .filter_update:hover, .filter_remove:hover {
     background-color: #ffffff;
     color: #000000;
 } 
 
-.filter_new {
+.filter_new, .filter_refresh {
     background-color: #f4f4f4;
     color: #000000;
-    float: right;
-    font-size: 15px;
-    font-weight: bold;
+    font-size: 12px;
+    font-weight: normal;
     text-align: center;
     border: 1pt solid #c9c9c9;
     padding: 0px 2px 0px 3px;
-    margin-right: 5px;
     border-radius: 3px;
+    width: 355555px;
+}
+
+.filter_refresh {
+    margin-right: 5px;
 }
 
 span.warn {

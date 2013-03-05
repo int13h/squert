@@ -204,12 +204,16 @@ $(document).ready(function(){
     // Bottom ribbon controls
     //
 
+    // Reload page
     $("#b_update").click(function() {
-        var ctab = $('#sel_tab').val();
-        var urArgs = "type=" + 5 + "&tab=" + ctab;
-        $.get(".inc/callback.php?" + urArgs, function(){location.reload()});
+        eventList("0-aaa-00");
+        $('#tl0,#tl1').fadeOut();
     });
 
+    // Logout
+    $("#logout").click(function(event) {
+         $.get("index.php?id=0", function(){location.reload()});
+    });
 
     $("#b_top").click(function() {
         $('html, body').animate({ scrollTop: 0 }, 'slow');
@@ -256,11 +260,6 @@ $(document).ready(function(){
         }
     });
 
-    // Logout
-    $("#logout").click(function(event) {
-         $.get("index.php?id=0", function(){location.reload()});
-    });
-    
     //
     // Rows
     //
@@ -536,6 +535,8 @@ $(document).ready(function(){
               tbl += row;
               tbl += "</table>";
               $('#' + parts[1] + '-' + parts[2]).after(tbl);
+              $('#tl0,#tl1').fadeIn('slow');
+              $("#b_event").html("<b>Events:</b> Synchronized.");
               $("#tl1").tablesorter({ headers: { 4: {sorter:"false"} } });
           }
           break;
@@ -1101,55 +1102,63 @@ $(document).ready(function(){
         if ($('#usr_filters').css('display') == "none") {
             $('#filters').css('text-decoration', 'none');
             $('#filters').css('color', '#adadad');
-            $('.padded').remove();
+            $('#tl4').hide();
         } else {
             $('#filters').css('text-decoration', 'underline');
-            $('#filters').css('color', '#ffffff'); 
-            
-            var curUser = $('#t_usr').data('c_usr');
-            urArgs = "type=8" + "&user=" + curUser + "&mode=query&data=0";
-
-            $(function(){
-                $.get(".inc/callback.php?" + urArgs, function(data){cb6(data)}); 
-            });
-
-            function cb6(data){
-                eval("theData=" + data);
-                tbl = '';
-                head = '';
-                row = '';
-                head += "<thead><tr>";
-                head += "<th class=sort width=60>ALIAS</th>";
-                head += "<th class=sort width=200>NAME</th>";
-                head += "<th class=sort>NOTES</th>";
-                head += "<th class=sort width=150>LAST MODIFIED</th>";
-                head += "<th class=sort width=60><span id=new class=filter_new>+</span></th>";
-                head += "</tr></thead>";
-
-                for (var i=0; i<theData.length; i++) {
-                    row += "<tr class=f_row id=\"tr_" + theData[i].alias + "\" ";
-                    row += "data-alias=\"" + theData[i].alias + "\" ";
-                    row += "data-name=\"" + theData[i].name + "\" ";
-                    row += "data-notes=\"" + theData[i].notes + "\" ";
-                    row += "data-filter=\"" + theData[i].filter + "\">";
-                    row += "<td class=row_active>" + theData[i].alias + "</td>";
-                    row += "<td class=row><b>" + theData[i].name + "</b></td>";
-                    row += "<td class=row>" + theData[i].notes + "</td>";
-                    row += "<td class=row>" + theData[i].age + "</td>";
-                    row += "<td class=row><div id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</div></td>";
-                    row += "</tr>";
-                }
-
-                tbl += "<table id=tl4 class=padded width=970 cellpadding=0 cellspacing=0 align=center>";
-                tbl += head;
-                tbl += row;
-                tbl += "</table>";
-                $('#usr_filters').after(tbl);
-                $('#tl4').slideDown('slow');
-                //$("#tl4").tablesorter({ headers: { 4: {sorter:"false"} } });
-            }      
+            $('#filters').css('color', '#ffffff');
+            $('#tl4').fadeIn();
+            if ($('#tl4').length == 0) {
+                loadFilters();
+            }
         }
-    });
+    }); 
+
+    function loadFilters() {
+            
+        var curUser = $('#t_usr').data('c_usr');
+        urArgs = "type=8" + "&user=" + curUser + "&mode=query&data=0";
+
+        $(function(){
+            $.get(".inc/callback.php?" + urArgs, function(data){cb6(data)}); 
+        });
+
+        function cb6(data){
+            eval("theData=" + data);
+            tbl = '';
+            head = '';
+            row = '';
+            head += "<thead><tr>";
+            head += "<th class=sort width=60>ALIAS</th>";
+            head += "<th class=sort width=200>NAME</th>";
+            head += "<th class=sort>NOTES</th>";
+            head += "<th class=sort width=150>LAST MODIFIED</th>";
+            head += "<th class=sort width=40px>";
+            head += "<span title=refresh class=filter_refresh>&#x21BA;</span>";
+            head += "<span title=add class=filter_new>+</span>";
+            head += "</th></tr></thead>";
+
+            for (var i=0; i<theData.length; i++) {
+                row += "<tr class=f_row id=\"tr_" + theData[i].alias + "\" ";
+                row += "data-alias=\"" + theData[i].alias + "\" ";
+                row += "data-name=\"" + theData[i].name + "\" ";
+                row += "data-notes=\"" + theData[i].notes + "\" ";
+                row += "data-filter=\"" + theData[i].filter + "\">";
+                row += "<td class=row_active>" + theData[i].alias + "</td>";
+                row += "<td class=row><b>" + theData[i].name + "</b></td>";
+                row += "<td class=row>" + theData[i].notes + "</td>";
+                row += "<td class=row>" + theData[i].age + "</td>";
+                row += "<td class=row><div id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</div></td>";
+                row += "</tr>";
+            }
+
+            tbl += "<table id=tl4 class=padded width=970 cellpadding=0 cellspacing=0 align=center>";
+            tbl += head;
+            tbl += row;
+            tbl += "</table>";
+            $('#usr_filters').after(tbl);
+            $('#tl4').fadeIn('slow');
+        }      
+    }
 
     function openEdit (cl) {
         alias = $('#tr_' + cl).data('alias');
@@ -1172,6 +1181,13 @@ $(document).ready(function(){
 
         $('#tr_' + cl).after(row);
     }
+
+    // Refresh filter listing
+    $(document).on("click", ".filter_refresh", function(event) {
+        $('#tl4').fadeOut('slow');
+        $('#tl4').remove();
+        loadFilters();
+    });
 
     // Create new filter
     $(document).on("click", ".filter_new", function(event) {
