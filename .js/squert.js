@@ -1244,9 +1244,7 @@ $(document).ready(function(){
         eMsg = '';
         // Get the current filter
         try {
-            filterTxt = $('#txt_' + currentCL).val().replace(/[|&;$@*`]/g, "");
-            filterTxt = $('#txt_' + currentCL).val().replace(/[>]/g, "&gt;");
-            filterTxt = $('#txt_' + currentCL).val().replace(/[<]/g, "&lt;");
+            _filterTxt = $('#txt_' + currentCL).val().replace(/[|&;$@*`<>]/g, "");
             filterTxt = $.parseJSON(_filterTxt);
             
             if (filterTxt.alias.length == 0 || filterTxt.alias == "New" || filterTxt.alias.indexOf(' ') >=0) {
