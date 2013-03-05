@@ -653,14 +653,22 @@ span.links_enabled:hover {
 
 /* Main Tables */
 
-th.sort {
+th.sort, th.sortr {
   background: #000000;
   color: #adadad;
   padding: 10px 0px 10px 5px;
   cursor: pointer;
   font-size: 10px;
-  text-align: left;
   border: none;
+}
+
+th.sort {
+    text-align: left;
+}
+
+th.sortr {
+    text-align: right;
+    padding-right: 5px;
 }
 
 td.bold {
@@ -1036,7 +1044,11 @@ tr.f_row {
     background-color: #fafafa;
 }
 
-tr.f_row:hover {
+tr.h_row {
+    background-color: lightyellow;
+}
+
+tr.f_row:hover, tr.h_row:hover {
     background-color: #f4f4f4;
 }
 
@@ -1050,6 +1062,24 @@ td.f_row {
 
 #tl0, #tl1, #usr_filters, tr.hidden {
     display: none;
+}
+
+.filter_show {
+    font-weight: normal;
+    text-align: center;
+    border: 1pt solid #c9c9c9;
+    padding: 3px 0px 3px 0px;
+    border-radius: 3px;
+    margin-left: 4px;
+    margin-right: 5px;
+    font-size: 11px;
+    width: 50px;
+    float: left;
+    cursor: pointer;
+}
+
+.filter_show:hover {
+    color: #ffffff;
 }
 
 .filter_edit, .filter_update, .filter_remove {
@@ -1072,14 +1102,14 @@ td.f_row {
 }
 
 .filter_update {
-    background-color: #e9e9e9;
-    color: #000000;
+    background-color: green;
+    color: #ffffff;
+    margin-left: 10px;
 }
 
 .filter_remove {
     background-color: #cc0000;
     color: #ffffff;
-    margin-left: 10px;
 }
 
 .filter_new:hover, .filter_refresh:hover, .filter_edit:hover, .filter_update:hover, .filter_remove:hover {
@@ -1096,7 +1126,7 @@ td.f_row {
     border: 1pt solid #c9c9c9;
     padding: 0px 2px 0px 3px;
     border-radius: 3px;
-    width: 355555px;
+    width: 40px;
 }
 
 .filter_refresh {

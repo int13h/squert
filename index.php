@@ -57,7 +57,7 @@ dbC();
 <div id=t_sum class=tab>Events</div>
 
 <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span></div>
-<div id=t_search class=search><span id=filters class=links>Filter:</span></span>&nbsp;<input class=search id=search type=text size=50 maxlength=1000><span id=clear_search class=clear>&nbsp;&#x21BA;</span>
+<div id=t_search class=search><div id=filters class=filter_show>filter</div><input class=search id=search type=text size=50 maxlength=1000>&nbsp;<span id=clear_search class=clear>&#x21BA;</span>
 </div>
 </form>
 <?php echo $timeLinks;?>

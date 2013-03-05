@@ -200,11 +200,13 @@ $(document).ready(function(){
         lastCount = eventCount;
     }, emTimeout);
 
+
+
     //   
     // Bottom ribbon controls
     //
 
-    // Reload page
+    // Refresh page
     $("#b_update").click(function() {
         $('#tl0,#tl1').fadeOut();
         $('#tl0,#tl1').remove();
@@ -219,7 +221,9 @@ $(document).ready(function(){
     $("#b_top").click(function() {
         $('html, body').animate({ scrollTop: 0 }, 'slow');
     });
-        
+    
+
+    
     //
     // Tab manipulations
     //
@@ -260,6 +264,9 @@ $(document).ready(function(){
             $.get(".inc/callback.php?" + urArgs, function(){Null});
         }
     });
+
+
+
 
     //
     // Rows
@@ -337,6 +344,8 @@ $(document).ready(function(){
         closeSubRow2();
     })
 
+
+
     //
     //  Level 1
     //
@@ -394,6 +403,8 @@ $(document).ready(function(){
             }
         }
     });
+
+
  
     //
     //  Level 2
@@ -418,6 +429,8 @@ $(document).ready(function(){
         }  
     });
 
+
+
     //
     //  Level 3
     //
@@ -434,6 +447,8 @@ $(document).ready(function(){
             eventList("3-" + baseID);
         }
     });
+
+
 
     //
     // This creates the views for each level
@@ -892,6 +907,8 @@ $(document).ready(function(){
         }
     } 
 
+
+
     //
     // Request for transcript
     //
@@ -941,6 +958,8 @@ $(document).ready(function(){
             }
         }
     });
+
+
 
     //
     // Event classification
@@ -1071,20 +1090,25 @@ $(document).ready(function(){
         });
     }
 
+
+
     //
     // Filters
     //
 
     // Create entries
     function mkEntry(entry) {
+
+        cls = 'f_row';
         if(!entry) {
+            cls = 'h_row';
             filter = "dst_ip BETWEEN 2886729728 AND 2886795263";
             entry = {"alias": "New", "name": "New Entry", "notes": "", "filter": filter, "age": "1970-01-01 00:00:00"};
         }
 
         encFilter = s2h(entry.filter);        
         row = '';
-        row += "<tr class=f_row id=\"tr_" + entry.alias + "\" ";
+        row += "<tr class=" + cls + " id=\"tr_" + entry.alias + "\" ";
         row += "data-alias=\"" + entry.alias + "\" ";
         row += "data-name=\"" + entry.name + "\" ";
         row += "data-notes=\"" + entry.notes + "\" ";
@@ -1102,7 +1126,6 @@ $(document).ready(function(){
         $('#usr_filters').toggle();
         if ($('#usr_filters').css('display') == "none") {
             $('#filters').css('text-decoration', 'none');
-            $('#filters').css('color', '#adadad');
             $('#tl4').hide();
         } else {
             $('#filters').css('text-decoration', 'underline');
@@ -1133,7 +1156,7 @@ $(document).ready(function(){
             head += "<th class=sort width=200>NAME</th>";
             head += "<th class=sort>NOTES</th>";
             head += "<th class=sort width=150>LAST MODIFIED</th>";
-            head += "<th class=sort width=40px>";
+            head += "<th class=sortr width=70>";
             head += "<span title=refresh class=filter_refresh>&#x21BA;</span>";
             head += "<span title=add class=filter_new>+</span>";
             head += "</th></tr></thead>";
@@ -1176,7 +1199,7 @@ $(document).ready(function(){
         row += "\"filter\": \"" + filter + "\"\n";
         row += "}";
         row += "</textarea>";
-        row += "<div class=filter_bees><div class=filter_remove>remove</div><div class=filter_update>update</div></div>"; 
+        row += "<div class=filter_bees><div class=filter_update>update</div><div class=filter_remove>remove</div></div>"; 
         row += "<div class=filter_error></div>";
         row += "</td></tr>";
 
