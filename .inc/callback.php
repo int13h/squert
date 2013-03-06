@@ -373,7 +373,7 @@ function fi() {
 
     switch ($mode) {
         case "query"  : 
-            $query = "SELECT name, alias, HEX(filter) as filter, notes, age
+            $query = "SELECT UNHEX(name) AS name, alias, filter, UNHEX(notes) as notes, age
                       FROM filters
                       WHERE username = '$user'
                       ORDER BY name DESC";
@@ -392,9 +392,11 @@ function fi() {
 
         case "update" :
             $data = hextostr($_REQUEST['data']);
-            list($alias, $name, $notes, $filter) = explode("||", $data); 
-            $filter = mysql_real_escape_string($filter);
-
+            list($alias, $name, $notes, $filter) = explode("||", $data);
+            $name = strtohex($name);
+            $notes = strtohex($notes); 
+            $filter = strtohex($filter);
+            
             $query = "INSERT INTO filters (name,alias,username,filter,notes)
                       VALUES ('$name','$alias','$user','$filter','$notes')
                       ON DUPLICATE KEY UPDATE 

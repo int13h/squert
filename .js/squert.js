@@ -1103,7 +1103,7 @@ $(document).ready(function(){
         if(!entry) {
             cls = 'h_row';
             filter = "dst_ip BETWEEN 2886729728 AND 2886795263";
-            entry = {"alias": "New", "name": "New Entry", "notes": "", "filter": filter, "age": "1970-01-01 00:00:00"};
+            entry = {"alias": "New", "name": "New Entry", "notes": "None.", "filter": filter, "age": "1970-01-01 00:00:00"};
         }
 
         encFilter = s2h(entry.filter);        
@@ -1246,30 +1246,23 @@ $(document).ready(function(){
         try {
             _filterTxt = $('#txt_' + currentCL).val().replace(/[|&;$@*`<>]/g, "");
             filterTxt = $.parseJSON(_filterTxt);
-            
-            if (filterTxt.alias.length == 0 || filterTxt.alias == "New" || filterTxt.alias.indexOf(' ') >=0) {
-                eMsg += "<span class=warn><br>Error!</span> ";
-                eMsg += "Filter aliases MUST be unique and cannot contain spaces. ";
-                eMsg += "Also, the word \"New\" is reserved and may not be used.";
-                $('.filter_error').append(eMsg);  
-                $('.filter_error').fadeIn();
-            } else {         
-                go = 'yes';
+
+            // Check for empty objects
+            emptyVal = 0;
+            for (var i in filterTxt) {
+                if (filterTxt.hasOwnProperty(i)) {
+                    if (filterTxt[i].length == 0) {
+                        emptyVal++;
+                    }
+                }
             }
 
-        } catch (err) {
-            eMsg += "<span class=warn><br>Format error!</span> ";
-            eMsg += "Please ensure the format above is valid JSON. ";
-            eMsg += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> ";
-            eMsg += "pairs.<br> Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except";
-            eMsg += "the last pair before the closing curly brace <b>\"}\"</b>.";
-            eMsg += " Strings must be enclosed within double quotes";
-            $('.filter_error').append(eMsg);
-            $('.filter_error').fadeIn();
-            go = 'no';  
-        }
+            if (emptyVal > 0) throw 0; 
+            
+            // Check for valid alias
+            if (filterTxt.alias.length == 0 || filterTxt.alias == "New" || filterTxt.alias.indexOf(' ') >=0) throw 1;
 
-        if (go == 'yes') {
+            // Continue..
             oldCL = currentCL;
             fd = s2h(filterTxt.alias + "||" + filterTxt.name + "||" + filterTxt.notes + "||" + filterTxt.filter);
             var curUser = $('#t_usr').data('c_usr');
@@ -1305,8 +1298,30 @@ $(document).ready(function(){
             if ($('#tr_New').length == 1) {
                 $('#tr_New').remove();
             }
-        }
 
+        } catch (err) {
+
+            switch (err) {
+                case 0:
+                    eMsg += "<span class=warn><br>Error!</span> ";
+                    eMsg += "Please supply a value for each object.";
+                    break;
+                case 1:
+                    eMsg += "<span class=warn><br>Error!</span> "
+                    eMsg += "Filter aliases MUST be unique and cannot contain spaces. ";
+                    eMsg += "Also, the word \"New\" is reserved and may not be used.";
+                    break;
+                default:
+                    eMsg += "<span class=warn><br>Format error!</span> ";
+                    eMsg += "Please ensure the format above is valid JSON. ";
+                    eMsg += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> ";
+                    eMsg += "pairs.<br> Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except";
+                    eMsg += "the last pair before the closing curly brace <b>\"}\"</b>.";
+                    eMsg += " Strings must be enclosed within double quotes";
+           }
+           $('.filter_error').append(eMsg);
+           $('.filter_error').fadeIn();
+        }
     });
 
     // Remove a filter
