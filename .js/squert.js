@@ -3,6 +3,7 @@
 $(document).ready(function(){
 
     var theWhen = $("#timestamp").val();
+    // Load main content
     eventList("0-aaa-00");
 
     var lastclasscount = 0;
@@ -166,6 +167,7 @@ $(document).ready(function(){
     $('#clear_search').click(function() {
         if ($('#search').val() != '') {
             $('#search').val('');
+            eventList("0-aaa-00");
         }
     });
 
@@ -200,8 +202,6 @@ $(document).ready(function(){
         lastCount = eventCount;
     }, emTimeout);
 
-
-
     //   
     // Bottom ribbon controls
     //
@@ -212,6 +212,15 @@ $(document).ready(function(){
         $('#tl0,#tl1').remove();
         eventList("0-aaa-00");
     });
+ 
+    // fire refresh on enter
+    $('#search').keypress(function(e) {
+        if(!e) e=window.event;
+        key = e.keyCode ? e.keyCode : e.which;
+        if(key == 13) {
+            $("#b_update").click();
+        }
+    });
 
     // Logout
     $("#logout").click(function(event) {
@@ -221,8 +230,6 @@ $(document).ready(function(){
     $("#b_top").click(function() {
         $('html, body').animate({ scrollTop: 0 }, 'slow');
     });
-    
-
     
     //
     // Tab manipulations
@@ -264,9 +271,6 @@ $(document).ready(function(){
             $.get(".inc/callback.php?" + urArgs, function(){Null});
         }
     });
-
-
-
 
     //
     // Rows
@@ -343,8 +347,6 @@ $(document).ready(function(){
     $(document).on("click", "#ev_close_sub2", function(event) {
         closeSubRow2();
     })
-
-
 
     //
     //  Level 1
@@ -429,8 +431,6 @@ $(document).ready(function(){
         }  
     });
 
-
-
     //
     //  Level 3
     //
@@ -447,22 +447,29 @@ $(document).ready(function(){
             eventList("3-" + baseID);
         }
     });
-
-
-
+    
     //
     // This creates the views for each level
     //
 
     function eventList (type) {
         var parts = type.split("-");
+        var theFilter = s2h('empty');
+        // Check for any filters
+        if ($('#search').val().length > 0) {
+            userFilter = $('#search').val();
+            // Now see if we have it listed
+            if ($("#tr_" + userFilter).length > 0) {
+                theFilter = $("#tr_" + userFilter).data('filter');
+            }
+        }
 
         switch (parts[0]) {
 
         // Level 0 view - Grouped by Signature
         case "0":
 
-          urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen;
+          urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
           });
@@ -560,7 +567,7 @@ $(document).ready(function(){
         // Level 1 view - Grouped by signature, source, destination
 
         case "1":
-          urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen;
+          urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
           });
@@ -959,8 +966,6 @@ $(document).ready(function(){
         }
     });
 
-
-
     //
     // Event classification
     //
@@ -1090,8 +1095,6 @@ $(document).ready(function(){
         });
     }
 
-
-
     //
     // Filters
     //
@@ -1102,7 +1105,7 @@ $(document).ready(function(){
         cls = 'f_row';
         if(!entry) {
             cls = 'h_row';
-            filter = "dst_ip BETWEEN 2886729728 AND 2886795263";
+            filter = "and clause";
             entry = {"alias": "New", "name": "New Entry", "notes": "None.", "filter": filter, "age": "1970-01-01 00:00:00"};
         }
 
@@ -1125,19 +1128,18 @@ $(document).ready(function(){
     $('#filters').click(function() {
         $('#usr_filters').toggle();
         if ($('#usr_filters').css('display') == "none") {
-            $('#filters').css('text-decoration', 'none');
             $('#tl4').hide();
+            $('#filters').css('text-decoration', 'none');
         } else {
-            $('#filters').css('text-decoration', 'underline');
-            $('#filters').css('color', '#ffffff');
             $('#tl4').fadeIn();
+            $('#filters').css('text-decoration', 'underline');
             if ($('#tl4').length == 0) {
-                loadFilters();
+                loadFilters(1);
             }
         }
     }); 
 
-    function loadFilters() {
+    function loadFilters(show) {
             
         var curUser = $('#t_usr').data('c_usr');
         urArgs = "type=8" + "&user=" + curUser + "&mode=query&data=0";
@@ -1180,7 +1182,9 @@ $(document).ready(function(){
             tbl += row;
             tbl += "</table>";
             $('#usr_filters').after(tbl);
-            $('#tl4').fadeIn('slow');
+            if (show == 1) {
+                $('#tl4').fadeIn('slow');
+            }
         }      
     }
 
@@ -1210,7 +1214,7 @@ $(document).ready(function(){
     $(document).on("click", ".filter_refresh", function(event) {
         $('#tl4').fadeOut('slow');
         $('#tl4').remove();
-        loadFilters();
+        loadFilters(1);
     });
 
     // Create new filter
@@ -1231,7 +1235,7 @@ $(document).ready(function(){
             $('#' + currentCL).text('close');
         } else {
             if($('#' + currentCL).text() == 'close') {
-                $("#filter_content").remove();               
+                $("#filter_content").remove();       
                 $('#' + currentCL).text('edit');
             }    
         }
@@ -1244,8 +1248,12 @@ $(document).ready(function(){
         eMsg = '';
         // Get the current filter
         try {
-            _filterTxt = $('#txt_' + currentCL).val().replace(/[|&;$@*`<>]/g, "");
-            filterTxt = $.parseJSON(_filterTxt);
+            rawTxt = $('#txt_' + currentCL).val();
+            // Fitler out some stuff
+            rawTxt = rawTxt.replace(/[@|&;*\\`]/g, "");
+            rawTxt = rawTxt.replace(/[>]/g, "&gt;");
+            rawTxt = rawTxt.replace(/[<]/g, "&lt;");
+            filterTxt = $.parseJSON(rawTxt);
 
             // Check for empty objects
             emptyVal = 0;
@@ -1259,8 +1267,11 @@ $(document).ready(function(){
 
             if (emptyVal > 0) throw 0; 
             
-            // Check for valid alias
-            if (filterTxt.alias.length == 0 || filterTxt.alias == "New" || filterTxt.alias.indexOf(' ') >=0) throw 1;
+            // Sanitize alias
+            var re = /^[a-zA-Z][\w-]*$/;
+            var OK = re.exec(filterTxt.alias);
+            if (!OK) throw 1;
+            if (filterTxt.alias == "New") throw 1;
 
             // Continue..
             oldCL = currentCL;
@@ -1308,8 +1319,9 @@ $(document).ready(function(){
                     break;
                 case 1:
                     eMsg += "<span class=warn><br>Error!</span> "
-                    eMsg += "Filter aliases MUST be unique and cannot contain spaces. ";
-                    eMsg += "Also, the word \"New\" is reserved and may not be used.";
+                    eMsg += "Filter aliases MUST be unique and start with a letter . Valid characters are: ";
+                    eMsg += "Aa-Zz, 0-9, dashes and underscores.";
+                    eMsg += "The word \"New\" is reserved and may not be used.";
                     break;
                 default:
                     eMsg += "<span class=warn><br>Format error!</span> ";
@@ -1347,7 +1359,6 @@ $(document).ready(function(){
             }
         }
     });
-    
-
 // The End.
+
 });

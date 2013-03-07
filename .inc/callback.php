@@ -1,7 +1,6 @@
 <?php
-
+// Terminate if this launches without a valid session
 session_start();
-
 if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
     header ("Location: session.php?id=0");
     exit();
@@ -128,19 +127,15 @@ function si() {
 function es() {   
     global $offset;
     $object = mysql_real_escape_string($_REQUEST['object']);
-    $parts = explode('-', $object);
-
-    switch ($parts[1]) {
-        case 'ccc':
-            $filter = "AND (map1.cc = '$parts[2]' OR map2.cc = '$parts[2]')";
-            break;
-        default:
-            $filter = "";
-            break;
+    $when   = hextostr($_REQUEST['ts']);
+    $filter = hextostr($_REQUEST['filter']);
+    if ($filter != 'empty') {
+        $filter = str_replace('&lt;','<', $filter);
+        $filter = str_replace('&gt;','>', $filter);
+        $filter = "AND " . $filter;
+    } else {
+        $filter = '';
     }
-
-    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
- 
     $query = "SELECT COUNT(event.signature) AS f1,
               event.signature AS f2,
               event.signature_id AS f3,
@@ -176,8 +171,15 @@ function eg() {
 
     global $offset;
     $sid = mysql_real_escape_string($_REQUEST['object']);
-    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
-
+    $when = hextostr($_REQUEST['ts']);
+    $filter = hextostr($_REQUEST['filter']);
+    if ($filter != 'empty') {
+        $filter = str_replace('&lt;','<', $filter);
+        $filter = str_replace('&gt;','>', $filter);
+        $filter = "AND " . $filter;
+    } else {
+        $filter = '';
+    }
     $query = "SELECT COUNT(signature) AS count,
               MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) AS maxTime, 
               INET_NTOA(src_ip) AS src_ip,
@@ -196,6 +198,7 @@ function eg() {
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               WHERE $when
               AND signature_id = '$sid'
+              $filter
               GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
               ORDER BY maxTime DESC";
 
@@ -208,7 +211,6 @@ function eg() {
     }
     $theJSON = json_encode($rows);
     echo $theJSON;
-
 }
 
 function ed() {

@@ -51,7 +51,6 @@ dbC();
 <title>squert</title>
 </head>
 <body>
-<form name=squert id=squert method=post action="<?php echo "index.php?id=$id&s=$s&e=$e";?>">
 <div id=tab_group class=tab_group>
 <div id=t_dash class=tab>Dashboard</div>
 <div id=t_sum class=tab>Events</div>
@@ -59,7 +58,6 @@ dbC();
 <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span></div>
 <div id=t_search class=search><div id=filters class=filter_show>filter</div><input class=search id=search type=text size=50 maxlength=1000>&nbsp;<span id=clear_search class=clear>&#x21BA;</span>
 </div>
-</form>
 <?php echo $timeLinks;?>
 </div></div>
 <br>
