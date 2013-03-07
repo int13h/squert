@@ -457,10 +457,16 @@ $(document).ready(function(){
         var theFilter = s2h('empty');
         // Check for any filters
         if ($('#search').val().length > 0) {
-            userFilter = $('#search').val();
-            // Now see if we have it listed
-            if ($("#tr_" + userFilter).length > 0) {
-                theFilter = $("#tr_" + userFilter).data('filter');
+            var fParts = $('#search').val().split(" ");
+            // Now see if it exists
+            if ($("#tr_" + fParts[0]).length > 0) {
+                tmpFilter = $("#tr_" + fParts[0]).data('filter');
+                // Now see if we need to modify the query
+                if(fParts[1]) { 
+                    theFilter = s2h(h2s(tmpFilter).replace(/\$/g, fParts[1]));
+                } else {
+                    theFilter = tmpFilter;
+                }
             }
         }
 
@@ -1105,7 +1111,7 @@ $(document).ready(function(){
         cls = 'f_row';
         if(!entry) {
             cls = 'h_row';
-            filter = "and clause";
+            filter = "empty";
             entry = {"alias": "New", "name": "New Entry", "notes": "None.", "filter": filter, "age": "1970-01-01 00:00:00"};
         }
 
@@ -1116,8 +1122,8 @@ $(document).ready(function(){
         row += "data-name=\"" + entry.name + "\" ";
         row += "data-notes=\"" + entry.notes + "\" ";
         row += "data-filter=\"" + encFilter + "\">";
-        row += "<td class=row_active>" + entry.alias + "</td>";
-        row += "<td class=row><b>" + entry.name + "</b></td>";
+        row += "<td class=f_row_active>" + entry.alias + "</td>";
+        row += "<td class=row>" + entry.name + "</td>";
         row += "<td class=row>" + entry.notes + "</td>";
         row += "<td class=row>now</td>";
         row += "<td class=row><span id=\"" + entry.alias + "\" class=\"filter_edit\">edit</span></td>";
@@ -1154,7 +1160,7 @@ $(document).ready(function(){
             head = '';
             row = '';
             head += "<thead><tr>";
-            head += "<th class=sort width=60>ALIAS</th>";
+            head += "<th class=sort width=70>ALIAS</th>";
             head += "<th class=sort width=200>NAME</th>";
             head += "<th class=sort>NOTES</th>";
             head += "<th class=sort width=150>LAST MODIFIED</th>";
@@ -1169,8 +1175,8 @@ $(document).ready(function(){
                 row += "data-name=\"" + theData[i].name + "\" ";
                 row += "data-notes=\"" + theData[i].notes + "\" ";
                 row += "data-filter=\"" + theData[i].filter + "\">";
-                row += "<td class=row_active>" + theData[i].alias + "</td>";
-                row += "<td class=row><b>" + theData[i].name + "</b></td>";
+                row += "<td class=f_row_active>" + theData[i].alias + "</td>";
+                row += "<td class=row>" + theData[i].name + "</td>";
                 row += "<td class=row>" + theData[i].notes + "</td>";
                 row += "<td class=row>" + theData[i].age + "</td>";
                 row += "<td class=row><div id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</div></td>";
@@ -1229,14 +1235,15 @@ $(document).ready(function(){
     // Filter expansion (gives access to edit as well)
     $(document).on("click", ".filter_edit", function(event) {
         currentCL = $(this).attr('id');
-
         if (!$("#filter_content")[0]) {
             openEdit(currentCL);
             $('#' + currentCL).text('close');
+            $('td:first', $(this).parents('tr')).css('background-color','#c4c4c4');
         } else {
             if($('#' + currentCL).text() == 'close') {
                 $("#filter_content").remove();       
                 $('#' + currentCL).text('edit');
+                $('td:first', $(this).parents('tr')).css('background-color','#e9e9e9');
             }    
         }
     });

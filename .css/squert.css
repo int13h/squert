@@ -90,6 +90,18 @@ font-size:11px;
 padding:3px 5px;
 }
 
+td.f_row_active {
+background:#e9e9e9;
+border:1pt solid #c4c4c4;
+border-top:none;
+border-right:none;
+border-left:none;
+color:#185FAB;
+font-weight: bold;
+font-size:11px;
+padding:3px 5px;
+}
+
 td.lt {
 background:transparent;
 border:1pt solid #c4c4c4;
@@ -920,7 +932,7 @@ background-color:#f4f4f4;
 
 td.f_row {
 border-bottom:1pt solid gray;
-background-color:#c9c9c9;
+background-color:#c4c4c4;
 font-size:12px;
 padding:10px;
 }
