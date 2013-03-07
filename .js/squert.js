@@ -405,8 +405,6 @@ $(document).ready(function(){
             }
         }
     });
-
-
  
     //
     //  Level 2
@@ -463,7 +461,9 @@ $(document).ready(function(){
                 tmpFilter = $("#tr_" + fParts[0]).data('filter');
                 // Now see if we need to modify the query
                 if(fParts[1]) { 
-                    theFilter = s2h(h2s(tmpFilter).replace(/\$/g, fParts[1]));
+                    preFilter = h2s(tmpFilter);
+                    theQuestion = fParts[1].replace(/['@|&;*\\`]/g, "");
+                    theFilter = s2h(preFilter.replace(/\$/g, theQuestion));     
                 } else {
                     theFilter = tmpFilter;
                 }
