@@ -34,7 +34,7 @@ dbC();
 <head>
 <link rel="stylesheet" type="text/css" href=".css/squert.css" />
 <script type="text/javascript" src=".js/jq.js"></script>
-<script type="text/javascript" src=".js/jquery.tablesorter.js"></script>
+<script type="text/javascript" src=".js/jquery.dataTables.js"></script>
 <script type="text/javascript" src=".js/squert.js"></script>
 <script type="text/javascript" src=".js/charts.js"></script>
 <script type="text/javascript" src=".js/worldmap.js"></script>
@@ -59,7 +59,12 @@ dbC();
 <div id=t_search class=search><div id=filters class=filter_show>filter</div><input class=search id=search type=text size=50 maxlength=1000>&nbsp;<span id=clear_search class=clear>&#x21BA;</span>
 </div>
 <?php echo $timeLinks;?>
-</div></div>
+</div>
+<div class=quick>
+<span class=link id=menu1>ungroup events</span>&nbsp;&nbsp;
+<span class=link id=menu2>create charts</span>&nbsp;&nbsp;
+<span class=link id=menu3>create map</span>
+</div>
 <br>
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
@@ -76,7 +81,7 @@ dbC();
 
 <div id=t_sum_content class=content>
 <br><div id=usr_filters></div><br>
-<br><div id=aaa-00 class=aaa></div><br>
+<br><div id=aaa-00 class=aaa></div><br><br><br>
 </div>
 
 <div id=debug class=debug>

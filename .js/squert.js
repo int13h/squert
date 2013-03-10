@@ -8,8 +8,6 @@ $(document).ready(function(){
 
     var lastclasscount = 0;
 
-    $('[id^=sort-]').tablesorter();
-
     function d2h(d) {
        return d.toString(16);
     }
@@ -66,7 +64,6 @@ $(document).ready(function(){
         "c0":[{"short": "UN", "long": "Unclassified"}]
       }
     };
-
 
     var loaderImg = "<img id=loader class=loader src=\".css/load.gif\">";
 
@@ -167,7 +164,7 @@ $(document).ready(function(){
     $('#clear_search').click(function() {
         if ($('#search').val() != '') {
             $('#search').val('');
-            eventList("0-aaa-00");
+            $("#b_update").click();           
         }
     });
 
@@ -198,7 +195,6 @@ $(document).ready(function(){
             eventCount = eventCount - lastCount;
             $("#b_event").html("<b>Events:</b> " + eventCount + " new");
         }
-
         lastCount = eventCount;
     }, emTimeout);
 
@@ -346,7 +342,7 @@ $(document).ready(function(){
     // Close open packet data
     $(document).on("click", "#ev_close_sub2", function(event) {
         closeSubRow2();
-    })
+    });
 
     //
     //  Level 1
@@ -401,7 +397,6 @@ $(document).ready(function(){
                 eventList("1-" + rowValue);
                 $("#eview").show();
                 $(".d_row").fadeTo('0','0.2');
-                
             }
         }
     });
@@ -445,36 +440,52 @@ $(document).ready(function(){
             eventList("3-" + baseID);
         }
     });
-    
+
     //
     // This creates the views for each level
     //
 
     function eventList (type) {
         var parts = type.split("-");
+        var filterMsg = '';
         var theFilter = s2h('empty');
         // Check for any filters
         if ($('#search').val().length > 0) {
             var fParts = $('#search').val().split(" ");
-            // Now see if it exists
+            // Now see if the requested filter exists
             if ($("#tr_" + fParts[0]).length > 0) {
                 tmpFilter = $("#tr_" + fParts[0]).data('filter');
                 // Now see if we need to modify the query
                 if(fParts[1]) { 
+                    // This is the base filter
                     preFilter = h2s(tmpFilter);
+                    // This is the user supplied text.
                     theQuestion = fParts[1].replace(/['@|&;*\\`]/g, "");
-                    theFilter = s2h(preFilter.replace(/\$/g, theQuestion));     
+                    // We will accept multiple questions if they are comma delimited
+                    questionParts = theQuestion.split(",");
+                    if (questionParts.length > 1) {
+                        var f = '(';
+                        for (var i = 0; i < questionParts.length; i++) {
+                            f += preFilter.replace(/\$/g, questionParts[i]);
+                            if (i != (questionParts.length - 1)) {
+                                f += " OR ";
+                            } 
+                        }
+                        f += ')'; 
+                        theFilter = s2h(f); 
+                    } else {
+                        theFilter = s2h(preFilter.replace(/\$/g, questionParts[0]));
+                    }     
                 } else {
                     theFilter = tmpFilter;
                 }
             }
-        }
+        }        
 
         switch (parts[0]) {
 
         // Level 0 view - Grouped by Signature
         case "0":
-
           urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
@@ -484,7 +495,7 @@ $(document).ready(function(){
               tbl = '';
               head = '';
               row = '';
-              head += "<thead><tr><th class=sort width=60>QUEUED</th>";
+              head += "<thead><tr id=trl1_headings><th class=sort width=60>QUEUED</th>";
               head += "<th class=sort width=60>ALL</th>";
               head += "<th class=sort width=35>SC</th>";
               head += "<th class=sort width=35>DC</th>";
@@ -565,8 +576,11 @@ $(document).ready(function(){
               tbl += "</table>";
               $('#' + parts[1] + '-' + parts[2]).after(tbl);
               $('#tl0,#tl1').fadeIn('slow');
-              $("#b_event").html("<b>Events:</b> Synchronized.");
-              $("#tl1").tablesorter({ headers: { 4: {sorter:"false"} } });
+              $("#b_event").html("<b>Events:</b>&nbsp;&nbsp;Synchronized");
+              $("#tl1").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
+              if ($('#tl4').length == 0) {
+                  loadFilters(0);
+              }
           }
           break;
 
@@ -626,14 +640,14 @@ $(document).ready(function(){
                   row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_total>" + theData[i].count + "</div></td>";
                   row += "<td class=sub>" + cells + "</td>";
                   row += "<td class=sub>" + theData[i].maxTime + "</td>";
-                  row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
-                  if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
+                  row += "<td class=sub_filter data-type=ip>" + theData[i].src_ip + "</td>";
+                  if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_filter"; }
                   sflag = getFlag(theData[i].srcc)
-                  row += "<td class=" + sclass + ">" + sflag + theData[i].src_cc + " (." + theData[i].srcc.toLowerCase() + ")" + "</td>";
-                  row += "<td class=sub_active>" + theData[i].dst_ip + "</td>";
-                  if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_active"; }
+                  row += "<td class=" + sclass + " data-type=cc>" + sflag + theData[i].src_cc + " (." + theData[i].srcc.toLowerCase() + ")" + "</td>";
+                  row += "<td class=sub_filter data-type=ip>" + theData[i].dst_ip + "</td>";
+                  if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_filter"; }
                   dflag = getFlag(theData[i].dstc)
-                  row += "<td class=" + sclass + ">" + dflag + theData[i].dst_cc + " (." + theData[i].dstc.toLowerCase() + ")" + "</td>";
+                  row += "<td class=" + sclass + " data-type=cc>" + dflag + theData[i].dst_cc + " (." + theData[i].dstc.toLowerCase() + ")" + "</td>";
                   row += "</tr>";
               }
 
@@ -644,13 +658,13 @@ $(document).ready(function(){
               $("#class_count").html(curclasscount);            
               lastclasscount = $("#class_count").html();
 
-              tbl += "<div class=eview_sub id=eview_sub><table id=tl2 class=tablesorter cellpadding=0 cellspacing=0>";
+              tbl += "<div class=eview_sub id=eview_sub><table id=tl2 class=table cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table></div>";
               $("#eview").after(tbl);
-              $("#tl2").tablesorter({ headers: { 2: {sorter:"ipAddress"}, 4: {sorter:"ipAddress"} } });
               $("#loader").remove();
+              $("#tl2").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
           }
           break;
 
@@ -699,10 +713,10 @@ $(document).ready(function(){
                   row += "<td class=sub><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv + " class=b_" + cv + ">" + cv + "</div></td>";
                   row += "<td class=sub>" + theData[i].timestamp + "</td>";
                   row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
-                  row += "<td class=sub_active>" + theData[i].src_ip + "</td>";
-                  row += "<td class=sub_active>" + src_port + "</td>";
-                  row += "<td class=sub_active>" + theData[i].dst_ip + "</td>";
-                  row += "<td class=sub_active>" + dst_port + "</td>";
+                  row += "<td class=sub>" + theData[i].src_ip + "</td>";
+                  row += "<td class=sub>" + src_port + "</td>";
+                  row += "<td class=sub>" + theData[i].dst_ip + "</td>";
+                  row += "<td class=sub>" + dst_port + "</td>";
                   row += "<td class=sub>";
                   //row += "<div class=b_notes title='Add Notes'>N</div>";
                   //row += "<div class=b_tag title='Add Tag'>T</div>";
@@ -710,19 +724,19 @@ $(document).ready(function(){
                   if (src_port != "-" && dst_port != "-") {
                       row += "<div class=b_tx data-tx=" + txdata + " title='Generate Transcript'>T</div>";
                   }
-                  row += "<div class=b_asset title='Asset Info'>A</div>";
+                  //row += "<div class=b_asset title='Asset Info'>A</div>";
                   row += "</td></tr>";
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=8><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
               tbl += "<div class=notes></div>";
-              tbl += "<table id=tl3 class=tablesorter align=center width=100% cellpadding=0 cellspacing=0>";
+              tbl += "<table id=tl3 class=table align=center width=100% cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table></td></tr>";
               $("#" + rowLoke).after(tbl);
               $(".d_row_sub").fadeTo('0','0.2');
-              $("#tl3").tablesorter({ headers: { 3: {sorter:"ipAddress"}, 5: {sorter:"ipAddress"}, 7: {sorter:"false"} } });
               $("#loader").remove();
+              $("#tl3").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
           }
           break;
 
@@ -920,7 +934,21 @@ $(document).ready(function(){
         }
     } 
 
+    //
+    // Add filter parts to box
+    //
 
+    $(document).on("click", ".sub_filter", function() {
+        var prefix = $(this).data('type');
+        var suffix = $(this).html();
+        switch (prefix) {
+            case 'ip': $('#search').val(prefix + " " + suffix); break;
+            case 'cc': pattern = /\(\.([a-zA-Z]+)\)/;
+                       cc = pattern.exec(suffix);
+                       $('#search').val(prefix + " " + cc[1]); break;  
+        } 
+        $('#search').focus();
+    });
 
     //
     // Request for transcript
@@ -1149,7 +1177,6 @@ $(document).ready(function(){
             
         var curUser = $('#t_usr').data('c_usr');
         urArgs = "type=8" + "&user=" + curUser + "&mode=query&data=0";
-
         $(function(){
             $.get(".inc/callback.php?" + urArgs, function(data){cb6(data)}); 
         });
@@ -1164,9 +1191,10 @@ $(document).ready(function(){
             head += "<th class=sort width=200>NAME</th>";
             head += "<th class=sort>NOTES</th>";
             head += "<th class=sort width=150>LAST MODIFIED</th>";
-            head += "<th class=sortr width=70>";
-            head += "<span title=refresh class=filter_refresh>&#x21BA;</span>";
-            head += "<span title=add class=filter_new>+</span>";
+            head += "<th class=sortr width=100>";
+            head += "<div title=add class=filter_new>+</div>";
+            head += "<div title=refresh class=filter_refresh>&#x21BA;</div>";
+            head += "<div title=help class=filter_help>?</div>";
             head += "</th></tr></thead>";
 
             for (var i=0; i<theData.length; i++) {
@@ -1216,6 +1244,76 @@ $(document).ready(function(){
         $('#tr_' + cl).after(row);
     }
 
+    // Help!?
+    $(document).on("click", ".filter_help", function(event) {
+        if ($('#tr_help').length == 0) {
+            row = "<tr id=tr_help><td class=fhelp colspan=5>";
+            row += "<div class=filter_parts><u><b>Filters</b></u><br><br>";
+            row += "Filters are used to add extra conditions to base queries before they are performed. ";
+            row += "When the main event page loads it displays <b>ALL</b> events for the current day. ";
+            row += "Using filters lets you manipulate the base query to return just the results you are interested in. ";
+            row += "Filters can either be explicit statements or shells that accept arguments.</div>";
+            row += "<div class=filter_parts><u><b>Usage</b></u><br><br>";  
+            row += "Once a filter has been created you can start using it right away. To do so, simply type the ";
+            row += "filters alias in the input box located at the top right corner of the interface and press the ";
+            row += "enter key. If you create a filter with the alias 'a', then you would ";
+            row += "just type 'a' and then 'enter' to perform the query and return the filtered results.<br><br>"; 
+            row += "<b>Explicit</b> filters are ";
+            row += "intended to be used for frequent queries that contain multiple but static conditions, say ";
+            row += "a filter called 'finance' that contains three sensors and IPs in a few  different "; 
+            row += "ranges.<br><br>";
+            row += "<b>Shells</b> on the other hand are a little more dynamic. For example, one of the base filters ";
+            row += "with the alias 'ip' looks like this: <br><br>";
+            row += "<b>\"filter\": \"(src_ip = INET_ATON('$') OR dst_ip = INET_ATON('$'))\"</b><br><br>";
+            row += "This filter can be used either like this <b>'ip 10.1.2.3'</b>  or like this ";
+            row += "<b>'ip 10.1.2.3,10.1.2.4,10.1.2.5'</b>. ";
+            row += "Shell filters expand '$' to whatever immediately follows the filter alias. If commas are used ";
+            row += "each additional item will also be added to the query.</div>";
+            row += "<div class=filter_parts><u><b>Query examples</b></u><br><br>";
+            row += "We are using standard MySQL vernacular so we can make use of all native functions ";
+            row += "and conditional operators. A few simple examples:<br><br>";
+            row += "=> (src_port NOT IN('80','443') AND dst_port > 1024)<br>";
+            row += "=> (src_ip NOT BETWEEN 167772160 AND 184549375 AND src_ip NOT BETWEEN 2886729728 AND 2886795263)<br>";
+            row += "=> (signature LIKE '%malware%' AND INET_ATON(dst_ip) LIKE '10.%.1.%')</div>";  
+            row += "<div class=filter_parts><u><b>Available filter fields</b></u><br><br>";
+            row += "<div class=filter_fields>";
+            row += "cid - The event ID. sid + cid = distinct event<br>";
+            row += "class - Event Classification<br>";
+            row += "dst_ip - Destination IP<br>";
+            row += "dst_port - Destination Port<br>";
+            row += "icmp_code - ICMP Code<br>";
+            row += "icmp_type - ICMP Type<br>";
+            row += "ip_csum - IP Header Checksum<br>";
+            row += "ip_flags - IP Flags<br>";
+            row += "ip_hlen - IP Header Length<br>";
+            row += "ip_id - IP Identification<br>";
+            row += "ip_len - IP Total Length<br>";
+            row += "ip_off - IP Fragment Offset<br>";
+            row += "ip_proto - IP Protocol<br>";
+            row += "ip_tos - IP Type Of Service</div>";
+            row += "<div class=filter_fields>";
+            row += "ip_ttl - IP Time To Live<br>";
+            row += "ip_ver - IP Version<br>";
+            row += "msrc.cc - Source Country Code<br>";
+            row += "mdst.cc - Destination Country Code<br>";
+            row += "priority - Event Priority<br>";
+            row += "sid - The sensor ID. sid + cid = distinct event<br>";
+            row += "signature - Event Signature<br>";
+            row += "signature_gen - Event Signature Generator<br>";
+            row += "signature_id - Event Signature ID<br>";
+            row += "signature_rev - Event Signature Revision<br>";
+            row += "src_ip - Source IP<br>";
+            row += "src_port - Source Port<br>";
+            row += "status - Analyst Classification</div></div>";
+            row += "<div class=filter_parts><br><u><b>Restoring the default Shells</b></u><br><br>";
+            row += "You can restore the default filter shells by clicking <span id=restore_links class=link>here</span>";
+            row += "</div></td></tr>"; 
+            $('#tl4').prepend(row);
+        } else {
+            $('#tr_help').remove();
+        }
+    });
+
     // Refresh filter listing
     $(document).on("click", ".filter_refresh", function(event) {
         $('#tl4').fadeOut('slow');
@@ -1228,7 +1326,11 @@ $(document).ready(function(){
         // There can be only one :/  
         if ($('#tr_New').length == 0 && $('#filter_content').length == 0) {
             newEntry = mkEntry();
-            $('#tl4').prepend(newEntry);
+            if ($('#tr_help').length == 0) {
+                $('#tl4').prepend(newEntry);
+            } else {
+                $('#tr_help').after(newEntry);
+            }
         }
     });
     
@@ -1310,6 +1412,7 @@ $(document).ready(function(){
                 $('#toRemove').remove();
             } else {
                 $('#tr_' + oldCL).before(newEntry);
+                $('td:first', $('#tr_' + oldCL)).css('background-color','#e9e9e9');
             }
 
             // If we started from a new entry, delete it.
