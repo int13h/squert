@@ -61,6 +61,7 @@ dbC();
 <?php echo $timeLinks;?>
 </div>
 <div class=quick>
+<div class=menu_rt>RT</div><div class=input_quick><input type="checkbox" id=rt checked></div>
 <div class=menu id=menu1>ungroup events</div><div class=menu id=menu2>create chart</div><div class=menu id=menu3>create map</div>
 </div>
 <br>

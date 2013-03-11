@@ -258,6 +258,10 @@ $(document).ready(function(){
         }
     });
 
+    $(document).on("click", "#rt", function(event) {
+        $("#b_update").click();
+    });
+
     //
     // Tab manipulations
     //
@@ -479,8 +483,13 @@ $(document).ready(function(){
     function eventList (type) {
         var parts = type.split("-");
         var filterMsg = '';
+        var rt = 0;
         var theFilter = s2h('empty');
         // Check for any filters
+        if ($('#rt').is(':checked')) {
+            rt = 1;
+        }
+
         if ($('#search').val().length > 0) {
             var fParts = $('#search').val().split(" ");
             // Now see if the requested filter exists
@@ -517,7 +526,7 @@ $(document).ready(function(){
 
         // Level 0 view - Grouped by Signature
         case "0":
-          urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter;
+          urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
           });
@@ -618,7 +627,7 @@ $(document).ready(function(){
         // Level 1 view - Grouped by signature, source, destination
 
         case "1":
-          urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter;
+          urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
           });
@@ -776,7 +785,7 @@ $(document).ready(function(){
         // Level 2a view - No grouping, individual events
 
         case "2a":
-          urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter;
+          urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb3a(data)});
           });
@@ -1412,8 +1421,14 @@ $(document).ready(function(){
             row += "You can restore the default filter shells by clicking <span id=restore_links class=link>here</span>";
             row += "</div></td></tr>"; 
             $('#tl4').prepend(row);
+            $('.filter_help').css('background-color','#cc0000');
+            $('.filter_help').css('color','#fff');
+            $('.filter_help').text('X');
         } else {
             $('#tr_help').remove();
+            $('.filter_help').css('background-color','#f4f4f4');
+            $('.filter_help').css('color','#000');
+            $('.filter_help').text('?');
         }
     });
 

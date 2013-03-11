@@ -128,6 +128,12 @@ function si() {
 function es() {   
     global $offset;
     $object = mysql_real_escape_string($_REQUEST['object']);
+    $rt = mysql_real_escape_string($_REQUEST['rt']);
+    if ($rt == 1) {
+        $rt = "AND event.status = 0";
+    } else {
+        $rt = "";
+    }
     $when   = hextostr($_REQUEST['ts']);
     $filter = hextostr($_REQUEST['filter']);
     if ($filter != 'empty') {
@@ -153,6 +159,7 @@ function es() {
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               WHERE $when
+              $rt
               $filter
               GROUP BY f3
               ORDER BY f5 DESC";
@@ -172,6 +179,12 @@ function eg() {
 
     global $offset;
     $sid = mysql_real_escape_string($_REQUEST['object']);
+    $rt = mysql_real_escape_string($_REQUEST['rt']);
+    if ($rt == 1) {
+        $rt = "AND event.status = 0";
+    } else {
+        $rt = "";
+    }
     $when = hextostr($_REQUEST['ts']);
     $filter = hextostr($_REQUEST['filter']);
     if ($filter != 'empty') {
@@ -198,6 +211,7 @@ function eg() {
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               WHERE $when
+              $rt
               AND signature_id = '$sid'
               $filter
               GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
@@ -218,6 +232,12 @@ function ed() {
 
     global $offset;
     $comp = mysql_real_escape_string($_REQUEST['object']);
+    $rt = mysql_real_escape_string($_REQUEST['rt']);
+    if ($rt == 1) {
+        $rt = "AND event.status = 0";
+    } else {
+        $rt = "";
+    }
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
     $adqp = hextostr(mysql_real_escape_string($_REQUEST['adqp']));
 
@@ -233,6 +253,7 @@ function ed() {
               src_port, INET_NTOA(dst_ip) AS dst_ip, dst_port, sid, cid, ip_proto
               FROM event
               WHERE $when
+              $rt
               $adqp
               AND (signature_id = '$sid' AND src_ip = '$src_ip' AND dst_ip = '$dst_ip')
               ORDER BY timestamp DESC";
@@ -251,7 +272,13 @@ function ed() {
 function ee() {
 
     global $offset;
-    $object = mysql_real_escape_string($_REQUEST['object']);
+    $rt = mysql_real_escape_string($_REQUEST['rt']);
+    if ($rt == 1) {
+        $rt = "AND event.status = 0";
+    } else {
+        $rt = "";
+    }
+
     $when   = hextostr($_REQUEST['ts']);
     $filter = hextostr($_REQUEST['filter']);
     if ($filter != 'empty') {
@@ -281,6 +308,7 @@ function ee() {
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               WHERE $when
+              $rt
               $filter
               ORDER BY timestamp DESC LIMIT 500";
 
