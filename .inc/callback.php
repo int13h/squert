@@ -16,15 +16,16 @@ $db = mysql_select_db($dbName,$link);
 $type = $_REQUEST['type'];
 
 $types = array(
-                 0 => "es",
-                 1 => "eg",
-                 2 => "ed",
-                 3 => "pd",
-                 4 => "si",
-                 5 => "tb",
-                 6 => "ec",
-                 7 => "tx",
-                 8 => "fi",
+                 '0' => 'es',
+                 '1' => 'eg',
+                 '2' => 'ed',
+                '2a' => 'ee',
+                 '3' => 'pd',
+                 '4' => 'si',
+                 '5' => 'tb',
+                 '6' => 'ec',
+                 '7' => 'tx',
+                 '8' => 'fi',
 );
 
 $type = $types[$type];
@@ -235,6 +236,53 @@ function ed() {
               $adqp
               AND (signature_id = '$sid' AND src_ip = '$src_ip' AND dst_ip = '$dst_ip')
               ORDER BY timestamp DESC";
+
+    $result = mysql_query($query);
+    $rows = array();
+
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
+    $theJSON = json_encode($rows);
+    echo $theJSON;
+
+}
+
+function ee() {
+
+    global $offset;
+    $object = mysql_real_escape_string($_REQUEST['object']);
+    $when   = hextostr($_REQUEST['ts']);
+    $filter = hextostr($_REQUEST['filter']);
+    if ($filter != 'empty') {
+        $filter = str_replace('&lt;','<', $filter);
+        $filter = str_replace('&gt;','>', $filter);
+        $filter = "AND " . $filter;
+    } else {
+        $filter = '';
+    }
+
+    $query = "SELECT event.status AS f1, 
+              CONVERT_TZ(event.timestamp,'+00:00','$offset') AS f2, 
+              INET_NTOA(event.src_ip) AS f3,
+              event.src_port AS f4, 
+              msrc.c_long AS f5,
+              msrc.cc AS f6,          
+              INET_NTOA(event.dst_ip) AS f7, 
+              event.dst_port AS f8,
+              mdst.c_long AS f9,
+              mdst.cc AS f10,
+              event.sid AS f11,
+              event.cid AS f12, 
+              event.ip_proto AS f13,
+              event.signature AS f14,
+              event.signature_id AS f15
+              FROM event
+              LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+              LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
+              WHERE $when
+              $filter
+              ORDER BY timestamp DESC LIMIT 500";
 
     $result = mysql_query($query);
     $rows = array();

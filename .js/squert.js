@@ -34,11 +34,12 @@ $(document).ready(function(){
     }
 
     function getFlag(cc) {
-
-        if (cc != "LO" && cc != null) {
+        if (cc == "LO") {
+            answer = "LO";
+        } else if (cc != null) {
             answer = "<span class=flag><img src=\".flags/" + cc + ".png\"></span>"
         } else {
-            answer = ""
+            answer = "--"
         }
         return answer;
     }
@@ -204,9 +205,19 @@ $(document).ready(function(){
 
     // Refresh page
     $("#b_update").click(function() {
-        $('#tl0,#tl1').fadeOut();
-        $('#tl0,#tl1').remove();
-        eventList("0-aaa-00");
+        var cv = $('#menu1').text();
+        switch (cv) {
+            case "ungroup events":
+                $('#tl0,#tl1').fadeOut();
+                $('#tl0,#tl1').remove();
+                eventList("0-aaa-00");
+                break;
+            case "regroup events":
+                $('#tl3a').fadeOut();
+                $('#tl3a').remove();
+                eventList("2a-aaa-00");
+                break;
+        }
     });
  
     // fire refresh on enter
@@ -227,6 +238,26 @@ $(document).ready(function(){
         $('html, body').animate({ scrollTop: 0 }, 'slow');
     });
     
+    //
+    // Menu items
+    //
+
+    $(document).on("click", "#menu1", function(event) {
+        var cv = $('#menu1').text();
+        switch (cv) {
+            case "ungroup events":
+                $('#menu1').text('regroup events');
+                $('#tl0,#tl1').remove();
+                eventList("2a-aaa-00");
+                break;
+            case "regroup events":
+                $('#menu1').text('ungroup events');
+                $('#tl3a').remove();
+                eventList("0-aaa-00");
+                break;
+        }
+    });
+
     //
     // Tab manipulations
     //
@@ -582,7 +613,7 @@ $(document).ready(function(){
                   loadFilters(0);
               }
           }
-          break;
+        break;
 
         // Level 1 view - Grouped by signature, source, destination
 
@@ -643,11 +674,13 @@ $(document).ready(function(){
                   row += "<td class=sub_filter data-type=ip>" + theData[i].src_ip + "</td>";
                   if (theData[i].src_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_filter"; }
                   sflag = getFlag(theData[i].srcc)
-                  row += "<td class=" + sclass + " data-type=cc>" + sflag + theData[i].src_cc + " (." + theData[i].srcc.toLowerCase() + ")" + "</td>";
+                  row += "<td class=" + sclass + " data-type=cc data-value=" + theData[i].srcc + ">";
+                  row += sflag + theData[i].src_cc + " (." + theData[i].srcc.toLowerCase() + ")" + "</td>";
                   row += "<td class=sub_filter data-type=ip>" + theData[i].dst_ip + "</td>";
                   if (theData[i].dst_cc == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_filter"; }
                   dflag = getFlag(theData[i].dstc)
-                  row += "<td class=" + sclass + " data-type=cc>" + dflag + theData[i].dst_cc + " (." + theData[i].dstc.toLowerCase() + ")" + "</td>";
+                  row += "<td class=" + sclass + " data-type=cc data-value=" + theData[i].dstc + ">";
+                  row += dflag + theData[i].dst_cc + " (." + theData[i].dstc.toLowerCase() + ")" + "</td>";
                   row += "</tr>";
               }
 
@@ -666,7 +699,7 @@ $(document).ready(function(){
               $("#loader").remove();
               $("#tl2").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
           }
-          break;
+        break;
 
         // Level 2 view - No grouping, individual events
 
@@ -738,7 +771,76 @@ $(document).ready(function(){
               $("#loader").remove();
               $("#tl3").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
           }
-          break;
+        break;
+ 
+        // Level 2a view - No grouping, individual events
+
+        case "2a":
+          urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter;
+          $(function(){
+              $.get(".inc/callback.php?" + urArgs, function(data){cb3a(data)});
+          });
+
+          function cb3a(data){
+              eval("theData=" + data);
+
+              tbl = '';
+              head = '';
+              row = '';
+              head += "<thead><tr>";
+              head += "<th class=sort width=10>ST</th>";
+              head += "<th class=sort width=130>TIMESTAMP</th>";
+              head += "<th class=sort width=75>ID</th>";
+              head += "<th class=sort width=100>SOURCE</th>";
+              head += "<th class=sort width=40>PORT</th>";
+              head += "<th class=sort width=30>CC</th>";
+              head += "<th class=sort width=100>DESTINATION</th>";
+              head += "<th class=sort width=40>PORT</th>";
+              head += "<th class=sort width=30>CC</th>";
+              head += "<th class=sort>SIGNATURE</th>";
+              head += "</tr></thead>";
+              
+              // update class_count
+              $("#class_count").html(theData.length);
+
+              for (var i=0; i<theData.length; i++) {
+
+                  rid = "s" + i + "-" + theData[i].f11 + "-" + theData[i].f12;
+                  eid = theData[i].f11 + "-" + theData[i].f12;
+                  row += "<tr class=d_row_sub1 id=s" + i + " data-filter=\"" + eid + "\">";
+                  tclass = "c" + theData[i].f1;
+                  cv = classifications.class[tclass][0].short;
+                  src_port = chkPort(theData[i].f4);
+                  dst_port = chkPort(theData[i].f8);
+                  txdata = "s" + i + "-" + theData[i].f12 + "-" + s2h(theData[i].f11 + "|" + theData[i].f2 + "|" + theData[i].f3 + "|" + theData[i].f4 + "|" + theData[i].f7 + "|" + theData[i].f8);
+                  
+                  row += "<td class=row><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv + " class=b_" + cv + ">" + cv + "</div></td>";
+                  row += "<td class=row>" + theData[i].f2 + "</td>";
+                  row += "<td class=row>" + theData[i].f11 + "." + theData[i].f12 + "</td>";
+                  row += "<td class=sub_filter data-type=ip>" + theData[i].f3 + "</td>";
+                  row += "<td class=row>" + src_port + "</td>";
+                  if (theData[i].f5 == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_filter"; }
+                  sflag = getFlag(theData[i].f6);
+                  row += "<td class=" + sclass + " title=\"" + theData[i].f5 + "\" data-type=cc data-value=";
+                  row += theData[i].f6 +">" + sflag + "</td>";
+                  row += "<td class=sub_filter data-type=ip>" + theData[i].f7 + "</td>";
+                  row += "<td class=row>" + dst_port + "</td>";
+                  if (theData[i].f9 == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_filter"; }
+                  sflag = getFlag(theData[i].f10);
+                  row += "<td class=" + sclass + " title=\"" + theData[i].f9 + "\" data-type=cc data-value=";
+                  row += theData[i].f10 +">" + sflag + "</td>";
+                  row += "<td class=sub_filter data-type=sid data-value=" + theData[i].f15 + ">" + theData[i].f14 + "</td>";
+              }
+              tbl += "<table id=tl3a class=main align=center width=970 cellpadding=0 cellspacing=0>";
+              tbl += head;
+              tbl += row;
+              tbl += "</table>";
+              $('#' + parts[1] + '-' + parts[2]).after(tbl);
+              $('#tl3a').fadeIn('slow');
+              $("#b_event").html("<b>Events:</b>&nbsp;&nbsp;Synchronized");
+              $("#tl3a").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
+          }
+        break;
 
         // Level 3 view - Packet Data
 
@@ -930,7 +1032,7 @@ $(document).ready(function(){
               }
               $("#loader").remove();
           }
-          break;
+        break;
         }
     } 
 
@@ -942,10 +1044,11 @@ $(document).ready(function(){
         var prefix = $(this).data('type');
         var suffix = $(this).html();
         switch (prefix) {
-            case 'ip': $('#search').val(prefix + " " + suffix); break;
-            case 'cc': pattern = /\(\.([a-zA-Z]+)\)/;
-                       cc = pattern.exec(suffix);
-                       $('#search').val(prefix + " " + cc[1]); break;  
+            case  'ip': $('#search').val(prefix + " " + suffix); break;
+            case  'cc': var cc = $(this).data('value');
+                        $('#search').val(prefix + " " + cc); break;  
+            case 'sid': var value = $(this).data('value');
+                        $('#search').val(prefix + " " + value); break; 
         } 
         $('#search').focus();
     });
@@ -1163,10 +1266,10 @@ $(document).ready(function(){
         $('#usr_filters').toggle();
         if ($('#usr_filters').css('display') == "none") {
             $('#tl4').hide();
-            $('#filters').css('text-decoration', 'none');
+            $('#filters').html('filter &#9660;');
         } else {
             $('#tl4').fadeIn();
-            $('#filters').css('text-decoration', 'underline');
+            $('#filters').html('filter &#9650;');
             if ($('#tl4').length == 0) {
                 loadFilters(1);
             }
