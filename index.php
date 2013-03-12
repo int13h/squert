@@ -34,7 +34,7 @@ dbC();
 <head>
 <link rel="stylesheet" type="text/css" href=".css/squert.css" />
 <script type="text/javascript" src=".js/jq.js"></script>
-<script type="text/javascript" src=".js/jquery.dataTables.js"></script>
+<script type="text/javascript" src=".js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src=".js/squert.js"></script>
 <script type="text/javascript" src=".js/charts.js"></script>
 <script type="text/javascript" src=".js/worldmap.js"></script>
@@ -51,20 +51,21 @@ dbC();
 <title>squert</title>
 </head>
 <body>
+<div class=upper>
 <div id=tab_group class=tab_group>
 <div id=t_dash class=tab>Dashboard</div>
 <div id=t_sum class=tab>Events</div>
 
 <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span></div>
-<div id=t_search class=search><div id=filters class=filter_show>filter &#9660;</div><input class=search id=search type=text size=50 maxlength=1000>&nbsp;<span id=clear_search class=clear>&#x21BA;</span>
+<div id=t_search class=search><div id=filters class=filter_show>filter</div><input class=search id=search type=text size=50 maxlength=1000>&nbsp;<span id=clear_search class=clear>&#x21BA;</span>
 </div>
 <?php echo $timeLinks;?>
 </div>
 <div class=quick>
-<div class=menu_rt>RT</div><div class=input_quick><input type="checkbox" id=rt checked></div>
-<div class=menu id=menu1>ungroup events</div><div class=menu id=menu2>create chart</div><div class=menu id=menu3>create map</div>
+<div class=menu_rt title="Queue">RT</div><div class=input_quick><input type="checkbox" id=rt></div>
+<div class=menu id=menu1>ungroup events</div><div class=menu id=menu2>create chart</div><div class=menu id=menu3>create map</div></div>
 </div>
-<br>
+<div class=cloud></div>
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
 <h3>Events grouped by minute and hour</h3>
@@ -77,7 +78,6 @@ dbC();
 <?php include_once '.charts/country.php';?>
 </td></tr></table>
 </div>
-
 <div id=t_sum_content class=content>
 <br><div id=usr_filters></div><br>
 <br><div id=aaa-00 class=aaa></div><br><br><br>

@@ -249,8 +249,15 @@ function ed() {
     $src_ip = sprintf("%u", ip2long($src_ip));
     $dst_ip = sprintf("%u", ip2long($dst_ip));
 
-    $query = "SELECT status, CONVERT_TZ(timestamp,'+00:00','$offset') AS timestamp, INET_NTOA(src_ip) AS src_ip,
-              src_port, INET_NTOA(dst_ip) AS dst_ip, dst_port, sid, cid, ip_proto
+    $query = "SELECT status AS f1, 
+              CONVERT_TZ(timestamp,'+00:00','$offset') AS f2,
+              INET_NTOA(src_ip) AS f3,
+              src_port AS f4,
+              INET_NTOA(dst_ip) AS f5,
+              dst_port AS f6, 
+              sid AS f7,
+              cid AS f8,
+              ip_proto AS f9
               FROM event
               WHERE $when
               $rt
@@ -330,7 +337,7 @@ function pd() {
     list($sid,$cid) = explode("-", $comp);
 
     $query = "SELECT INET_NTOA(src_ip), INET_NTOA(dst_ip), ip_ver, ip_hlen, ip_tos, ip_len, ip_id,ip_flags,
-             ip_off, ip_ttl, ip_csum, src_port, dst_port, ip_proto, signature, signature_id, CONVERT_TZ(timestamp,'+00:00','$offset')
+             ip_off, ip_ttl, ip_csum, src_port, dst_port, ip_proto, signature, signature_id, CONVERT_TZ(timestamp,'+00:00','$offset'), sid, cid
              FROM event
              WHERE sid='$sid' and cid='$cid'";
 

@@ -34,12 +34,11 @@ $(document).ready(function(){
     }
 
     function getFlag(cc) {
-        if (cc == "LO") {
-            answer = "LO";
-        } else if (cc != null) {
+
+        if (cc != "LO" && cc != null) {
             answer = "<span class=flag><img src=\".flags/" + cc + ".png\"></span>"
         } else {
-            answer = "--"
+            answer = ""
         }
         return answer;
     }
@@ -62,7 +61,7 @@ $(document).ready(function(){
         "c17":[{"short": "C7", "long": "Malware"}],
         "c2":[{"short": "ES", "long": "Escalated Event"}],
         "c1":[{"short": "NA", "long": "No Action Req'd."}],
-        "c0":[{"short": "UN", "long": "Unclassified"}]
+        "c0":[{"short": "RT", "long": "Unclassified"}]
       }
     };
 
@@ -121,46 +120,10 @@ $(document).ready(function(){
        cells += "</tr></table>";
        return cells;
     }
-
+ 
     //
-    // Row filtering by event class
+    // Filter search box
     //
-
-    function filterRows(caller,type,ec) {
-
-        if (ec !=0) {
-            closeRow();
-            rowValue = caller.replace(type,"");
-            oldValue = $('#sel_class').val();
-
-            if (rowValue == oldValue) {
-                $('tr[id^=' + type + ']').attr('class', 'a_row');
-                $('tr[id^=sid-]').attr('class', 'd_row');
-                $('.d_row').show();
-                $('#sel_class').val('-1');
-            } else {
-                $('#sel_class').val(rowValue);
-                $('tr[id^=' + type + ']').attr('class', 'a_row');
-                $('#' + caller).attr('class', 'a_row_highlight');
-                $('tr[id^=sid-]').hide();
-                $('tr[id^=sid-]').attr('class', 'a_row');
-                $("[data-class*='" + rowValue + "']").attr('class', 'd_row');
-                $("[data-class*='" + rowValue + "']").show();
-                $("[data-sid*='" + rowValue + "']").attr('class', 'd_row');
-                $("[data-sid*='" + rowValue + "']").show();
-            }
-        }
-    };
-
-    $('tr[id^=cat-]').click(function(){
-        ec = $(this).data("c_ec");
-        filterRows(this.id,"cat-",ec);
-    });
-
-    $('tr[id^=sen-]').click(function(){
-        ec = $(this).data("c_ec");
-        filterRows(this.id,"sen-",ec);
-    });
 
     $('#clear_search').click(function() {
         if ($('#search').val() != '') {
@@ -246,11 +209,13 @@ $(document).ready(function(){
         var cv = $('#menu1').text();
         switch (cv) {
             case "ungroup events":
+                //$('#rt').prop('checked', true);
                 $('#menu1').text('regroup events');
                 $('#tl0,#tl1').remove();
                 eventList("2a-aaa-00");
                 break;
             case "regroup events":
+                //$('#rt').prop('checked', false);
                 $('#menu1').text('ungroup events');
                 $('#tl3a').remove();
                 eventList("0-aaa-00");
@@ -423,7 +388,7 @@ $(document).ready(function(){
                 tbl += "<span class=small>";
                 tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span>";
                 tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
-                tbl += "<div class=right><span class=link>[show more]</span></div><br>";
+                tbl += "</div><br>";
                 tbl += catBar(curclasscount);
                 tbl += "</td></tr>";
                 $("#" + curID).find('[class*="row"]').css('background', '#CFE3A6');
@@ -462,9 +427,9 @@ $(document).ready(function(){
     //
     //  Level 3
     //
-
+    
+    // Grouped view
     $(document).on("click", ".b_pl", function() {
- 
         if (!$("#eview_sub2")[0]) {
             baseID = $(this).data('eidl');
             rowcall = baseID.split("-");
@@ -472,6 +437,19 @@ $(document).ready(function(){
             $("#" + callerID).attr('class','d_row_sub1_active');
             $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
             $(this).parent().append(loaderImg);
+            eventList("3-" + baseID);
+        }
+    });
+
+    // Ungrouped view
+    $(document).on("click", ".getpl", function() {
+        if (!$("#eview_sub2")[0]) {
+            baseID = $(this).data('eidl');
+            rowcall = baseID.split("-");
+            callerID = rowcall[0];
+            $("#" + callerID).attr('class','d_row_sub1_active');
+            $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+            $(this).html(loaderImg);
             eventList("3-" + baseID);
         }
     });
@@ -514,14 +492,14 @@ $(document).ready(function(){
                         f += ')'; 
                         theFilter = s2h(f); 
                     } else {
-                        theFilter = s2h(preFilter.replace(/\$/g, questionParts[0]));
+                        var newFilter = preFilter.replace(/\$/g, questionParts[0]);
+                        theFilter = s2h(newFilter);
                     }     
                 } else {
                     theFilter = tmpFilter;
                 }
             }
         }        
-
         switch (parts[0]) {
 
         // Level 0 view - Grouped by Signature
@@ -531,7 +509,7 @@ $(document).ready(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
           });
           function cb1(data){
-              eval("theData=" + data);
+              eval("d0=" + data);
               tbl = '';
               head = '';
               row = '';
@@ -549,18 +527,18 @@ $(document).ready(function(){
       
               // Sums for boxes 
               var sumEC = 0, sumSC = 0, sumDC = 0;
-              for (var i=0; i<theData.length; i++) {
-                 sumEC += Number(theData[i].f1);
-                 sumSC += Number(theData[i].f6);
-                 sumDC += Number(theData[i].f7);
+              for (var i=0; i<d0.length; i++) {
+                 sumEC += Number(d0[i].f1);
+                 sumSC += Number(d0[i].f6);
+                 sumDC += Number(d0[i].f7);
               }
               
-              sumSI = theData.length;
+              sumSI = d0.length;
 
-              for (var i=0; i<theData.length; i++) {
+              for (var i=0; i<d0.length; i++) {
 
                   // How many events are not categorized?
-                  unClass = theData[i].f11.split(",").filter(function(x){return x==0}).length;
+                  unClass = d0[i].f11.split(",").filter(function(x){return x==0}).length;
 
                   // Colour based on event presence
                   if ( unClass > 0 ) {
@@ -572,25 +550,26 @@ $(document).ready(function(){
                   }
 
                   rid = "r" + i + "-" + parts[1];
-                  cells = mkGrid(theData[i].f12);
-                  row += "<tr class=d_row id=sid-" + theData[i].f3 + "-" + theData[i].f4;
-                  row += " data-class=" + " data-sid=" + " data-event_count=" + theData[i].f1 + ">";
+                  cells = mkGrid(d0[i].f12);
+                  row += "<tr class=d_row id=sid-" + d0[i].f3 + "-" + d0[i].f4;
+                  row += " data-class=" + " data-sid=" + " data-event_count=" + d0[i].f1 + ">";
                   row += "<td class=" + isActive + "><div class=" + rtClass + ">" + unClass + "</div></td>";
-                  row += "<td class=row_active><div class=b_ec_total>" + theData[i].f1 + "</div></td>";
-                  row += "<td class=row><span class=red>" + theData[i].f6 + "</span></td>";
-                  row += "<td class=row><span class=blue>" + theData[i].f7 + "</span></td>";
+                  row += "<td class=row_active><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
+                  row += "<td class=row><span class=red>" +d0[i].f6+ "</span></td>";
+                  row += "<td class=row><span class=blue>" +d0[i].f7+ "</span></td>";
 
-                  timeParts = theData[i].f5.split(" ");
+                  timeParts = d0[i].f5.split(" ");
                   timeStamp = timeParts[1];
 
                   row += "<td class=row>" + cells + "</td>";
                   row += "<td class=row>" + timeStamp + "</td>";
-                  row += "<td class=row>" + theData[i].f2 + "</td>";
-                  row += "<td class=row>" + theData[i].f3 + "</td>";
-                  row += "<td class=row>" + theData[i].f8 + "</td>";
+                  row += "<td class=row_filter data-type=sid data-value=";
+                  row += d0[i].f3 + ">" + d0[i].f2 + "</td>";
+                  row += "<td class=row>" + d0[i].f3 + "</td>";
+                  row += "<td class=row>" + d0[i].f8 + "</td>";
                   
                   if( sumEC > 0) {
-                      rowPer = Number(theData[i].f1/sumEC*100).toFixed(3);
+                      rowPer = Number(d0[i].f1/sumEC*100).toFixed(3);
                   } else {
                       rowPer = "0.000%";
                   }
@@ -617,7 +596,7 @@ $(document).ready(function(){
               $('#' + parts[1] + '-' + parts[2]).after(tbl);
               $('#tl0,#tl1').fadeIn('slow');
               $("#b_event").html("<b>Events:</b>&nbsp;&nbsp;Synchronized");
-              $("#tl1").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
+              $("#tl1").tablesorter();
               if ($('#tl4').length == 0) {
                   loadFilters(0);
               }
@@ -706,15 +685,15 @@ $(document).ready(function(){
               tbl += "</table></div>";
               $("#eview").after(tbl);
               $("#loader").remove();
-              $("#tl2").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
+              $("#tl2").tablesorter();
           }
         break;
 
         // Level 2 view - No grouping, individual events
 
         case "2":
-          rowLoke = parts[1];
-          filter = $('#' + parts[1]).data('filter');
+          var rowLoke = parts[1];
+          var filter = $('#' + parts[1]).data('filter');
 
           urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2];
           $(function(){
@@ -722,51 +701,53 @@ $(document).ready(function(){
           });
 
           function cb3(data){
-              eval("theData=" + data);
+              eval("d2=" + data);
 
               tbl = '';
               head = '';
               row = '';
               head += "<thead><tr>";
-              head += "<th class=sub1 width=10>ST</th>";
+              head += "<th class=sub1 width=20 colspan=2>ST</th>";
               head += "<th class=sub1 width=140>Timestamp</th>";
               head += "<th class=sub1 width=100>EventID</th>";
               head += "<th class=sub1 width=100>Source</th>";
               head += "<th class=sub1 width=40>Port</th>";
               head += "<th class=sub1 width=100>Destination</th>";
               head += "<th class=sub1 width=40>Port</th>";
-              head += "<th class=sub1 width=180>Actions</th>";
+              head += "<th class=sub1>Actions</th>";
               head += "</tr></thead>";
               
               // update class_count
-              $("#class_count").html(theData.length);
+              $("#class_count").html(d2.length);
 
-              for (var i=0; i<theData.length; i++) {
+              for (var i=0; i<d2.length; i++) {
 
-                  rid = "s" + i + "-" + theData[i].sid + "-" + theData[i].cid;
-                  eid = theData[i].sid + "-" + theData[i].cid;
-                  row += "<tr class=d_row_sub1 id=s" + i + " data-filter=\"" + eid + "\">";
-                  tclass = "c" + theData[i].status;
+                  rid = "s" + i + "-" + d2[i].f7 + "-" + d2[i].f8;
+                  eid = d2[i].f7 + "-" + d2[i].f8;
+                  row += "<tr class=d_row_sub1 id=s" + i + " data-cols=9 data-filter=\"" + eid + "\">";
+                  tclass = "c" + d2[i].f1;
                   cv = classifications.class[tclass][0].short;
-                  src_port = chkPort(theData[i].src_port);
-                  dst_port = chkPort(theData[i].dst_port);
-                  txdata = "s" + i + "-" + theData[i].cid + "-" + s2h(theData[i].sid + "|" + theData[i].timestamp + "|" + theData[i].src_ip + "|" + theData[i].src_port + "|" + theData[i].dst_ip + "|" + theData[i].dst_port);
-                  
-                  row += "<td class=sub><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv + " class=b_" + cv + ">" + cv + "</div></td>";
-                  row += "<td class=sub>" + theData[i].timestamp + "</td>";
-                  row += "<td class=sub>" + theData[i].sid + "." + theData[i].cid + "</td>";
-                  row += "<td class=sub>" + theData[i].src_ip + "</td>";
-                  row += "<td class=sub>" + src_port + "</td>";
-                  row += "<td class=sub>" + theData[i].dst_ip + "</td>";
-                  row += "<td class=sub>" + dst_port + "</td>";
+                  src_port = chkPort(d2[i].f4);
+                  dst_port = chkPort(d2[i].f6);
+                  txdata = "s" + i + "-" + d2[i].f8 + "-" + s2h(d2[i].f7 + "|" + d2[i].f2 + "|" + d2[i].f3 + "|" + d2[i].f4 + "|" + d2[i].f5 + "|" + d2[i].f6);
+                  row += "<td class=row><input id=eid" + i + " type=checkbox value=\"" + eid + "\">";
+                  row += "<td class=row><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv;
+                  row += " class=b_" + cv + ">" + cv + "</div></td>";
+                  row += "<td class=sub>" + d2[i].f2 + "</td>";
+                  row += "<td class=sub><span class=getpl data-eidl=s" + i + " title=\"View Payload\">";
+                  row += d2[i].f7 + "." + d2[i].f8 + "</span></td>";
+                  row += "<td class=sub_filter data-type=ip>" + d2[i].f3 + "</td>";
+                  row += "<td class=sub_filter data-type=spt>" + src_port + "</td>";
+                  row += "<td class=sub_filter data-type=ip>" + d2[i].f5 + "</td>";
+                  row += "<td class=sub_filter data-type=dpt>" + dst_port + "</td>";
                   row += "<td class=sub>";
-                  //row += "<div class=b_notes title='Add Notes'>N</div>";
-                  //row += "<div class=b_tag title='Add Tag'>T</div>";
                   row += "<div class=b_pl data-eidl=s" + i + " title='View Payload'>P</div>";
                   if (src_port != "-" && dst_port != "-") {
                       row += "<div class=b_tx data-tx=" + txdata + " title='Generate Transcript'>T</div>";
                   }
-                  //row += "<div class=b_asset title='Asset Info'>A</div>";
+                  row += "<div class=b_asset title='Asset Info'>A</div>";
+                  row += "<div class=b_notes title='Add Notes'>N</div>";
+                  row += "<div class=b_tag title='Add Tag'>G</div>";
                   row += "</td></tr>";
               }
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=8><div id=ev_close_sub class=close_sub><div class=b_close title='Close'>X</div></div>";
@@ -778,7 +759,7 @@ $(document).ready(function(){
               $("#" + rowLoke).after(tbl);
               $(".d_row_sub").fadeTo('0','0.2');
               $("#loader").remove();
-              $("#tl3").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
+              $("#tl3").tablesorter();
           }
         break;
  
@@ -791,13 +772,13 @@ $(document).ready(function(){
           });
 
           function cb3a(data){
-              eval("theData=" + data);
+              eval("d2a=" + data);
 
               tbl = '';
               head = '';
               row = '';
               head += "<thead><tr>";
-              head += "<th class=sort width=10>ST</th>";
+              head += "<th class=sort colspan=2 width=20>ST</th>";
               head += "<th class=sort width=130>TIMESTAMP</th>";
               head += "<th class=sort width=75>ID</th>";
               head += "<th class=sort width=100>SOURCE</th>";
@@ -810,35 +791,46 @@ $(document).ready(function(){
               head += "</tr></thead>";
               
               // update class_count
-              $("#class_count").html(theData.length);
+              $("#class_count").html(d2a.length);
+              for (var i=0; i<d2a.length; i++) {
 
-              for (var i=0; i<theData.length; i++) {
-
-                  rid = "s" + i + "-" + theData[i].f11 + "-" + theData[i].f12;
-                  eid = theData[i].f11 + "-" + theData[i].f12;
-                  row += "<tr class=d_row_sub1 id=s" + i + " data-filter=\"" + eid + "\">";
-                  tclass = "c" + theData[i].f1;
+                  rid = "s" + i + "-" + d2a[i].f11 + "-" + d2a[i].f12;
+                  eid = d2a[i].f11 + "-" + d2a[i].f12;
+                  row += "<tr class=d_row_sub1 id=s" + i + " data-cols=11 data-filter=\"" + eid + "\">";
+                  tclass = "c" + d2a[i].f1;
                   cv = classifications.class[tclass][0].short;
-                  src_port = chkPort(theData[i].f4);
-                  dst_port = chkPort(theData[i].f8);
-                  txdata = "s" + i + "-" + theData[i].f12 + "-" + s2h(theData[i].f11 + "|" + theData[i].f2 + "|" + theData[i].f3 + "|" + theData[i].f4 + "|" + theData[i].f7 + "|" + theData[i].f8);
-                  
-                  row += "<td class=row><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv + " class=b_" + cv + ">" + cv + "</div></td>";
-                  row += "<td class=row>" + theData[i].f2 + "</td>";
-                  row += "<td class=row>" + theData[i].f11 + "." + theData[i].f12 + "</td>";
-                  row += "<td class=sub_filter data-type=ip>" + theData[i].f3 + "</td>";
-                  row += "<td class=row>" + src_port + "</td>";
-                  if (theData[i].f5 == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_filter"; }
-                  sflag = getFlag(theData[i].f6);
-                  row += "<td class=" + sclass + " title=\"" + theData[i].f5 + "\" data-type=cc data-value=";
-                  row += theData[i].f6 +">" + sflag + "</td>";
-                  row += "<td class=sub_filter data-type=ip>" + theData[i].f7 + "</td>";
-                  row += "<td class=row>" + dst_port + "</td>";
-                  if (theData[i].f9 == "RFC1918") { sclass = "sub_light"; } else { sclass = "sub_filter"; }
-                  sflag = getFlag(theData[i].f10);
-                  row += "<td class=" + sclass + " title=\"" + theData[i].f9 + "\" data-type=cc data-value=";
-                  row += theData[i].f10 +">" + sflag + "</td>";
-                  row += "<td class=sub_filter data-type=sid data-value=" + theData[i].f15 + ">" + theData[i].f14 + "</td>";
+                  src_port = chkPort(d2a[i].f4);
+                  dst_port = chkPort(d2a[i].f8);
+                  txdata = "s" + i + "-" + d2a[i].f12 + "-" + s2h(d2a[i].f11 + "|" + d2a[i].f2 + "|" + d2a[i].f3 + "|" + d2a[i].f4 + "|" + d2a[i].f7 + "|" + d2a[i].f8);
+                  row += "<td class=row><input id=eid" + i + " type=checkbox value=\"" + eid + "\">";
+                  row += "<td class=row><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv;
+                  row += " class=b_" + cv + ">" + cv + "</div></td>";
+                  row += "<td class=row>" + d2a[i].f2 + "</td>";
+                  row += "<td class=row><span class=getpl data-eidl=s" + i + " title=\"View Payload\">";
+                  row += d2a[i].f11 + "." + d2a[i].f12 + "</span></td>";
+                  row += "<td class=sub_filter data-type=ip>" + d2a[i].f3 + "</td>";
+                  row += "<td class=sub_filter data-type=spt>" + src_port + "</td>";
+                  if (d2a[i].f5 == "RFC1918") { 
+                      sclass = "sub_light"; 
+                      sflag = "LO";
+                  } else { 
+                      sclass = "sub_filter";
+                      sflag = getFlag(d2a[i].f6); 
+                  }
+                  row += "<td class=" + sclass + " title=\"" + d2a[i].f5 + "\" data-type=cc data-value=";
+                  row += d2a[i].f6 +">" + sflag + "</td>";
+                  row += "<td class=sub_filter data-type=ip>" + d2a[i].f7 + "</td>";
+                  row += "<td class=sub_filter data-type=dpt>" + dst_port + "</td>";
+                  if (d2a[i].f9 == "RFC1918") { 
+                      sclass = "sub_light";
+                      sflag = "LO"; 
+                  } else { 
+                      sclass = "sub_filter";
+                      sflag = getFlag(d2a[i].f10);
+                  }
+                  row += "<td class=" + sclass + " title=\"" + d2a[i].f9 + "\" data-type=cc data-value=";
+                  row += d2a[i].f10 +">" + sflag + "</td>";
+                  row += "<td class=sub_filter data-type=sid data-value=" + d2a[i].f15 + ">" + d2a[i].f14 + "</td>";
               }
               tbl += "<table id=tl3a class=main align=center width=970 cellpadding=0 cellspacing=0>";
               tbl += head;
@@ -847,7 +839,7 @@ $(document).ready(function(){
               $('#' + parts[1] + '-' + parts[2]).after(tbl);
               $('#tl3a').fadeIn('slow');
               $("#b_event").html("<b>Events:</b>&nbsp;&nbsp;Synchronized");
-              $("#tl3a").dataTable({"bPaginate": false,"bInfo": false,"bFilter": false});
+              $("#tl3a").tablesorter();
           }
         break;
 
@@ -855,6 +847,7 @@ $(document).ready(function(){
 
         case "3":
           var rowLoke = parts[1];
+          var nCols = $('#' + parts[1]).data('cols');
           var filter = $('#' + parts[1]).data('filter');
 
           urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
@@ -1027,7 +1020,7 @@ $(document).ready(function(){
               row += "<td class=sub><samp>" + p_ascii + "<samp></td>";
               row += "</td></tr></table>";
                     
-              tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=8><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
+              tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
               tbl += "<div class=notes_sub2 id=notes></div>";
               tbl += head;
               tbl += row;
@@ -1039,7 +1032,7 @@ $(document).ready(function(){
               if ( rC <= 399 ) {
                   $(".d_row_sub1").fadeTo('fast','0.2');
               }
-              $("#loader").remove();
+              $("#" + rowLoke).find('.getpl').html(theData[0].sid + "." + theData[0].cid);
           }
         break;
         }
@@ -1049,7 +1042,7 @@ $(document).ready(function(){
     // Add filter parts to box
     //
 
-    $(document).on("click", ".sub_filter", function() {
+    $(document).on("click", ".sub_filter,.row_filter", function() {
         var prefix = $(this).data('type');
         var suffix = $(this).html();
         switch (prefix) {
@@ -1058,6 +1051,8 @@ $(document).ready(function(){
                         $('#search').val(prefix + " " + cc); break;  
             case 'sid': var value = $(this).data('value');
                         $('#search').val(prefix + " " + value); break; 
+            case 'spt': $('#search').val(prefix + " " + suffix); break;
+            case 'dpt': $('#search').val(prefix + " " + suffix); break;
         } 
         $('#search').focus();
     });
@@ -1245,6 +1240,23 @@ $(document).ready(function(){
     // Filters
     //
 
+    // Open can close the view
+    $('#filters').click(function() {
+        $('#usr_filters').toggle();
+        if ($('#usr_filters').css('display') == "none") {
+            $('#tl4').hide();
+        } else {
+            $('#tl4').fadeIn();
+            if ($('#tl4').length == 0) {
+                loadFilters(1);
+            }
+        }
+    }); 
+
+    $(document).on("click", ".filter_close", function(event) {
+        $('#filters').click();
+    });
+
     // Create entries
     function mkEntry(entry) {
 
@@ -1271,20 +1283,6 @@ $(document).ready(function(){
         return row;
     }
 
-    $('#filters').click(function() {
-        $('#usr_filters').toggle();
-        if ($('#usr_filters').css('display') == "none") {
-            $('#tl4').hide();
-            $('#filters').html('filter &#9660;');
-        } else {
-            $('#tl4').fadeIn();
-            $('#filters').html('filter &#9650;');
-            if ($('#tl4').length == 0) {
-                loadFilters(1);
-            }
-        }
-    }); 
-
     function loadFilters(show) {
             
         var curUser = $('#t_usr').data('c_usr');
@@ -1303,7 +1301,8 @@ $(document).ready(function(){
             head += "<th class=sort width=200>NAME</th>";
             head += "<th class=sort>NOTES</th>";
             head += "<th class=sort width=150>LAST MODIFIED</th>";
-            head += "<th class=sortr width=100>";
+            head += "<th class=sortr width=120>";
+            head += "<div title=close class=filter_close>x</div>";
             head += "<div title=add class=filter_new>+</div>";
             head += "<div title=refresh class=filter_refresh>&#x21BA;</div>";
             head += "<div title=help class=filter_help>?</div>";
@@ -1426,8 +1425,8 @@ $(document).ready(function(){
             $('.filter_help').text('X');
         } else {
             $('#tr_help').remove();
-            $('.filter_help').css('background-color','#f4f4f4');
-            $('.filter_help').css('color','#000');
+            $('.filter_help').css('background-color','#888888');
+            $('.filter_help').css('color','#fff');
             $('.filter_help').text('?');
         }
     });

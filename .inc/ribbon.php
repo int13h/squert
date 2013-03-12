@@ -163,12 +163,4 @@ if ($rStart == $rEnd) {
 
 // The ribbon
 $timeLinks = mkLinks();
-
-// Today link
-if (strtotime($today) != strtotime($endDate)) {
-    $page = ltrim($_SERVER['PHP_SELF'],"");
-    $todayLink = "<div class=today>You are viewing a day in the past, <a href=\"$page?id=$id&s=$today&e=$today\">click here to view today</a></div>";
-} else {
-    $todayLink = "";
-}
 ?>

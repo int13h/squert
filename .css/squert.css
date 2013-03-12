@@ -45,6 +45,16 @@ margin-top:-1px;
 text-align:center;
 }
 
+div.cloud {
+top:0;
+left:0;
+width:100%;
+height:110px;
+position:fixed;
+background-color:#ffffff;
+opacity:0.6;
+}
+
 .input_quick {
 float:left;
 padding-right:8px;
@@ -100,7 +110,7 @@ text-align:left;
 padding:5px;
 }
 
-td.row,td.row_active {
+td.row,td.row_active,.row_filter {
 background:transparent;
 border:1pt solid #c4c4c4;
 border-top:none;
@@ -302,7 +312,7 @@ text-decoration:none;
 cursor:pointer;
 }
 
-td.sub_filter:hover {
+td.sub_filter:hover, td.row_filter:hover {
 text-decoration: underline;
 cursor: pointer;
 }
@@ -365,6 +375,14 @@ margin-top:-25px;
 padding:0 30px 20px 0;
 }
 
+div.upper {
+top:0;
+left:0;
+position:fixed;
+clear:both;
+z-index:9;
+}
+
 div.tab_group {
 top:0;
 left:0;
@@ -400,7 +418,9 @@ padding:10px;
 }
 
 div.content_active {
+width:100%;
 clear:both;
+margin-top:100px;
 }
 
 div.user {
@@ -592,13 +612,12 @@ padding:0 5px;
 }
 
 th.sort,th.sortr {
-background:#d8d8d8;
+background:#c9c7c7;
 color:#545454;
 cursor:pointer;
 font-size:10px;
 border:none;
-border-bottom:1pt solid gray;
-padding:10px 0 10px 5px;
+padding:15px 0 15px 5px;
 }
 
 th.sort {
@@ -620,7 +639,6 @@ width:120px;
 color:#000;
 background:#e9e9e9;
 display:table;
-border:1pt solid #545454;
 font-weight:700;
 text-align:center;
 font-size:30px;
@@ -640,7 +658,6 @@ div.b_ec_cold {
 float:left;
 font-weight:700;
 text-align:center;
-border:1pt solid #545454;
 border-radius:3px;
 background:gray;
 color:#fff;
@@ -653,7 +670,6 @@ div.b_ec_hot {
 float:left;
 font-weight:700;
 text-align:center;
-border:1pt solid #545454;
 border-radius:3px;
 background:#c8000a;
 color:#fff;
@@ -666,7 +682,6 @@ div.b_ec_total {
 float:left;
 font-weight:700;
 text-align:center;
-border:1pt solid #757575;
 border-radius:3px;
 background:#e9e9e9;
 color:gray;
@@ -819,7 +834,6 @@ cursor:pointer;
 .b_null {
 float:left;
 text-align:center;
-border:1pt solid transparent;
 color:gray;
 margin-left:4px;
 margin-right:4px;
@@ -828,11 +842,10 @@ width:15px;
 padding:5px;
 }
 
-.b_C1,.b_C2,.b_C3,.b_C4,.b_C5,.b_C6,.b_C7,.b_ES,.b_NA,.b_UN,.b_SE {
+.b_C1,.b_C2,.b_C3,.b_C4,.b_C5,.b_C6,.b_C7,.b_ES,.b_NA,.b_RT,.b_SE {
 float:left;
 font-weight:700;
 text-align:center;
-border:1pt solid #545454;
 border-radius:3px;
 color:#000;
 margin-left:4px;
@@ -880,6 +893,11 @@ background-color:#ADD8E6;
 
 .b_SE {
 background-color:#000;
+color:#fff;
+}
+
+.b_RT {
+background-color:#cc0000;
 color:#fff;
 }
 
@@ -944,7 +962,7 @@ padding:10px;
 .filter_show, .menu {
 font-weight:400;
 text-align:center;
-border-radius:5px;
+border-radius:3px;
 margin-left:4px;
 margin-right:10px;
 font-size:11px;
@@ -957,9 +975,9 @@ height:14px;
 }
 
 .menu_rt {
-font-weight:400;
+font-weight:bold;
 text-align:center;
-border-radius:5px;
+border-radius:3px;
 margin-left:4px;
 margin-right:2px;
 font-size:11px;
@@ -969,17 +987,17 @@ background-color:#cc0000;
 color:#ffffff;
 width:25px;
 float:left;
-border: 1pt solid #000;
+border: 1pt solid #cc0000;
 }
 
 .filter_show {
 width:50px;
-border:1pt solid lightblue;
+border:1pt solid #185FAB;
 }
 
 .menu {
 width:95px;
-border:1pt solid lightblue;
+border:1pt solid #185FAB;
 }
 
 .filter_show:hover, .menu:hover {
@@ -990,7 +1008,6 @@ background-color:#2C77C7;
 float:right;
 font-weight:400;
 text-align:center;
-border:1pt solid #545454;
 border-radius:3px;
 margin-left:4px;
 margin-right:5px;
@@ -1011,22 +1028,21 @@ color:#fff;
 margin-left:10px;
 }
 
-.filter_new:hover,.filter_refresh:hover,.filter_edit:hover,.filter_update:hover,.filter_remove:hover {
+.filter_close:hover,.filter_new:hover,.filter_refresh:hover,.filter_edit:hover,.filter_update:hover,.filter_remove:hover {
 background-color:#fff;
 color:#000;
 }
 
-.filter_new,.filter_refresh,.filter_help {
-background-color:#fff;
-color:#000;
+.filter_new,.filter_refresh,.filter_help,.filter_close {
+background-color:#888888;
+color:#fff;
 font-size:12px;
 font-weight:400;
 text-align:center;
-border:1pt solid #c9c9c9;
 border-radius:3px;
 width:20px;
 height: 15px;
-padding:0 2px;
+padding:0 3px;
 float: right;
 margin-left: 2px;
 margin-right: 2px;
@@ -1123,8 +1139,8 @@ td.c_on:hover,.b_UN {
 background-color:red;
 }
 
-div.b_tx:hover,div.b_pl:hover,div.b_notes:hover,div.b_tag:hover,div.b_clsfy:hover,div.b_asset:hover,div.b_close:hover,div.b_close_r:hover,.b_C1:hover,.b_C2:hover,.b_C3:hover,.b_C4:hover,.b_C5:hover,.b_C6:hover,.b_C7:hover,.b_ES:hover,.b_NA:hover,.b_UN:hover,.b_SE:hover {
-background:#fff;
+div.b_tx:hover,div.b_pl:hover,div.b_notes:hover,div.b_tag:hover,div.b_clsfy:hover,div.b_asset:hover,div.b_close:hover,div.b_close_r:hover,.b_C1:hover,.b_C2:hover,.b_C3:hover,.b_C4:hover,.b_C5:hover,.b_C6:hover,.b_C7:hover,.b_ES:hover,.b_NA:hover,.b_SE:hover,.b_RT:hover {
+background:#e9e9e9;
 color:#000;
 cursor:pointer;
 }
@@ -1138,3 +1154,9 @@ div.b_clsfy,.filter_remove {
 background-color:#c00;
 color:#fff;
 }
+
+.getpl:hover {
+text-decoration:underline;
+cursor:pointer;
+}
+
