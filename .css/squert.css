@@ -54,6 +54,28 @@ margin-top:-1px;
 text-align:center;
 }
 
+div.cat_box {
+position:fixed;
+clear:both;
+top:200px;
+right:0;
+width:25px;
+border-left:1pt solid #000;
+border-top:1pt solid #000;
+border-bottom:1pt solid #000;
+border-bottom-left-radius:5px;
+border-top-left-radius:5px;
+padding:5px;
+padding-right:10px;
+text-align:center;
+background-color:#e9e9e9;
+}
+
+div.cat_ct {
+height:30px;
+text-align:center;
+}
+
 div.cloud {
 top:0;
 left:0;
@@ -1088,8 +1110,8 @@ background-color:red;
 }
 
 div.b_close:hover,div.b_close_r:hover,.b_C1:hover,.b_C2:hover,.b_C3:hover,.b_C4:hover,.b_C5:hover,.b_C6:hover,.b_C7:hover,.b_ES:hover,.b_NA:hover,.b_SE:hover,.b_RT:hover {
-background:#e9e9e9;
-color:#000;
+background:#666666;
+color:#fff;
 cursor:pointer;
 }
 

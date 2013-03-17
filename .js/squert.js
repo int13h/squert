@@ -63,27 +63,6 @@ $(document).ready(function(){
       }
     };
 
-    function catBar(count) {
-        bar =  "<div class=effs><div class=left>&nbsp;</div>";
-        bar += "<div class=b_null>F1</div><div class=b_null>F2</div><div class=b_null>F3</div>";
-        bar += "<div class=b_null>F4</div><div class=b_null>F5</div><div class=b_null>F6</div>";
-        bar += "<div class=b_null>F7</div><div class=b_null>F8</div><div class=b_null>F9</div>";
-        bar += "</div>";
-        bar += "<div class=event_class>";
-        bar += "<div class=left>categorize <span class=bold id=class_count>" + count + "</span> event(s):</div>";
-        bar += "<div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>";
-        bar += "<div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>";
-        bar += "<div id=b_class-13 class=b_C3 title='Attempted Unauthorized Access'>C3</div>";
-        bar += "<div id=b_class-14 class=b_C4 title='Denial of Service Attack'>C4</div>";
-        bar += "<div id=b_class-15 class=b_C5 title='Policy Violation'>C5</div>";
-        bar += "<div id=b_class-16 class=b_C6 title='Reconnaissance'>C6</div>";
-        bar += "<div id=b_class-17 class=b_C7 title='Malware'>C7</div>";
-        bar += "<div id=b_class-1  class=b_NA title='No Action Req&#x2019;d.'>NA</div>";
-        bar += "<div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>";
-        bar += "</div>";
-        return bar;
-    }
-
     //
     // Grid
     //
@@ -326,7 +305,7 @@ $(document).ready(function(){
     }
 
     // Reset if headings are clicked
-    $("th.sort").click(function() {
+    $(document).on("click", ".sort", function(event) {
         closeRow();
     });
     
@@ -355,14 +334,15 @@ $(document).ready(function(){
 
     $(document).on("click", ".row_active", function(event) {
 
-        $("#loader").show();
         var curID = $(this).parent().attr('id');        
         // What type of row are we?
         rowType = curID.substr(0,3);
 
         // Make sure no other instances are open
         if (!$(".d_row_active")[0] && rowType == 'sid') {          
- 
+
+            $("#loader").show(); 
+            
             // This leaves us with sid-gid
             rowValue = curID.replace("sid-","");
      
@@ -396,7 +376,6 @@ $(document).ready(function(){
                 tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span>";
                 tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
                 tbl += "</div><br>";
-                tbl += catBar(curclasscount);
                 tbl += "</td></tr>";
                 $("#" + curID).after(tbl);
                 eventList("1-" + rowValue);
@@ -423,7 +402,7 @@ $(document).ready(function(){
             rowcall = baseID.split("-");
             callerID = rowcall[0];
             $("#" + callerID).attr('class','d_row_sub_active');
-            $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+            $("#" + callerID).find('[class*="sub"]').css('border-top', '1pt solid #c9c9c9');
             $("#loader").show();
             eventList("2-" + baseID + "-" + adqp);
         }  
@@ -555,7 +534,7 @@ $(document).ready(function(){
               tbl = '';
               head = '';
               row = '';
-              head += "<thead><tr id=trl1_headings><th class=sort width=60>QUEUED</th>";
+              head += "<thead><tr><th class=sort width=60>QUEUED</th>";
               head += "<th class=sort width=60>ALL</th>";
               head += "<th class=sort width=35>SC</th>";
               head += "<th class=sort width=35>DC</th>";
@@ -845,7 +824,7 @@ $(document).ready(function(){
               head = '';
               row = '';
               head += "<thead><tr>";
-              head += "<th class=sub width=10><input class=chk id=root_2a type=checkbox></th>";
+              head += "<th class=sub width=10><input class=chk_all type=checkbox></th>";
               head += "<th class=sub width=20>ST</th>";
               head += "<th class=sub width=120>TIMESTAMP</th>";
               head += "<th class=sub width=100>ID</th>";
@@ -1557,9 +1536,9 @@ $(document).ready(function(){
                     eMsg += "<span class=warn><br>Format error!</span> ";
                     eMsg += "Please ensure the format above is valid JSON. ";
                     eMsg += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> ";
-                    eMsg += "pairs.<br> Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except";
+                    eMsg += "pairs.<br> Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except ";
                     eMsg += "the last pair before the closing curly brace <b>\"}\"</b>.";
-                    eMsg += " Strings must be enclosed within double quotes";
+                    eMsg += " Strings must be enclosed within double quotes.";
            }
            $('.filter_error').append(eMsg);
            $('.filter_error').fadeIn();
