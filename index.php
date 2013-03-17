@@ -32,6 +32,8 @@ dbC();
    "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
 <link rel="stylesheet" type="text/css" href=".css/squert.css" />
 <script type="text/javascript" src=".js/jq.js"></script>
 <script type="text/javascript" src=".js/jquery.tablesorter.min.js"></script>
@@ -82,9 +84,8 @@ dbC();
 <br><div id=usr_filters></div><br>
 <br><div id=aaa-00 class=aaa></div><br><br><br>
 </div>
-
 <div id=bottom class=bottom>
-<div id=b_tray class=b_tray></span><span id=b_tray_items><span></div>
+<div id=b_tray class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
 <div id=b_class class=b_class><span class=class_msg></span>&nbsp;</div>
 <div id=b_event class=b_event></div>
 <div id=b_update class=b_update>update</div>

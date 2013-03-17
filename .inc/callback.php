@@ -257,7 +257,9 @@ function ed() {
               dst_port AS f6, 
               sid AS f7,
               cid AS f8,
-              ip_proto AS f9
+              ip_proto AS f9,
+              signature AS f10,
+              signature_id AS f11
               FROM event
               WHERE $when
               $rt
@@ -317,7 +319,7 @@ function ee() {
               WHERE $when
               $rt
               $filter
-              ORDER BY timestamp DESC LIMIT 500";
+              ORDER BY timestamp DESC";
 
     $result = mysql_query($query);
     $rows = array();
@@ -458,10 +460,10 @@ function fi() {
 
     switch ($mode) {
         case "query"  : 
-            $query = "SELECT UNHEX(name) AS name, alias, filter, UNHEX(notes) as notes, age
+            $query = "SELECT UNHEX(name) AS name, alias, filter, UNHEX(notes) as notes, age, global
                       FROM filters
-                      WHERE username = '$user'
-                      ORDER BY name DESC";
+                      WHERE username = '$user' OR global = 1
+                      ORDER BY global,name ASC";
 
             $result = mysql_query($query);
 
@@ -496,7 +498,7 @@ function fi() {
 
         case "remove" : 
             $alias =  mysql_real_escape_string($_REQUEST['data']);  
-            $query = "DELETE FROM filters WHERE username = '$user' AND alias = '$alias'";
+            $query = "DELETE FROM filters WHERE username = '$user' AND (alias = '$alias' AND global = 0)";
             mysql_query($query);
             $result = mysql_error();
             $return = array("msg" => $result);
