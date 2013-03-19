@@ -67,7 +67,6 @@ dbC();
 <div class=menu_rt title="Queue">RT</div><div class=input_quick><input type="checkbox" id=rt></div>
 <div class=menu id=menu1>ungroup events</div><div class=menu id=menu2>create chart</div><div class=menu id=menu3>create map</div></div>
 </div>
-<div class=cloud></div>
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
 <h3>Events grouped by minute and hour</h3>
@@ -85,16 +84,34 @@ dbC();
 <br><div id=aaa-00 class=aaa></div><br><br><br>
 </div>
 <div class=cat_box>
-<div class=cat_ct><div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div></div>
-<div class=cat_ct><div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div></div>
-<div class=cat_ct><div id=b_class-13 class=b_C3 title='Attempted Unauthorized Access'>C3</div></div>
-<div class=cat_ct><div id=b_class-14 class=b_C4 title='Denial of Service Attack'>C4</div></div>
-<div class=cat_ct><div id=b_class-15 class=b_C5 title='Policy Violation'>C5</div></div>
-<div class=cat_ct><div id=b_class-16 class=b_C6 title='Reconnaissance'>C6</div></div>
-<div class=cat_ct><div id=b_class-17 class=b_C7 title='Malware'>C7</div></div>
-<div class=cat_ct><div id=b_class-1  class=b_NA title='No Action Req&#x2019;d.'>NA</div></div>
-<div class=cat_ct><div id=b_class-2  class=b_ES title='Escalate Event'>ES</div></div>
+<div class=cat_ct><div id=b_class-0 class=b_RT title='Awaiting Review'>RT</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-13 class=b_C3 title='Attempted Unauthorized Access'>C3</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-14 class=b_C4 title='Denial of Service Attack'>C4</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-15 class=b_C5 title='Policy Violation'>C5</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-16 class=b_C6 title='Reconnaissance'>C6</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-17 class=b_C7 title='Malware'>C7</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-1  class=b_NA title='No Action Req&#x2019;d.'>NA</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>
+<div class=cat_val>0</div></div>
+<div class=cat_ct><div class=b_ME title='Add Message'>M+</div>
+<div class=cat_val>Add Message</div></div>
+<div class=cat_ct><div class=b_EX title='Expand'>&#8592;</div>
+<div class=cat_val>Collapse</div></div>
 </div>
+<div class=cat_msg>
+Add a message to all selected events:
+<input class=cat_msg_txt type=text maxlength=255><div class=cat_msg_add>OK</div></div>
 <div id=bottom class=bottom>
 <div id=b_tray class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
 <div id=b_class class=b_class><span class=class_msg></span>&nbsp;</div>

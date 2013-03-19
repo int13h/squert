@@ -34,6 +34,17 @@ $(document).ready(function(){
         return str;
     }
 
+    function sort_unique(arr) {
+        arr = arr.sort(function (a, b) { return a*1 - b*1; });
+        var ret = [arr[0]];
+        for (var i = 1; i < arr.length; i++) {
+            if (arr[i-1] !== arr[i]) {
+                ret.push(arr[i]);
+            }
+        }
+        return ret;
+    }
+
     function getCountry(cc) {
 
         switch (cc) {
@@ -264,8 +275,9 @@ $(document).ready(function(){
         // update class_count
         $("#class_count").html(lastclasscount);
         $("#loader").hide();
+        // Reset checkbox
+        $(".chk_all").prop("checked",false);
     }
-
     function closeSubRow() {
         $("#eview_sub1").remove();
         $("#" + this.id).attr('class','d_row_sub');
@@ -278,8 +290,9 @@ $(document).ready(function(){
         $("#class_count").html(lastclasscount);
         curclasscount = lastclasscount;
         $("#loader").hide();
+        // Reset checkbox
+        $(".chk_all").prop("checked",false);
     }
-
     function closeSubRow1() {
         $("#eview_sub2").remove();
         $("#" + this.id).attr('class','d_row_sub1');
@@ -289,6 +302,8 @@ $(document).ready(function(){
             $(".d_row_sub1_active").attr('class','d_row_sub1');
         }
         $("#loader").hide();
+        // Reset checkbox
+        $(".chk_all").prop("checked",false);
     }
 
     function closeSubRow2() {
@@ -376,6 +391,9 @@ $(document).ready(function(){
                 tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span>";
                 tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
                 tbl += "</div><br>";
+                tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
+                tbl += "categorize <span class=bold id=class_count>";
+                tbl += curclasscount + "</span> event(s)</div>";
                 tbl += "</td></tr>";
                 $("#" + curID).after(tbl);
                 eventList("1-" + rowValue);
@@ -393,6 +411,9 @@ $(document).ready(function(){
         if (!$(".d_row_sub_active")[0]) {
             baseID = $(this).parent().attr('id');
             columnType = this.id[2];
+
+            // Reset checkbox
+            $(".chk_all").prop("checked",false);
 
             switch (columnType) {
                 case "l": adqp = s2h("AND event.status = 0"); break;
@@ -560,11 +581,23 @@ $(document).ready(function(){
                   row += "<tr class=d_row><td class=row colspan=10>";
                   row += "No result.</td></tr>";
               }
-
+               
+              var sm0=0,sm1=0,sm2=0,sm11=0,sm12=0,sm13=0,sm14=0,sm15=0,sm16=0,sm17=0;
               for (var i=0; i<d0.length; i++) {
 
                   // How many events are not categorized?
                   unClass = d0[i].f11.split(",").filter(function(x){return x==0}).length;
+                  sm0 += unClass;
+                  // What about the rest?
+                  sm1 += d0[i].f11.split(",").filter(function(x){return x==1}).length;
+                  sm2 += d0[i].f11.split(",").filter(function(x){return x==2}).length;
+                  sm11 += d0[i].f11.split(",").filter(function(x){return x==11}).length;
+                  sm12 += d0[i].f11.split(",").filter(function(x){return x==12}).length;
+                  sm13 += d0[i].f11.split(",").filter(function(x){return x==13}).length;
+                  sm14 += d0[i].f11.split(",").filter(function(x){return x==14}).length;
+                  sm15 += d0[i].f11.split(",").filter(function(x){return x==15}).length;
+                  sm16 += d0[i].f11.split(",").filter(function(x){return x==16}).length;
+                  sm17 += d0[i].f11.split(",").filter(function(x){return x==17}).length;
 
                   // Colour based on event presence
                   if ( unClass > 0 ) {
@@ -604,6 +637,18 @@ $(document).ready(function(){
                   row += "</td></tr>";
               }
               
+              // Populate event status counts
+              $("#b_class-0").next().html("<b>" + sm0 + "</b>");
+              $("#b_class-1").next().text(sm1);
+              $("#b_class-2").next().text(sm2);
+              $("#b_class-11").next().text(sm11);
+              $("#b_class-12").next().text(sm12);
+              $("#b_class-13").next().text(sm13);
+              $("#b_class-14").next().text(sm14);
+              $("#b_class-15").next().text(sm15);
+              $("#b_class-16").next().text(sm16);
+              $("#b_class-17").next().text(sm17);
+
               tbl += "<table id=tl0 width=960 cellpadding=0 cellspacing=0 align=center>";
               tbl += "<td align=center><div class=big>Total Events</div><div id=etotal class=box>"; 
               tbl += sumEC + "</div></td>";
@@ -652,11 +697,11 @@ $(document).ready(function(){
               head += "<th class=sub width=110>DESTINATION</th>";
               head += "<th class=sub width=160>COUNTRY</th>";
               head += "</tr></thead>";
-              curclasscount = 0;
-              timeValues = "";
+              var curclasscount = 0, tlCount = 0, rtCount = 0;
+              var timeValues = "";
 
               for (var i=0; i<theData.length; i++) {
-                
+                  var count     = theData[i].count   || "0"; 
                   var src_ip    = theData[i].src_ip  || "-";
                   var dst_ip    = theData[i].dst_ip  || "-";
                   var max_time  = theData[i].maxTime || "-";
@@ -664,6 +709,8 @@ $(document).ready(function(){
                   var src_cc    = theData[i].srcc    || "-";
                   var dst_clong = theData[i].dst_cc  || "unknown";
                   var dst_cc    = theData[i].dstc    || "-";
+                  var c_sid     = theData[i].c_sid   || "0";
+                  var c_cid     = theData[i].c_cid   || "0";
                   var cs = getCountry(src_cc).split("|");
                   if (cs[1] == "LO") { cs[1] = ""; }
                   var cd = getCountry(dst_cc).split("|");
@@ -690,18 +737,21 @@ $(document).ready(function(){
                   // Aggregate time values
                   timeValues += theData[i].c_ts + ",";
                   cells = mkGrid(theData[i].f12);
+                  // Event sums
+                  tlCount += parseInt(count,10);
+                  rtCount += parseInt(unclass,10);
 
                   curclasscount += parseInt(unclass);
                   rid = "r" + i + "-" + parts[1] + "-" + src_ip + "-" + dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
                   row += "<td class=" + isActive + " id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
-                  row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_total>" + theData[i].count + "</div></td>";
+                  row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_total>" + count + "</div></td>";
                   row += "<td class=sub>" + cells + "</td>";
                   row += "<td class=sub>" + max_time + "</td>";
                   row += "<td class=sub_filter data-type=ip>" + src_ip + "</td>";
                   row += "<td class=" + cs[0] + " data-type=cc data-value=" + src_cc + ">";
                   row += cs[1] + src_clong + " (." + src_cc.toLowerCase() + ")" + "</td>";
-                  row += "<td class=sub_filter data-type=ip>" + theData[i].dst_ip + "</td>";
+                  row += "<td class=sub_filter data-type=ip>" + dst_ip + "</td>";
                   row += "<td class=" + cd[0] + " data-type=cc data-value=" + dst_cc + ">";
                   row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
                   row += "</tr>";
@@ -712,6 +762,10 @@ $(document).ready(function(){
               // update class_count
               $("#class_count").html(curclasscount);            
               lastclasscount = $("#class_count").html();
+
+              // update parent counts
+              $(".d_row_active").find(".b_ec_hot").text(rtCount);
+              $(".d_row_active").find(".b_ec_total").text(tlCount);
 
               tbl += "<div class=eview_sub id=eview_sub><table id=tl2 class=table cellpadding=0 cellspacing=0>";
               tbl += head;
@@ -741,7 +795,7 @@ $(document).ready(function(){
               head = '';
               row = '';
               head += "<thead><tr>";
-              head += "<th class=sub1 width=20><input class=chk_all type=checkbox></th>";
+              head += "<th class=sub1 width=20><input id=ca1 class=chk_all type=checkbox></th>";
               head += "<th class=sub1 width=20>ST</th>";
               head += "<th class=sub1 width=130>TIMESTAMP</th>";
               head += "<th class=sub1 width=100>EVENT ID</th>";
@@ -754,6 +808,7 @@ $(document).ready(function(){
               
               // update class_count
               $("#class_count").html(d2.length);
+              var tlCount=0, rtCount=0;
 
               for (var i=0; i<d2.length; i++) {
                   var eclass    = d2[i].f1  || "-";
@@ -773,6 +828,13 @@ $(document).ready(function(){
                   row += "<tr class=d_row_sub1 id=s" + i + " data-cols=9 data-filter=\"" + eid + "\">";
                   tclass = "c" + eclass;
                   cv = classifications.class[tclass][0].short;
+
+                  // Event sums
+                  tlCount += parseInt(1,10);
+                  if (cv == "RT") {
+                      rtCount += parseInt(1,10);
+                  }
+
                   txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + timestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
 
                   if (src_port != "-" && dst_port != "-") {
@@ -781,7 +843,7 @@ $(document).ready(function(){
 
                   row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
                   row += "type=checkbox value=\"" + eid + "\">";
-                  row += "<td class=row><div class=b_" + cv + " id=class_box_" + i + ">";
+                  row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
                   row += cv + "</div></td>";
                   row += "<td class=sub>" + timestamp + "</td>";
                   row += "<td class=sub><div class=b_PL data-eidl=s" + i + " title=\"View Payload\">";
@@ -794,6 +856,10 @@ $(document).ready(function(){
                   row += sig_id + ">" + signature + "</td>";
                   row += "</td></tr>";
               }
+
+              // update parent counts
+              $(".d_row_sub_active").find(".b_ec_hot").text(rtCount);
+              $(".d_row_sub_active").find(".b_ec_total").text(tlCount);              
 
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=8><div id=ev_close_sub ";
               tbl += "class=close_sub><div class=b_close title='Close'>X</div></div>";
@@ -824,7 +890,7 @@ $(document).ready(function(){
               head = '';
               row = '';
               head += "<thead><tr>";
-              head += "<th class=sub width=10><input class=chk_all type=checkbox></th>";
+              head += "<th class=sub width=10><input id=ca1 class=chk_all type=checkbox></th>";
               head += "<th class=sub width=20>ST</th>";
               head += "<th class=sub width=120>TIMESTAMP</th>";
               head += "<th class=sub width=100>ID</th>";
@@ -842,7 +908,7 @@ $(document).ready(function(){
                   row += "No result.</td></tr>";
               }
  
-              var maxI = 3000;
+              var maxI = 999; 
               // update class_count
               $("#class_count").html(d2a.length);
               for (var i=0; i<d2a.length && i <= maxI; i++) {
@@ -876,8 +942,8 @@ $(document).ready(function(){
                   }
    
                   row += "<td class=row><input id=eid" + i + " type=checkbox value=\"" + eid + "\">";
-                  row += "<td class=row><div id=classcat data-catid=" + eid + " data-bclass=b_" + cv;
-                  row += " class=b_" + cv + ">" + cv + "</div></td>";
+                  row += "<td class=row><div id=classcat data-catid=" + eid + " data-bclass=a_" + cv;
+                  row += " class=a_" + cv + ">" + cv + "</div></td>";
                   row += "<td class=row>" + timestamp + "</td>";
                   row += "<td class=sub><div class=b_PL data-eidl=s" + i + " title=\"View Payload\">";
                   row += sid + "." + cid + "</div>" + txBit + "</td>";
@@ -1130,6 +1196,34 @@ $(document).ready(function(){
     // Event classification
     //
 
+    // Add message to class
+    $(document).on("click", ".b_ME", function(event) {
+        $(".cat_msg").fadeToggle();
+        $(".cat_msg_txt").val("");
+    });
+
+    $(document).on("click", ".b_EX", function(event) {
+        var nw, txt, cw = $(".cat_box").css("width");
+        switch (cw) {
+            case "150px": 
+                nw = 25; 
+                txt =  "&#8592\;"; 
+                $(".cat_val").fadeOut(function () {
+                    $(".b_EX").html(txt);
+                    $(".cat_box").css("width", nw + "px");
+                });
+                break;
+            case  "25px": 
+                nw = 150; 
+                txt = "&#8594\;";
+                $(".b_EX").html(txt);
+                $(".cat_box").css("width", nw + "px");
+                $(".cat_val").fadeIn();
+                break;
+        }
+    });
+    
+
     $("#testestest").keyup(function(event){
 
         function stopOthers() {    
@@ -1152,45 +1246,69 @@ $(document).ready(function(){
 
     // individual selects
     $(document).on("click", ".chk_event", function(event) {
-
-       // update class_count
+        // update class_count
         $("#class_count").html($(".chk_event:checked").length);
-
+        if ($("#ca1:checked").length > 0) {
+             $("#ca1").prop("checked",false);
+        }
+        
+        if ($(".chk_event:checked").length > 0) {
+             $("#ca0").prop("checked",true);
+        }
     });
 
     // select all
-    $(document).on("click", ".chk_all", function(event) {
+    $(document).on("click", "#ca1", function(event) {
+        var chkLen = $("#ca1:checked").length;
 
-       $(".chk_event").prop("checked", !$(".chk_event").prop("checked"));
+        switch(chkLen) {
+            case 0:
+                $(".chk_event").prop("checked",false);
+                $("#ca0").prop("checked",false);
+                break;
+            default:
+                $(".chk_event").prop("checked",true);
+                $("#ca0").prop("checked",true); 
+                break;
+        }    
 
-       // update class_count
-        $("#class_count").html($(".chk_event:checked").length);
+        if ($(".eview_sub1")[0]) {  
+           // update class_count
+           $("#class_count").html($(".chk_event:checked").length);
+        }
 
     });
 
     // class button click
     $(document).on("click", "[id*=\"b_class-\"]", function() {
-            eClass(this);
-        
+        eClass(this);
     });
 
     function eClass(caller) {
+        // How many events were selected
         curclasscount = $("#class_count").text();
+        // How many are in the parent
+        curtotalcount = $(".d_row_active").find(".b_ec_hot").text();
+        // Adjust the count
+        newcount = parseInt(curtotalcount - curclasscount,10);
+        $(".d_row_active").find(".b_ec_hot").text(newcount);
+
         // what the new classification will be
         selClass = $(caller).attr("class");
         selTxt = selClass.split("_");
+        newClass = "a_" + selTxt[1];
+        
         // change visible class 
- 
         $(".chk_event:checked").each(function() {
             var curID = $(this).parent(".d_row_sub1").attr('id'); 
             var n = this.id.split("_");          
-            $("#class_box_" + n[1]).attr('class', selClass);
+            $("#class_box_" + n[1]).attr('class', newClass);
             $("#class_box_" + n[1]).text(selTxt[1]);
         });
 
         // uncheck everything
-        $(".chk_event").prop("checked", !$(".chk_event").prop("checked"));
-        $(".chk_all").prop("checked", !$(".chk_all").prop("checked"));     
+        $(".chk_event").prop("checked", false);
+        $(".chk_all").prop("checked", false);     
 
         
     }
