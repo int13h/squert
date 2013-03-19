@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 SQueRT - Please login to continue</td></tr>
 <tr><td colspan=2 class=boxes>
 Username<br>
-<input class=in type=text name=username value="<?php echo $username;?>" maxlength="32"></td></tr>
+<input class=in type=text name=username value="<?php echo htmlentities($username);?>" maxlength="32"></td></tr>
 <tr><td colspan=2 class=boxes>
 Password<br>
 <input class=in type=password name=password value="" maxlength="32"></td></tr>
