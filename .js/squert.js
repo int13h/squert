@@ -348,7 +348,7 @@ $(document).ready(function(){
         closeSubRow1();
     });
 
-    // Close open packet data
+    // Close open TX
     $(document).on("click", "#ev_close_sub2", function(event) {
         closeSubRow2();
     });
@@ -1263,9 +1263,8 @@ $(document).ready(function(){
                 break;
         }
     });
-    
 
-    $("#testestest").keyup(function(event){
+    $(document).keyup(function(event){
 
         function stopOthers() {    
             event.preventDefault();
@@ -1456,9 +1455,12 @@ $(document).ready(function(){
                 // If we are RT ungrouped, we just remove 
                 if ($('#rt').is(':checked') && $("#ca2")[0]) {
                     $(".chk_event:checked").each(function() {
-                        var pid = $(this).closest(".d_row_sub1").attr('id');
-                        $("#" + pid).fadeOut('slow', function() {
-                            $("#" + pid).remove();
+                        var pid = $(this).attr("id").split("_");
+                        // Remove any open payload or TX panes
+                        closeSubRow1();
+                        closeSubRow2();
+                        $("#s" + pid[1]).fadeOut('slow', function() {
+                            $("#s" + pid[1]).remove();
                         });
                     });
                 } else {

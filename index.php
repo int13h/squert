@@ -105,9 +105,9 @@ dbC();
 <div class=cat_ct><div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>
 <div class=cat_val>0</div></div>
 <div class=cat_ct><div class=b_ME title='Add Message'>M+</div>
-<div class=cat_val>Add Message</div></div>
-<div class=cat_ct><div class=b_EX title='Expand'>&#8592;</div>
-<div class=cat_val>Collapse</div></div>
+<div class=cat_val></div></div>
+<div class=cat_ct><div class=b_EX title='Expand/Collapse'>&#8592;</div>
+<div class=cat_val></div></div>
 </div>
 <div class=cat_msg>
 Add a message to the selected events:
