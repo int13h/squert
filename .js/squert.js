@@ -290,8 +290,9 @@ $(document).ready(function(){
         $("#class_count").html(lastclasscount);
         curclasscount = lastclasscount;
         $("#loader").hide();
-        // Reset checkbox
+        // Reset and show checkbox
         $(".chk_all").prop("checked",false);
+        $("#ca0").show();
     }
     function closeSubRow1() {
         $("#eview_sub2").remove();
@@ -305,9 +306,7 @@ $(document).ready(function(){
         // Reset checkbox
         $(".chk_all").prop("checked",false);
     }
-
     function closeSubRow2() {
-
         $("#eview_sub3").remove();
         $("#" + this.id).attr('class','d_row_sub1');
 
@@ -505,11 +504,13 @@ $(document).ready(function(){
         var filterMsg = '';
         var rt = 0;
         var theFilter = s2h('empty');
-        // Check for any filters
+
+        // See if we are just RT events
         if ($('#rt').is(':checked')) {
             rt = 1;
         }
 
+        // Check for any filters
         if ($('#search').val().length > 0) {
             var fParts = $('#search').val().split(" ");
             // Now see if the requested filter exists
@@ -698,7 +699,7 @@ $(document).ready(function(){
               head += "<th class=sub width=160>COUNTRY</th>";
               head += "</tr></thead>";
               var curclasscount = 0, tlCount = 0, rtCount = 0;
-              var timeValues = "";
+              var timeValues = "", scid = "";
 
               for (var i=0; i<theData.length; i++) {
                   var count     = theData[i].count   || "0"; 
@@ -715,6 +716,13 @@ $(document).ready(function(){
                   if (cs[1] == "LO") { cs[1] = ""; }
                   var cd = getCountry(dst_cc).split("|");
                   if (cd[1] == "LO") { cd[1] = ""; }
+
+                  // Create sid.cid list
+                  sids = c_sid.split(",");
+                  cids = c_cid.split(",");
+                  $.each(sids, function(a,b) {
+                      scid += b + "." + cids[a] + ",";
+                  });
 
                   // How many events are not categorized?
                   rt = theData[i].c_status.split(",");
@@ -741,7 +749,6 @@ $(document).ready(function(){
                   tlCount += parseInt(count,10);
                   rtCount += parseInt(unclass,10);
 
-                  curclasscount += parseInt(unclass);
                   rid = "r" + i + "-" + parts[1] + "-" + src_ip + "-" + dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
                   row += "<td class=" + isActive + " id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
@@ -756,14 +763,26 @@ $(document).ready(function(){
                   row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
                   row += "</tr>";
               }
+     
               // Pass timestamps for chart creation
               chartInterval(timeValues);
+              
+              // Add scid's to checkbox
+              $("#ca0").data("scid", scid.replace(/,$/, ""));
+
+              // If queue is empty provide event sums in case the user 
+              // intends to reclass anything
+              if (rtCount == 0) {
+                  curclasscount = tlCount;
+              } else {
+                  curclasscount = rtCount;
+              }
 
               // update class_count
               $("#class_count").html(curclasscount);            
               lastclasscount = $("#class_count").html();
 
-              // update parent counts
+              // Update parent counts
               $(".d_row_active").find(".b_ec_hot").text(rtCount);
               $(".d_row_active").find(".b_ec_total").text(tlCount);
 
@@ -806,7 +825,7 @@ $(document).ready(function(){
               head += "<th class=sub1>SIGNATURE</th>";
               head += "</tr></thead>";
               
-              // update class_count
+              // Update class_count
               $("#class_count").html(d2.length);
               var tlCount=0, rtCount=0;
 
@@ -842,7 +861,7 @@ $(document).ready(function(){
                   }   
 
                   row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
-                  row += "type=checkbox value=\"" + eid + "\">";
+                  row += "type=checkbox value=\"" + sid + "." + cid + "\">";
                   row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
                   row += cv + "</div></td>";
                   row += "<td class=sub>" + timestamp + "</td>";
@@ -857,7 +876,7 @@ $(document).ready(function(){
                   row += "</td></tr>";
               }
 
-              // update parent counts
+              // Update parent counts
               $(".d_row_sub_active").find(".b_ec_hot").text(rtCount);
               $(".d_row_sub_active").find(".b_ec_total").text(tlCount);              
 
@@ -872,6 +891,7 @@ $(document).ready(function(){
               $(".d_row_sub").fadeTo('0','0.2');
               $("#loader").hide();
               $("#tl3").tablesorter({headers:{0:{sorter:false}},cancelSelection:false});
+              $("#ca0").hide();
           }
         break;
  
@@ -909,7 +929,7 @@ $(document).ready(function(){
               }
  
               var maxI = 999; 
-              // update class_count
+              // Update class_count
               $("#class_count").html(d2a.length);
               for (var i=0; i<d2a.length && i <= maxI; i++) {
 
@@ -1196,12 +1216,6 @@ $(document).ready(function(){
     // Event classification
     //
 
-    // Add message to class
-    $(document).on("click", ".b_ME", function(event) {
-        $(".cat_msg").fadeToggle();
-        $(".cat_msg_txt").val("");
-    });
-
     $(document).on("click", ".b_EX", function(event) {
         var nw, txt, cw = $(".cat_box").css("width");
         switch (cw) {
@@ -1244,80 +1258,179 @@ $(document).ready(function(){
         }
     });
 
-    // individual selects
+    // Add message to class
+    $(document).on("click", ".b_ME", function(event) {
+        var chkLen = parseInt($(".chk_event:checked").length + $(".chk_all:checked").length);
+        if (chkLen > 0) {
+            $(".cat_msg").fadeIn();
+        }
+    });
+
+    $(document).on("click", ".cat_msg_add", function(event) {
+        $(".cat_msg").fadeOut();
+        $(".cat_msg_txt").val("");
+    });
+
+    // Individual selects
     $(document).on("click", ".chk_event", function(event) {
-        // update class_count
+        // Update class_count
         $("#class_count").html($(".chk_event:checked").length);
         if ($("#ca1:checked").length > 0) {
              $("#ca1").prop("checked",false);
         }
-        
-        if ($(".chk_event:checked").length > 0) {
-             $("#ca0").prop("checked",true);
-        }
     });
 
-    // select all
+    // Select all (option 2)
     $(document).on("click", "#ca1", function(event) {
         var chkLen = $("#ca1:checked").length;
-
         switch(chkLen) {
             case 0:
                 $(".chk_event").prop("checked",false);
                 $("#ca0").prop("checked",false);
                 break;
             default:
-                $(".chk_event").prop("checked",true);
+                $(".chk_event").each(function() {
+                    if ($(this).prop("disabled") == false) {
+                        $(this).prop("checked",true);
+                    }
+                });
                 $("#ca0").prop("checked",true); 
                 break;
         }    
 
         if ($(".eview_sub1")[0]) {  
-           // update class_count
+           // Update class_count
            $("#class_count").html($(".chk_event:checked").length);
         }
 
     });
 
-    // class button click
+    // Class button click
     $(document).on("click", "[id*=\"b_class-\"]", function() {
-        eClass(this);
+        // We only fire if something is selected
+        var chkLen = parseInt($(".chk_event:checked").length + $(".chk_all:checked").length);
+        var intclass = $(this).attr('id').split("-");
+        if (chkLen > 0 && intclass[1] != 0) {
+            eClass(this,intclass[1]);
+        }
     });
 
-    function eClass(caller) {
-        // How many events were selected
-        curclasscount = $("#class_count").text();
-        // How many are in the parent
-        curtotalcount = $(".d_row_active").find(".b_ec_hot").text();
-        // Adjust the count
-        newcount = parseInt(curtotalcount - curclasscount,10);
-        $(".d_row_active").find(".b_ec_hot").text(newcount);
+    function eClass(caller,intclass) {
+        // The sid.cid values
+        var scid= "";
+        if ($(".eview_sub1")[0]) {
+            $(".chk_event:checked").each(function() {
+                scid += $(this).val() + ",";
+            });
+            scidlist = scid.replace(/,$/, "");
+        } else {
+            scidlist = $("#ca0").data("scid").split(","); 
+        }
 
-        // what the new classification will be
-        selClass = $(caller).attr("class");
-        selTxt = selClass.split("_");
-        newClass = "a_" + selTxt[1];
+        // Was there a message?
+        var msg = "none";
+        if($(".cat_msg_txt").length != 0) {
+            msg = $(".cat_msg_txt").val();
+        }        
+
+        var catdata = intclass + "|||" + msg + "|||" + scidlist;
+        // URI can't be longer than 8190 bytes. If it is, truncate and loop
+        if (catdata.length <= 8000) {
+            // We are now ready to class
+            urArgs = "type=" + 9 + "&catdata=" + catdata;
+            $(function(){
+                $.get(".inc/callback.php?" + urArgs, function(data){cb9(data)}); 
+            });
+        }
+
+        function cb9(data){
+            eval("catRaw=" + data);
+            catDbg = catRaw.dbg;
+            if (catDbg == "0") {
+
+                // How many events were selected
+                curclasscount = $("#class_count").text();
+
+                // How many are in the parent
+                curtotalparentcount = $(".d_row_active").find(".b_ec_hot").text();
+               
+                if (curtotalparentcount > 0) {
+ 
+                    // Adjust the parent count
+                    newparentcount = parseInt(curtotalparentcount - curclasscount,10);
+                    $(".d_row_active").find(".b_ec_hot").text(newparentcount);
+                    if (newparentcount == 0) {a
+                        $(".d_row_active").find(".b_ec_hot").parent().attr('class','row');
+                        $(".d_row_active").find(".b_ec_hot").attr('class','b_ec_cold');
+                    }    
+
+                    // If we are working within the child, adjust accordingly
+                    if ($(".eview_sub1")[0]) {
+                        // How many are in the child
+                        curtotalchildcount = $(".d_row_sub_active").find(".b_ec_hot").text();
         
-        // change visible class 
-        $(".chk_event:checked").each(function() {
-            var curID = $(this).parent(".d_row_sub1").attr('id'); 
-            var n = this.id.split("_");          
-            $("#class_box_" + n[1]).attr('class', newClass);
-            $("#class_box_" + n[1]).text(selTxt[1]);
-        });
+                        // Adjust the child count
+                        newchildcount = parseInt(curtotalchildcount - curclasscount,10); 
+                        $(".d_row_sub_active").find(".b_ec_hot").text(newchildcount);
+                        if (newchildcount == 0) {
+                            $("#ca1").prop("disabled",true);
+                            $(".d_row_sub_active").find(".b_ec_hot").parent().attr('class','sub');
+                            $(".d_row_sub_active").find(".b_ec_hot").attr('class','b_ec_cold');
+                        }
+                    // Otherwise we were called from the parent
+                    } else {
+                        $(".d_row_sub").find(".b_ec_hot").parent().attr('class','sub');
+                        $(".d_row_sub").find(".b_ec_hot").text(0);
+                        $(".d_row_sub").find(".b_ec_hot").attr('class','b_ec_cold');
+                        $("#ca0").prop("disabled",true);      
+                    } 
 
-        // uncheck everything
-        $(".chk_event").prop("checked", false);
-        $(".chk_all").prop("checked", false);     
+                    // Lastly, update class_count
+                    $("#class_count").html(0);
+                    lastclasscount = newparentcount;
 
+                } else { // We are reworking events
+                   if ($(".eview_sub1")[0]) {
+                       curtotalchildcount = $(".d_row_sub_active").find(".b_ec_total").text();
+                       $("#class_count").html(curtotalchildcount);
+                   } else {
+                       $("#class_count").html(lastclasscount);
+                   }
+                }
+
+
+                // What the new classification is
+                selClass = $(caller).attr("class");
+                selTxt = selClass.split("_");
+                newClass = "a_" + selTxt[1];
         
+                // Change visible class and disable if RT 
+                $(".chk_event:checked").each(function() {
+                    var curID = $(this).parent(".d_row_sub1").attr('id'); 
+                    var n = this.id.split("_");          
+                    $("#class_box_" + n[1]).attr('class', newClass);
+                    $("#class_box_" + n[1]).text(selTxt[1]);
+                    if (curtotalparentcount > 0) {
+                        $(this).prop("disabled",true);
+                    }
+                });
+
+                // Uncheck everything
+                $(".chk_event").prop("checked", false);
+                $(".chk_all").prop("checked", false);
+                catMsg(curclasscount);
+            } else {
+                catMsg(0);
+            }
+        }
     }
 
-    function categorizeEvents(count) {
+    function catMsg(count) {
         ess = '';
         if ( count > 1 ) {
             ess = 's';
         }
+                
         $("span.class_msg").text(count + " event" + ess + " successfully categorized");
         $("span.class_msg").fadeIn('slow', function() {
             setTimeout(function(){
@@ -1330,7 +1443,7 @@ $(document).ready(function(){
     // Filters
     //
 
-    // Open can close the view
+    // Open and close the view
     $('#filters').click(function() {
         $('#usr_filters').toggle();
         if ($('#usr_filters').css('display') == "none") {

@@ -26,6 +26,7 @@ $types = array(
                  '6' => 'ec',
                  '7' => 'tx',
                  '8' => 'fi',
+                 '9' => 'cat',
 );
 
 $type = $types[$type];
@@ -338,10 +339,16 @@ function pd() {
     $comp = mysql_real_escape_string($_REQUEST['object']);
     list($sid,$cid) = explode("-", $comp);
 
-    $query = "SELECT INET_NTOA(src_ip), INET_NTOA(dst_ip), ip_ver, ip_hlen, ip_tos, ip_len, ip_id,ip_flags,
-             ip_off, ip_ttl, ip_csum, src_port, dst_port, ip_proto, signature, signature_id, CONVERT_TZ(timestamp,'+00:00','$offset'), sid, cid
-             FROM event
-             WHERE sid='$sid' and cid='$cid'";
+    $query = "SELECT INET_NTOA(src_ip), 
+              INET_NTOA(dst_ip),
+              ip_ver, ip_hlen, ip_tos,
+              ip_len, ip_id, ip_flags,
+              ip_off, ip_ttl, ip_csum,
+              src_port, dst_port, ip_proto,
+              signature, signature_id,
+              CONVERT_TZ(timestamp,'+00:00','$offset'), sid, cid
+              FROM event
+              WHERE sid='$sid' and cid='$cid'";
 
     $result = mysql_query($query);
 
@@ -355,9 +362,15 @@ function pd() {
     switch ($ipp) {
 
         case 1:
-            $query = "SELECT event.icmp_type AS icmp_type, event.icmp_code AS icmp_code, icmphdr.icmp_csum AS icmp_csum, 
-                      icmphdr.icmp_id AS icmp_id, icmphdr.icmp_seq AS icmp_seq
-                      FROM event, icmphdr WHERE event.sid=icmphdr.sid AND event.cid=icmphdr.cid AND event.sid='$sid'
+            $query = "SELECT event.icmp_type AS icmp_type,
+                      event.icmp_code AS icmp_code,
+                      icmphdr.icmp_csum AS icmp_csum, 
+                      icmphdr.icmp_id AS icmp_id,
+                      icmphdr.icmp_seq AS icmp_seq
+                      FROM event, icmphdr
+                      WHERE event.sid=icmphdr.sid
+                      AND event.cid=icmphdr.cid
+                      AND event.sid='$sid'
                       AND event.cid='$cid'";
             
             $result = mysql_query($query);
@@ -368,7 +381,8 @@ function pd() {
 
         case 6:
             $query = "SELECT tcp_seq, tcp_ack, tcp_off, tcp_res, tcp_flags, tcp_win, tcp_urp, tcp_csum
-                      FROM tcphdr WHERE sid='$sid' and cid='$cid'";
+                      FROM tcphdr 
+                      WHERE sid='$sid' AND cid='$cid'";
             
             $result = mysql_query($query);
 
@@ -377,7 +391,9 @@ function pd() {
             break;
          
         case 17:
-            $query = "SELECT udp_len, udp_csum FROM udphdr WHERE sid='$sid' and cid='$cid'";
+            $query = "SELECT udp_len, udp_csum 
+                      FROM udphdr 
+                      WHERE sid='$sid' AND cid='$cid'";
 
             $result = mysql_query($query);
 
@@ -387,7 +403,9 @@ function pd() {
     }
 
     // Data
-    $query = "SELECT data_payload FROM data WHERE sid='$sid' AND cid='$cid'";
+    $query = "SELECT data_payload 
+              FROM data 
+              WHERE sid='$sid' AND cid='$cid'";
 
     $result = mysql_query($query);
 
@@ -513,6 +531,24 @@ function fi() {
 
     echo $theJSON;
 
+}
+
+function cat() {
+    $catdata = $_REQUEST['catdata'];
+    list($cat, $msg, $lst) = explode("|||", $catdata);
+    $msg = htmlentities($msg);
+    $cmd = "clicat.tcl \"$cat\" \"$msg\" \"$lst\"";
+
+    exec("../.scripts/$cmd",$raw);
+    $fmtd = "";
+    foreach ($raw as $line) {
+        $fmtd .= htmlspecialchars($line);
+    }
+
+    $result = array("dbg"  => "$fmtd");
+
+    $theJSON = json_encode($result);
+    echo $theJSON;
 }
 
 $type();

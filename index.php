@@ -110,8 +110,8 @@ dbC();
 <div class=cat_val>Collapse</div></div>
 </div>
 <div class=cat_msg>
-Add a message to all selected events:
-<input class=cat_msg_txt type=text maxlength=255><div class=cat_msg_add>OK</div></div>
+Add a message to the selected events:
+<input class=cat_msg_txt type=text maxlength=255><div class=cat_msg_add>CANCEL</div></div>
 <div id=bottom class=bottom>
 <div id=b_tray class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
 <div id=b_class class=b_class><span class=class_msg></span>&nbsp;</div>

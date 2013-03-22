@@ -14,15 +14,28 @@
 
 ########################## GLOBALS ##################################
 
-set VERSION "SGUIL-0.8.0 OPENSSL ENABLED"
-set SERVER 10.13.1.226
-set PORT 7734
+### Load extended tcl
+if [catch {package require Tclx} tclxVersion] {
+    puts "Error: Package TclX not found"
+    exit
+}
 
-# Comment out the following 2 lines if 
-# you wish to be prompted for a user/pass
-
-set USERNAME "paulh"
-set PASSWD "oplC*($@"
+set CONFIG "../.inc/config.php"
+if {[file exists $CONFIG]} {
+    for_file line $CONFIG {
+        if { [regexp {^\$([^\s]+)\s+=\s+['"]([^'"]+)['"]} $line match theVar theVal] } {
+            set configArray($theVar) $theVal
+        }
+    }
+    set VERSION  $configArray(sgVer)
+    set SERVER   $configArray(sgHost)
+    set PORT     $configArray(sgPort)
+    set USERNAME $configArray(sgUser)
+    set PASSWD   $configArray(sgPass)
+} else {
+    puts "I could not find a confguration file"
+    exit 1
+}
 
 #########################################################################
 # Get cmd line args
