@@ -1491,7 +1491,7 @@ $(document).ready(function(){
             ess = 's';
         }
                
-        $("span.class_msg").text(count + " event" + ess + " successfully categorized");
+        $("span.class_msg").text(count + " event" + ess + " categorized");
         $("span.class_msg").fadeIn('slow', function() {
             setTimeout(function(){
                 $(".class_msg").fadeOut('slow');
