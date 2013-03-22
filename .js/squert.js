@@ -1377,10 +1377,10 @@ $(document).ready(function(){
 
         // Was there a message?
         var msg = "none";
-        if($(".cat_msg_txt").length != 0) {
+        if($(".cat_msg_txt").val().length != 0) {
             msg = $(".cat_msg_txt").val();
         }        
-
+        
         var catdata = intclass + "|||" + msg + "|||" + scidlist;
         // URI can't be longer than 8190 bytes. If it is, truncate and loop
         if (catdata.length <= 8000) {
