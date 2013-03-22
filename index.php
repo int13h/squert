@@ -121,11 +121,8 @@ Add a message to the selected events:
 </div>
 
 <input id=timestamp type=hidden value="<?php echo strtohex($when);?>">
-<input id=sel_ec type=hidden value="0">
-<input id=sel_class type=hidden value="-1">
-<input id=sel_sensor type=hidden value="-1">
+<input id=sel_lc type=hidden value="load">
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
-<input id=sel_idlist type=hidden value="">
 </body>
 </html>
 <?php $_SESSION['LAST_ACTIVITY'] = time();?>

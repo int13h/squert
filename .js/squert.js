@@ -123,9 +123,8 @@ $(document).ready(function(){
     //
  
     var emTimeout = 30000;
-
-    var lastCount = $("#etotal").html();
-    var eventCount = lastCount;
+    var lstCount = $("#sel_ec").val();
+    var curCount = 0;
 
     window.setInterval(function(){
 
@@ -136,16 +135,20 @@ $(document).ready(function(){
 
         function cb(data){
             eval("theData=" + data);
-            eventCount = theData[0].count;
+            curCount = theData[0].count;
+        }
+ 
+        if (lstCount == "load") {
+            $("#sel_ec").val(curCount);    
         }
 
-        lastCount = Number($("#etotal").html());
-
-        if ( lastCount < eventCount ) {
-            eventCount = eventCount - lastCount;
+        lstCount = $("#sel_ec").val();
+         
+        if (lstCount < curCount) {
+            curCount = parseInt(curCount - lstCount);
             $("#b_event").html("<b>Events:</b> " + eventCount + " new");
         }
-        lastCount = eventCount;
+        lstCount = curCount;
     }, emTimeout);
 
     //   
@@ -163,8 +166,8 @@ $(document).ready(function(){
                 $("#loader").show();
                 break;
             case "regroup events":
-                $('#tl3b').fadeOut();
-                $('#tl3b').remove();
+                $('#tl3a,#tl3b').fadeOut();
+                $('#tl3a,#tl3b').remove();
                 eventList("2a-aaa-00");
                 $("#loader").show();
                 break;
@@ -194,19 +197,19 @@ $(document).ready(function(){
     //
 
     $(document).on("click", "#menu1", function(event) {
-        var cv = $('#menu1').text();
+        var cv = $("#menu1").text();
         switch (cv) {
             case "ungroup events":
-                //$('#rt').prop('checked', true);
-                $('#menu1').text('regroup events');
-                $('#tl0,#tl1').remove();
+                //$("#rt").prop("checked", true);
+                $("#menu1").text("regroup events");
+                $("#tl0,#tl1").remove();
                 eventList("2a-aaa-00");
                 $("#loader").show();
                 break;
             case "regroup events":
-                //$('#rt').prop('checked', false);
-                $('#menu1').text('ungroup events');
-                $('#tl3b').remove();
+                //$("#rt").prop("checked", false);
+                $("#menu1").text("ungroup events");
+                $("#tl3a,#tl3b").remove();
                 eventList("0-aaa-00"); 
                 $("#loader").show();
                 break;
@@ -263,15 +266,23 @@ $(document).ready(function(){
     //
 
     function closeRow() {
-        $("#active_eview").remove();
-        $("#" + this.id).attr('class','d_row');
-        $(".d_row").css('opacity','1');
-        $(".d_row_active").find('[class*="row"]').css('color', 'gray');
-        $(".d_row_active").find('[class*="row"]').css('background', 'transparent');
-        $(".d_row_active").find('td').css('border-top', 'none')
-        ltCol = $(".d_row_active").find('td.lt').html();
-        $(".d_row_active").find('td.lt').css('background', ltCol);
-        $(".d_row_active").attr('class','d_row');
+        if ($('#rt').is(':checked') && $(".d_row_active").find(".b_ec_hot").text() == 0) {
+            $("#active_eview").remove();
+            $(".d_row_active").fadeOut('slow', function (event) {
+                $(".d_row_active").remove();
+            });
+            $(".d_row").css('opacity','1');
+        } else {
+            $("#active_eview").remove();
+            $("#" + this.id).attr('class','d_row');
+            $(".d_row").css('opacity','1');
+            $(".d_row_active").find('[class*="row"]').css('color', 'gray');
+            $(".d_row_active").find('[class*="row"]').css('background', 'transparent');
+            $(".d_row_active").find('td').css('border-top', 'none')
+            ltCol = $(".d_row_active").find('td.lt').html();
+            $(".d_row_active").find('td.lt').css('background', ltCol);
+            $(".d_row_active").attr('class','d_row');
+        }
         // update class_count
         $("#class_count").html(lastclasscount);
         $("#loader").hide();
@@ -582,23 +593,16 @@ $(document).ready(function(){
                   row += "<tr class=d_row><td class=row colspan=10>";
                   row += "No result.</td></tr>";
               }
+  
+              if (rt == 1) {
+                  sumSC = "-";
+                  sumDC = "-";
+              }
                
-              var sm0=0,sm1=0,sm2=0,sm11=0,sm12=0,sm13=0,sm14=0,sm15=0,sm16=0,sm17=0;
               for (var i=0; i<d0.length; i++) {
 
                   // How many events are not categorized?
                   unClass = d0[i].f11.split(",").filter(function(x){return x==0}).length;
-                  sm0 += unClass;
-                  // What about the rest?
-                  sm1 += d0[i].f11.split(",").filter(function(x){return x==1}).length;
-                  sm2 += d0[i].f11.split(",").filter(function(x){return x==2}).length;
-                  sm11 += d0[i].f11.split(",").filter(function(x){return x==11}).length;
-                  sm12 += d0[i].f11.split(",").filter(function(x){return x==12}).length;
-                  sm13 += d0[i].f11.split(",").filter(function(x){return x==13}).length;
-                  sm14 += d0[i].f11.split(",").filter(function(x){return x==14}).length;
-                  sm15 += d0[i].f11.split(",").filter(function(x){return x==15}).length;
-                  sm16 += d0[i].f11.split(",").filter(function(x){return x==16}).length;
-                  sm17 += d0[i].f11.split(",").filter(function(x){return x==17}).length;
 
                   // Colour based on event presence
                   if ( unClass > 0 ) {
@@ -609,12 +613,18 @@ $(document).ready(function(){
                       isActive = "row";
                   }
 
+                  // Disable ec_total if we are RT
+                  ttlActive = "row_active";
+                  if (rt == 1) {
+                      ttlActive = "row";
+                  }                  
+
                   rid = "r" + i + "-" + parts[1];
                   cells = mkGrid(d0[i].f12);
                   row += "<tr class=d_row id=sid-" + d0[i].f3 + "-" + d0[i].f4;
                   row += " data-class=" + " data-sid=" + " data-event_count=" + d0[i].f1 + ">";
                   row += "<td class=" + isActive + "><div class=" + rtClass + ">" + unClass + "</div></td>";
-                  row += "<td class=row_active><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
+                  row += "<td class=" + ttlActive + "><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
                   row += "<td class=row><span class=red>" +d0[i].f6+ "</span></td>";
                   row += "<td class=row><span class=blue>" +d0[i].f7+ "</span></td>";
 
@@ -637,23 +647,11 @@ $(document).ready(function(){
                   row += "<td class=row><b>" + rowPer + "%</b></td>";
                   row += "</td></tr>";
               }
-              
-              // Populate event status counts
-              $("#b_class-0").next().html("<b>" + sm0 + "</b>");
-              $("#b_class-1").next().text(sm1);
-              $("#b_class-2").next().text(sm2);
-              $("#b_class-11").next().text(sm11);
-              $("#b_class-12").next().text(sm12);
-              $("#b_class-13").next().text(sm13);
-              $("#b_class-14").next().text(sm14);
-              $("#b_class-15").next().text(sm15);
-              $("#b_class-16").next().text(sm16);
-              $("#b_class-17").next().text(sm17);
 
               tbl += "<table id=tl0 width=960 cellpadding=0 cellspacing=0 align=center>";
               tbl += "<td align=center><div class=big>Total Events</div><div id=etotal class=box>"; 
               tbl += sumEC + "</div></td>";
-              tbl += "<td align=center><div class=big>Total Signatures</div><div class=box>";
+              tbl += "<td align=center><div class=big>Total Signatures</div><div id=esignature class=box>";
               tbl += sumSI + "</div></td>";
               tbl += "<td align=center><div class=big>Total Sources</div><div class=box>";
               tbl += sumSC + "</div></td>";
@@ -725,9 +723,9 @@ $(document).ready(function(){
                   });
 
                   // How many events are not categorized?
-                  rt = theData[i].c_status.split(",");
+                  es0 = theData[i].c_status.split(",");
                   var unclass = 0;                  
-                  $.each(rt, function(a,b) {
+                  $.each(es0, function(a,b) {
                       switch (b) {
                           case "0": unclass++; break;
                       }
@@ -742,9 +740,16 @@ $(document).ready(function(){
                       isActive = "sub";
                   }
 
+                  // Disable ec_total if we are RT
+                  ttlActive = "sub_active";
+                  if (rt == 1) {
+                      ttlActive = "sub";
+                  }
+                  
                   // Aggregate time values
                   timeValues += theData[i].c_ts + ",";
                   cells = mkGrid(theData[i].f12);
+                  
                   // Event sums
                   tlCount += parseInt(count,10);
                   rtCount += parseInt(unclass,10);
@@ -752,7 +757,7 @@ $(document).ready(function(){
                   rid = "r" + i + "-" + parts[1] + "-" + src_ip + "-" + dst_ip;
                   row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
                   row += "<td class=" + isActive + " id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
-                  row += "<td class=sub_active id=l2r" + i + "><div class=b_ec_total>" + count + "</div></td>";
+                  row += "<td class=" + ttlActive + " id=l2r" + i + "><div class=b_ec_total>" + count + "</div></td>";
                   row += "<td class=sub>" + cells + "</td>";
                   row += "<td class=sub>" + max_time + "</td>";
                   row += "<td class=sub_filter data-type=ip>" + src_ip + "</td>";
@@ -828,7 +833,6 @@ $(document).ready(function(){
               // Update class_count
               $("#class_count").html(d2.length);
               var tlCount=0, rtCount=0;
-
               for (var i=0; i<d2.length; i++) {
                   var eclass    = d2[i].f1  || "-";
                   var timestamp = d2[i].f2  || "-";
@@ -878,7 +882,9 @@ $(document).ready(function(){
 
               // Update parent counts
               $(".d_row_sub_active").find(".b_ec_hot").text(rtCount);
-              $(".d_row_sub_active").find(".b_ec_total").text(tlCount);              
+              if ($(".d_row_sub_active").find(".b_ec_total").text() < tlCount) {
+                  $(".d_row_sub_active").find(".b_ec_total").text(tlCount);
+              }
 
               tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=8><div id=ev_close_sub ";
               tbl += "class=close_sub><div class=b_close title='Close'>X</div></div>";
@@ -910,7 +916,7 @@ $(document).ready(function(){
               head = '';
               row = '';
               head += "<thead><tr>";
-              head += "<th class=sub width=10><input id=ca1 class=chk_all type=checkbox></th>";
+              head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox></th>";
               head += "<th class=sub width=20>ST</th>";
               head += "<th class=sub width=120>TIMESTAMP</th>";
               head += "<th class=sub width=100>ID</th>";
@@ -928,10 +934,18 @@ $(document).ready(function(){
                   row += "No result.</td></tr>";
               }
  
-              var maxI = 999; 
+
+              // Aggregate time values
+              var timeValues = "";
+              for (var ts=0; ts<d2a.length; ts++) {
+                  var datetimestamp = d2a[ts].f2.split(" ");
+                  timeValues += datetimestamp[1] + ",";
+              }
+
+              var maxI = 1000; 
               // Update class_count
               $("#class_count").html(d2a.length);
-              for (var i=0; i<d2a.length && i <= maxI; i++) {
+              for (var i=0; i<d2a.length; i++) {
 
                   var eclass    = d2a[i].f1  || "-"; 
                   var timestamp = d2a[i].f2  || "-";
@@ -952,7 +966,6 @@ $(document).ready(function(){
 
                   rid = "s" + i + "-" + sid + "-" + cid;
                   eid = sid + "-" + cid;
-                  row += "<tr class=d_row_sub1 id=s" + i + " data-cols=11 data-filter=\"" + eid + "\">";
                   tclass = "c" + eclass;
                   cv = classifications.class[tclass][0].short;
                   txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + timestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
@@ -961,9 +974,11 @@ $(document).ready(function(){
                       txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
                   }
    
-                  row += "<td class=row><input id=eid" + i + " type=checkbox value=\"" + eid + "\">";
-                  row += "<td class=row><div id=classcat data-catid=" + eid + " data-bclass=a_" + cv;
-                  row += " class=a_" + cv + ">" + cv + "</div></td>";
+                  row += "<tr class=d_row_sub1 id=s" + i + " data-cols=11 data-filter=\"" + eid + "\">";
+                  row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
+                  row += "type=checkbox value=\"" + sid + "." + cid + "\">";
+                  row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
+                  row += cv + "</div></td>";
                   row += "<td class=row>" + timestamp + "</td>";
                   row += "<td class=sub><div class=b_PL data-eidl=s" + i + " title=\"View Payload\">";
                   row += sid + "." + cid + "</div>" + txBit + "</td>";
@@ -975,22 +990,34 @@ $(document).ready(function(){
                   row += "<td class=sub_filter data-type=dpt>" + dst_port + "</td>";
                   row += "<td class=" + cd[0] + " title=\"" + dst_clong + "\" data-type=cc data-value=";
                   row += dst_cc +">" + cd[1] + "</td>";
-                  row += "<td class=sub_filter data-type=sid data-value=" + sig_id + ">" + signature + "</td>";
+                  row += "<td class=sub_filter data-type=sid data-value=" + sig_id + ">" + signature + "</td></tr>";
+                  if (i == maxI) { break; }
               }
  
-              var sumEC = 0, sumSI = 0, sumSC = 0, sumDC = 0;
+              var sumED = 0, sumEC = 0, sumSI = 0, sumSC = "-", sumDC = "-";
               
               if (d2a.length > 0) {
-                  sumED = i; 
+                  sumED = i;  
                   sumEC = d2a.length;
                    
               }
+
+              tbl += "<table id=tl3a align=center width=960 border=0 cellpadding=0 cellspacing=0>";
+              tbl += "<tr><td colspan=10><div>";
+              tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
+              tbl += "</div><div class=event_class>";
+              tbl += "categorize <span class=bold id=class_count>" + 0 + "</span>";
+              tbl += " of <span id=cat_count class=bold>" + sumED + "</span> event(s)</div>";
+              tbl += "</td></tr>";
+              tbl += "</table>";
+
               tbl += "<table id=tl3b class=main align=center width=960 cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table>";
               $('#' + parts[1] + '-' + parts[2]).after(tbl);
-              $('#tl3b').fadeIn('slow');
+              chartInterval(timeValues);
+              $("#tl3a,#tl3b").fadeIn('slow');
               $("#b_event").html("<b>Events:</b>&nbsp;&nbsp;Synchronized");
               $("#tl3b").tablesorter({headers:{0:{sorter:false}},cancelSelection:false});
               $("#loader").hide();
@@ -1258,7 +1285,7 @@ $(document).ready(function(){
         }
     });
 
-    // Add message to class
+    // Show message box
     $(document).on("click", ".b_ME", function(event) {
         var chkLen = parseInt($(".chk_event:checked").length + $(".chk_all:checked").length);
         if (chkLen > 0) {
@@ -1266,6 +1293,7 @@ $(document).ready(function(){
         }
     });
 
+    // Hide message box
     $(document).on("click", ".cat_msg_add", function(event) {
         $(".cat_msg").fadeOut();
         $(".cat_msg_txt").val("");
@@ -1280,7 +1308,7 @@ $(document).ready(function(){
         }
     });
 
-    // Select all (option 2)
+    // Select all (2)
     $(document).on("click", "#ca1", function(event) {
         var chkLen = $("#ca1:checked").length;
         switch(chkLen) {
@@ -1302,7 +1330,27 @@ $(document).ready(function(){
            // Update class_count
            $("#class_count").html($(".chk_event:checked").length);
         }
+    });
 
+    // Select all (2a)
+    $(document).on("click", "#ca2", function(event) {
+        var chkLen = $("#ca2:checked").length;
+        switch(chkLen) {
+            case 0:
+                $(".chk_event").prop("checked",false);
+                $("#ca2").prop("checked",false);
+                break;
+            default:
+                $(".chk_event").each(function() {
+                    if ($(this).prop("disabled") == false) {
+                        $(this).prop("checked",true);
+                    }
+                });
+                $("#ca2").prop("checked",true); 
+                break;
+        }    
+        // Update class_count
+        $("#class_count").html($(".chk_event:checked").length);
     });
 
     // Class button click
@@ -1318,7 +1366,7 @@ $(document).ready(function(){
     function eClass(caller,intclass) {
         // The sid.cid values
         var scid= "";
-        if ($(".eview_sub1")[0]) {
+        if ($(".eview_sub1")[0] || $("#ca2")[0]) {
             $(".chk_event:checked").each(function() {
                 scid += $(this).val() + ",";
             });
@@ -1350,11 +1398,12 @@ $(document).ready(function(){
 
                 // How many events were selected
                 curclasscount = $("#class_count").text();
-
-                // How many are in the parent
                 curtotalparentcount = $(".d_row_active").find(".b_ec_hot").text();
                
                 if (curtotalparentcount > 0) {
+
+                    // How many are in the parent
+                    curtotalparentcount = $(".d_row_active").find(".b_ec_hot").text();
  
                     // Adjust the parent count
                     newparentcount = parseInt(curtotalparentcount - curclasscount,10);
@@ -1398,23 +1447,32 @@ $(document).ready(function(){
                    }
                 }
 
-
                 // What the new classification is
                 selClass = $(caller).attr("class");
                 selTxt = selClass.split("_");
                 newClass = "a_" + selTxt[1];
         
-                // Change visible class and disable if RT 
-                $(".chk_event:checked").each(function() {
-                    var curID = $(this).parent(".d_row_sub1").attr('id'); 
-                    var n = this.id.split("_");          
-                    $("#class_box_" + n[1]).attr('class', newClass);
-                    $("#class_box_" + n[1]).text(selTxt[1]);
-                    if (curtotalparentcount > 0) {
-                        $(this).prop("disabled",true);
-                    }
-                });
-
+                // Change visible class and disable if RT
+                // If we are RT ungrouped, we just remove 
+                if ($('#rt').is(':checked') && $("#ca2")[0]) {
+                    $(".chk_event:checked").each(function() {
+                        var pid = $(this).closest(".d_row_sub1").attr('id');
+                        $("#" + pid).fadeOut('slow', function() {
+                            $("#" + pid).remove();
+                        });
+                    });
+                } else {
+                    $(".chk_event:checked").each(function() {
+                       // var curID = $(this).parent(".d_row_sub1").attr('id'); 
+                        var n = this.id.split("_");          
+                        $("#class_box_" + n[1]).attr('class', newClass);
+                        $("#class_box_" + n[1]).text(selTxt[1]);
+                        if (curtotalparentcount > 0) {
+                            $(this).prop("disabled",true);
+                        }
+                    });
+                }
+                
                 // Uncheck everything
                 $(".chk_event").prop("checked", false);
                 $(".chk_all").prop("checked", false);
@@ -1430,13 +1488,30 @@ $(document).ready(function(){
         if ( count > 1 ) {
             ess = 's';
         }
-                
+               
         $("span.class_msg").text(count + " event" + ess + " successfully categorized");
         $("span.class_msg").fadeIn('slow', function() {
             setTimeout(function(){
                 $(".class_msg").fadeOut('slow');
             }, 3000);
         });
+
+        // If we are just rt update Total boxes as we go
+        if ($('#rt').is(':checked')) {
+            if (!$("#ca2")[0]) {
+                newboxtotal = parseInt($("#etotal").text() - count);
+                newsigtotal = parseInt($("#esignature").text() - 1);
+                $("#etotal").text(newboxtotal);
+                $("#esignature").text(newsigtotal);
+            } else {
+                newboxtotal = parseInt($("#cat_count").text() - count);
+                $("#cat_count").text(newboxtotal);
+                if (newboxtotal == 0) {
+                    $("#b_update").click();
+                }
+                
+            }
+        }
     }
 
     //

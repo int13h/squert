@@ -746,12 +746,12 @@ padding:2px;
 border:none;
 }
 
-div.b_ec_n:hover,div.b_ec_total:hover,div.b_ec_hot:hover {
+/*div.b_ec_total:hover,div.b_ec_hot:hover {
 background:#fff;
 color:#000;
 cursor:pointer;
 text-decoration:none;
-}
+}*/
 
 div.b_time {
 border:1pt solid #000;

@@ -55,9 +55,4 @@ if ($id != $_SESSION['id']) {
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sTime)) {
     sKill();
 }
-
-// Kill the sesssion if the user requests it
-if (isset($_POST['base']) && $_POST['base'] == "Log out") {
-    sKill();
-}
 ?>
