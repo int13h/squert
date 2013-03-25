@@ -56,7 +56,7 @@ this should be placed in the "[mysqld]" section of my.cnf
 
 9) Give this user privileges to the filters table:
 
-`mysql -N -B --user=root --password=toor -e "GRANT INSERT,UPDATE,DELETE ON sguildb.filters TO 'readonly'@'localhost';" 
+`mysql -N -B --user=root --password=toor -e "GRANT INSERT,UPDATE,DELETE ON sguildb.filters TO 'readonly'@'localhost';"` 
 
 10) Now populate the ip2c table:
 
