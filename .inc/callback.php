@@ -41,7 +41,7 @@ function ec() {
 
     $query = "SELECT COUNT(*) AS count FROM event
               LEFT JOIN sensor AS s ON event.sid = s.sid
-              WHERE $when
+              WHERE $when AND event.status = 0
               AND agent_type = 'snort'";
 
     $result = mysql_query($query);

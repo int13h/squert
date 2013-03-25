@@ -46,7 +46,7 @@ function chartInterval(data) {
 
     var bar = new RGraph.Bar('chart_timestamps', hours);
     bar.Set('chart.labels', ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23']);
-    bar.Set('chart.gutter.bottom', 50);
+    bar.Set('chart.gutter.bottom', 20);
     bar.Set('chart.gutter.left', 50);
     bar.Set('chart.gutter.right', 50);
     bar.Set('chart.strokestyle', '#c4c4c4');

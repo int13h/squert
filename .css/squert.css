@@ -40,7 +40,7 @@ empty-cells:show;
 
 div.quick {
 float:right;
-width:410px;
+width:290px;
 background-color:#e9e9e9;
 border-bottom:1px solid #000;
 border-left:1px solid #000;
@@ -129,7 +129,6 @@ background-color:#cc0000;
 
 .input_quick {
 float:left;
-padding-right:8px;
 }
 
 .content {
@@ -280,7 +279,7 @@ text-decoration:none;
 }
 
 tr.d_row:hover,tr.s_row:hover,tr.d_row_sub:hover,tr.d_row_sub1:hover {
-background-color:#f5f5f5;
+background-color:#f4f4f4;
 }
 
 td.txtext {
@@ -535,8 +534,8 @@ color:#000;
 cursor:pointer;
 text-align:center;
 float:left;
-padding-top:10px;
 height:40px;
+padding-top:10px;
 }
 
 div.b_update:hover,div.b_top:hover {
@@ -933,6 +932,10 @@ table.main {
 border:1pt solid #c9c9c9;
 }
 
+table.chart {
+border:none;
+}
+
 table.table {
 width:100%;
 margin:none;
@@ -996,8 +999,7 @@ height:14px;
 font-weight:bold;
 text-align:center;
 border-radius:3px;
-margin-left:4px;
-margin-right:2px;
+margin-right:15px;
 font-size:11px;
 padding:3px 0;
 background-color:#cc0000;
@@ -1182,6 +1184,11 @@ padding-top:2px;
 padding-bottom:2px;
 }
 
+.b_PL:hover {
+text-decoration:underline;
+cursor:pointer;
+}
+
 .b_TX {
 float:left;
 font-weight:normal;
@@ -1198,13 +1205,38 @@ color:#000;
 cursor:pointer;
 }
 
-.b_TX:hover {
-background-color:#000;
-color:#fff;
+.n_TX {
+float:left;
+font-weight:normal;
+text-align:center;
+border-radius:3px;
+font-size:10px;
+padding-top:2px;
+padding-bottom:2px;
+padding-left:5px;
+padding-right:5px;
+margin-left:4px;
+background-color:#c9c9c9;
+color:#878787;
+text-decoration:line-through;
 }
 
-
-.b_PL:hover {
-text-decoration:underline;
+.b_MP {
+float:left;
+font-weight:normal;
+text-align:center;
+border-radius:3px;
+font-size:10px;
+padding-top:2px;
+padding-bottom:2px;
+padding-left:3px;
+padding-right:3px;
+margin-left:6px;
+background-color:navy;
+color:#fff;
 cursor:pointer;
+}
+
+td.dark {
+background-color:#fff;
 }

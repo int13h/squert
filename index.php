@@ -64,8 +64,8 @@ dbC();
 <?php echo $timeLinks;?>
 </div>
 <div class=quick>
-<div class=menu_rt title="Queue">RT</div><div class=input_quick><input type="checkbox" id=rt></div>
-<div class=menu id=menu1>ungroup events</div><div class=menu id=menu2>create chart</div><div class=menu id=menu3>create map</div></div>
+<div class=input_quick><input type="checkbox" id=rt></div><div class=menu_rt title="Queue">RT</div>
+<div class=menu id=menu1>ungroup events</div><div class=menu id=menu2>show map</div></div>
 </div>
 <div id=t_dash_content class=content>
 <table width=970 align=center><tr><td>
@@ -121,7 +121,6 @@ Add a message to the selected events:
 </div>
 
 <input id=timestamp type=hidden value="<?php echo strtohex($when);?>">
-<input id=sel_lc type=hidden value="load">
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
 </body>
 </html>

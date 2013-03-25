@@ -123,11 +123,8 @@ $(document).ready(function(){
     //
  
     var emTimeout = 30000;
-    var lstCount = $("#sel_ec").val();
-    var curCount = 0;
-
+    var curCount = 0, lstCount = 0;
     window.setInterval(function(){
-
         var urArgs = "type=" + 6 + "&ts=" + theWhen;
         $(function(){
             $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
@@ -137,19 +134,17 @@ $(document).ready(function(){
             eval("theData=" + data);
             curCount = theData[0].count;
         }
- 
-        if (lstCount == "load") {
-            $("#sel_ec").val(curCount);    
-        }
-
-        lstCount = $("#sel_ec").val();
+        if (lstCount == 0) {
+            lstCount = curCount;    
+        } 
          
         if (lstCount < curCount) {
-            curCount = parseInt(curCount - lstCount);
-            $("#b_event").html("<b>Events:</b> " + eventCount + " new");
+            eventCount = parseInt(curCount - lstCount);
+            $("#b_event").html("<b>Status:</b> New events available");
+            lstCount = curCount;
         }
-        lstCount = curCount;
     }, emTimeout);
+
 
     //   
     // Bottom ribbon controls
@@ -173,7 +168,35 @@ $(document).ready(function(){
                 break;
         }
     });
- 
+   
+    //
+    // Menu items
+    //
+
+    $(document).on("click", "#menu1", function(event) {
+        var cv = $("#menu1").text();
+        switch (cv) {
+            case "ungroup events":
+                $("#menu1").text("regroup events");
+                $("#tl0,#tl1").hide();
+                eventList("2a-aaa-00");
+                $("#tl0,#tl1").remove();
+                $("#loader").show();
+                break;
+            case "regroup events":
+                $("#menu1").text("ungroup events");
+                $("#tl3a,#tl3b").remove();
+                eventList("0-aaa-00"); 
+                $("#loader").show();
+                break;
+        }
+    });
+
+    // RT check/uncheck
+    $(document).on("click", "#rt", function(event) {
+        $("#b_update").click();
+    });
+
     // fire refresh on enter
     $('#search').keypress(function(e) {
         if(!e) e=window.event;
@@ -183,7 +206,11 @@ $(document).ready(function(){
         }
     });
 
-    // Logout
+    //
+    // Tab manipulations
+    //
+
+     // Logout
     $("#logout").click(function(event) {
          $.get("index.php?id=0", function(){location.reload()});
     });
@@ -191,39 +218,7 @@ $(document).ready(function(){
     $("#b_top").click(function() {
         $('html, body').animate({ scrollTop: 0 }, 'slow');
     });
-    
-    //
-    // Menu items
-    //
-
-    $(document).on("click", "#menu1", function(event) {
-        var cv = $("#menu1").text();
-        switch (cv) {
-            case "ungroup events":
-                //$("#rt").prop("checked", true);
-                $("#menu1").text("regroup events");
-                $("#tl0,#tl1").remove();
-                eventList("2a-aaa-00");
-                $("#loader").show();
-                break;
-            case "regroup events":
-                //$("#rt").prop("checked", false);
-                $("#menu1").text("ungroup events");
-                $("#tl3a,#tl3b").remove();
-                eventList("0-aaa-00"); 
-                $("#loader").show();
-                break;
-        }
-    });
-
-    $(document).on("click", "#rt", function(event) {
-        $("#b_update").click();
-    });
-
-    //
-    // Tab manipulations
-    //
-
+ 
     var tab_cached = $("#sel_tab").val();
     $('#' + tab_cached).attr('class','tab_active');
     $("#" + tab_cached + "_content").attr('class','content_active');
@@ -283,8 +278,9 @@ $(document).ready(function(){
             $(".d_row_active").find('td.lt').css('background', ltCol);
             $(".d_row_active").attr('class','d_row');
         }
-        // update class_count
-        $("#class_count").html(lastclasscount);
+        // Update class_count
+        $("#class_count").text(lastclasscount);
+        // Get rid of any crashed loaders
         $("#loader").hide();
         // Reset checkbox
         $(".chk_all").prop("checked",false);
@@ -297,8 +293,8 @@ $(document).ready(function(){
         $(".d_row_sub_active").find('[class*="sub"]').css('border-top', 'none');
         $(".d_row_sub_active").find('[class*="sub"]').css('background', 'transparent');
         $(".d_row_sub_active").attr('class','d_row_sub');
-        // update class_count
-        $("#class_count").html(lastclasscount);
+        // Update class_count
+        $("#class_count").text(lastclasscount);
         curclasscount = lastclasscount;
         $("#loader").hide();
         // Reset and show checkbox
@@ -399,7 +395,7 @@ $(document).ready(function(){
                 tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
                 tbl += "<span class=small>";
                 tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span>";
-                tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
+                tbl += "<canvas id=chart_timestamps width=930 height=130>[No canvas support]</canvas>";
                 tbl += "</div><br>";
                 tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
                 tbl += "categorize <span class=bold id=class_count>";
@@ -444,7 +440,7 @@ $(document).ready(function(){
     //
     
     $(document).on("click", ".b_PL", function() {
-        if (!$("#eview_sub2")[0]) {
+        if (!$("#eview_sub2")[0] && !$("#eview_sub3")[0]) {
             baseID = $(this).data('eidl');
             rowcall = baseID.split("-");
             callerID = rowcall[0];
@@ -460,7 +456,7 @@ $(document).ready(function(){
     //
 
     $(document).on("click", ".b_TX", function(event) {
-        if (!$(".eview_sub3")[0]) {
+        if (!$(".eview_sub3")[0] && !$(".eview_sub2")[0]) {
             $("#loader").show();
             composite = $(this).data('tx').split("-");
             rowLoke = composite[0];
@@ -665,7 +661,7 @@ $(document).ready(function(){
               tbl += "</table>";
               $('#' + parts[1] + '-' + parts[2]).after(tbl);
               $('#tl0,#tl1').fadeIn('slow');
-              $("#b_event").html("<b>Events:</b>&nbsp;&nbsp;Synchronized");
+              $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");
               $("#tl1").tablesorter();
               if ($('#tl4').length == 0) {
                   loadFilters(0);
@@ -787,6 +783,16 @@ $(document).ready(function(){
               $("#class_count").html(curclasscount);            
               lastclasscount = $("#class_count").html();
 
+              // While in grouped events (RT) we remove rows as
+              // they are classed and subtract the values from "Total Events"
+              // This keeps etotal up to date so the math doesn't get silly 
+              var oldrt = Number($(".d_row_active").find(".b_ec_hot").text());
+              var oldec = Number($("#etotal").text());
+              if (oldrt < rtCount) {
+                  newrtcount = parseInt((rtCount - oldrt) + oldec);
+                  $("#etotal").text(newrtcount);
+              } 
+
               // Update parent counts
               $(".d_row_active").find(".b_ec_hot").text(rtCount);
               $(".d_row_active").find(".b_ec_total").text(tlCount);
@@ -822,7 +828,7 @@ $(document).ready(function(){
               head += "<th class=sub1 width=20><input id=ca1 class=chk_all type=checkbox></th>";
               head += "<th class=sub1 width=20>ST</th>";
               head += "<th class=sub1 width=130>TIMESTAMP</th>";
-              head += "<th class=sub1 width=100>EVENT ID</th>";
+              head += "<th class=sub1 width=110>EVENT ID</th>";
               head += "<th class=sub1 width=100>SOURCE</th>";
               head += "<th class=sub1 width=40>PORT</th>";
               head += "<th class=sub1 width=100>DESTINATION</th>";
@@ -860,9 +866,10 @@ $(document).ready(function(){
 
                   txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + timestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
 
+                  txBit = "<div class=n_TX>TX</div>";   
                   if (src_port != "-" && dst_port != "-") {
                       txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
-                  }   
+                  }
 
                   row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
                   row += "type=checkbox value=\"" + sid + "." + cid + "\">";
@@ -919,7 +926,7 @@ $(document).ready(function(){
               head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox></th>";
               head += "<th class=sub width=20>ST</th>";
               head += "<th class=sub width=120>TIMESTAMP</th>";
-              head += "<th class=sub width=100>ID</th>";
+              head += "<th class=sub width=110>ID</th>";
               head += "<th class=sub width=90>SOURCE</th>";
               head += "<th class=sub width=40>PORT</th>";
               head += "<th class=sub width=30>CC</th>";
@@ -934,7 +941,6 @@ $(document).ready(function(){
                   row += "No result.</td></tr>";
               }
  
-
               // Aggregate time values
               var timeValues = "";
               for (var ts=0; ts<d2a.length; ts++) {
@@ -946,7 +952,7 @@ $(document).ready(function(){
               // Update class_count
               $("#class_count").html(d2a.length);
               for (var i=0; i<d2a.length; i++) {
-
+                  if (i == maxI) { break; }
                   var eclass    = d2a[i].f1  || "-"; 
                   var timestamp = d2a[i].f2  || "-";
                   var sid       = d2a[i].f11 || "0";
@@ -961,6 +967,7 @@ $(document).ready(function(){
                   var dst_clong = d2a[i].f9  || "unknown";
                   var sig_id    = d2a[i].f15 || "-";
                   var signature = d2a[i].f14 || "-";
+                  var evt_msg   = "-";
                   var cs = getCountry(src_cc).split("|");
                   var cd = getCountry(dst_cc).split("|");
 
@@ -970,6 +977,7 @@ $(document).ready(function(){
                   cv = classifications.class[tclass][0].short;
                   txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + timestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
 
+                  txBit = "<div class=n_TX>TX</div>";   
                   if (src_port != "-" && dst_port != "-") {
                       txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
                   }
@@ -991,24 +999,27 @@ $(document).ready(function(){
                   row += "<td class=" + cd[0] + " title=\"" + dst_clong + "\" data-type=cc data-value=";
                   row += dst_cc +">" + cd[1] + "</td>";
                   row += "<td class=sub_filter data-type=sid data-value=" + sig_id + ">" + signature + "</td></tr>";
-                  if (i == maxI) { break; }
               }
  
-              var sumED = 0, sumEC = 0, sumSI = 0, sumSC = "-", sumDC = "-";
+              var sumED = 0, sumEC = 0, sumSI = 0, sumSC = "-", sumDC = "-", cmsg = "";
               
               if (d2a.length > 0) {
                   sumED = i;  
                   sumEC = d2a.length;
-                   
+              }
+  
+              if (d2a.length >= maxI) {
+                  sumRE = sumEC - maxI;
+                  cmsg = " / <span class=bold>"  + sumRE + "</span> not shown";
               }
 
-              tbl += "<table id=tl3a align=center width=960 border=0 cellpadding=0 cellspacing=0>";
-              tbl += "<tr><td colspan=10><div>";
-              tbl += "<canvas id=chart_timestamps width=930 height=150>[No canvas support]</canvas>";
+              tbl += "<table id=tl3a class=chart align=center width=960 border=0 cellpadding=0 cellspacing=0>";
+              tbl += "<tr><td class=dark colspan=10><div>";
+              tbl += "<canvas id=chart_timestamps width=950 height=130>[No canvas support]</canvas>";
               tbl += "</div><div class=event_class>";
               tbl += "categorize <span class=bold id=class_count>" + 0 + "</span>";
-              tbl += " of <span id=cat_count class=bold>" + sumED + "</span> event(s)</div>";
-              tbl += "</td></tr>";
+              tbl += " of <span id=cat_count class=bold>" + sumED + "</span> event(s)" + cmsg;
+              tbl += "</div></td></tr>";
               tbl += "</table>";
 
               tbl += "<table id=tl3b class=main align=center width=960 cellpadding=0 cellspacing=0>";
@@ -1018,7 +1029,7 @@ $(document).ready(function(){
               $('#' + parts[1] + '-' + parts[2]).after(tbl);
               chartInterval(timeValues);
               $("#tl3a,#tl3b").fadeIn('slow');
-              $("#b_event").html("<b>Events:</b>&nbsp;&nbsp;Synchronized");
+              $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");
               $("#tl3b").tablesorter({headers:{0:{sorter:false}},cancelSelection:false});
               $("#loader").hide();
           }
@@ -1264,23 +1275,23 @@ $(document).ready(function(){
         }
     });
 
-    $(document).keyup(function(event){
-
-        function stopOthers() {    
+    $(document).keydown(function(event){
+        function stopOthers() { 
+            event.originalEvent.keyCode = 0;   
             event.preventDefault();
             event.stopPropagation();
         }
 
         switch (event.keyCode) {
-            case 112: $('#b_class-11').click(); stopOthers(); break;
-            case 113: $('#b_class-12').click(); stopOthers(); break;
-            case 114: $('#b_class-13').click(); stopOthers(); break;
-            case 115: $('#b_class-14').click(); stopOthers(); break;
-            case 116: $('#b_class-15').click(); stopOthers(); break;
-            case 117: $('#b_class-16').click(); stopOthers(); break;
-            case 118: $('#b_class-17').click(); stopOthers(); break;
-            case 119: $('#b_class-1').click();  stopOthers(); break;
-            case 120: $('#b_class-2').click();  stopOthers(); break;
+            case 112: stopOthers(); $('#b_class-11').click(); break;
+            case 113: stopOthers(); $('#b_class-12').click(); break;
+            case 114: stopOthers(); $('#b_class-13').click(); break;
+            case 115: stopOthers(); $('#b_class-14').click(); break;
+            case 116: stopOthers(); $('#b_class-15').click(); break;
+            case 117: stopOthers(); $('#b_class-16').click(); break;
+            case 118: stopOthers(); $('#b_class-17').click(); break;
+            case 119: stopOthers(); $('#b_class-1').click(); break;
+            case 120: stopOthers(); $('#b_class-2').click(); break;
         }
     });
 
@@ -1298,13 +1309,29 @@ $(document).ready(function(){
         $(".cat_msg_txt").val("");
     });
 
+    var clickOne = 0, clck1 = 0, clck2 = 0;
     // Individual selects
     $(document).on("click", ".chk_event", function(event) {
+        clickTwo = this.id.split("_");
+        if (Number(clickOne[1]) > Number(clickTwo[1])) {
+            clck1 = clickTwo[1];
+            clck2 = clickOne[1];
+        } else {
+            clck1 = clickOne[1];
+            clck2 = clickTwo[1];
+        }
+
+        if (event.shiftKey) {
+            $("#s" + clck1).nextUntil("#s" + clck2).find(".chk_event").prop("checked", true);
+            clickOne = 0, clck1 = 0, clck2 = 0;
+        } 
+
         // Update class_count
         $("#class_count").html($(".chk_event:checked").length);
         if ($("#ca1:checked").length > 0) {
              $("#ca1").prop("checked",false);
         }
+        clickOne = this.id.split("_");
     });
 
     // Select all (2)
@@ -1378,6 +1405,7 @@ $(document).ready(function(){
         var msg = "none";
         if($(".cat_msg_txt").val().length != 0) {
             msg = $(".cat_msg_txt").val();
+            $(".cat_msg_add").click();
         }        
         
         var catdata = intclass + "|||" + msg + "|||" + scidlist;
@@ -1456,11 +1484,19 @@ $(document).ready(function(){
                 if ($('#rt').is(':checked') && $("#ca2")[0]) {
                     $(".chk_event:checked").each(function() {
                         var pid = $(this).attr("id").split("_");
+                        var nid = parseInt(Number(pid[1]) + 1);
                         // Remove any open payload or TX panes
-                        closeSubRow1();
-                        closeSubRow2();
-                        $("#s" + pid[1]).fadeOut('slow', function() {
+                        if ($("[id^=eview_]")[0]) {
+                            $("[id^=eview_]").remove();
+                            $(".d_row_sub1").css('opacity','1');
+                        }
+                        $("#s" + pid[1]).fadeOut('fast', function() {
                             $("#s" + pid[1]).remove();
+                            // Select next entry
+                            if (curclasscount == 1) {
+                                $("#s" + nid).find(".chk_event").prop("checked", true);
+                                $("#class_count").html($(".chk_event:checked").length);
+                            }
                         });
                     });
                 } else {
@@ -1543,8 +1579,8 @@ $(document).ready(function(){
         cls = 'f_row';
         if(!entry) {
             cls = 'h_row';
-            filter = "empty";
-            entry = {"alias": "New", "name": "New Entry", "notes": "None.", "filter": filter, "age": "1970-01-01 00:00:00"};
+            filter = "";
+            entry = {"alias": "New", "name": "", "notes": "None.", "filter": filter, "age": "1970-01-01 00:00:00"};
         }
 
         encFilter = s2h(entry.filter);        
