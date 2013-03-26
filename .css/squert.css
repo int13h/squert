@@ -403,6 +403,7 @@ padding:0 30px 20px 0;
 }
 
 div.upper {
+width:100%;
 top:0;
 left:0;
 position:fixed;
