@@ -140,69 +140,69 @@ $(document).ready(function(){
          
         if (lstCount < curCount) {
             eventCount = parseInt(curCount - lstCount);
-            $("#b_event").html("<b>Status:</b> New events available");
+            $("#b_event").html("<b>Status:</b> New events are available");
             lstCount = curCount;
         }
     }, emTimeout);
 
-
-    //   
-    // Bottom ribbon controls
     //
-
-    // Refresh page
-    $("#b_update").click(function() {
-        var cv = $('#menu1').text();
-        switch (cv) {
-            case "ungroup events":
-                $('#tl0,#tl1').fadeOut();
-                $('#tl0,#tl1').remove();
-                eventList("0-aaa-00");
-                $("#loader").show();
-                break;
-            case "regroup events":
-                $('#tl3a,#tl3b').fadeOut();
-                $('#tl3a,#tl3b').remove();
-                eventList("2a-aaa-00");
-                $("#loader").show();
-                break;
-        }
-    });
-   
+    // Toggle and update views
     //
-    // Menu items
-    //
-
-    $(document).on("click", "#menu1", function(event) {
+    function newView(req) {
         var cv = $("#menu1").text();
+        switch (req) { // Either an update or view change    
+            case "u":
+               f = "0-aaa-00";
+               s = "2a-aaa-00";
+               break; 
+            case "c":
+               switch(cv) {
+                   case "ungroup events": $("#menu1").text("regroup events");
+                       if ($("#search").val().length == 0) {
+                           $("#rt").prop("checked", true);
+                       }
+                       break;  
+                   case "regroup events": $("#menu1").text("ungroup events"); break;
+               }
+               f = "2a-aaa-00";
+               s = "0-aaa-00";
+               break;
+        }
         switch (cv) {
             case "ungroup events":
-                $("#menu1").text("regroup events");
-                $("#tl0,#tl1").hide();
-                eventList("2a-aaa-00");
                 $("#tl0,#tl1").remove();
+                eventList(f);
                 $("#loader").show();
                 break;
             case "regroup events":
-                $("#menu1").text("ungroup events");
                 $("#tl3a,#tl3b").remove();
-                eventList("0-aaa-00"); 
+                eventList(s);
                 $("#loader").show();
                 break;
         }
+    }
+
+    // Group and ungroup
+    $(document).on("click", "#menu1", function(event) {
+        newView("c");
     });
 
     // RT check/uncheck
     $(document).on("click", "#rt", function(event) {
-        $("#b_update").click();
+        newView("u");
     });
 
-    // fire refresh on enter
+    // Update page
+    $("#b_update").click(function(event) {
+        newView("u");
+    });
+ 
+    // If search is in focus, update on enter
     $('#search').keypress(function(e) {
         if(!e) e=window.event;
         key = e.keyCode ? e.keyCode : e.which;
         if(key == 13) {
-            $("#b_update").click();
+            newView("u");
         }
     });
 
@@ -329,7 +329,7 @@ $(document).ready(function(){
     $(document).on("click", ".sort", function(event) {
         closeRow();
     });
-    
+
     $(document).on("click", "#ev_close", function(event) {
         closeRow();
     });
@@ -948,7 +948,7 @@ $(document).ready(function(){
                   timeValues += datetimestamp[1] + ",";
               }
 
-              var maxI = 1000; 
+              var maxI = 500; 
               // Update class_count
               $("#class_count").html(d2a.length);
               for (var i=0; i<d2a.length; i++) {
@@ -1253,6 +1253,9 @@ $(document).ready(function(){
     //
     // Event classification
     //
+    
+    // Highlight colour for selected events
+    var hlCol = "lightyellow";
 
     $(document).on("click", ".b_EX", function(event) {
         var nw, txt, cw = $(".cat_box").css("width");
@@ -1323,6 +1326,7 @@ $(document).ready(function(){
 
         if (event.shiftKey) {
             $("#s" + clck1).nextUntil("#s" + clck2).find(".chk_event").prop("checked", true);
+            $("#s" + clck1).nextUntil("#s" + clck2).find("td").css("background-color", hlCol);
             clickOne = 0, clck1 = 0, clck2 = 0;
         } 
 
@@ -1332,6 +1336,12 @@ $(document).ready(function(){
              $("#ca1").prop("checked",false);
         }
         clickOne = this.id.split("_");
+
+        if ($(this).prop("checked") == true) {
+            $("#s" + clickTwo[1]).find("td").css("background-color", hlCol);  
+        } else {
+            $("#s" + clickTwo[1]).find("td").css("background-color", "transparent");
+        }
     });
 
     // Select all (2)
@@ -1340,6 +1350,7 @@ $(document).ready(function(){
         switch(chkLen) {
             case 0:
                 $(".chk_event").prop("checked",false);
+                $(".d_row_sub1").find("td").css("background-color", "transparent");
                 $("#ca0").prop("checked",false);
                 break;
             default:
@@ -1348,6 +1359,7 @@ $(document).ready(function(){
                         $(this).prop("checked",true);
                     }
                 });
+                $(".d_row_sub1").find("td").css("background-color", hlCol);
                 $("#ca0").prop("checked",true); 
                 break;
         }    
@@ -1356,14 +1368,16 @@ $(document).ready(function(){
            // Update class_count
            $("#class_count").html($(".chk_event:checked").length);
         }
+
     });
 
-    // Select all (2a)
+    // Select all (2a) - clean this up, the above is almost identical
     $(document).on("click", "#ca2", function(event) {
         var chkLen = $("#ca2:checked").length;
         switch(chkLen) {
             case 0:
                 $(".chk_event").prop("checked",false);
+                $(".d_row_sub1").find("td").css("background-color", "transparent");
                 $("#ca2").prop("checked",false);
                 break;
             default:
@@ -1372,6 +1386,7 @@ $(document).ready(function(){
                         $(this).prop("checked",true);
                     }
                 });
+                $(".d_row_sub1").find("td").css("background-color", hlCol);
                 $("#ca2").prop("checked",true); 
                 break;
         }    
@@ -1495,6 +1510,7 @@ $(document).ready(function(){
                             // Select next entry
                             if (curclasscount == 1) {
                                 $("#s" + nid).find(".chk_event").prop("checked", true);
+                                $("#s" + nid).find("td").css("background-color", hlCol);
                                 $("#class_count").html($(".chk_event:checked").length);
                             }
                         });
