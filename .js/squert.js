@@ -1275,9 +1275,6 @@ $(document).ready(function(){
     // Event classification
     //
     
-    // Highlight colour for selected events
-    var hlCol = "lightyellow";
-
     $(document).on("click", ".b_EX", function(event) {
         var nw, txt, cw = $(".cat_box").css("width");
         switch (cw) {
@@ -1334,6 +1331,11 @@ $(document).ready(function(){
         $(".cat_msg_txt").val("");
     });
 
+    
+
+    // Highlight colour for selected events
+    var hlCol = "lightyellow";
+
     var clickOne = 0, clck1 = 0, clck2 = 0;
     // Individual selects
     $(document).on("click", ".chk_event", function(event) {
@@ -1349,7 +1351,10 @@ $(document).ready(function(){
         if (event.shiftKey) {
             if (clck1 != clck2) {
                 $("#s" + clck1).nextUntil("#s" + clck2).find(".chk_event").prop("checked", true);
-                $("#s" + clck1).nextUntil("#s" + clck2).find("td").css("background-color", hlCol);
+                $("#s" + clck1).nextUntil("#s" + clck2).css("background-color", hlCol);
+                $("#s" + clck1).nextUntil("#s" + clck2).hover(
+                    function(){$(this).css("background-color", "#ffffaa")},
+                    function(){$(this).css("background-color", "lightyellow")});
                 clickOne = 0, clck1 = 0, clck2 = 0;
             }
         } 
@@ -1362,9 +1367,13 @@ $(document).ready(function(){
         clickOne = this.id.split("_");
 
         if ($(this).prop("checked") == true) {
-            $("#s" + clickTwo[1]).find("td").css("background-color", hlCol);  
+            $("#s" + clickTwo[1]).css("background-color", hlCol);
+            $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", "#ffffaa")},
+                                        function(){$(this).css("background-color", "lightyellow")});
         } else {
-            $("#s" + clickTwo[1]).find("td").css("background-color", "transparent");
+            $("#s" + clickTwo[1]).css("background-color", "#fafafa");
+            $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", "#f4f4f4")},
+                                        function(){$(this).css("background-color", "#fafafa")});
         }
     });
 
@@ -1415,6 +1424,8 @@ $(document).ready(function(){
                     }
                 });
                 $(".d_row_sub1").css("background-color", hlCol);
+                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#ffffaa")},
+                                       function(){$(this).css("background-color", "lightyellow")});
                 $("#ca2").prop("checked",true); 
                 break;
         }
