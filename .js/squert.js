@@ -1395,6 +1395,8 @@ $(document).ready(function(){
                     }
                 });
                 $(".d_row_sub1").css("background-color", hlCol);
+                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#ffffaa")},
+                                       function(){$(this).css("background-color", "lightyellow")});
                 $("#ca0").prop("checked",true); 
                 break;
         }    
@@ -1553,7 +1555,7 @@ $(document).ready(function(){
                                 $("#s" + nid).css("background-color", hlCol);
                                 $("#s" + nid).hover(function(){$(this).css("background-color", "#ffffaa")},
                                                     function(){$(this).css("background-color", "lightyellow")});
-                                $("#class_count").html($(".chk_event:checked").length);
+                                $("#class_count").text($(".chk_event:checked").length);
                             }
                         });
                    }); 
