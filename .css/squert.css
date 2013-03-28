@@ -58,13 +58,13 @@ div.cat_box {
 position:fixed;
 top:250px;
 right:0;
-width:25px;
+width:50px;
 border-left:1pt solid #000;
 border-top:1pt solid #000;
 border-bottom:1pt solid #000;
 border-bottom-left-radius:5px;
 border-top-left-radius:5px;
-padding-right:10px;
+padding-right:5px;
 padding-top:5px;
 padding-left:5px;
 text-align:center;
@@ -76,6 +76,14 @@ z-index:1;
 div.cat_ct {
 height:30px;
 text-align:center;
+}
+
+div.cat_f {
+width:15px;
+padding-top:5px;
+font-size:9px;
+color:#b4b4b4;
+float:left;
 }
 
 div.cat_val {
@@ -860,7 +868,6 @@ margin-right:4px;
 font-size:10px;
 width:15px;
 padding:5px;
-z-index:10;
 }
 
 .b_C1:hover,.b_C2:hover,.b_C3:hover,.b_C4:hover,.b_C5:hover,.b_C6:hover,.b_C7:hover,.b_ES:hover,.b_NA:hover,.b_ME:hover,.b_RT:hover,.b_EX:hover {

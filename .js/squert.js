@@ -47,6 +47,16 @@ $(document).ready(function(){
         return ret;
     }
 
+    $.ctrl = function(key, callback, args) {
+        $(document).keydown(function(e) {
+            if(!args) {args=[];}
+            if(e.keyCode == key.charCodeAt(0) && e.ctrlKey) {
+                callback.apply(this, args);
+                return false;
+            }
+        });        
+    }
+
     function getCountry(cc) {
 
         switch (cc) {
@@ -1278,16 +1288,16 @@ $(document).ready(function(){
     $(document).on("click", ".b_EX", function(event) {
         var nw, txt, cw = $(".cat_box").css("width");
         switch (cw) {
-            case "150px": 
-                nw = 25; 
+            case "400px": 
+                nw = 50; 
                 txt =  "&#8592\;"; 
                 $(".cat_val").fadeOut(function () {
                     $(".b_EX").html(txt);
                     $(".cat_box").css("width", nw + "px");
                 });
                 break;
-            case  "25px": 
-                nw = 150; 
+            case  "50px": 
+                nw = 400; 
                 txt = "&#8594\;";
                 $(".b_EX").html(txt);
                 $(".cat_box").css("width", nw + "px");
@@ -1296,8 +1306,14 @@ $(document).ready(function(){
         }
     });
 
+    $.ctrl('X', function() {
+        $(".b_EX").click();
+    });
+
     // Use function keys to trigger status buttons
     $(document).keydown(function(event){
+     
+
         function stopOthers() { 
             event.originalEvent.keyCode = 0;   
             event.preventDefault();
@@ -1323,6 +1339,7 @@ $(document).ready(function(){
         if (chkLen > 0) {
             $(".cat_msg").fadeIn();
         }
+        $(".cat_msg_txt").focus();
     });
 
     // Hide message box
@@ -1331,7 +1348,9 @@ $(document).ready(function(){
         $(".cat_msg_txt").val("");
     });
 
-    
+    $.ctrl('M', function() {
+        $(".b_ME").click();
+    });    
 
     // Highlight colour for selected events
     var hlCol = "lightyellow";

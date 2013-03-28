@@ -84,27 +84,27 @@ dbC();
 <br><div id=aaa-00 class=aaa></div><br><br><br>
 </div>
 <div class=cat_box>
-<div class=cat_ct><div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>
+<div class=cat_ct><div class=cat_f>F1</div><div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>
+<div class=cat_ct><div class=cat_f>F2</div><div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div id=b_class-13 class=b_C3 title='Attempted Unauthorized Access'>C3</div>
+<div class=cat_ct><div class=cat_f>F3</div><div id=b_class-13 class=b_C3 title='Attempted Unauthorized Access'>C3</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div id=b_class-14 class=b_C4 title='Denial of Service Attack'>C4</div>
+<div class=cat_ct><div class=cat_f>F4</div><div id=b_class-14 class=b_C4 title='Denial of Service Attack'>C4</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div id=b_class-15 class=b_C5 title='Policy Violation'>C5</div>
+<div class=cat_ct><div class=cat_f>F5</div><div id=b_class-15 class=b_C5 title='Policy Violation'>C5</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div id=b_class-16 class=b_C6 title='Reconnaissance'>C6</div>
+<div class=cat_ct><div class=cat_f>F6</div><div id=b_class-16 class=b_C6 title='Reconnaissance'>C6</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div id=b_class-17 class=b_C7 title='Malware'>C7</div>
+<div class=cat_ct><div class=cat_f>F7</div><div id=b_class-17 class=b_C7 title='Malware'>C7</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div id=b_class-1  class=b_NA title='No Action Req&#x2019;d.'>NA</div>
+<div class=cat_ct><div class=cat_f>F8</div><div id=b_class-1  class=b_NA title='No Action Req&#x2019;d.'>NA</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>
+<div class=cat_ct><div class=cat_f>F9</div><div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div class=b_ME title='Add Message'>M+</div>
+<div class=cat_ct><div class=cat_f>^M</div><div class=b_ME title='Add Message'>M+</div>
 <div class=cat_val></div></div>
-<div class=cat_ct><div class=b_EX title='Expand/Collapse'>&#8592;</div>
+<div class=cat_ct><div class=cat_f>^X</div><div class=b_EX title='Expand/Collapse'>&#8592;</div>
 <div class=cat_val></div></div>
 </div>
 <div class=cat_msg>
