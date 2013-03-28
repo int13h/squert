@@ -1550,7 +1550,9 @@ $(document).ready(function(){
                             if (curclasscount == 1) {
                                 $("#s" + nid).find(".chk_event").prop("checked", true);
                                 clickOne = $("#s" + nid).find(".chk_event").attr("id").split("_"); 
-                                $("#s" + nid).find("td").css("background-color", hlCol);
+                                $("#s" + nid).css("background-color", hlCol);
+                                $("#s" + nid).hover(function(){$(this).css("background-color", "#ffffaa")},
+                                                    function(){$(this).css("background-color", "lightyellow")});
                                 $("#class_count").html($(".chk_event:checked").length);
                             }
                         });
