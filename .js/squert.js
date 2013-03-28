@@ -1610,6 +1610,7 @@ $(document).ready(function(){
                 $("#esignature").text(newsigtotal);
             } else {
                 newboxtotal = parseInt($("#cat_count").text() - count);
+                $("#cat_count").text(newboxtotal);
             }
             if (newboxtotal == 0) { 
                 newView("u");
