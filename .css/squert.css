@@ -278,7 +278,7 @@ tr.d_row_active:hover {
 text-decoration:none;
 }
 
-tr.d_row:hover,tr.s_row:hover,tr.d_row_sub:hover,tr.d_row_sub1:hover {
+tr.d_row:hover,tr.s_row:hover,tr.d_row_sub:hover,.d_row_sub1:hover {
 background-color:#f4f4f4;
 }
 
@@ -387,12 +387,26 @@ padding:10px;
 }
 
 div.event_class {
-clear:both;
 float:left;
 background-color:transparent;
 font-weight:400;
 padding-bottom:10px;
 margin-left:10px;
+}
+
+div.event_time {
+float:right;
+background-color:transparent;
+font-weight:400;
+padding-bottom:10px;
+margin-right:10px;
+text-decoration:underline;
+color:navy;
+cursor:pointer;
+}
+
+div.event_time:hover {
+color:#545454;
 }
 
 div.right {

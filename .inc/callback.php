@@ -130,6 +130,7 @@ function es() {
     global $offset;
     $object = mysql_real_escape_string($_REQUEST['object']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
+    $sv = mysql_real_escape_string($_REQUEST['sv']);
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
@@ -163,7 +164,7 @@ function es() {
               $rt
               $filter
               GROUP BY f3
-              ORDER BY f5 DESC";
+              ORDER BY f5 $sv";
 
     $result = mysql_query($query);
 
@@ -181,6 +182,7 @@ function eg() {
     global $offset;
     $sid = mysql_real_escape_string($_REQUEST['object']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
+    $sv = mysql_real_escape_string($_REQUEST['sv']);
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
@@ -216,7 +218,7 @@ function eg() {
               AND signature_id = '$sid'
               $filter
               GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
-              ORDER BY maxTime DESC";
+              ORDER BY maxTime $sv";
 
     $result = mysql_query($query);
 
@@ -234,6 +236,7 @@ function ed() {
     global $offset;
     $comp = mysql_real_escape_string($_REQUEST['object']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
+    $sv = mysql_real_escape_string($_REQUEST['sv']);
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
@@ -266,8 +269,8 @@ function ed() {
               $rt
               $adqp
               AND (signature_id = '$sid' AND src_ip = '$src_ip' AND dst_ip = '$dst_ip')
-              ORDER BY timestamp DESC";
-
+              ORDER BY timestamp $sv";
+    
     $result = mysql_query($query);
     $rows = array();
 
@@ -283,6 +286,7 @@ function ee() {
 
     global $offset;
     $rt = mysql_real_escape_string($_REQUEST['rt']);
+    $sv = mysql_real_escape_string($_REQUEST['sv']);
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
@@ -320,7 +324,7 @@ function ee() {
               WHERE $when
               $rt
               $filter
-              ORDER BY timestamp DESC";
+              ORDER BY timestamp $sv";
 
     $result = mysql_query($query);
     $rows = array();

@@ -2,7 +2,9 @@
 
 $(document).ready(function(){
 
+    // Base timestamp
     var theWhen = $("#timestamp").val();
+    
     // Load main content
     eventList("0-aaa-00");
     $("#loader").show();
@@ -148,6 +150,7 @@ $(document).ready(function(){
     //
     // Toggle and update views
     //
+
     function newView(req) {
         var cv = $("#menu1").text();
         switch (req) { // Either an update or view change    
@@ -189,6 +192,20 @@ $(document).ready(function(){
 
     // RT check/uncheck
     $(document).on("click", "#rt", function(event) {
+        newView("u");
+    });
+
+    // Sort ASC/DESC
+    $(document).on("click", ".event_time", function(event) {
+        var csv = $(".event_time").text();
+        switch (csv) {
+            case "show oldest first":
+                $("#event_sort").val("ASC");
+                break;
+            case "show newest first":
+                $("#event_sort").val("DESC");
+                break;
+        }
         newView("u");
     });
 
@@ -326,9 +343,6 @@ $(document).ready(function(){
     }
 
     // Reset if headings are clicked
-    $(document).on("click", ".sort", function(event) {
-        closeRow();
-    });
 
     $(document).on("click", "#ev_close", function(event) {
         closeRow();
@@ -517,6 +531,13 @@ $(document).ready(function(){
             rt = 1;
         }
 
+        // How are we sorting?
+        var sortval = $("#event_sort").val(), sorttxt; 
+        switch (sortval) {
+            case "DESC": sorttxt = "show oldest first"; break;
+            case  "ASC": sorttxt = "show newest first"; break;
+        }
+
         // Check for any filters
         if ($('#search').val().length > 0) {
             var fParts = $('#search').val().split(" ");
@@ -554,7 +575,7 @@ $(document).ready(function(){
 
         // Level 0 view - Grouped by Signature
         case "0":
-          urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt;
+          urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
           });
@@ -673,7 +694,7 @@ $(document).ready(function(){
         // Level 1 view - Grouped by signature, source, destination
 
         case "1":
-          urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt;
+          urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
           });
@@ -813,7 +834,7 @@ $(document).ready(function(){
           var rowLoke = parts[1];
           var filter = $('#' + parts[1]).data('filter');
 
-          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2];
+          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2] + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb3(data)});
           });
@@ -911,7 +932,7 @@ $(document).ready(function(){
         // Level 2a view - No grouping, individual events
 
         case "2a":
-          urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt;
+          urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb3a(data)});
           });
@@ -1019,8 +1040,8 @@ $(document).ready(function(){
               tbl += "</div><div class=event_class>";
               tbl += "categorize <span class=bold id=class_count>" + 0 + "</span>";
               tbl += " of <span id=cat_count class=bold>" + sumED + "</span> event(s)" + cmsg;
-              tbl += "</div></td></tr>";
-              tbl += "</table>";
+              tbl += "</div><div class=event_time>" + sorttxt + "</div>";
+              tbl += "</td></tr></table>";
 
               tbl += "<table id=tl3b class=main align=center width=960 cellpadding=0 cellspacing=0>";
               tbl += head;
@@ -1278,6 +1299,7 @@ $(document).ready(function(){
         }
     });
 
+    // Use function keys to trigger status buttons
     $(document).keydown(function(event){
         function stopOthers() { 
             event.originalEvent.keyCode = 0;   
@@ -1325,9 +1347,11 @@ $(document).ready(function(){
         }
 
         if (event.shiftKey) {
-            $("#s" + clck1).nextUntil("#s" + clck2).find(".chk_event").prop("checked", true);
-            $("#s" + clck1).nextUntil("#s" + clck2).find("td").css("background-color", hlCol);
-            clickOne = 0, clck1 = 0, clck2 = 0;
+            if (clck1 != clck2) {
+                $("#s" + clck1).nextUntil("#s" + clck2).find(".chk_event").prop("checked", true);
+                $("#s" + clck1).nextUntil("#s" + clck2).find("td").css("background-color", hlCol);
+                clickOne = 0, clck1 = 0, clck2 = 0;
+            }
         } 
 
         // Update class_count
@@ -1350,8 +1374,10 @@ $(document).ready(function(){
         switch(chkLen) {
             case 0:
                 $(".chk_event").prop("checked",false);
-                $(".d_row_sub1").find("td").css("background-color", "transparent");
                 $("#ca0").prop("checked",false);
+                $(".d_row_sub1").css("background-color", "#fafafa");
+                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#f4f4f4")},
+                                       function(){$(this).css("background-color", "#fafafa")});
                 break;
             default:
                 $(".chk_event").each(function() {
@@ -1359,7 +1385,7 @@ $(document).ready(function(){
                         $(this).prop("checked",true);
                     }
                 });
-                $(".d_row_sub1").find("td").css("background-color", hlCol);
+                $(".d_row_sub1").css("background-color", hlCol);
                 $("#ca0").prop("checked",true); 
                 break;
         }    
@@ -1377,8 +1403,10 @@ $(document).ready(function(){
         switch(chkLen) {
             case 0:
                 $(".chk_event").prop("checked",false);
-                $(".d_row_sub1").find("td").css("background-color", "transparent");
                 $("#ca2").prop("checked",false);
+                $(".d_row_sub1").css("background-color", "#fafafa");
+                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#f4f4f4")},
+                                       function(){$(this).css("background-color", "#fafafa")});
                 break;
             default:
                 $(".chk_event").each(function() {
@@ -1386,10 +1414,10 @@ $(document).ready(function(){
                         $(this).prop("checked",true);
                     }
                 });
-                $(".d_row_sub1").find("td").css("background-color", hlCol);
+                $(".d_row_sub1").css("background-color", hlCol);
                 $("#ca2").prop("checked",true); 
                 break;
-        }    
+        }
         // Update class_count
         $("#class_count").html($(".chk_event:checked").length);
     });
@@ -1505,19 +1533,24 @@ $(document).ready(function(){
                             $("[id^=eview_]").remove();
                             $(".d_row_sub1").css('opacity','1');
                         }
+                        // Remove the row
                         $("#s" + pid[1]).fadeOut('fast', function() {
                             $("#s" + pid[1]).remove();
-                            // Select next entry
                             if (curclasscount == 1) {
                                 $("#s" + nid).find(".chk_event").prop("checked", true);
+                                clickOne = $("#s" + nid).find(".chk_event").attr("id").split("_"); 
                                 $("#s" + nid).find("td").css("background-color", hlCol);
                                 $("#class_count").html($(".chk_event:checked").length);
                             }
                         });
-                    });
+                   }); 
+
+                    // Update table (for sorter)
+                    $("#tl3b").trigger('update');
+
                 } else {
+
                     $(".chk_event:checked").each(function() {
-                       // var curID = $(this).parent(".d_row_sub1").attr('id'); 
                         var n = this.id.split("_");          
                         $("#class_box_" + n[1]).attr('class', newClass);
                         $("#class_box_" + n[1]).text(selTxt[1]);
@@ -1525,6 +1558,11 @@ $(document).ready(function(){
                             $(this).prop("disabled",true);
                         }
                     });
+
+                    
+                    $(".d_row_sub1").css("background-color", "#fafafa");
+                    $(".d_row_sub1").hover(function(){$(this).css("background-color", "#f4f4f4")},
+                                           function(){$(this).css("background-color", "#fafafa")});
                 }
                 
                 // Uncheck everything
@@ -1559,11 +1597,9 @@ $(document).ready(function(){
                 $("#esignature").text(newsigtotal);
             } else {
                 newboxtotal = parseInt($("#cat_count").text() - count);
-                $("#cat_count").text(newboxtotal);
-                if (newboxtotal == 0) {
-                    $("#b_update").click();
-                }
-                
+            }
+            if (newboxtotal == 0) { 
+                newView("u");
             }
         }
     }

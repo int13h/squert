@@ -84,8 +84,6 @@ dbC();
 <br><div id=aaa-00 class=aaa></div><br><br><br>
 </div>
 <div class=cat_box>
-<div class=cat_ct><div id=b_class-0 class=b_RT title='Awaiting Review'>RT</div>
-<div class=cat_val>0</div></div>
 <div class=cat_ct><div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>
 <div class=cat_val>0</div></div>
 <div class=cat_ct><div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>
@@ -121,6 +119,7 @@ Add a message to the selected events:
 </div>
 
 <input id=timestamp type=hidden value="<?php echo strtohex($when);?>">
+<input id=event_sort type=hidden value="DESC">
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
 </body>
 </html>
