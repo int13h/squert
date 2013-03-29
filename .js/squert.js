@@ -135,7 +135,6 @@ $(document).ready(function(){
     //
  
     var emTimeout = 30000;
-    var curCount = 0, lstCount = 0;
     window.setInterval(function(){
         var urArgs = "type=" + 6 + "&ts=" + theWhen;
         $(function(){
@@ -143,17 +142,21 @@ $(document).ready(function(){
         });
 
         function cb(data){
-            eval("theData=" + data);
-            curCount = theData[0].count;
-        }
-        if (lstCount == 0) {
-            lstCount = curCount;    
-        } 
-         
-        if (lstCount < curCount) {
-            eventCount = parseInt(curCount - lstCount);
-            $("#b_event").html("<b>Status:</b> New events are available");
-            lstCount = curCount;
+            eval("ec=" + data);
+            var esum = 0;
+
+            for (var i=0; i<ec.length; i++) {
+                var ecount = ec[i].count;
+                var eclass = ec[i].status;
+                esum += parseInt(ecount);
+                $("#b_class-" + eclass).next().text(ecount);
+            }
+            var lastcount = $(".cat_sum").text();
+            var newcount = esum;
+            $(".cat_sum").text(esum);
+            if (lastcount < newcount) {
+                $("#b_event").html("<b>Status:</b> New events are available");
+            }
         }
     }, emTimeout);
 
@@ -1291,7 +1294,7 @@ $(document).ready(function(){
             case "400px": 
                 nw = 50; 
                 txt =  "&#8592\;"; 
-                $(".cat_val").fadeOut(function () {
+                $(".cat_val,.cat_sum").fadeOut(function () {
                     $(".b_EX").html(txt);
                     $(".cat_box").css("width", nw + "px");
                 });
@@ -1301,7 +1304,7 @@ $(document).ready(function(){
                 txt = "&#8594\;";
                 $(".b_EX").html(txt);
                 $(".cat_box").css("width", nw + "px");
-                $(".cat_val").fadeIn();
+                $(".cat_val,.cat_sum").fadeIn();
                 break;
         }
     });
@@ -1997,5 +2000,4 @@ $(document).ready(function(){
         }
     });
 // The End.
-
 });

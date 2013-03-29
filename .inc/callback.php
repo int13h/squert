@@ -39,20 +39,27 @@ function ec() {
 
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
 
-    $query = "SELECT COUNT(*) AS count FROM event
+    //$query = "SELECT COUNT(*) AS count FROM event
+    //          LEFT JOIN sensor AS s ON event.sid = s.sid
+    //          WHERE $when AND event.status = 0
+    //          AND agent_type = 'snort'";
+
+    $query = "SELECT COUNT(status) AS count, status
+              FROM event
               LEFT JOIN sensor AS s ON event.sid = s.sid
-              WHERE $when AND event.status = 0
-              AND agent_type = 'snort'";
+              WHERE $when
+              AND agent_type = 'snort'
+              GROUP BY status";
 
     $result = mysql_query($query);
 
     $rows = array();
 
-    $row = mysql_fetch_assoc($result);
-    $rows[] = $row;
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
     $theJSON = json_encode($rows);
     echo $theJSON;
-
 }
 
 function si() {
