@@ -871,8 +871,9 @@ padding:5px;
 }
 
 .b_C1:hover,.b_C2:hover,.b_C3:hover,.b_C4:hover,.b_C5:hover,.b_C6:hover,.b_C7:hover,.b_ES:hover,.b_NA:hover,.b_ME:hover,.b_RT:hover,.b_EX:hover {
-opacity:0.7;
 cursor:pointer;
+background-color:#000;
+color:yellow;
 }
 
 .a_C1,.b_C1 {
@@ -1179,7 +1180,7 @@ td.c_on:hover {
 background-color:red;
 }
 
-div.b_close:hover,div.b_close_r:hover,.b_C1:hover,.b_C2:hover,.b_C3:hover,.b_C4:hover,.b_C5:hover,.b_C6:hover,.b_C7:hover,.b_ES:hover,.b_NA:hover,.b_ME:hover,.b_RT:hover,.b_EX:hover {
+div.b_close:hover,div.b_close_r:hover {
 opacity:0.7;
 cursor:pointer;
 }

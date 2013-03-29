@@ -1333,22 +1333,19 @@ $(document).ready(function(){
         }
     });
 
-    // Show message box
+    // Show comment box
     $(document).on("click", ".b_ME", function(event) {
-        var chkLen = parseInt($(".chk_event:checked").length + $(".chk_all:checked").length);
-        if (chkLen > 0) {
-            $(".cat_msg").fadeIn();
-        }
+        $(".cat_msg").fadeIn();
         $(".cat_msg_txt").focus();
     });
 
-    // Hide message box
+    // Hide comment box
     $(document).on("click", ".cat_msg_add", function(event) {
         $(".cat_msg").fadeOut();
         $(".cat_msg_txt").val("");
     });
 
-    $.ctrl('M', function() {
+    $.ctrl('C', function() {
         $(".b_ME").click();
     });    
 
@@ -1372,7 +1369,7 @@ $(document).ready(function(){
                 $("#s" + clck1).nextUntil("#s" + clck2).find(".chk_event").prop("checked", true);
                 $("#s" + clck1).nextUntil("#s" + clck2).css("background-color", hlCol);
                 $("#s" + clck1).nextUntil("#s" + clck2).hover(
-                    function(){$(this).css("background-color", "#ffffaa")},
+                    function(){$(this).css("background-color", "#EFEFC4")},
                     function(){$(this).css("background-color", "lightyellow")});
                 clickOne = 0, clck1 = 0, clck2 = 0;
             }
@@ -1387,7 +1384,7 @@ $(document).ready(function(){
 
         if ($(this).prop("checked") == true) {
             $("#s" + clickTwo[1]).css("background-color", hlCol);
-            $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", "#ffffaa")},
+            $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", "#EFEFC4")},
                                         function(){$(this).css("background-color", "lightyellow")});
         } else {
             $("#s" + clickTwo[1]).css("background-color", "#fafafa");
@@ -1414,7 +1411,7 @@ $(document).ready(function(){
                     }
                 });
                 $(".d_row_sub1").css("background-color", hlCol);
-                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#ffffaa")},
+                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#EFEFC4")},
                                        function(){$(this).css("background-color", "lightyellow")});
                 $("#ca0").prop("checked",true); 
                 break;
@@ -1445,7 +1442,7 @@ $(document).ready(function(){
                     }
                 });
                 $(".d_row_sub1").css("background-color", hlCol);
-                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#ffffaa")},
+                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#EFEFC4")},
                                        function(){$(this).css("background-color", "lightyellow")});
                 $("#ca2").prop("checked",true); 
                 break;
@@ -1572,7 +1569,7 @@ $(document).ready(function(){
                                 $("#s" + nid).find(".chk_event").prop("checked", true);
                                 clickOne = $("#s" + nid).find(".chk_event").attr("id").split("_"); 
                                 $("#s" + nid).css("background-color", hlCol);
-                                $("#s" + nid).hover(function(){$(this).css("background-color", "#ffffaa")},
+                                $("#s" + nid).hover(function(){$(this).css("background-color", "#EFEFC4")},
                                                     function(){$(this).css("background-color", "lightyellow")});
                                 $("#class_count").text($(".chk_event:checked").length);
                             }

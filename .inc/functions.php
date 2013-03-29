@@ -85,7 +85,7 @@ function fixTime($sDate, $sTime, $eDate, $eTime) {
     $end = strtotime("$eDate $eTime");
     $startDate = date("Y-m-d H:i:s", $start);
     $endDate = date("Y-m-d H:i:s", $end);
-    $when = "timestamp BETWEEN CONVERT_TZ('$startDate','$offset','+00:00') AND CONVERT_TZ('$endDate','$offset','+00:00')";
+    $when = "event.timestamp BETWEEN CONVERT_TZ('$startDate','$offset','+00:00') AND CONVERT_TZ('$endDate','$offset','+00:00')";
 
     return $when;
 }

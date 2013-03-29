@@ -102,13 +102,13 @@ dbC();
 <div class=cat_val>0</div></div>
 <div class=cat_ct><div class=cat_f>F9</div><div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div class=cat_f>^M</div><div class=b_ME title='Add Message'>M+</div>
+<div class=cat_ct><div class=cat_f>^C</div><div class=b_ME title='Add Comment'>C+</div>
 <div class=cat_val></div></div>
 <div class=cat_ct><div class=cat_f>^X</div><div class=b_EX title='Expand/Collapse'>&#8592;</div>
 <div class=cat_val></div></div>
 </div>
 <div class=cat_msg>
-Add a message to the selected events:
+Add a comment to the selected events:
 <input class=cat_msg_txt type=text maxlength=255><div class=cat_msg_add>CANCEL</div></div>
 <div id=bottom class=bottom>
 <div id=b_tray class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>

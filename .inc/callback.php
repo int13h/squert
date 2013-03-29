@@ -324,7 +324,7 @@ function ee() {
               WHERE $when
               $rt
               $filter
-              ORDER BY timestamp $sv";
+              ORDER BY event.timestamp $sv";
 
     $result = mysql_query($query);
     $rows = array();
@@ -334,7 +334,6 @@ function ee() {
     }
     $theJSON = json_encode($rows);
     echo $theJSON;
-
 }
 
 function pd() {
