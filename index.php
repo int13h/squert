@@ -84,8 +84,8 @@ dbC();
 <br><div id=aaa-00 class=aaa></div><br><br><br>
 </div>
 <div class=cat_box>
-<div class=cat_ct><div class=cat_f>&#8226;</div><div id=b_class-0 class=a_RT title='Queued Event'>RT</div>
-<div class=cat_val>0</div></div>
+<div class=cat_ct><div class=cat_f>^X</div><div id=b_class-0 class=o_RT title='Queued Event'>RT</div>
+<div class=cat_val>0</div><div class=cat_sum>0</div></div>
 <div class=cat_ct><div class=cat_f>F1</div><div id=b_class-11 class=b_C1 title='Unauthorized Admin Access'>C1</div>
 <div class=cat_val>0</div></div>
 <div class=cat_ct><div class=cat_f>F2</div><div id=b_class-12 class=b_C2 title='Unauthorized User Access'>C2</div>
@@ -104,10 +104,8 @@ dbC();
 <div class=cat_val>0</div></div>
 <div class=cat_ct><div class=cat_f>F9</div><div id=b_class-2  class=b_ES title='Escalate Event'>ES</div>
 <div class=cat_val>0</div></div>
-<div class=cat_ct><div class=cat_f>^C</div><div class=b_ME title='Add Comment'>C+</div>
-<div class=cat_sum>0</div></div>
-<div class=cat_ct><div class=cat_f>^X</div><div class=b_EX title='Expand/Collapse'>&#8592;</div>
-</div>
+<div class=cat_ct><div class=cat_f>^C</div><div class=b_ME title='Add Comment'>C+</div></div>
+
 </div>
 <div class=cat_msg>
 Add a comment to the selected events:

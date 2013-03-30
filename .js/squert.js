@@ -86,6 +86,47 @@ $(document).ready(function(){
       }
     };
 
+    // Get event statuses
+    function statusPoll(caller) {
+        var urArgs = "type=" + 6 + "&ts=" + theWhen;
+        $(function(){
+            $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
+        });
+
+        function cb(data){
+            eval("ec=" + data);
+            var esum = 0;
+
+            for (var i=0; i<ec.length; i++) {
+                var ecount = ec[i].count;
+                var eclass = ec[i].status;
+                esum += parseInt(ecount);
+                $("#b_class-" + eclass).next().text(ecount);
+            }
+            var lastcount = $(".cat_sum").text();
+            var newcount = esum;
+            $(".cat_sum").text(esum);
+
+            if (caller == 0) { // Fresh load
+                lastcount = newcount;
+            }
+
+            if (lastcount < newcount) {
+                $("#b_class-0").attr("class", "b_RT");
+                $("#b_event").html("<b>Status:</b> New events are available");
+            } else {
+                // Check if we are already alarmed
+                if (!$("#b_class-0").attr("class") == "b_RT"){ 
+                    $("#b_class-0").attr("class", "o_RT");
+                }
+            }
+        }
+    }
+
+    if ($(".cat_sum").text() == 0) {
+        statusPoll(0);
+    }
+    
     //
     // Grid
     //
@@ -136,28 +177,7 @@ $(document).ready(function(){
  
     var emTimeout = 30000;
     window.setInterval(function(){
-        var urArgs = "type=" + 6 + "&ts=" + theWhen;
-        $(function(){
-            $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
-        });
-
-        function cb(data){
-            eval("ec=" + data);
-            var esum = 0;
-
-            for (var i=0; i<ec.length; i++) {
-                var ecount = ec[i].count;
-                var eclass = ec[i].status;
-                esum += parseInt(ecount);
-                $("#b_class-" + eclass).next().text(ecount);
-            }
-            var lastcount = $(".cat_sum").text();
-            var newcount = esum;
-            $(".cat_sum").text(esum);
-            if (lastcount < newcount) {
-                $("#b_event").html("<b>Status:</b> New events are available");
-            }
-        }
+        statusPoll(1);
     }, emTimeout);
 
     //
@@ -196,6 +216,7 @@ $(document).ready(function(){
                 $("#loader").show();
                 break;
         }
+        $("#b_class-0").attr("class", "o_RT");
     }
 
     // Group and ungroup
@@ -1288,21 +1309,17 @@ $(document).ready(function(){
     // Event classification
     //
     
-    $(document).on("click", ".b_EX", function(event) {
+    $(document).on("click", "#b_class-0", function(event) {
         var nw, txt, cw = $(".cat_box").css("width");
         switch (cw) {
             case "400px": 
                 nw = 50; 
-                txt =  "&#8592\;"; 
                 $(".cat_val,.cat_sum").fadeOut(function () {
-                    $(".b_EX").html(txt);
                     $(".cat_box").css("width", nw + "px");
                 });
                 break;
             case  "50px": 
                 nw = 400; 
-                txt = "&#8594\;";
-                $(".b_EX").html(txt);
                 $(".cat_box").css("width", nw + "px");
                 $(".cat_val,.cat_sum").fadeIn();
                 break;
@@ -1310,7 +1327,7 @@ $(document).ready(function(){
     });
 
     $.ctrl('X', function() {
-        $(".b_EX").click();
+        $("#b_class-0").click();
     });
 
     // Use function keys to trigger status buttons
@@ -1593,7 +1610,6 @@ $(document).ready(function(){
                         }
                     });
 
-                    
                     $(".d_row_sub1").css("background-color", "#fafafa");
                     $(".d_row_sub1").hover(function(){$(this).css("background-color", "#f4f4f4")},
                                            function(){$(this).css("background-color", "#fafafa")});

@@ -56,7 +56,7 @@ text-align:center;
 
 div.cat_box {
 position:fixed;
-top:250px;
+top:200px;
 right:0;
 width:50px;
 border-left:1pt solid #000;
@@ -69,6 +69,7 @@ padding-top:5px;
 padding-left:5px;
 text-align:center;
 background-color:#e9e9e9;
+opacity:0.92;
 z-index:1;
 }
 
@@ -877,7 +878,7 @@ width:15px;
 padding:5px;
 }
 
-.a_C1,.a_C2,.a_C3,.a_C4,.a_C5,.a_C6,.a_C7,.a_ES,.a_NA,.a_RT,.b_C1,.b_C2,.b_C3,.b_C4,.b_C5,.b_C6,.b_C7,.b_ES,.b_NA,.b_RT,.b_ME {
+.a_C1,.a_C2,.a_C3,.a_C4,.a_C5,.a_C6,.a_C7,.a_ES,.a_NA,.a_RT,.b_C1,.b_C2,.b_C3,.b_C4,.b_C5,.b_C6,.b_C7,.b_ES,.b_NA,.b_RT,.o_RT,.b_ME {
 float:left;
 font-weight:700;
 text-align:center;
@@ -937,9 +938,21 @@ background-color:navy;
 color:#fff;
 }
 
-.a_RT,.b_RT {
+.a_RT {
 background-color:#cc0000;
 color:#fff;
+}
+
+.b_RT {
+background-color:#cc0000;
+color:#fff;
+cursor:pointer;
+}
+
+.o_RT {
+background-color:#666;
+color:#c9c9c9;
+cursor:pointer;
 }
 
 .b_TX {
