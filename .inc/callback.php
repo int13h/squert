@@ -39,11 +39,6 @@ function ec() {
 
     $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
 
-    //$query = "SELECT COUNT(*) AS count FROM event
-    //          LEFT JOIN sensor AS s ON event.sid = s.sid
-    //          WHERE $when AND event.status = 0
-    //          AND agent_type = 'snort'";
-
     $query = "SELECT COUNT(status) AS count, status
               FROM event
               LEFT JOIN sensor AS s ON event.sid = s.sid
@@ -483,7 +478,7 @@ function tx() {
 }
 
 function fi() {   
-    $user = mysql_real_escape_string($_REQUEST['user']);
+    $user = $_SESSION['sUser'];
     $mode = mysql_real_escape_string($_REQUEST['mode']);
 
     switch ($mode) {

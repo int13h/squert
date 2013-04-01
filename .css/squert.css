@@ -90,32 +90,23 @@ div.cat_val {
 display:none;
 float:left;
 margin-left:4px;
-margin-right:4px;
 font-size:12px;
-padding:3px;
+padding:3px 0px 3px 0px;
 text-align:left;
 color:#000;
 font-weight:medium;
-width:70px;
-border-radius:3px;
-background-color:#f4f4f4;
-border: 1pt solid #c9c9c9;
+width:0px;
+background-color:#bababa;
+border-radius:2px;
 }
 
 div.cat_sum {
 display:none;
-float:left;
-margin-left:4px;
-margin-right:4px;
-font-size:12px;
-padding:3px;
-text-align:left;
-color:#000;
-font-weight:bold;
-width:70px;
-border-radius:3px;
-background-color:yellow;
-border: 1pt solid #c9c9c9;
+}
+
+span.per {
+font-size:9px;
+margin-left:5px;
 }
 
 div.cat_msg {

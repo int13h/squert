@@ -96,13 +96,29 @@ $(document).ready(function(){
         function cb(data){
             eval("ec=" + data);
             var esum = 0;
-
+            
             for (var i=0; i<ec.length; i++) {
                 var ecount = ec[i].count;
                 var eclass = ec[i].status;
                 esum += parseInt(ecount);
-                $("#b_class-" + eclass).next().text(ecount);
+                $("#b_class-" + eclass).next().html("&nbsp;" + ecount);
             }
+          
+            for (var i=0; i<ec.length; i++) {
+                var ecount = ec[i].count;
+                var eclass = ec[i].status;
+                var w = 0;
+                if (esum > 0) {
+                    var p = parseFloat(ecount/esum*100).toFixed(3);
+                    var w = parseInt(p*2);
+                }
+                if (eclass == 0) {
+                    $("#b_class-" + 0).next().css("background-color", "#D9ABAB");
+                } 
+                $("#b_class-" + eclass).next().append("<span class=per>(" + p + "%)</span>");
+                $("#b_class-" + eclass).next().css("width", w + "px");
+            }
+            
             var lastcount = $(".cat_sum").text();
             var newcount = esum;
             $(".cat_sum").text(esum);
@@ -172,10 +188,10 @@ $(document).ready(function(){
     });
 
     //
-    // Event monitor
+    // Event monitor (how often we poll for new events)
     //
  
-    var emTimeout = 30000;
+    var emTimeout = 60000;
     window.setInterval(function(){
         statusPoll(1);
     }, emTimeout);
@@ -1312,16 +1328,16 @@ $(document).ready(function(){
     $(document).on("click", "#b_class-0", function(event) {
         var nw, txt, cw = $(".cat_box").css("width");
         switch (cw) {
-            case "400px": 
+            case "290px": 
                 nw = 50; 
-                $(".cat_val,.cat_sum").fadeOut(function () {
+                $(".cat_val").fadeOut(function () {
                     $(".cat_box").css("width", nw + "px");
                 });
                 break;
             case  "50px": 
-                nw = 400; 
+                nw = 290; 
                 $(".cat_box").css("width", nw + "px");
-                $(".cat_val,.cat_sum").fadeIn();
+                $(".cat_val").fadeIn();
                 break;
         }
     });
@@ -1370,7 +1386,8 @@ $(document).ready(function(){
     });    
 
     // Highlight colour for selected events
-    var hlCol = "lightyellow";
+    var hlcol = "lightyellow";
+    var hlhov = "#F6F6CB";
 
     var clickOne = 0, clck1 = 0, clck2 = 0;
     // Individual selects
@@ -1387,10 +1404,10 @@ $(document).ready(function(){
         if (event.shiftKey) {
             if (clck1 != clck2) {
                 $("#s" + clck1).nextUntil("#s" + clck2).find(".chk_event").prop("checked", true);
-                $("#s" + clck1).nextUntil("#s" + clck2).css("background-color", hlCol);
+                $("#s" + clck1).nextUntil("#s" + clck2).css("background-color", hlcol);
                 $("#s" + clck1).nextUntil("#s" + clck2).hover(
-                    function(){$(this).css("background-color", "#EFEFC4")},
-                    function(){$(this).css("background-color", "lightyellow")});
+                    function(){$(this).css("background-color", hlhov)},
+                    function(){$(this).css("background-color", hlcol)});
                 clickOne = 0, clck1 = 0, clck2 = 0;
             }
         } 
@@ -1403,9 +1420,9 @@ $(document).ready(function(){
         clickOne = this.id.split("_");
 
         if ($(this).prop("checked") == true) {
-            $("#s" + clickTwo[1]).css("background-color", hlCol);
-            $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", "#EFEFC4")},
-                                        function(){$(this).css("background-color", "lightyellow")});
+            $("#s" + clickTwo[1]).css("background-color", hlcol);
+            $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", hlhov)},
+                                        function(){$(this).css("background-color", hlcol)});
         } else {
             $("#s" + clickTwo[1]).css("background-color", "#fafafa");
             $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", "#f4f4f4")},
@@ -1430,9 +1447,9 @@ $(document).ready(function(){
                         $(this).prop("checked",true);
                     }
                 });
-                $(".d_row_sub1").css("background-color", hlCol);
-                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#EFEFC4")},
-                                       function(){$(this).css("background-color", "lightyellow")});
+                $(".d_row_sub1").css("background-color", hlcol);
+                $(".d_row_sub1").hover(function(){$(this).css("background-color", hlhov)},
+                                       function(){$(this).css("background-color", hlcol)});
                 $("#ca0").prop("checked",true); 
                 break;
         }    
@@ -1461,9 +1478,9 @@ $(document).ready(function(){
                         $(this).prop("checked",true);
                     }
                 });
-                $(".d_row_sub1").css("background-color", hlCol);
-                $(".d_row_sub1").hover(function(){$(this).css("background-color", "#EFEFC4")},
-                                       function(){$(this).css("background-color", "lightyellow")});
+                $(".d_row_sub1").css("background-color", hlcol);
+                $(".d_row_sub1").hover(function(){$(this).css("background-color", hlhov)},
+                                       function(){$(this).css("background-color", hlcol)});
                 $("#ca2").prop("checked",true); 
                 break;
         }
@@ -1501,24 +1518,46 @@ $(document).ready(function(){
         }        
         
         var catdata = intclass + "|||" + msg + "|||" + scidlist;
-        // URI can't be longer than 8190 bytes. If it is, truncate and loop
         if (catdata.length <= 8000) {
             // We are now ready to class
             urArgs = "type=" + 9 + "&catdata=" + catdata;
             $(function(){
-                $.get(".inc/callback.php?" + urArgs, function(data){cb9(data)}); 
+                $.get(".inc/callback.php?" + urArgs, function(data){cb9(data)});
             });
+        } 
+// This is incredibly lame. Fix.
+/*      } else {    
+            // URI can't be longer than 8190 bytes. If it is, truncate and loop
+            var shortlist = "";
+            $("#loader").show();
+            var oll = scidlist.length;
+            for (var i=0; i<oll; i++) {
+                shortlist += scidlist[i] + ",";
+                if (shortlist.length >= 7000 || i == (oll - 1)) {
+                    var newscidlist = shortlist.replace(/,$/, "");
+                    var catdata = intclass + "|||" + msg + "|||" + newscidlist;
+                    //$("#debug").append("<br>" + i + ":<br>" + newscidlist);
+                    urArgs = "type=" + 9 + "&catdata=" + catdata;
+                    if (i == (oll - 1)) {
+                        $.get(".inc/callback.php?" + urArgs, function(data){cb9(data)});     
+                    } else {              
+                        $.get(".inc/callback.php?" + urArgs);
+                    }
+                    shortlist = "";
+                }
+            }
+            $("#loader").hide();
         }
-
+*/
         function cb9(data){
             eval("catRaw=" + data);
             catDbg = catRaw.dbg;
             if (catDbg == "0") {
 
                 // How many events were selected
-                curclasscount = $("#class_count").text();
+                curclasscount = Number($("#class_count").text());
                 curtotalparentcount = $(".d_row_active").find(".b_ec_hot").text();
-               
+                // Grouped events 
                 if (curtotalparentcount > 0) {
 
                     // How many are in the parent
@@ -1588,16 +1627,16 @@ $(document).ready(function(){
                             if (curclasscount == 1) {
                                 $("#s" + nid).find(".chk_event").prop("checked", true);
                                 clickOne = $("#s" + nid).find(".chk_event").attr("id").split("_"); 
-                                $("#s" + nid).css("background-color", hlCol);
-                                $("#s" + nid).hover(function(){$(this).css("background-color", "#EFEFC4")},
-                                                    function(){$(this).css("background-color", "lightyellow")});
+                                $("#s" + nid).css("background-color", hlcol);
+                                $("#s" + nid).hover(function(){$(this).css("background-color", hlhov)},
+                                                    function(){$(this).css("background-color", hlcol)});
                                 $("#class_count").text($(".chk_event:checked").length);
                             }
                         });
                    }); 
 
-                    // Update table (for sorter)
-                    $("#tl3b").trigger('update');
+                   // Update table (for sorter)
+                   $("#tl3b").trigger('update');
 
                 } else {
 
@@ -1624,7 +1663,7 @@ $(document).ready(function(){
             }
         }
     }
-
+  
     function catMsg(count) {
         ess = '';
         if ( count > 1 ) {
@@ -1705,8 +1744,7 @@ $(document).ready(function(){
 
     function loadFilters(show) {
             
-        var curUser = $('#t_usr').data('c_usr');
-        urArgs = "type=8" + "&user=" + curUser + "&mode=query&data=0";
+        urArgs = "type=8" + "&mode=query&data=0";
         $(function(){
             $.get(".inc/callback.php?" + urArgs, function(data){cb6(data)}); 
         });
@@ -1931,8 +1969,7 @@ $(document).ready(function(){
             // Continue..
             oldCL = currentCL;
             fd = s2h(filterTxt.alias + "||" + filterTxt.name + "||" + filterTxt.notes + "||" + filterTxt.filter);
-            var curUser = $('#t_usr').data('c_usr');
-            urArgs = "type=8&user=" + curUser + "&mode=update&data=" + fd;
+            urArgs = "type=8&mode=update&data=" + fd;
 
             $(function(){
                 $.get(".inc/callback.php?" + urArgs, function(data){cb7(data)}); 
@@ -1996,8 +2033,7 @@ $(document).ready(function(){
     $(document).on("click", ".filter_remove", function(event) {
         var oktoRM = confirm("Are you sure you want to remove this filter?");
         if (oktoRM) {
-            var curUser = $('#t_usr').data('c_usr');
-            urArgs = "type=8&user=" + curUser + "&mode=remove&data=" + currentCL;
+            urArgs = "type=8&mode=remove&data=" + currentCL;
             $(function(){
                  $.get(".inc/callback.php?" + urArgs, function(data){cb8(data)});
             }); 
