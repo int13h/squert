@@ -87,6 +87,7 @@ $(document).ready(function(){
     };
 
     // Get event statuses
+    var eTotal = 0, qTotal = 0;
     function statusPoll(caller) {
         var urArgs = "type=" + 6 + "&ts=" + theWhen;
         $(function(){
@@ -113,6 +114,7 @@ $(document).ready(function(){
                     var w = parseInt(p*2);
                 }
                 if (eclass == 0) {
+                    qTotal = ecount;
                     $("#b_class-" + 0).next().css("background-color", "#D9ABAB");
                 } 
                 $("#b_class-" + eclass).next().append("<span class=per>(" + p + "%)</span>");
@@ -122,6 +124,7 @@ $(document).ready(function(){
             var lastcount = $(".cat_sum").text();
             var newcount = esum;
             $(".cat_sum").text(esum);
+            eTotal = esum;
 
             if (caller == 0) { // Fresh load
                 lastcount = newcount;
@@ -130,6 +133,8 @@ $(document).ready(function(){
             if (lastcount < newcount) {
                 $("#b_class-0").attr("class", "b_RT");
                 $("#b_event").html("<b>Status:</b> New events are available");
+                $("#etotal").html(eTotal);
+                $("#qtotal").html(qTotal);
             } else {
                 // Check if we are already alarmed
                 if (!$("#b_class-0").attr("class") == "b_RT"){ 
@@ -243,6 +248,11 @@ $(document).ready(function(){
     // RT check/uncheck
     $(document).on("click", "#rt", function(event) {
         newView("u");
+    });
+
+    $(document).on("click", ".box_red", function(event) {
+        $("#rt").prop("checked", true);
+        newView("u");        
     });
 
     // Sort ASC/DESC
@@ -664,8 +674,9 @@ $(document).ready(function(){
               if (rt == 1) {
                   sumSC = "-";
                   sumDC = "-";
+                  sumEC = eTotal;
               }
-               
+              var sumRT = 0;
               for (var i=0; i<d0.length; i++) {
 
                   // How many events are not categorized?
@@ -675,6 +686,7 @@ $(document).ready(function(){
                   if ( unClass > 0 ) {
                       rtClass = "b_ec_hot";
                       isActive = "row_active";
+                      sumRT += parseInt(unClass);
                   } else {
                       rtClass = "b_ec_cold";
                       isActive = "row";
@@ -716,7 +728,9 @@ $(document).ready(function(){
               }
 
               tbl += "<table id=tl0 width=960 cellpadding=0 cellspacing=0 align=center>";
-              tbl += "<td align=center><div class=big>Total Events</div><div id=etotal class=box>"; 
+              tbl += "<td align=center><div class=big>Queued Events (RT)</div><div class=box_red id=qtotal>";
+              tbl += sumRT + "</div></td>";
+              tbl += "<td align=center><div class=big>Total Events</div><div class=box id=etotal>"; 
               tbl += sumEC + "</div></td>";
               tbl += "<td align=center><div class=big>Total Signatures</div><div id=esignature class=box>";
               tbl += sumSI + "</div></td>";
@@ -1386,8 +1400,8 @@ $(document).ready(function(){
     });    
 
     // Highlight colour for selected events
-    var hlcol = "lightyellow";
-    var hlhov = "#F6F6CB";
+    var hlcol = "#FFFFE0";
+    var hlhov = "#FDFDD6";
 
     var clickOne = 0, clck1 = 0, clck2 = 0;
     // Individual selects
@@ -1678,19 +1692,22 @@ $(document).ready(function(){
         });
 
         // If we are just rt update Total boxes as we go
-        if ($('#rt').is(':checked')) {
-            if (!$("#ca2")[0]) {
-                newboxtotal = parseInt($("#etotal").text() - count);
-                newsigtotal = parseInt($("#esignature").text() - 1);
-                $("#etotal").text(newboxtotal);
-                $("#esignature").text(newsigtotal);
-            } else {
-                newboxtotal = parseInt($("#cat_count").text() - count);
-                $("#cat_count").text(newboxtotal);
-            }
-            if (newboxtotal == 0) { 
+        if (!$("#ca2")[0]) {
+            newboxtotal = parseInt($("#qtotal").text() - count);
+            if (newboxtotal < 0) { // We are out of sync
                 newView("u");
+            } else {   
+                newsigtotal = parseInt($("#esignature").text() - 1);
+                $("#qtotal").text(newboxtotal);
+                $("#esignature").text(newsigtotal);
             }
+        } else {
+            newboxtotal = parseInt($("#cat_count").text() - count);
+            $("#cat_count").text(newboxtotal);
+        }
+        
+        if (newboxtotal == 0) { 
+            newView("u");
         }
     }
 
