@@ -102,4 +102,37 @@ function strtohex($x) {
   return($s);
 } 
 
+function getSeverity($value,$steps,$startHex,$endHex) {
+    $x = round($value);
+    $start = hexdec($startHex);
+    $end = hexdec($endHex);
+
+    if ($x >= $steps) {
+        $x = $steps;
+    }
+
+    $theR0 = ($start & 0xff0000) >> 16;
+    $theG0 = ($start & 0x00ff00) >> 8;
+    $theB0 = ($start & 0x0000ff) >> 0;
+
+    $theR1 = ($end & 0xff0000) >> 16;
+    $theG1 = ($end & 0x00ff00) >> 8;
+    $theB1 = ($end & 0x0000ff) >> 0;
+    $theR = interpolate($theR0, $theR1, $x, $steps);
+    $theG = interpolate($theG0, $theG1, $x, $steps);
+    $theB = interpolate($theB0, $theB1, $x, $steps);
+
+    $theVal = ((($theR << 8) | $theG) << 8) | $theB;
+    $result = sprintf("#%06X", $theVal);
+
+    return $result;
+}
+
+function interpolate($pBegin, $pEnd, $pStep, $pMax) {
+    if ($pBegin < $pEnd) {
+      return (($pEnd - $pBegin) * ($pStep / $pMax)) + $pBegin;
+    } else {
+      return (($pBegin - $pEnd) * (1 - ($pStep / $pMax))) + $pEnd;
+    }
+}
 ?>

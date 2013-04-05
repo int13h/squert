@@ -131,15 +131,10 @@ $(document).ready(function(){
             }
 
             if (lastcount < newcount) {
-                $("#b_class-0").attr("class", "b_RT");
+                $(".rt_notice").fadeIn();
                 $("#b_event").html("<b>Status:</b> New events are available");
                 $("#etotal").html(eTotal);
                 $("#qtotal").html(qTotal);
-            } else {
-                // Check if we are already alarmed
-                if (!$("#b_class-0").attr("class") == "b_RT"){ 
-                    $("#b_class-0").attr("class", "o_RT");
-                }
             }
         }
     }
@@ -196,7 +191,7 @@ $(document).ready(function(){
     // Event monitor (how often we poll for new events)
     //
  
-    var emTimeout = 60000;
+    var emTimeout = 30000;
     window.setInterval(function(){
         statusPoll(1);
     }, emTimeout);
@@ -237,7 +232,7 @@ $(document).ready(function(){
                 $("#loader").show();
                 break;
         }
-        $("#b_class-0").attr("class", "o_RT");
+        $(".rt_notice").fadeOut();
     }
 
     // Group and ungroup
@@ -728,8 +723,8 @@ $(document).ready(function(){
               }
 
               tbl += "<table id=tl0 width=960 cellpadding=0 cellspacing=0 align=center>";
-              tbl += "<td align=center><div class=big>Queued Events (RT)</div><div class=box_red id=qtotal>";
-              tbl += sumRT + "</div></td>";
+              tbl += "<td align=center><div class=big>Queued Events (RT)</div><div class=box_red><span id=qtotal>";
+              tbl += sumRT + "</span><div class=rt_notice>!</div></div></td>";
               tbl += "<td align=center><div class=big>Total Events</div><div class=box id=etotal>"; 
               tbl += sumEC + "</div></td>";
               tbl += "<td align=center><div class=big>Total Signatures</div><div id=esignature class=box>";
