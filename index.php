@@ -81,6 +81,7 @@ dbC();
 </div>
 <div id=t_sum_content class=content>
 <div id=debug></div>
+<?php echo $todayLink;?>
 <br><div id=usr_filters></div><br>
 <br><div id=aaa-00 class=aaa></div><br><br><br>
 </div>

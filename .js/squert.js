@@ -86,6 +86,87 @@ $(document).ready(function(){
       }
     };
 
+    // Make a map
+    function doMap(req) {
+        var filter = 0;
+        urArgs = "type=" + 10 + "&filter=" + filter + "&ts=" + theWhen;
+        $(function(){
+            $.get(".inc/callback.php?" + urArgs, function(data){cb10(data)});
+        });
+
+        switch (req) {
+            case "draw": 
+                var tbl = "";
+                tbl += "<table id=map_box width=950 align=center border=0 cellpadding=0 cellspacing=0>";
+                tbl += "<tr><td class=mb_header align=right></td></tr>"; 
+                tbl += "<tr><td class=mb_box><canvas id=wm0 width=950 height=500></canvas></td></tr>";
+                tbl += "</table>";
+                $("#aaa-00").before(tbl);
+                break;
+        }
+
+        function cb10(data){
+            eval("mapRaw=" + data);
+            try {
+                var mapDetail = $.parseJSON("{" + mapRaw.all + "}");
+                var srcc    = mapRaw.srcc;
+                var srce    = mapRaw.srce;
+                var dstc    = mapRaw.dstc;
+                var dste    = mapRaw.dste;
+                var allc    = mapRaw.allc;
+                var alle    = mapRaw.alle;
+            } 
+            catch(e) {
+                var mapDetail = "{\"\"}";
+            }
+              
+            WorldMap({ id: "wm0",
+                rbgcolor: "#ffffff",
+                fgcolor: "#dddddd",
+                bordercolor: "#aaaaaa",
+                borderwidth: 1,
+                padding: 0,
+                detail: mapDetail 
+            });
+            header = "";
+            header += "<span class=mb_links>Source Countries:</span> ";
+            header += srcc + ", " + srce + " events";
+            header += "<span class=mb_links>Destination Countries:</span> " 
+            header += dstc + ", " + dste + " events";
+            header += "<span class=mb_links>All Countries:</span> ";
+            header += allc + ", " + alle + " events";
+            header += "&nbsp;&nbsp;<div id=map_redraw class=mb_refresh>refresh</div>";  
+
+            $(".mb_header").html(header);
+            $("#wm0").fadeIn();
+        }
+    }
+
+    // Draw map
+    $("#menu2").click(function(event) {
+        var cv = $("#menu2").text();
+        switch (cv) {
+            case "show map":
+                $("#menu2").text("hide map");
+                if (!$("#wm0")[0]) {
+                    doMap("draw");
+                } else {
+                    $("#map_box").show();
+                }
+                break;
+            case "hide map":
+                $("#menu2").text("show map");
+                $("#map_box").hide();
+                break;
+        }
+    });
+    
+    // Redraw map
+    $(document).on("click", "#map_redraw", function(event) {
+        $("#wm0").fadeOut();
+        doMap("redraw");
+    });
+
     // Get event statuses
     var eTotal = 0, qTotal = 0;
     function statusPoll(caller) {
@@ -245,8 +326,7 @@ $(document).ready(function(){
         newView("u");
     });
 
-    $(document).on("click", ".box_red", function(event) {
-        $("#rt").prop("checked", true);
+    $(document).on("click", ".rt_notice", function(event) {
         newView("u");        
     });
 
@@ -724,7 +804,7 @@ $(document).ready(function(){
 
               tbl += "<table id=tl0 width=960 cellpadding=0 cellspacing=0 align=center>";
               tbl += "<td align=center><div class=big>Queued Events (RT)</div><div class=box_red><span id=qtotal>";
-              tbl += sumRT + "</span><div class=rt_notice>!</div></div></td>";
+              tbl += sumRT + "</span><div class=rt_notice title=\"update results\">!</div></div></td>";
               tbl += "<td align=center><div class=big>Total Events</div><div class=box id=etotal>"; 
               tbl += sumEC + "</div></td>";
               tbl += "<td align=center><div class=big>Total Signatures</div><div id=esignature class=box>";

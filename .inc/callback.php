@@ -1,10 +1,10 @@
 <?php
 // Terminate if this launches without a valid session
-session_start();
-if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-    header ("Location: session.php?id=0");
-    exit();
-}
+//session_start();
+//if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
+//    header ("Location: session.php?id=0");
+//    exit();
+//}
 
 $base = dirname(__FILE__);
 include_once "$base/config.php";
@@ -27,6 +27,7 @@ $types = array(
                  '7' => 'tx',
                  '8' => 'fi',
                  '9' => 'cat',
+                '10' => 'map',
 );
 
 $type = $types[$type];
@@ -556,6 +557,142 @@ function cat() {
     echo $theJSON;
 }
 
-$type();
+function msg() {
+    $query = "SELECT COUNT(comment) AS c, comment, u.username
+              FROM history 
+              LEFT JOIN user_info AS u ON history.uid = u.uid 
+              WHERE timestamp BETWEEN CURDATE() - INTERVAL 20 DAY AND CURDATE() 
+              AND comment NOT IN('NULL','Auto Update','')
+              GROUP BY comment";
+}
 
+function map() {
+    $filter = $_REQUEST['filter'];
+    $when = hextostr($_REQUEST['ts']);
+
+    $srcq = "SELECT COUNT(src_ip) AS c, m1.cc 
+            FROM event 
+            LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
+            LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
+            WHERE $when
+            AND src_ip NOT BETWEEN 167772160 AND 184549375
+            AND src_ip NOT BETWEEN 2886729728 AND 2886795263
+            AND src_ip NOT BETWEEN 3232235520 AND 3232301055
+            AND m1.cc IS NOT NULL
+            GROUP BY m1.cc";
+
+    $dstq = "SELECT COUNT(dst_ip) AS c, m2.cc 
+            FROM event 
+            LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
+            LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
+            WHERE $when
+            AND dst_ip NOT BETWEEN 167772160 AND 184549375
+            AND dst_ip NOT BETWEEN 2886729728 AND 2886795263
+            AND dst_ip NOT BETWEEN 3232235520 AND 3232301055
+            AND m2.cc IS NOT NULL
+            GROUP BY m2.cc";
+
+    $srcr = mysql_query($srcq);
+    $dstr = mysql_query($dstq);
+
+    // A => src, B=> dst,  C=> cumulative
+    $a1 = $a2 = $b1 = $b2 = array();
+    $aHit = $bHit = $cHit = 'no';
+
+    // Source countries and count
+    while ($row = mysql_fetch_row($srcr)) {
+        $a1[] = $row[0];
+        $a2[] = $row[1];
+        $c1[] = $row[0];
+        $c2[] = $row[1];
+        $aHit = 'yes';
+        $cHit = 'yes';
+    }
+
+    // Destination countries and count
+    // As we loop through we check to see if we hit a country
+    // that we already processed so that we can derive a sum
+    while ($row = mysql_fetch_row($dstr)) {
+        $b1[] = $row[0];
+        $b2[] = $row[1];
+        if ($aHit == 'yes') {
+            $key = array_search($row[1],$c2);
+            if ($key === FALSE) {
+                $c1[] = $row[0];
+                $c2[] = $row[1];
+            } else {
+                $base = $c1[$key] + $row[0];
+                $c1[$key] = $base;
+            }
+        } else {
+            $c1[] = $row[0];
+            $c2[] = $row[1];
+        }
+
+        $bHit = 'yes';
+        $cHit = 'yes';
+    }        
+
+    $aSum = $bSum = $cSum = $aItems = $bItems = $cItems = 0;
+
+    function makeDetail($x1,$x2,$wmThres) {
+        $mapSC = '#919191';
+        $mapEC = '#8a0000';    
+        $detail = ""; 
+        $lc = count($x1);
+        for ($i=0; $i<$lc; $i++) {
+            $cc = strtolower($x2[$i]);
+            $col = getSeverity($x1[$i],$wmThres,$mapSC,$mapEC);
+            $detail .= "\"$cc\": \"$col\"";
+            if ($i < $lc-1) {
+                $detail .= ",";
+            }
+        }
+        return $detail;
+    }
+
+    if ($aHit == 'yes') {
+        $aItems = count($a1);
+        $aSum = array_sum($a1);
+        array_multisort($a1, SORT_DESC, $a2);
+        $th = $a1;
+        $wmThres = ret95($th);
+        $srcd = makeDetail($a1,$a2,$wmThres);
+    }
+
+    if ($bHit == 'yes') {
+        $bItems = count($b1);
+        $bSum = array_sum($b1);
+        array_multisort($b1, SORT_DESC, $b2);
+        $th = $b1;
+        $wmThres = ret95($th);
+        $dstd = makeDetail($b1,$b2,$wmThres);
+    }
+
+    if ($cHit == 'yes') {
+        $cItems = count($c1);
+        $cSum = array_sum($c1);
+        array_multisort($c1, SORT_DESC, $c2);
+        $th = $c1;
+        $wmThres = ret95($th);
+        $alld = makeDetail($c1,$c2,$wmThres);
+    }
+
+    $result = array("src"  => "$srcd", 
+                    "dst"  => "$dstd", 
+                    "all"  => "$alld",
+                    "srcc" => "$aItems",
+                    "srce" => "$aSum",
+                    "dstc" => "$bItems",
+                    "dste" => "$bSum",
+                    "allc" => "$cItems",
+                    "alle" => "$cSum",
+    );
+
+    $theJSON = json_encode($result);
+    echo $theJSON;
+
+}
+
+$type();
 ?>
