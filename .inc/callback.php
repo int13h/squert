@@ -635,15 +635,11 @@ function map() {
 
     $aSum = $bSum = $cSum = $aItems = $bItems = $cItems = 0;
 
-    function makeDetail($x1,$x2,$wmThres) {
-        $mapSC = '#919191';
-        $mapEC = '#8a0000';    
+    function makeDetail($x1,$x2) {
         $detail = ""; 
         $lc = count($x1);
         for ($i=0; $i<$lc; $i++) {
-            $cc = strtolower($x2[$i]);
-            $col = getSeverity($x1[$i],$wmThres,$mapSC,$mapEC);
-            $detail .= "\"$cc\": \"$col\"";
+            $detail .= "\"$x2[$i]\": \"$x1[$i]\"";
             if ($i < $lc-1) {
                 $detail .= ",";
             }
@@ -655,27 +651,21 @@ function map() {
         $aItems = count($a1);
         $aSum = array_sum($a1);
         array_multisort($a1, SORT_DESC, $a2);
-        $th = $a1;
-        $wmThres = ret95($th);
-        $srcd = makeDetail($a1,$a2,$wmThres);
+        $srcd = makeDetail($a1,$a2);
     }
 
     if ($bHit == 'yes') {
         $bItems = count($b1);
         $bSum = array_sum($b1);
         array_multisort($b1, SORT_DESC, $b2);
-        $th = $b1;
-        $wmThres = ret95($th);
-        $dstd = makeDetail($b1,$b2,$wmThres);
+        $dstd = makeDetail($b1,$b2);
     }
 
     if ($cHit == 'yes') {
         $cItems = count($c1);
         $cSum = array_sum($c1);
         array_multisort($c1, SORT_DESC, $c2);
-        $th = $c1;
-        $wmThres = ret95($th);
-        $alld = makeDetail($c1,$c2,$wmThres);
+        $alld = makeDetail($c1,$c2);
     }
 
     $result = array("src"  => "$srcd", 

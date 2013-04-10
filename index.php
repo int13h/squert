@@ -35,11 +35,13 @@ dbC();
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
 <link rel="stylesheet" type="text/css" href=".css/squert.css" />
+<link rel="stylesheet" type="text/css" href=".css/jquery-jvectormap-1.2.2.css" />
 <script type="text/javascript" src=".js/jq.js"></script>
 <script type="text/javascript" src=".js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src=".js/squert.js"></script>
 <script type="text/javascript" src=".js/charts.js"></script>
-<script type="text/javascript" src=".js/worldmap.js"></script>
+<script type="text/javascript" src=".js/jquery-jvectormap-1.2.2.min.js"></script>
+<script type="text/javascript" src=".js/jquery-jvectormap-world-mill-en.js"></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.common.core.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.bar.js" ></script>
 <script type="text/javascript" src=".js/RGraph/libraries/RGraph.pie.js" ></script>

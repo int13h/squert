@@ -97,9 +97,9 @@ $(document).ready(function(){
         switch (req) {
             case "draw": 
                 var tbl = "";
-                tbl += "<table id=map_box width=950 align=center border=0 cellpadding=0 cellspacing=0>";
+                tbl += "<table class=mb_table id=map_box cellpadding=0 cellspacing=0 align=center>";
                 tbl += "<tr><td class=mb_header align=right></td></tr>"; 
-                tbl += "<tr><td class=mb_box><canvas id=wm0 width=950 height=500></canvas></td></tr>";
+                tbl += "<tr><td class=mb_box></td></tr>";
                 tbl += "</table>";
                 $("#aaa-00").before(tbl);
                 break;
@@ -119,26 +119,40 @@ $(document).ready(function(){
             catch(e) {
                 var mapDetail = "{\"\"}";
             }
-              
-            WorldMap({ id: "wm0",
-                rbgcolor: "#ffffff",
-                fgcolor: "#dddddd",
-                bordercolor: "#aaaaaa",
-                borderwidth: 1,
-                padding: 0,
-                detail: mapDetail 
+
+            $(".mb_box").html("<div id=wm0 style=\"width:950px;height:500px;\"></div>");
+            $('#wm0').vectorMap({
+                map: 'world_mill_en',
+                color: '#f4f3f0',
+                backgroundColor: '#a5bfdd',
+                onRegionClick: function(event, code){
+                    $('#search').val("cc" + " " + code);
+                    $('#search').focus();
+                },
+                series: {
+                    regions: [{
+                        values: mapDetail,
+                        scale: ['#f4f4f4', '#545454'],
+                        normalizeFunction: 'polynomial'
+                    }]
+                },
+                onRegionLabelShow: function(e, el, code){
+                    el.html(el.html() + ' (' + mapDetail[code] + ' Events)');
+                }
             });
+
+            $("#wm0").fadeIn();
+
             header = "";
-            header += "<span class=mb_links>Source Countries:</span> ";
-            header += srcc + ", " + srce + " events";
-            header += "<span class=mb_links>Destination Countries:</span> " 
-            header += dstc + ", " + dste + " events";
-            header += "<span class=mb_links>All Countries:</span> ";
-            header += allc + ", " + alle + " events";
-            header += "&nbsp;&nbsp;<div id=map_redraw class=mb_refresh>refresh</div>";  
+            header += "<span class=mb_links>Countries as sources:</span> ";
+            header += srcc + " with " + srce + " events";
+            header += "<span class=mb_links>Countries as destinations:</span> " 
+            header += dstc + " with " + dste + " events";
+            header += "<span class=mb_links>Total countries:</span> ";
+            header += allc;
+            header += "&nbsp;&nbsp;<div id=map_redraw class=mb_refresh>update</div>";  
 
             $(".mb_header").html(header);
-            $("#wm0").fadeIn();
         }
     }
 
@@ -163,7 +177,9 @@ $(document).ready(function(){
     
     // Redraw map
     $(document).on("click", "#map_redraw", function(event) {
-        $("#wm0").fadeOut();
+        $("#wm0").fadeOut(function() {
+            $("#wm0").remove();
+        });
         doMap("redraw");
     });
 
