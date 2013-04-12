@@ -111,8 +111,9 @@ dbC();
 
 </div>
 <div class=cat_msg>
-<div class=cm_top>Add a comment to the selected events:
-<input class=cat_msg_txt type=text maxlength=255><div class=cat_msg_add>CANCEL</div></div></div>
+<div class=cm_top>Add a comment to the selected events: <input class=cat_msg_txt type=text maxlength=255><div class=cat_msg_add>CANCEL</div></div>
+<div class=cm_tbl></div>
+</div>
 
 <div id=bottom class=bottom>
 <div id=b_tray class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>

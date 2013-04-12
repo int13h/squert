@@ -110,36 +110,33 @@ margin-left:5px;
 
 div.cm_top {
 float:left;
-margin-left:-10px;
 padding:10px;
-padding-right:0px;
 position:fixed;
 background-color:#333;
 color:#fff;
 opacity:0.95;
-width:915px;
+width:900px;
+}
+
+div.cm_tbl {
+overflow:auto;
+margin-top:50px;
+padding:10px;
+height:430px;
 }
 
 div.cat_msg {
 position:fixed;
 top:150px;
 left:50%;
-height:500px;
+height:510px;
 margin-left:-470px;
 width:920px;
 background-color:#f4f4f4;
 border-radius:3px;
 border:2pt solid #c9c9c9;
-padding:10px;
-padding-top:0px;
 display:none;
 z-index:2;
-overflow:auto;
-}
-
-div.pcomm {
-margin-top:70px;
-width:100%;
 }
 
 div.tof {

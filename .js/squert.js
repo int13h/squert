@@ -1563,7 +1563,7 @@ $(document).ready(function(){
             tbl += head;
             tbl += row;
             tbl += "</table></div>";
-            $(".cat_msg").append(tbl);
+            $(".cm_tbl").append(tbl);
             $("#tlcom").tablesorter();
         }
         $(".content_active").fadeTo('fast',0.2);
