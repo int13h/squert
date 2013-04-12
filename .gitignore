@@ -7,3 +7,4 @@
 .js/config.js
 *.swp
 tests
+*.old

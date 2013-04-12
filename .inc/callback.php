@@ -1,10 +1,12 @@
 <?php
 // Terminate if this launches without a valid session
-//session_start();
-//if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
-//    header ("Location: session.php?id=0");
-//    exit();
-//}
+///*
+session_start();
+if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
+    header ("Location: session.php?id=0");
+    exit();
+}
+//*/
 
 $base = dirname(__FILE__);
 include_once "$base/config.php";
@@ -28,6 +30,7 @@ $types = array(
                  '8' => 'fi',
                  '9' => 'cat',
                 '10' => 'map',
+                '11' => 'comments',
 );
 
 $type = $types[$type];
@@ -141,13 +144,26 @@ function es() {
     }
     $when   = hextostr($_REQUEST['ts']);
     $filter = hextostr($_REQUEST['filter']);
+    
     if ($filter != 'empty') {
-        $filter = str_replace('&lt;','<', $filter);
-        $filter = str_replace('&gt;','>', $filter);
-        $filter = "AND " . $filter;
+        if (substr($filter, 0,4) == 'cmt ') {
+            $comment = explode('cmt ', $filter);
+            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
+                    WHERE history.comment = '$comment[1]'";
+        } else {
+            $filter = str_replace('&lt;','<', $filter);
+            $filter = str_replace('&gt;','>', $filter);
+            $filter = "AND " . $filter;
+            $qp2 = "WHERE $when
+                    $rt
+                    $filter";
+        }
     } else {
-        $filter = '';
+        $qp2 = "WHERE $when
+                $rt";
     }
+
+
     $query = "SELECT COUNT(event.signature) AS f1,
               event.signature AS f2,
               event.signature_id AS f3,
@@ -159,13 +175,11 @@ function es() {
               GROUP_CONCAT(DISTINCT(event.status)) AS f9,
               GROUP_CONCAT(DISTINCT(event.sid)) AS f10,
               GROUP_CONCAT(event.status) AS f11,
-              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(timestamp, '+00:00', '$offset'),12,2)) AS f12
+              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
-              WHERE $when
-              $rt
-              $filter
+              $qp2
               GROUP BY f3
               ORDER BY f5 $sv";
 
@@ -194,32 +208,43 @@ function eg() {
     $when = hextostr($_REQUEST['ts']);
     $filter = hextostr($_REQUEST['filter']);
     if ($filter != 'empty') {
-        $filter = str_replace('&lt;','<', $filter);
-        $filter = str_replace('&gt;','>', $filter);
-        $filter = "AND " . $filter;
+        if (substr($filter, 0,4) == 'cmt ') {
+            $comment = explode('cmt ', $filter);
+            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
+                    WHERE history.comment = '$comment[1]'
+                    AND event.signature_id = '$sid'";
+        } else {
+            $filter = str_replace('&lt;','<', $filter);
+            $filter = str_replace('&gt;','>', $filter);
+            $filter = "AND " . $filter;
+            $qp2 = "WHERE $when
+                    $rt
+                    AND event.signature_id = '$sid'
+                    $filter";
+        }
     } else {
-        $filter = '';
+        $qp2 = "WHERE $when
+                $rt
+                AND event.signature_id = '$sid'";
     }
-    $query = "SELECT COUNT(signature) AS count,
-              MAX(CONVERT_TZ(timestamp,'+00:00','$offset')) AS maxTime, 
-              INET_NTOA(src_ip) AS src_ip,
+
+    $query = "SELECT COUNT(event.signature) AS count,
+              MAX(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS maxTime, 
+              INET_NTOA(event.src_ip) AS src_ip,
               msrc.c_long AS src_cc,
-              INET_NTOA(dst_ip) AS dst_ip,
+              INET_NTOA(event.dst_ip) AS dst_ip,
               mdst.c_long AS dst_cc,
               msrc.cc AS srcc,
               mdst.cc AS dstc,
               GROUP_CONCAT(event.sid) AS c_sid,
               GROUP_CONCAT(event.cid) AS c_cid,
               GROUP_CONCAT(event.status) AS c_status,
-              GROUP_CONCAT(SUBSTR(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5)) AS c_ts,
-              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(timestamp, '+00:00', '$offset'),12,2)) AS f12
+              GROUP_CONCAT(SUBSTR(CONVERT_TZ(event.timestamp,'+00:00','$offset'),12,5)) AS c_ts,
+              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
-              WHERE $when
-              $rt
-              AND signature_id = '$sid'
-              $filter
+              $qp2
               GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
               ORDER BY maxTime $sv";
 
@@ -250,29 +275,48 @@ function ed() {
 
     if ($adqp === "empty") {
         $adqp = "";
+    } else {
+        $rt = "";
     }
 
     list($ln,$sid,$src_ip,$dst_ip) = explode("-", $comp);
     $src_ip = sprintf("%u", ip2long($src_ip));
     $dst_ip = sprintf("%u", ip2long($dst_ip));
 
-    $query = "SELECT status AS f1, 
-              CONVERT_TZ(timestamp,'+00:00','$offset') AS f2,
-              INET_NTOA(src_ip) AS f3,
-              src_port AS f4,
-              INET_NTOA(dst_ip) AS f5,
-              dst_port AS f6, 
-              sid AS f7,
-              cid AS f8,
-              ip_proto AS f9,
-              signature AS f10,
-              signature_id AS f11
+    $filter = hextostr($_REQUEST['filter']);
+
+    if ($filter != 'empty') {
+        if (substr($filter, 0,4) == 'cmt ') {
+            $comment = explode('cmt ', $filter);
+            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
+                    WHERE history.comment = '$comment[1]'
+                    AND (event.signature_id = '$sid'
+                    AND event.src_ip = '$src_ip'
+                    AND event.dst_ip = '$dst_ip')";
+        }
+    } else {
+        $qp2 = "WHERE $when
+                $rt
+                $adqp
+                AND (event.signature_id = '$sid' 
+                AND event.src_ip = '$src_ip' 
+                AND event.dst_ip = '$dst_ip')";
+    }
+
+    $query = "SELECT event.status AS f1, 
+              CONVERT_TZ(event.timestamp,'+00:00','$offset') AS f2,
+              INET_NTOA(event.src_ip) AS f3,
+              event.src_port AS f4,
+              INET_NTOA(event.dst_ip) AS f5,
+              event.dst_port AS f6, 
+              event.sid AS f7,
+              event.cid AS f8,
+              event.ip_proto AS f9,
+              event.signature AS f10,
+              event.signature_id AS f11
               FROM event
-              WHERE $when
-              $rt
-              $adqp
-              AND (signature_id = '$sid' AND src_ip = '$src_ip' AND dst_ip = '$dst_ip')
-              ORDER BY timestamp $sv";
+              $qp2
+              ORDER BY event.timestamp $sv";
     
     $result = mysql_query($query);
     $rows = array();
@@ -298,12 +342,23 @@ function ee() {
 
     $when   = hextostr($_REQUEST['ts']);
     $filter = hextostr($_REQUEST['filter']);
+ 
     if ($filter != 'empty') {
-        $filter = str_replace('&lt;','<', $filter);
-        $filter = str_replace('&gt;','>', $filter);
-        $filter = "AND " . $filter;
+        if (substr($filter, 0,4) == 'cmt ') {
+            $comment = explode('cmt ', $filter);
+            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
+                    WHERE history.comment = '$comment[1]'";
+        } else {
+            $filter = str_replace('&lt;','<', $filter);
+            $filter = str_replace('&gt;','>', $filter);
+            $filter = "AND " . $filter;
+            $qp2 = "WHERE $when
+                    $rt
+                    $filter";
+        }
     } else {
-        $filter = '';
+        $qp2 = "WHERE $when
+                $rt";
     }
 
     $query = "SELECT event.status AS f1, 
@@ -324,9 +379,7 @@ function ee() {
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
-              WHERE $when
-              $rt
-              $filter
+              $qp2
               ORDER BY event.timestamp $sv";
 
     $result = mysql_query($query);
@@ -557,13 +610,29 @@ function cat() {
     echo $theJSON;
 }
 
-function msg() {
-    $query = "SELECT COUNT(comment) AS c, comment, u.username
+function comments() {
+    $query = "SELECT COUNT(comment) AS f1,
+              comment AS f2,
+              u.username AS f3,
+              MIN(timestamp) AS f4,
+              MAX(timestamp) AS f5,
+              status AS f6
               FROM history 
               LEFT JOIN user_info AS u ON history.uid = u.uid 
-              WHERE timestamp BETWEEN CURDATE() - INTERVAL 20 DAY AND CURDATE() 
+              WHERE timestamp BETWEEN 
+              UTC_DATE() - INTERVAL 365 DAY AND UTC_TIMESTAMP()
               AND comment NOT IN('NULL','Auto Update','')
-              GROUP BY comment";
+              GROUP BY comment
+              ORDER BY f5 DESC";
+
+    $result = mysql_query($query);
+    $rows = array();
+
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
+    $theJSON = json_encode($rows);
+    echo $theJSON;
 }
 
 function map() {

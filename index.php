@@ -83,7 +83,6 @@ dbC();
 </div>
 <div id=t_sum_content class=content>
 <div id=debug></div>
-<?php echo $todayLink;?>
 <br><div id=usr_filters></div><br>
 <br><div id=aaa-00 class=aaa></div><br><br><br>
 </div>
@@ -112,8 +111,9 @@ dbC();
 
 </div>
 <div class=cat_msg>
-Add a comment to the selected events:
-<input class=cat_msg_txt type=text maxlength=255><div class=cat_msg_add>CANCEL</div></div>
+<div class=cm_top>Add a comment to the selected events:
+<input class=cat_msg_txt type=text maxlength=255><div class=cat_msg_add>CANCEL</div></div></div>
+
 <div id=bottom class=bottom>
 <div id=b_tray class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
 <div id=b_class class=b_class><span class=class_msg></span>&nbsp;</div>

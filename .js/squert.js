@@ -94,14 +94,19 @@ $(document).ready(function(){
             $.get(".inc/callback.php?" + urArgs, function(data){cb10(data)});
         });
 
+        var working = "Working<br><img src=.css/load.gif>";
+
         switch (req) {
             case "draw": 
                 var tbl = "";
                 tbl += "<table class=mb_table id=map_box cellpadding=0 cellspacing=0 align=center>";
                 tbl += "<tr><td class=mb_header align=right></td></tr>"; 
-                tbl += "<tr><td class=mb_box></td></tr>";
+                tbl += "<tr><td class=mb_box>" + working + "</td></tr>";
                 tbl += "</table>";
                 $("#aaa-00").before(tbl);
+                break;
+            case "redraw":
+                $('.mb_box').html(working);
                 break;
         }
 
@@ -119,7 +124,9 @@ $(document).ready(function(){
             catch(e) {
                 var mapDetail = "{\"\"}";
             }
-
+            
+            // What is our current event total?
+            var esum = $('#event_sum').val();
             $(".mb_box").html("<div id=wm0 style=\"width:950px;height:500px;\"></div>");
             $('#wm0').vectorMap({
                 map: 'world_mill_en',
@@ -137,11 +144,14 @@ $(document).ready(function(){
                     }]
                 },
                 onRegionLabelShow: function(e, el, code){
-                    el.html(el.html() + ' (' + mapDetail[code] + ' Events)');
+                    if (mapDetail[code]) {
+                        var eper = parseFloat(mapDetail[code]/esum*100).toFixed(3);
+                        el.html(el.html() + ' (' + mapDetail[code] + ' Events ' + eper + '% of Total)');
+                    } else {
+                        el.html(el.html());
+                    }
                 }
             });
-
-            $("#wm0").fadeIn();
 
             header = "";
             header += "<span class=mb_links>Countries as sources:</span> ";
@@ -177,9 +187,6 @@ $(document).ready(function(){
     
     // Redraw map
     $(document).on("click", "#map_redraw", function(event) {
-        $("#wm0").fadeOut(function() {
-            $("#wm0").remove();
-        });
         doMap("redraw");
     });
 
@@ -222,6 +229,7 @@ $(document).ready(function(){
             var newcount = esum;
             $(".cat_sum").text(esum);
             eTotal = esum;
+            $("#event_sum").val(eTotal);
 
             if (caller == 0) { // Fresh load
                 lastcount = newcount;
@@ -239,7 +247,19 @@ $(document).ready(function(){
     if ($(".cat_sum").text() == 0) {
         statusPoll(0);
     }
-    
+
+    //
+    // Event monitor (how often we poll for new events)
+    //
+ 
+    var emTimeout = 30000;
+    window.setInterval(function(){
+        if ($('#search').val().length == 0) {    
+            statusPoll(1);
+        }
+    }, emTimeout);
+
+   
     //
     // Grid
     //
@@ -283,15 +303,6 @@ $(document).ready(function(){
             $("#b_update").click();           
         }
     });
-
-    //
-    // Event monitor (how often we poll for new events)
-    //
- 
-    var emTimeout = 30000;
-    window.setInterval(function(){
-        statusPoll(1);
-    }, emTimeout);
 
     //
     // Toggle and update views
@@ -370,6 +381,10 @@ $(document).ready(function(){
         if(!e) e=window.event;
         key = e.keyCode ? e.keyCode : e.which;
         if(key == 13) {
+            // Close comment box if it is open
+            if ($('.cat_msg')[0]) {
+                $('.cat_msg_add').click();
+            }
             newView("u");
         }
     });
@@ -586,6 +601,7 @@ $(document).ready(function(){
             // Reset checkbox
             $(".chk_all").prop("checked",false);
 
+            // Did they click RT or ALL?
             switch (columnType) {
                 case "l": adqp = s2h("AND event.status = 0"); break;
                 case "r": adqp = s2h("empty"); break;
@@ -692,36 +708,41 @@ $(document).ready(function(){
         // Check for any filters
         if ($('#search').val().length > 0) {
             var fParts = $('#search').val().split(" ");
-            // Now see if the requested filter exists
-            if ($("#tr_" + fParts[0]).length > 0) {
-                tmpFilter = $("#tr_" + fParts[0]).data('filter');
-                // Now see if we need to modify the query
-                if(fParts[1]) { 
-                    // This is the base filter
-                    preFilter = h2s(tmpFilter);
-                    // This is the user supplied text.
-                    theQuestion = fParts[1].replace(/['@|&;*\\`]/g, "");
-                    // We will accept multiple questions if they are comma delimited
-                    questionParts = theQuestion.split(",");
-                    if (questionParts.length > 1) {
-                        var f = '(';
-                        for (var i = 0; i < questionParts.length; i++) {
-                            f += preFilter.replace(/\$/g, questionParts[i]);
-                            if (i != (questionParts.length - 1)) {
-                                f += " OR ";
-                            } 
-                        }
-                        f += ')'; 
-                        theFilter = s2h(f); 
+            if (fParts[0] == 'cmt') {
+                theFilter = s2h($('#search').val()); 
+            } else {
+                // Now see if the requested filter exists
+                if ($("#tr_" + fParts[0]).length > 0) {
+                    tmpFilter = $("#tr_" + fParts[0]).data('filter');
+                    // Now see if we need to modify the query
+                    if(fParts[1]) { 
+                        // This is the base filter
+                        preFilter = h2s(tmpFilter);
+                        // This is the user supplied text.
+                        theQuestion = fParts[1].replace(/['@|&;*\\`]/g, "");
+                        // We will accept multiple questions if they are comma delimited
+                        questionParts = theQuestion.split(",");
+                        if (questionParts.length > 1) {
+                            var f = '(';
+                            for (var i = 0; i < questionParts.length; i++) {
+                                f += preFilter.replace(/\$/g, questionParts[i]);
+                                if (i != (questionParts.length - 1)) {
+                                    f += " OR ";
+                                } 
+                            }
+                            f += ')'; 
+                            theFilter = s2h(f); 
+                        } else {
+                            var newFilter = preFilter.replace(/\$/g, questionParts[0]);
+                            theFilter = s2h(newFilter);
+                        }        
                     } else {
-                        var newFilter = preFilter.replace(/\$/g, questionParts[0]);
-                        theFilter = s2h(newFilter);
-                    }     
-                } else {
-                    theFilter = tmpFilter;
+                        theFilter = tmpFilter;
+                    }
                 }
             }
-        }        
+        }
+
         switch (parts[0]) {
 
         // Level 0 view - Grouped by Signature
@@ -989,7 +1010,7 @@ $(document).ready(function(){
           var rowLoke = parts[1];
           var filter = $('#' + parts[1]).data('filter');
 
-          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2] + "&sv=" + sortval;
+          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2] + "&filter=" + theFilter + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb3(data)});
           });
@@ -1414,16 +1435,35 @@ $(document).ready(function(){
     $(document).on("click", ".sub_filter,.row_filter", function() {
         var prefix = $(this).data('type');
         var suffix = $(this).html();
+        var tfocus = "#search";
         switch (prefix) {
-            case  'ip': $('#search').val(prefix + " " + suffix); break;
-            case  'cc': var cc = $(this).data('value');
-                        $('#search').val(prefix + " " + cc); break;  
-            case 'sid': var value = $(this).data('value');
-                        $('#search').val(prefix + " " + value); break; 
-            case 'spt': $('#search').val(prefix + " " + suffix); break;
-            case 'dpt': $('#search').val(prefix + " " + suffix); break;
+            case    'ip': $('#search').val(prefix + " " + suffix);
+                          break;
+
+            case    'cc': var cc = $(this).data('value');
+                          $('#search').val(prefix + " " + cc);
+                          break;
+
+            case 'cmt_f': var newprefix = prefix.split("_");
+                          suffix = $(this).prev().html();
+                          $('#search').val(newprefix[0] + " " + suffix);
+                          break;
+          
+            case 'cmt_c': $('.cat_msg_txt').val(suffix);
+                          tfocus = ".cat_msg_txt";
+                          break;
+ 
+            case   'sid': var value = $(this).data('value');
+                          $('#search').val(prefix + " " + value);
+                          break;
+ 
+            case   'spt': $('#search').val(prefix + " " + suffix);
+                          break;
+
+            case   'dpt': $('#search').val(prefix + " " + suffix);
+                          break;
         } 
-        $('#search').focus();
+        $(tfocus).focus();
     });
 
     //
@@ -1476,13 +1516,66 @@ $(document).ready(function(){
 
     // Show comment box
     $(document).on("click", ".b_ME", function(event) {
+        
+        urArgs = "type=11";
+
+        $(function(){
+            $.get(".inc/callback.php?" + urArgs, function(data){cb11(data)});
+        });
+
+        function cb11(data){
+            eval("comraw=" + data);
+            var tbl = '', head = '', row = ''; 
+
+            head += "<thead><tr>";
+            head += "<th class=sub width=20>ST</th>";
+            head += "<th class=sub colspan=2>COMMENT</th>";
+            head += "<th class=sub width=70>COUNT</th>";
+            head += "<th class=sub width=100>USERNAME</th>";
+            head += "<th class=sub width=75>EPOCH</th>";
+            head += "<th class=sub width=75>LAST</th>";
+            head += "</tr></thead>";         
+ 
+            for (var i=0; i<comraw.length; i++) {
+                var comment = comraw[i].f2  || "-";
+                var count   = comraw[i].f1  || "-";
+                var user    = comraw[i].f3 || "-";  
+                var epoch   = comraw[i].f4 || "-";
+                var last    = comraw[i].f5 || "-";
+                var eclass  = comraw[i].f6 || "-";
+
+                tclass = "c" + eclass;
+                cv = classifications.class[tclass][0].short;
+                row += "<tr class=pcomm>";
+                row += "<td class=sub><div class=a_" + cv + ">" + cv + "</td>"; 
+                row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
+                row += "<td class=row_filter data-type=cmt_f><div class=tof title=\"Add as filter\">F</div></td>";
+                row += "<td class=sub>" + count + "</td>";
+                row += "<td class=sub>" + user + "</td>";
+                row += "<td class=sub>" + epoch + "</td>";
+                row += "<td class=sub>" + last + "</td></tr>";
+            }
+
+            tbl += "<div class=pcomm>";
+            tbl += "<b>Note:</b> click a comment below to reuse it (followed by a classification action) <b>or</b> ";
+            tbl += "click on the \"F\" icon followed by \"enter\" to use as a filter<br>";
+            tbl += "<table id=tlcom width=930 class=table cellpadding=0 cellspacing=0>";
+            tbl += head;
+            tbl += row;
+            tbl += "</table></div>";
+            $(".cat_msg").append(tbl);
+            $("#tlcom").tablesorter();
+        }
+        $(".content_active").fadeTo('fast',0.2);
         $(".cat_msg").fadeIn();
-        $(".cat_msg_txt").focus();
+        $(".cat_msg_txt").focus();   
     });
 
     // Hide comment box
     $(document).on("click", ".cat_msg_add", function(event) {
         $(".cat_msg").fadeOut();
+        $(".content_active").fadeTo('fast',1);
+        $(".pcomm").remove();
         $(".cat_msg_txt").val("");
     });
 
