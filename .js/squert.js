@@ -73,16 +73,16 @@ $(document).ready(function(){
 
     // Classifications
     var classifications = {"class":{  
-        "c11":[{"short": "C1", "long": "Unauthorized Admin Access"}],
-        "c12":[{"short": "C2", "long": "Unauthorized User Access"}],
-        "c13":[{"short": "C3", "long": "Attempted Unauthorized Access"}],
-        "c14":[{"short": "C4", "long": "Denial of Service Attack"}],
-        "c15":[{"short": "C5", "long": "Policy Violation"}],
-        "c16":[{"short": "C6", "long": "Reconnaissance"}],
-        "c17":[{"short": "C7", "long": "Malware"}],
-        "c2":[{"short": "ES", "long": "Escalated Event"}],
-        "c1":[{"short": "NA", "long": "No Action Req'd."}],
-        "c0":[{"short": "RT", "long": "Unclassified"}]
+        "c11":[{"colour": "#c00", "short": "C1", "long": "Unauthorized Admin Access"}],
+        "c12":[{"colour": "#f60", "short": "C2", "long": "Unauthorized User Access"}],
+        "c13":[{"colour": "#f90", "short": "C3", "long": "Attempted Unauthorized Access"}],
+        "c14":[{"colour": "#c90", "short": "C4", "long": "Denial of Service Attack"}],
+        "c15":[{"colour": "#99c", "short": "C5", "long": "Policy Violation"}],
+        "c16":[{"colour": "#fc0", "short": "C6", "long": "Reconnaissance"}],
+        "c17":[{"colour": "#c6f", "short": "C7", "long": "Malware"}],
+         "c2":[{"colour": "#FFC0CB", "short": "ES", "long": "Escalated Event"}],
+         "c1":[{"colour": "#ADD8E6", "short": "NA", "long": "No Action Req'd."}],
+         "c0":[{"colour": "#cc0000", "short": "RT", "long": "Unclassified"}]
       }
     };
 
@@ -259,15 +259,11 @@ $(document).ready(function(){
         }
     }, emTimeout);
 
-   
-    //
-    // Grid
-    //
+    // 24 Grid
 
     function mkGrid(values) {
-        
-        cells = "<table class=grid cellspacing=none><tr>";
-        composite = values.split(",");
+        var cells = "<table class=grid cellspacing=none><tr>";
+        var composite = values.split(",");
         for (var i=0; i<24;) {
             var n = i;
 	    if (n < 10) {
@@ -293,6 +289,34 @@ $(document).ready(function(){
        return cells;
     }
  
+    // Event Classification grid
+    function catGrid(values) {
+        var cells = "<table class=grid cellspacing=none><tr>";
+        var composite = values.split(",");
+        var cats = [11,12,13,14,15,16,17,1,2];
+        for (var i=0; i<9;) {
+            var o = 0, n = cats[i];
+            for (var c = 0; c < composite.length; ++c) {
+                if (composite[c] == n)
+                    o++;
+            }
+            var cl = "c" + cats[i];
+            var vc = classifications.class[cl][0].colour;
+            var vt = classifications.class[cl][0].long;
+            if (o > 0) {
+                cells += "<td class=cl_on title=\"" + vt + "\" style=\"background-color:" + vc + "\">1</td>";
+            } else {
+                cells += "<td class=cl_off title=\"" + vt + "\">0</td>"; 
+            }
+            if (cats[i] == 13 || cats[i] == 16) {
+                cells += "</tr><tr>";
+            }
+       i++; 
+       }
+
+       cells += "</tr></table>";
+       return cells;
+    }
     //
     // Filter search box
     //
@@ -1544,10 +1568,9 @@ $(document).ready(function(){
                 var last    = comraw[i].f5 || "-";
                 var eclass  = comraw[i].f6 || "-";
 
-                tclass = "c" + eclass;
-                cv = classifications.class[tclass][0].short;
+                var cgrid = catGrid(eclass);
                 row += "<tr class=pcomm>";
-                row += "<td class=sub><div class=a_" + cv + ">" + cv + "</td>"; 
+                row += "<td class=sub>" + cgrid + "</td>"; 
                 row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
                 row += "<td class=row_filter data-type=cmt_f><div class=tof title=\"Add as filter\">F</div></td>";
                 row += "<td class=sub>" + count + "</td>";
@@ -1557,7 +1580,7 @@ $(document).ready(function(){
             }
 
             tbl += "<div class=pcomm>";
-            tbl += "<b>Note:</b> click a comment below to reuse it (followed by a classification action) <b>or</b> ";
+            tbl += "<b>Note:</b> you can click a comment below to reuse it (followed by a classification action) <b>or</b> ";
             tbl += "click on the \"F\" icon followed by \"enter\" to use as a filter<br>";
             tbl += "<table id=tlcom width=930 class=table cellpadding=0 cellspacing=0>";
             tbl += head;

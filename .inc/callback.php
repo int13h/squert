@@ -616,7 +616,7 @@ function comments() {
               u.username AS f3,
               MIN(timestamp) AS f4,
               MAX(timestamp) AS f5,
-              status AS f6
+              GROUP_CONCAT(DISTINCT(status)) AS f6
               FROM history 
               LEFT JOIN user_info AS u ON history.uid = u.uid 
               WHERE timestamp BETWEEN 
