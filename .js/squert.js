@@ -1721,7 +1721,7 @@ $(document).ready(function(){
 
     function eClass(caller,intclass) {
         // The sid.cid values
-        var scid= "";
+        var scid= "", scidlist = "";
         if ($(".eview_sub1")[0] || $("#ca2")[0]) {
             $(".chk_event:checked").each(function() {
                 scid += $(this).val() + ",";

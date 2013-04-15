@@ -62,7 +62,11 @@ this should be placed in the "[mysqld]" section of my.cnf
 
 `squert/.scripts/ip2c.tcl`
 
-9) Create a scheduled task to keep the mappings tables up to date:
+11) Add an index to comment column in Sguils history table:
+
+`mysql -N -B --user=root --password=toor -e "CREATE INDEX comment ON sguildb.history (comment(50));"`
+
+12) Create a scheduled task to keep the mappings tables up to date:
 
 `*/5     *       *       *       *       /usr/local/bin/php -e /usr/local/www/squert/.inc/ip2c.php 1 > /dev/null 2>&1`
 
