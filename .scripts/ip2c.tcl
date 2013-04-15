@@ -282,7 +282,7 @@ if {$fail == "no"} {
             set urlparts(user) "anonymous"
         }
         if {$urlparts(pwd) == {}} {
-            set urlparts(pwd) "user@localhost.localdomain"
+            set urlparts(pwd) ""
         }
         if {$urlparts(port) == {}} {
             set urlparts(port) 21

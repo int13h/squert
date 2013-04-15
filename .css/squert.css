@@ -134,9 +134,9 @@ margin-left:-470px;
 width:920px;
 background-color:#f4f4f4;
 border-radius:3px;
-border:2pt solid #c9c9c9;
+border:1pt solid #000;
 display:none;
-z-index:2;
+z-index:20;
 }
 
 div.tof {
@@ -1362,8 +1362,8 @@ border-top-right-radius:5px;
 td.mb_box {
 height:500px;
 width:950px;
-background-color:#000;
-color:#fff;
+background-color:#e9e9e9;
+color:#000;
 font-size:14px;
 text-align:center;
 vertical-align:middle;
@@ -1371,7 +1371,7 @@ vertical-align:middle;
 
 td.mb_header {
 height:30px;
-background-color:#000;
+background-color:#333;
 color:#e9e9e9;
 }
 

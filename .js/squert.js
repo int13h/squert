@@ -598,7 +598,7 @@ $(document).ready(function(){
                 tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
                 tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
                 tbl += "<span class=small>";
-                tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span>";
+                tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span><br>";
                 tbl += "<canvas id=chart_timestamps width=930 height=130>[No canvas support]</canvas>";
                 tbl += "</div><br>";
                 tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
@@ -863,7 +863,7 @@ $(document).ready(function(){
                   row += "</td></tr>";
               }
 
-              tbl += "<table id=tl0 width=960 cellpadding=0 cellspacing=0 align=center>";
+              tbl += "<table id=tl0 width=950 cellpadding=0 cellspacing=0 align=center>";
               tbl += "<td align=center><div class=big>Queued Events (RT)</div><div class=box_red><span id=qtotal>";
               tbl += sumRT + "</span><div class=rt_notice title=\"update results\">!</div></div></td>";
               tbl += "<td align=center><div class=big>Total Events</div><div class=box id=etotal>"; 
@@ -876,7 +876,7 @@ $(document).ready(function(){
               tbl += sumDC + "</div></td>";
               tbl += "</table><br>";
               
-              tbl += "<table id=tl1 class=main width=960 cellpadding=0 cellspacing=0 align=center>";
+              tbl += "<table id=tl1 class=main width=950 cellpadding=0 cellspacing=0 align=center>";
               tbl += head;
               tbl += row;
               tbl += "</table>";
@@ -1234,7 +1234,7 @@ $(document).ready(function(){
                   cmsg = " / <span class=bold>"  + sumRE + "</span> not shown";
               }
 
-              tbl += "<table id=tl3a class=chart align=center width=960 border=0 cellpadding=0 cellspacing=0>";
+              tbl += "<table id=tl3a class=chart align=center width=950 border=0 cellpadding=0 cellspacing=0>";
               tbl += "<tr><td class=dark colspan=10><div>";
               tbl += "<canvas id=chart_timestamps width=950 height=130>[No canvas support]</canvas>";
               tbl += "</div><div class=event_class>";
@@ -1243,7 +1243,7 @@ $(document).ready(function(){
               tbl += "</div><div class=event_time>" + sorttxt + "</div>";
               tbl += "</td></tr></table>";
 
-              tbl += "<table id=tl3b class=main align=center width=960 cellpadding=0 cellspacing=0>";
+              tbl += "<table id=tl3b class=main align=center width=950 cellpadding=0 cellspacing=0>";
               tbl += head;
               tbl += row;
               tbl += "</table>";
@@ -1745,31 +1745,10 @@ $(document).ready(function(){
             $(function(){
                 $.get(".inc/callback.php?" + urArgs, function(data){cb9(data)});
             });
-        } 
-// This is incredibly lame. Fix.
-/*      } else {    
-            // URI can't be longer than 8190 bytes. If it is, truncate and loop
-            var shortlist = "";
-            $("#loader").show();
-            var oll = scidlist.length;
-            for (var i=0; i<oll; i++) {
-                shortlist += scidlist[i] + ",";
-                if (shortlist.length >= 7000 || i == (oll - 1)) {
-                    var newscidlist = shortlist.replace(/,$/, "");
-                    var catdata = intclass + "|||" + msg + "|||" + newscidlist;
-                    //$("#debug").append("<br>" + i + ":<br>" + newscidlist);
-                    urArgs = "type=" + 9 + "&catdata=" + catdata;
-                    if (i == (oll - 1)) {
-                        $.get(".inc/callback.php?" + urArgs, function(data){cb9(data)});     
-                    } else {              
-                        $.get(".inc/callback.php?" + urArgs);
-                    }
-                    shortlist = "";
-                }
-            }
-            $("#loader").hide();
+        } else {
+            catMsg("e1");
         }
-*/
+        
         function cb9(data){
             eval("catRaw=" + data);
             catDbg = catRaw.dbg;
@@ -1886,36 +1865,45 @@ $(document).ready(function(){
     }
   
     function catMsg(count) {
-        ess = '';
-        if ( count > 1 ) {
-            ess = 's';
-        }
+        switch (count) {
+            case "e1":
+                var msg = "Error: Too many events in current selection"; 
+                break;
+            default:
+                ess = '';
+                if ( count > 1 ) {
+                    ess = 's';
+                }
                
-        $("span.class_msg").text(count + " event" + ess + " categorized");
+                // If we are just rt update Total boxes as we go
+                if (!$("#ca2")[0]) {
+                    newboxtotal = parseInt($("#qtotal").text() - count);
+                    if (newboxtotal < 0) { // We are out of sync
+                        newView("u");
+                    } else {   
+                        newsigtotal = parseInt($("#esignature").text() - 1);
+                        $("#qtotal").text(newboxtotal);
+                        $("#esignature").text(newsigtotal);
+                    }
+                } else {
+                    newboxtotal = parseInt($("#cat_count").text() - count);
+                    $("#cat_count").text(newboxtotal);
+                }
+        
+                if (newboxtotal == 0) { 
+                    newView("u");
+                }
+                var msg = count + " event" + ess + " categorized";
+                break;
+        }
+
+
+        $("span.class_msg").text(msg);
         $("span.class_msg").fadeIn('slow', function() {
             setTimeout(function(){
                 $(".class_msg").fadeOut('slow');
             }, 3000);
         });
-
-        // If we are just rt update Total boxes as we go
-        if (!$("#ca2")[0]) {
-            newboxtotal = parseInt($("#qtotal").text() - count);
-            if (newboxtotal < 0) { // We are out of sync
-                newView("u");
-            } else {   
-                newsigtotal = parseInt($("#esignature").text() - 1);
-                $("#qtotal").text(newboxtotal);
-                $("#esignature").text(newsigtotal);
-            }
-        } else {
-            newboxtotal = parseInt($("#cat_count").text() - count);
-            $("#cat_count").text(newboxtotal);
-        }
-        
-        if (newboxtotal == 0) { 
-            newView("u");
-        }
     }
 
     //
