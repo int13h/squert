@@ -842,14 +842,44 @@ border-radius:2px;
 font-size:0;
 padding:4px;
 border:none;
+cursor:pointer;
 }
 
-td.cl_off {
+.cl_11,.cl_12,.cl_13,.cl_14,.cl_15,.cl_16,.cl_17,.cl_1,.cl_2 {
 border-radius:2px;
 background-color:#e9e9e9;
 font-size:0;
 padding:4px;
 border:none;
+cursor:pointer;
+}
+
+.cl_11:hover {
+background-color:#c00;
+}
+.cl_12:hover {
+background-color:#f60;
+}
+.cl_13:hover {
+background-color:#f90;
+}
+.cl_14:hover {
+background-color:#c90;
+}
+.cl_15:hover {
+background-color:#99c;
+}
+.cl_16:hover {
+background-color:#fc0;
+}
+.cl_17:hover {
+background-color:#c00;
+}
+.cl_1:hover {
+background-color:#ADD8E6;
+}
+.cl_2:hover {
+background-color:#FFC0CB;
 }
 
 div.b_time {

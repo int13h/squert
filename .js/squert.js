@@ -290,8 +290,9 @@ $(document).ready(function(){
     }
  
     // Event Classification grid
-    function catGrid(values) {
-        var cells = "<table class=grid cellspacing=none><tr>";
+    function catGrid(values,comment) {
+        var cells =  "<table class=grid cellspacing=none data-comment=\"" + comment + "\">";
+            cells += "<tr>";
         var composite = values.split(",");
         var cats = [11,12,13,14,15,16,17,1,2];
         for (var i=0; i<9;) {
@@ -304,9 +305,9 @@ $(document).ready(function(){
             var vc = classifications.class[cl][0].colour;
             var vt = classifications.class[cl][0].long;
             if (o > 0) {
-                cells += "<td class=cl_on title=\"" + vt + "\" style=\"background-color:" + vc + "\">1</td>";
+                cells += "<td class=cl_" + cats[i] + " title=\"" + vt + "\" style=\"background-color:" + vc + "\">1</td>";
             } else {
-                cells += "<td class=cl_off title=\"" + vt + "\">0</td>"; 
+                cells += "<td class=cl_" + cats[i] + " title=\"" + vt + "\">0</td>";
             }
             if (cats[i] == 13 || cats[i] == 16) {
                 cells += "</tr><tr>";
@@ -317,9 +318,16 @@ $(document).ready(function(){
        cells += "</tr></table>";
        return cells;
     }
-    //
+
+    $(document).on("click", '[class*="cl_"]', function(event) {
+        var nc = $(this).attr('class').split("_");
+        var ct = $(this).parents('table').data('comment');
+        $(".cat_msg_txt").val(ct);
+        $('#b_class-' + nc[1]).click();
+    });
+
+    
     // Filter search box
-    //
 
     $('#clear_search').click(function() {
         if ($('#search').val() != '') {
@@ -1540,7 +1548,7 @@ $(document).ready(function(){
 
     // Show comment box
     $(document).on("click", ".b_ME", function(event) {
-        
+        if ($('#tlcom').length > 0) return;
         urArgs = "type=11";
 
         $(function(){
@@ -1568,7 +1576,7 @@ $(document).ready(function(){
                 var last    = comraw[i].f5 || "-";
                 var eclass  = comraw[i].f6 || "-";
 
-                var cgrid = catGrid(eclass);
+                var cgrid = catGrid(eclass,comment);
                 row += "<tr class=pcomm>";
                 row += "<td class=sub>" + cgrid + "</td>"; 
                 row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
@@ -1610,10 +1618,10 @@ $(document).ready(function(){
     var hlcol = "#FFFFE0";
     var hlhov = "#FDFDD6";
 
-    var clickOne = 0, clck1 = 0, clck2 = 0;
     // Individual selects
+    var clickOne = 0, clck1 = 0, clck2 = 0;
     $(document).on("click", ".chk_event", function(event) {
-        clickTwo = this.id.split("_");
+        var clickTwo = this.id.split("_");
         if (Number(clickOne[1]) > Number(clickTwo[1])) {
             clck1 = clickTwo[1];
             clck2 = clickOne[1];
