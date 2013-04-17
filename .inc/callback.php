@@ -31,9 +31,12 @@ $types = array(
                  '9' => 'cat',
                 '10' => 'map',
                 '11' => 'comments',
+                '12' => 'remove_comment',
 );
 
 $type = $types[$type];
+$when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
+//$when = fixTime($startDate,"00:00:00",$endDate,"23:59:59");
 
 if (!$type) {
     exit;
@@ -41,7 +44,7 @@ if (!$type) {
 
 function ec() {
 
-    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
+    global $when;
 
     $query = "SELECT COUNT(status) AS count, status
               FROM event
@@ -133,17 +136,17 @@ function si() {
 }
 
 function es() {   
-    global $offset;
+    global $offset, $when;
     $object = mysql_real_escape_string($_REQUEST['object']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
+    $filter = hextostr($_REQUEST['filter']);
+
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
         $rt = "";
     }
-    $when   = hextostr($_REQUEST['ts']);
-    $filter = hextostr($_REQUEST['filter']);
     
     if ($filter != 'empty') {
         if (substr($filter, 0,4) == 'cmt ') {
@@ -196,18 +199,18 @@ function es() {
 
 function eg() {
 
-    global $offset;
+    global $offset, $when;
     $sid = mysql_real_escape_string($_REQUEST['object']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
+    $filter = hextostr($_REQUEST['filter']);
+
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
         $rt = "";
     }
-    $when = hextostr($_REQUEST['ts']);
-    $filter = hextostr($_REQUEST['filter']);
-    if ($filter != 'empty') {
+        if ($filter != 'empty') {
         if (substr($filter, 0,4) == 'cmt ') {
             $comment = explode('cmt ', $filter);
             $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
@@ -261,17 +264,16 @@ function eg() {
 
 function ed() {
 
-    global $offset;
+    global $offset, $when;
     $comp = mysql_real_escape_string($_REQUEST['object']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
+    $adqp = hextostr(mysql_real_escape_string($_REQUEST['adqp']));
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
         $rt = "";
     }
-    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
-    $adqp = hextostr(mysql_real_escape_string($_REQUEST['adqp']));
 
     if ($adqp === "empty") {
         $adqp = "";
@@ -331,17 +333,16 @@ function ed() {
 
 function ee() {
 
-    global $offset;
+    global $offset, $when;
     $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
+    $filter = hextostr($_REQUEST['filter']);
+
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
         $rt = "";
     }
-
-    $when   = hextostr($_REQUEST['ts']);
-    $filter = hextostr($_REQUEST['filter']);
  
     if ($filter != 'empty') {
         if (substr($filter, 0,4) == 'cmt ') {
@@ -635,9 +636,23 @@ function comments() {
     echo $theJSON;
 }
 
+
+function remove_comment() {   
+    $user = $_SESSION['sUser'];
+    $comment = hextostr($_REQUEST['comment']);
+    $comment = mysql_real_escape_string($comment);
+    $query = "DELETE FROM sguildb.history WHERE comment = '$comment'";
+    mysql_query($query);
+    $result = mysql_error();
+    $return = array("msg" => $result);
+
+    $theJSON = json_encode($return); 
+    echo $theJSON;
+}
+
 function map() {
+    global $when;
     $filter = $_REQUEST['filter'];
-    $when = hextostr($_REQUEST['ts']);
 
     $srcq = "SELECT COUNT(src_ip) AS c, m1.cc 
             FROM event 

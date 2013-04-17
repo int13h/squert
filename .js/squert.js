@@ -1464,7 +1464,7 @@ $(document).ready(function(){
     // Add filter parts to box
     //
 
-    $(document).on("click", ".sub_filter,.row_filter", function() {
+    $(document).on("click", ".sub_filter,.row_filter,.tof", function() {
         var prefix = $(this).data('type');
         var suffix = $(this).html();
         var tfocus = "#search";
@@ -1476,9 +1476,8 @@ $(document).ready(function(){
                           $('#search').val(prefix + " " + cc);
                           break;
 
-            case 'cmt_f': var newprefix = prefix.split("_");
-                          suffix = $(this).prev().html();
-                          $('#search').val(newprefix[0] + " " + suffix);
+            case   'cmt': suffix = $(this).next().data('comment');
+                          $('#search').val(prefix + " " + suffix);
                           break;
           
             case 'cmt_c': $('.cat_msg_txt').val(suffix);
@@ -1561,11 +1560,12 @@ $(document).ready(function(){
 
             head += "<thead><tr>";
             head += "<th class=sub width=20>ST</th>";
-            head += "<th class=sub colspan=2>COMMENT</th>";
+            head += "<th class=sub>COMMENT</th>";
             head += "<th class=sub width=70>COUNT</th>";
             head += "<th class=sub width=100>USERNAME</th>";
             head += "<th class=sub width=75>EPOCH</th>";
             head += "<th class=sub width=75>LAST</th>";
+            head += "<th class=sub width=75>ACTIONS</th>";
             head += "</tr></thead>";         
  
             for (var i=0; i<comraw.length; i++) {
@@ -1575,16 +1575,18 @@ $(document).ready(function(){
                 var epoch   = comraw[i].f4 || "-";
                 var last    = comraw[i].f5 || "-";
                 var eclass  = comraw[i].f6 || "-";
-
+                var rowid   = "comrow" + i;
                 var cgrid = catGrid(eclass,comment);
-                row += "<tr class=pcomm>";
+                row += "<tr id=" + rowid + " class=pcomm>";
                 row += "<td class=sub>" + cgrid + "</td>"; 
                 row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
-                row += "<td class=row_filter data-type=cmt_f><div class=tof title=\"Add as filter\">F</div></td>";
                 row += "<td class=sub>" + count + "</td>";
                 row += "<td class=sub>" + user + "</td>";
                 row += "<td class=sub>" + epoch + "</td>";
-                row += "<td class=sub>" + last + "</td></tr>";
+                row += "<td class=sub>" + last + "</td>";
+                row += "<td class=sub><div class=tof title=\"Add as filter\" data-type=cmt>F</div>";
+                row += "<div class=tod title=\"Delete Entry\" data-rn=\"" + rowid + "\" data-comment=\"" + comment + "\">X</div></td>";
+                row += "<row>"; 
             }
 
             tbl += "<div class=pcomm>";
@@ -1608,6 +1610,30 @@ $(document).ready(function(){
         $(".content_active").fadeTo('fast',1);
         $(".pcomm").remove();
         $(".cat_msg_txt").val("");
+    });
+
+    // Remove a comment
+    $(document).on("click", ".tod", function(event) {
+        var oktoRM = confirm("Are you sure you want to remove this comment?");
+        if (oktoRM) {
+            var theComment = s2h($(this).data('comment'));
+            var rowNumber = $(this).data('rn');
+            urArgs = "type=12&comment=" + theComment;
+            $(function(){
+                 $.get(".inc/callback.php?" + urArgs, function(data){cb12(data)});
+            }); 
+
+            function cb12(data){
+                eval("theData=" + data);
+                if (theData.msg != '') {
+                    alert(theData.msg);
+                } else {
+                    $("#" + rowNumber).fadeOut('slow', function() {
+                        $("#" + rowNumber).remove();
+                    });
+                }
+            }
+        }
     });
 
     $.ctrl('C', function() {

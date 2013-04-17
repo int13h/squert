@@ -44,19 +44,19 @@ this should be placed in the "[mysqld]" section of my.cnf
 
 6) Create a mysql user account with readonly access to sguildb (what you set in step 3):
 
-`mysql -N -B --user=root --password=toor -e "GRANT SELECT ON sguildb.* TO 'readonly'@'localhost' IDENTIFIED BY 'apassword';"`
+`mysql -N -B --user=root -p -e "GRANT SELECT ON sguildb.* TO 'readonly'@'localhost' IDENTIFIED BY 'apassword';"`
 
 7) Give this user privileges to the ip2c table:
 
-`mysql -N -B --user=root --password=toor -e "GRANT ALL PRIVILEGES ON sguildb.ip2c TO 'readonly'@'localhost';"`
+`mysql -N -B --user=root -p -e "GRANT ALL PRIVILEGES ON sguildb.ip2c TO 'readonly'@'localhost';"`
 
 8) Give this user privileges to the mappings table:
 
-`mysql -N -B --user=root --password=toor -e "GRANT ALL PRIVILEGES ON sguildb.mappings TO 'readonly'@'localhost';"`
+`mysql -N -B --user=root -p -e "GRANT ALL PRIVILEGES ON sguildb.mappings TO 'readonly'@'localhost';"`
 
 9) Give this user privileges to the filters table:
 
-`mysql -N -B --user=root --password=toor -e "GRANT INSERT,UPDATE,DELETE ON sguildb.filters TO 'readonly'@'localhost';"` 
+`mysql -N -B --user=root -p -e "GRANT INSERT,UPDATE,DELETE ON sguildb.filters TO 'readonly'@'localhost';"` 
 
 10) Now populate the ip2c table:
 
@@ -64,19 +64,17 @@ this should be placed in the "[mysqld]" section of my.cnf
 
 11) Add an index to comment column in Sguils history table:
 
-`mysql -N -B --user=root --password=toor -e "CREATE INDEX comment ON sguildb.history (comment(50));"`
+`mysql -N -B --user=root -p -e "CREATE INDEX comment ON sguildb.history (comment(50));"`
 
-12) Create a scheduled task to keep the mappings tables up to date:
+12) The readonly user needs DELETE access to sguils history table (to delete comments):
+
+`mysql -N -B --user=root -p -e "GRANT DELETE on sguildb.history to 'readonly'@'localhost';"`
+
+13) Create a scheduled task to keep the mappings tables up to date:
 
 `*/5     *       *       *       *       /usr/local/bin/php -e /usr/local/www/squert/.inc/ip2c.php 1 > /dev/null 2>&1`
 
 This entry updates the database every 5 minutes. Make sure you use the correct paths to php and ip2c.php.
 
-If you want to map everything in your DB you can do this:
-
-`php -e ip2c.php 0`
-
-It maps about 10 addresses/second. This is not a requirement. If you are doing queries in the past and want country
-info you can just perform the mappings through the web interface as needed.
 
 That's it. Point your browser to https://yourhost/squert
