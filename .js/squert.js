@@ -260,7 +260,6 @@ $(document).ready(function(){
     }, emTimeout);
 
     // 24 Grid
-
     function mkGrid(values) {
         var cells = "<table class=grid cellspacing=none><tr>";
         var composite = values.split(",");
@@ -1042,7 +1041,7 @@ $(document).ready(function(){
           var rowLoke = parts[1];
           var filter = $('#' + parts[1]).data('filter');
 
-          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2] + "&filter=" + theFilter + "&sv=" + sortval;
+          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2] + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb3(data)});
           });

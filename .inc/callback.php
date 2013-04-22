@@ -35,8 +35,10 @@ $types = array(
 );
 
 $type = $types[$type];
-$when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
-//$when = fixTime($startDate,"00:00:00",$endDate,"23:59:59");
+
+if (isset($_REQUEST['ts'])) {
+    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
+}
 
 if (!$type) {
     exit;
@@ -210,7 +212,8 @@ function eg() {
     } else {
         $rt = "";
     }
-        if ($filter != 'empty') {
+    
+    if ($filter != 'empty') {
         if (substr($filter, 0,4) == 'cmt ') {
             $comment = explode('cmt ', $filter);
             $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
@@ -285,25 +288,12 @@ function ed() {
     $src_ip = sprintf("%u", ip2long($src_ip));
     $dst_ip = sprintf("%u", ip2long($dst_ip));
 
-    $filter = hextostr($_REQUEST['filter']);
-
-    if ($filter != 'empty') {
-        if (substr($filter, 0,4) == 'cmt ') {
-            $comment = explode('cmt ', $filter);
-            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
-                    WHERE history.comment = '$comment[1]'
-                    AND (event.signature_id = '$sid'
-                    AND event.src_ip = '$src_ip'
-                    AND event.dst_ip = '$dst_ip')";
-        }
-    } else {
-        $qp2 = "WHERE $when
-                $rt
-                $adqp
-                AND (event.signature_id = '$sid' 
-                AND event.src_ip = '$src_ip' 
-                AND event.dst_ip = '$dst_ip')";
-    }
+    $qp2 = "WHERE $when
+            $rt
+            $adqp
+            AND (event.signature_id = '$sid' 
+            AND event.src_ip = '$src_ip' 
+            AND event.dst_ip = '$dst_ip')";
 
     $query = "SELECT event.status AS f1, 
               CONVERT_TZ(event.timestamp,'+00:00','$offset') AS f2,
