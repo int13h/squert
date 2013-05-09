@@ -2,721 +2,736 @@
 
 $(document).ready(function(){
 
-    // Base timestamp
-    var theWhen = $("#timestamp").val();
+  // Base timestamp
+  var theWhen = $("#timestamp").val();
     
-    // Load main content
-    eventList("0-aaa-00");
-    $("#loader").show();
+  // Load main content
+  eventList("0-aaa-00");
+  $("#loader").show();
 
-    var lastclasscount = 0;
+  var lastclasscount = 0;
 
-    function d2h(d) {
-       return d.toString(16);
+  function d2h(d) {
+    return d.toString(16);
+  }
+
+  function h2d (h) {
+    return parseInt(h, 16);
+  }
+
+  function s2h (tmp) {
+    var str = '', i = 0, tmp_len = tmp.length, c;
+    for (; i < tmp_len; i += 1) {
+      c = tmp.charCodeAt(i);
+      str += d2h(c);
     }
+    return str;
+  }
 
-    function h2d (h) {
-       return parseInt(h, 16);
-    }
+  function h2s(hex) {
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }    
+    return str;
+  }
 
-    function s2h (tmp) {
-       var str = '', i = 0, tmp_len = tmp.length, c;
-     
-       for (; i < tmp_len; i += 1) {
-           c = tmp.charCodeAt(i);
-           str += d2h(c);
-       }
-       return str;
-    }
-
-    function h2s(hex) {
-        var str = '';
-        for (var i = 0; i < hex.length; i += 2)
-            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-        return str;
-    }
-
-    function sort_unique(arr) {
-        arr = arr.sort(function (a, b) { return a*1 - b*1; });
-        var ret = [arr[0]];
-        for (var i = 1; i < arr.length; i++) {
-            if (arr[i-1] !== arr[i]) {
-                ret.push(arr[i]);
-            }
-        }
-        return ret;
-    }
-
-    $.ctrl = function(key, callback, args) {
-        $(document).keydown(function(e) {
-            if(!args) {args=[];}
-            if(e.keyCode == key.charCodeAt(0) && e.ctrlKey) {
-                callback.apply(this, args);
-                return false;
-            }
-        });        
-    }
-
-    function getCountry(cc) {
-
-        switch (cc) {
-            case "LO": 
-                answer = "sub_light|LO"; break;
-            case "-": 
-                answer = "sub_light|-"; break;
-            default:
-                 answer = "sub_filter|<span class=flag><img src=\".flags/" + cc + ".png\"></span>"; break;
-        }
-
-        return answer;
-    }
-
-    // Classifications
-    var classifications = {"class":{  
-        "c11":[{"colour": "#c00", "short": "C1", "long": "Unauthorized Admin Access"}],
-        "c12":[{"colour": "#f60", "short": "C2", "long": "Unauthorized User Access"}],
-        "c13":[{"colour": "#f90", "short": "C3", "long": "Attempted Unauthorized Access"}],
-        "c14":[{"colour": "#c90", "short": "C4", "long": "Denial of Service Attack"}],
-        "c15":[{"colour": "#99c", "short": "C5", "long": "Policy Violation"}],
-        "c16":[{"colour": "#fc0", "short": "C6", "long": "Reconnaissance"}],
-        "c17":[{"colour": "#c6f", "short": "C7", "long": "Malware"}],
-         "c2":[{"colour": "#FFC0CB", "short": "ES", "long": "Escalated Event"}],
-         "c1":[{"colour": "#ADD8E6", "short": "NA", "long": "No Action Req'd."}],
-         "c0":[{"colour": "#cc0000", "short": "RT", "long": "Unclassified"}]
+  function sort_unique(arr) {
+    arr = arr.sort(function (a, b) { return a*1 - b*1; });
+    var ret = [arr[0]];
+    for (var i = 1; i < arr.length; i++) {
+      if (arr[i-1] !== arr[i]) {
+        ret.push(arr[i]);
       }
-    };
+    }
+    return ret;
+  }
 
-    // Make a map
-    function doMap(req) {
-        var filter = 0;
-        urArgs = "type=" + 10 + "&filter=" + filter + "&ts=" + theWhen;
-        $(function(){
-            $.get(".inc/callback.php?" + urArgs, function(data){cb10(data)});
-        });
+  $.ctrl = function(key, callback, args) {
+    $(document).keydown(function(e) {
+      if(!args) {args=[];}
+      if(e.keyCode == key.charCodeAt(0) && e.ctrlKey) {
+        callback.apply(this, args);
+        return false;
+      }
+    });        
+  }
 
-        var working = "Working<br><img src=.css/load.gif>";
+  function getCountry(cc) {
 
-        switch (req) {
-            case "draw": 
-                var tbl = "";
-                tbl += "<table class=mb_table id=map_box cellpadding=0 cellspacing=0 align=center>";
-                tbl += "<tr><td class=mb_header align=right></td></tr>"; 
-                tbl += "<tr><td class=mb_box>" + working + "</td></tr>";
-                tbl += "</table>";
-                $("#aaa-00").before(tbl);
-                break;
-            case "redraw":
-                $('.mb_box').html(working);
-                break;
-        }
+    switch (cc) {
+      case "LO": 
+        answer = "sub_light|LO"; break;
+      case "-": 
+        answer = "sub_light|-"; break;
+      default:
+        answer = "sub_filter|<span class=flag><img src=\".flags/" + cc + ".png\"></span>"; break;
+    }
+    return answer;
+  }
 
-        function cb10(data){
-            eval("mapRaw=" + data);
-            try {
-                var mapDetail = $.parseJSON("{" + mapRaw.all + "}");
-                var srcc    = mapRaw.srcc;
-                var srce    = mapRaw.srce;
-                var dstc    = mapRaw.dstc;
-                var dste    = mapRaw.dste;
-                var allc    = mapRaw.allc;
-                var alle    = mapRaw.alle;
-            } 
-            catch(e) {
-                var mapDetail = "{\"\"}";
-            }
-            
-            // What is our current event total?
-            var esum = $('#event_sum').val();
-            $(".mb_box").html("<div id=wm0 style=\"width:950px;height:500px;\"></div>");
-            $('#wm0').vectorMap({
-                map: 'world_mill_en',
-                color: '#f4f3f0',
-                backgroundColor: '#a5bfdd',
-                onRegionClick: function(event, code){
-                    $('#search').val("cc" + " " + code);
-                    $('#search').focus();
-                },
-                series: {
-                    regions: [{
-                        values: mapDetail,
-                        scale: ['#f4f4f4', '#545454'],
-                        normalizeFunction: 'polynomial'
-                    }]
-                },
-                onRegionLabelShow: function(e, el, code){
-                    if (mapDetail[code]) {
-                        var eper = parseFloat(mapDetail[code]/esum*100).toFixed(3);
-                        el.html(el.html() + ' (' + mapDetail[code] + ' Events ' + eper + '% of Total)');
-                    } else {
-                        el.html(el.html());
-                    }
-                }
-            });
+  // Classifications
+  var classifications = {"class":{  
+    "c11":[{"colour": "#c00", "short": "C1", "long": "Unauthorized Admin Access"}],
+    "c12":[{"colour": "#f60", "short": "C2", "long": "Unauthorized User Access"}],
+    "c13":[{"colour": "#f90", "short": "C3", "long": "Attempted Unauthorized Access"}],
+    "c14":[{"colour": "#c90", "short": "C4", "long": "Denial of Service Attack"}],
+    "c15":[{"colour": "#99c", "short": "C5", "long": "Policy Violation"}],
+    "c16":[{"colour": "#fc0", "short": "C6", "long": "Reconnaissance"}],
+    "c17":[{"colour": "#c6f", "short": "C7", "long": "Malware"}],
+     "c2":[{"colour": "#FFC0CB", "short": "ES", "long": "Escalated Event"}],
+     "c1":[{"colour": "#ADD8E6", "short": "NA", "long": "No Action Req'd."}],
+     "c0":[{"colour": "#cc0000", "short": "RT", "long": "Unclassified"}]
+    }
+  };
 
-            header = "";
-            header += "<span class=mb_links>Countries as sources:</span> ";
-            header += srcc + " with " + srce + " events";
-            header += "<span class=mb_links>Countries as destinations:</span> " 
-            header += dstc + " with " + dste + " events";
-            header += "<span class=mb_links>Total countries:</span> ";
-            header += allc;
-            header += "&nbsp;&nbsp;<div id=map_redraw class=mb_refresh>update</div>";  
+  // Rule Lookup
+  function sigLookup(sid) {
+    // Lookup rule
+    var urArgs = "type=" + 4 + "&sid=" + rowValue;
 
-            $(".mb_header").html(header);
-        }
+    $(function(){
+      $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
+    });
+
+    function cb(data){
+      eval("sigData=" + data);
+      sigtxt = sigData.ruletxt;
+      sigfile = sigData.rulefile;
+      sigline = sigData.ruleline;
+
+      var txt = '';
+      txt += "<div class=sigtxt>" + sigtxt + " <br><br>";
+      txt += "<span class=small>";
+      txt += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span><br>";
+    }
+    return txt; 
+
+  }
+
+  // Make a map
+  function doMap(req) {
+    var filter = 0;
+    var urArgs = "type=" + 10 + "&filter=" + filter + "&ts=" + theWhen;
+    $(function(){
+      $.get(".inc/callback.php?" + urArgs, function(data){cb10(data)});
+    });
+
+    var working = "Working<br><img src=.css/load.gif>";
+
+    switch (req) {
+      case "draw": 
+        var tbl = "";
+        tbl += "<table class=mb_table id=map_box cellpadding=0 cellspacing=0 align=center>";
+        tbl += "<tr><td class=mb_header align=right></td></tr>"; 
+        tbl += "<tr><td class=mb_box>" + working + "</td></tr>";
+        tbl += "</table>";
+        $("#aaa-00").before(tbl);
+        break;
+      case "redraw":
+        $('.mb_box').html(working);
+        break;
     }
 
-    // Draw map
-    $("#menu2").click(function(event) {
-        var cv = $("#menu2").text();
-        switch (cv) {
-            case "show map":
-                $("#menu2").text("hide map");
-                if (!$("#wm0")[0]) {
-                    doMap("draw");
-                } else {
-                    $("#map_box").show();
-                }
-                break;
-            case "hide map":
-                $("#menu2").text("show map");
-                $("#map_box").hide();
-                break;
-        }
-    });
-    
-    // Redraw map
-    $(document).on("click", "#map_redraw", function(event) {
-        doMap("redraw");
-    });
-
-    // Get event statuses
-    var eTotal = 0, qTotal = 0;
-    function statusPoll(caller) {
-        var urArgs = "type=" + 6 + "&ts=" + theWhen;
-        $(function(){
-            $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
-        });
-
-        function cb(data){
-            eval("ec=" + data);
-            var esum = 0;
+    function cb10(data){
+      eval("mapRaw=" + data);
+      try {
+        var mapDetail = $.parseJSON("{" + mapRaw.all + "}");
+        var srcc    = mapRaw.srcc;
+        var srce    = mapRaw.srce;
+        var dstc    = mapRaw.dstc;
+        var dste    = mapRaw.dste;
+        var allc    = mapRaw.allc;
+        var alle    = mapRaw.alle;
+      } 
+      catch(e) {
+        var mapDetail = "{\"\"}";
+      }
             
-            for (var i=0; i<ec.length; i++) {
-                var ecount = ec[i].count;
-                var eclass = ec[i].status;
-                esum += parseInt(ecount);
-                $("#b_class-" + eclass).next().html("&nbsp;" + ecount);
-            }
+      // What is our current event total?
+      var esum = $('#event_sum').val();
+      $(".mb_box").html("<div id=wm0 style=\"width:950px;height:500px;\"></div>");
+      $('#wm0').vectorMap({
+        map: 'world_mill_en',
+        color: '#f4f3f0',
+        backgroundColor: '#a5bfdd',
+        onRegionClick: function(event, code){
+        $('#search').val("cc" + " " + code);
+        $('#search').focus();
+        },
+        series: {
+          regions: [{
+            values: mapDetail,
+            scale: ['#f4f4f4', '#545454'],
+            normalizeFunction: 'polynomial'
+          }]
+        },
+        onRegionLabelShow: function(e, el, code){
+          if (mapDetail[code]) {
+            var eper = parseFloat(mapDetail[code]/esum*100).toFixed(3);
+            el.html(el.html() + ' (' + mapDetail[code] + ' Events ' + eper + '% of Total)');
+          } else {
+            el.html(el.html());
+          }
+        }
+      });
+
+      header = "";
+      header += "<span class=mb_links>Countries as sources:</span> ";
+      header += srcc + " with " + srce + " events";
+      header += "<span class=mb_links>Countries as destinations:</span> " 
+      header += dstc + " with " + dste + " events";
+      header += "<span class=mb_links>Total countries:</span> ";
+      header += allc;
+      header += "&nbsp;&nbsp;<div id=map_redraw class=mb_refresh>update</div>";  
+
+      $(".mb_header").html(header);
+    }
+  }
+
+  // Draw map
+  $("#menu2").click(function(event) {
+    var cv = $("#menu2").text();
+      switch (cv) {
+        case "show map":
+          $("#menu2").text("hide map");
+          if (!$("#wm0")[0]) {
+            doMap("draw");
+          } else {
+            $("#map_box").show();
+          }
+          break;
+        case "hide map":
+          $("#menu2").text("show map");
+          $("#map_box").hide();
+          break;
+      }
+  });
+    
+  // Redraw map
+  $(document).on("click", "#map_redraw", function(event) {
+    doMap("redraw");
+  });
+
+  // Get event statuses
+  var eTotal = 0, qTotal = 0;
+  function statusPoll(caller) {
+    var urArgs = "type=" + 6 + "&ts=" + theWhen;
+    $(function(){
+      $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
+    });
+
+    function cb(data){
+      eval("ec=" + data);
+      var esum = 0;
+            
+      for (var i=0; i<ec.length; i++) {
+        var ecount = ec[i].count;
+        var eclass = ec[i].status;
+        esum += parseInt(ecount);
+        $("#b_class-" + eclass).next().html("&nbsp;" + ecount);
+      }
           
-            for (var i=0; i<ec.length; i++) {
-                var ecount = ec[i].count;
-                var eclass = ec[i].status;
-                var w = 0;
-                if (esum > 0) {
-                    var p = parseFloat(ecount/esum*100).toFixed(3);
-                    var w = parseInt(p*2);
-                }
-                if (eclass == 0) {
-                    qTotal = ecount;
-                    $("#b_class-" + 0).next().css("background-color", "#D9ABAB");
-                } 
-                $("#b_class-" + eclass).next().append("<span class=per>(" + p + "%)</span>");
-                $("#b_class-" + eclass).next().css("width", w + "px");
-            }
+      for (var i=0; i<ec.length; i++) {
+        var ecount = ec[i].count;
+        var eclass = ec[i].status;
+        var w = 0;
+        if (esum > 0) {
+          var p = parseFloat(ecount/esum*100).toFixed(3);
+          var w = parseInt(p*2);
+        }
+        if (eclass == 0) {
+          qTotal = ecount;
+          $("#b_class-" + 0).next().css("background-color", "#D9ABAB");
+        } 
+        $("#b_class-" + eclass).next().append("<span class=per>(" + p + "%)</span>");
+        $("#b_class-" + eclass).next().css("width", w + "px");
+      }
             
-            var lastcount = $(".cat_sum").text();
-            var newcount = esum;
-            $(".cat_sum").text(esum);
-            eTotal = esum;
-            $("#event_sum").val(eTotal);
+      var lastcount = $(".cat_sum").text();
+      var newcount = esum;
+      $(".cat_sum").text(esum);
+      eTotal = esum;
+      $("#event_sum").val(eTotal);
 
-            if (caller == 0) { // Fresh load
-                lastcount = newcount;
-            }
+      if (caller == 0) { // Fresh load
+        lastcount = newcount;
+      }
 
-            if (lastcount < newcount) {
-                $(".rt_notice").fadeIn();
-                $("#b_event").html("<b>Status:</b> New events are available");
-                $("#etotal").html(eTotal);
-                $("#qtotal").html(qTotal);
-            }
-        }
+      if (lastcount < newcount) {
+        $(".rt_notice").fadeIn();
+        $("#b_event").html("<b>Status:</b> New events are available");
+        $("#etotal").html(eTotal);
+        $("#qtotal").html(qTotal);
+      }
     }
+  }
 
-    if ($(".cat_sum").text() == 0) {
-        statusPoll(0);
-    }
+  if ($(".cat_sum").text() == 0) {
+    statusPoll(0);
+  }
 
-    //
-    // Event monitor (how often we poll for new events)
-    //
+  //
+  // Event monitor (how often we poll for new events)
+  //
  
-    var emTimeout = 30000;
-    window.setInterval(function(){
-        if ($('#search').val().length == 0) {    
-            statusPoll(1);
-        }
-    }, emTimeout);
-
-    // 24 Grid
-    function mkGrid(values) {
-        var cells = "<table class=grid cellspacing=none><tr>";
-        var composite = values.split(",");
-        for (var i=0; i<24;) {
-            var n = i;
-	    if (n < 10) {
-                n = "0" + n;                
-            }
-            var o = 0;
-            for (var c = 0; c < composite.length; ++c) {
-                if (composite[c] == n)
-                    o++;
-            }
-            if (o > 0) {
-                cells += "<td class=c_on title=\"" + n + ":00 &#61;&gt; " + o + " events\">1</td>";
-            } else {
-                cells += "<td class=c_off>0</td>"; 
-            }
-            if (i == 7 || i == 15) {
-                cells += "</tr><tr>";
-            }
-       i++; 
-       }
-
-       cells += "</tr></table>";
-       return cells;
+  var emTimeout = 30000;
+  window.setInterval(function(){
+    if ($('#search').val().length == 0) {    
+      statusPoll(1);
     }
+  }, emTimeout);
+
+  // 24 Grid
+  function mkGrid(values) {
+    var cells = "<table class=grid cellspacing=none><tr>";
+    var composite = values.split(",");
+    for (var i=0; i<24;) {
+      var n = i;
+      if (n < 10) {
+        n = "0" + n;                
+      }
+      var o = 0;
+      for (var c = 0; c < composite.length; ++c) {
+        if (composite[c] == n) o++;
+      }
+      if (o > 0) {
+        cells += "<td class=c_on title=\"" + n + ":00 &#61;&gt; " + o + " events\">1</td>";
+      } else {
+        cells += "<td class=c_off>0</td>"; 
+      }
+      if (i == 7 || i == 15) {
+        cells += "</tr><tr>";
+      }
+      i++; 
+    }
+    cells += "</tr></table>";
+    return cells;
+  }
  
-    // Event Classification grid
-    function catGrid(values,comment) {
-        var cells =  "<table class=grid cellspacing=none data-comment=\"" + comment + "\">";
-            cells += "<tr>";
-        var composite = values.split(",");
-        var cats = [11,12,13,14,15,16,17,1,2];
-        for (var i=0; i<9;) {
-            var o = 0, n = cats[i];
-            for (var c = 0; c < composite.length; ++c) {
-                if (composite[c] == n)
-                    o++;
-            }
-            var cl = "c" + cats[i];
-            var vc = classifications.class[cl][0].colour;
-            var vt = classifications.class[cl][0].long;
-            if (o > 0) {
-                cells += "<td class=cl_" + cats[i] + " title=\"" + vt + "\" style=\"background-color:" + vc + "\">1</td>";
-            } else {
-                cells += "<td class=cl_" + cats[i] + " title=\"" + vt + "\">0</td>";
-            }
-            if (cats[i] == 13 || cats[i] == 16) {
-                cells += "</tr><tr>";
-            }
-       i++; 
-       }
-
-       cells += "</tr></table>";
-       return cells;
+  // Event Classification grid
+  function catGrid(values,comment) {
+    var cells =  "<table class=grid cellspacing=none data-comment=\"" + comment + "\">";
+    cells += "<tr>";
+    var composite = values.split(",");
+    var cats = [11,12,13,14,15,16,17,1,2];
+    for (var i=0; i<9;) {
+      var o = 0, n = cats[i];
+      for (var c = 0; c < composite.length; ++c) {
+        if (composite[c] == n) o++;
+      }
+      var cl = "c" + cats[i];
+      var vc = classifications.class[cl][0].colour;
+      var vt = classifications.class[cl][0].long;
+      if (o > 0) {
+        cells += "<td class=cl_" + cats[i] + " title=\"" + vt + "\" style=\"background-color:" + vc + "\">1</td>";
+      } else {
+        cells += "<td class=cl_" + cats[i] + " title=\"" + vt + "\">0</td>";
+      }
+      if (cats[i] == 13 || cats[i] == 16) {
+        cells += "</tr><tr>";
+      }
+      i++; 
     }
+    cells += "</tr></table>";
+    return cells;
+  }
 
-    $(document).on("click", '[class*="cl_"]', function(event) {
-        var nc = $(this).attr('class').split("_");
-        var ct = $(this).parents('table').data('comment');
-        $(".cat_msg_txt").val(ct);
-        $('#b_class-' + nc[1]).click();
-    });
+  $(document).on("click", '[class*="cl_"]', function(event) {
+    var nc = $(this).attr('class').split("_");
+    var ct = $(this).parents('table').data('comment');
+    $(".cat_msg_txt").val(ct);
+    $('#b_class-' + nc[1]).click();
+  });
 
     
-    // Filter search box
-
-    $('#clear_search').click(function() {
-        if ($('#search').val() != '') {
-            $('#search').val('');
-            $("#b_update").click();           
-        }
-    });
-
-    //
-    // Toggle and update views
-    //
-
-    function newView(req) {
-        var cv = $("#menu1").text();
-        switch (req) { // Either an update or view change    
-            case "u":
-               f = "0-aaa-00";
-               s = "2a-aaa-00";
-               break; 
-            case "c":
-               switch(cv) {
-                   case "ungroup events": $("#menu1").text("regroup events");
-                       if ($("#search").val().length == 0) {
-                           $("#rt").prop("checked", true);
-                       }
-                       break;  
-                   case "regroup events": $("#menu1").text("ungroup events"); break;
-               }
-               f = "2a-aaa-00";
-               s = "0-aaa-00";
-               break;
-        }
-        switch (cv) {
-            case "ungroup events":
-                $("#tl0,#tl1").remove();
-                eventList(f);
-                $("#loader").show();
-                break;
-            case "regroup events":
-                $("#tl3a,#tl3b").remove();
-                eventList(s);
-                $("#loader").show();
-                break;
-        }
-        $(".rt_notice").fadeOut();
+  // Filter search box
+  $('#clear_search').click(function() {
+    if ($('#search').val() != '') {
+      $('#search').val('');
+      $("#b_update").click();           
     }
+  });
 
-    // Group and ungroup
-    $(document).on("click", "#menu1", function(event) {
-        newView("c");
-    });
+  //
+  // Toggle and update views
+  //
 
-    // RT check/uncheck
-    $(document).on("click", "#rt", function(event) {
-        newView("u");
-    });
-
-    $(document).on("click", ".rt_notice", function(event) {
-        newView("u");        
-    });
-
-    // Sort ASC/DESC
-    $(document).on("click", ".event_time", function(event) {
-        var csv = $(".event_time").text();
-        switch (csv) {
-            case "show oldest first":
-                $("#event_sort").val("ASC");
-                break;
-            case "show newest first":
-                $("#event_sort").val("DESC");
-                break;
-        }
-        newView("u");
-    });
-
-    // Update page
-    $("#b_update").click(function(event) {
-        newView("u");
-    });
- 
-    // If search is in focus, update on enter
-    $('#search').keypress(function(e) {
-        if(!e) e=window.event;
-        key = e.keyCode ? e.keyCode : e.which;
-        if(key == 13) {
-            // Close comment box if it is open
-            if ($('.cat_msg')[0]) {
-                $('.cat_msg_add').click();
+  function newView(req) {
+    var cv = $("#menu1").text();
+    switch (req) { // Either an update or view change    
+      case "u":
+        f = "0-aaa-00";
+        s = "2a-aaa-00";
+        break; 
+      case "c":
+        switch(cv) {
+          case "ungroup events": $("#menu1").text("regroup events");
+            if ($("#search").val().length == 0) {
+              $("#rt").prop("checked", true);
             }
-            newView("u");
-        }
-    });
+          break;  
+          case "regroup events": $("#menu1").text("ungroup events"); break;
+       }
+       f = "2a-aaa-00";
+       s = "0-aaa-00";
+       break;
+    }
+    switch (cv) {
+      case "ungroup events":
+        $("#tl0,#tl1").remove();
+        eventList(f);
+        $("#loader").show();
+        break;
+      case "regroup events":
+        $("#tl3a,#tl3b").remove();
+        eventList(s);
+        $("#loader").show();
+        break;
+    }
+    $(".rt_notice").fadeOut();
+  }
 
-    //
-    // Tab manipulations
-    //
+  // Group and ungroup
+  $(document).on("click", "#menu1", function(event) {
+    newView("c");
+  });
 
-     // Logout
-    $("#logout").click(function(event) {
-         $.get("index.php?id=0", function(){location.reload()});
-    });
+  // RT check/uncheck
+  $(document).on("click", "#rt", function(event) {
+    newView("u");
+  });
 
-    $("#b_top").click(function() {
-        $('html, body').animate({ scrollTop: 0 }, 'slow');
-    });
+  $(document).on("click", ".rt_notice", function(event) {
+    newView("u");        
+  });
+
+  // Sort ASC/DESC
+  $(document).on("click", ".event_time", function(event) {
+    var csv = $(".event_time").text();
+    switch (csv) {
+      case "show oldest first":
+        $("#event_sort").val("ASC");
+        break;
+      case "show newest first":
+        $("#event_sort").val("DESC");
+        break;
+      }
+      newView("u");
+  });
+
+  // Update page
+  $("#b_update").click(function(event) {
+    newView("u");
+  });
  
-    var tab_cached = $("#sel_tab").val();
-    $('#' + tab_cached).attr('class','tab_active');
-    $("#" + tab_cached + "_content").attr('class','content_active');
-
-    $(".tab,.tab_active").mouseover(function(event) {
-        $(this).css('color','#ffffff');
-        $(this).css('background-color','#000000');
-    });
-
-    $(".tab,.tab_active").mouseout(function(event) {
-        var curClass = $(this).attr('class');
-        if ( curClass != "tab_active" ) {
-            $(this).css('color','#adadad');
-            $(this).css('background-color','#333333');
+  // If search is in focus, update on enter
+  $('#search').keypress(function(e) {
+    if(!e) e=window.event;
+      key = e.keyCode ? e.keyCode : e.which;
+      if(key == 13) {
+        // Close comment box if it is open
+        if ($('.cat_msg')[0]) {
+          $('.cat_msg_add').click();
         }
-    });
+        newView("u");
+      }
+  });
 
-    $(".tab,.tab_active").click(function(event) {
-        var active = $(".tab_active").attr('id');
-        var content = $(".content_active").attr('id');
+  //
+  // Tab manipulations
+  //
 
-        if ( this.id != active ) {
-            $("#" + active).removeClass('tab_active');
-            $("#" + active).addClass('tab');
-            $("#" + active).css('color','#adadad');
-            $("#" + active).css('background-color','#333333');
-            $(this).attr('class','tab_active');         
-            $("#" + content).attr('class','content');
-            $("#" + this.id + "_content").attr('class','content_active');
-            activeTab = $(".tab_active").attr('id')
-            $('#sel_tab').val(activeTab);
-            var ctab = $('#sel_tab').val();
-            var urArgs = "type=" + 5 + "&tab=" + ctab;
-            $.get(".inc/callback.php?" + urArgs, function(){Null});
-        }
-    });
+  // Logout
+  $("#logout").click(function(event) {
+    $.get("index.php?id=0", function(){location.reload()});
+  });
 
-    //
-    // Rows
-    //
+  $("#b_top").click(function() {
+    $('html, body').animate({ scrollTop: 0 }, 'slow');
+  });
+ 
+  var tab_cached = $("#sel_tab").val();
+  $('#' + tab_cached).attr('class','tab_active');
+  $("#" + tab_cached + "_content").attr('class','content_active');
 
-    function closeRow() {
-        if ($('#rt').is(':checked') && $(".d_row_active").find(".b_ec_hot").text() == 0) {
-            $("#active_eview").remove();
-            $(".d_row_active").fadeOut('slow', function (event) {
-                $(".d_row_active").remove();
-            });
-            $(".d_row").css('opacity','1');
-        } else {
-            $("#active_eview").remove();
-            $("#" + this.id).attr('class','d_row');
-            $(".d_row").css('opacity','1');
-            $(".d_row_active").find('[class*="row"]').css('color', 'gray');
-            $(".d_row_active").find('[class*="row"]').css('background', 'transparent');
-            $(".d_row_active").find('td').css('border-top', 'none')
-            ltCol = $(".d_row_active").find('td.lt').html();
-            $(".d_row_active").find('td.lt').css('background', ltCol);
-            $(".d_row_active").attr('class','d_row');
-        }
-        // Update class_count
-        $("#class_count").text(lastclasscount);
-        // Get rid of any crashed loaders
-        $("#loader").hide();
-        // Reset checkbox
-        $(".chk_all").prop("checked",false);
+  $(".tab,.tab_active").mouseover(function(event) {
+    $(this).css('color','#ffffff');
+    $(this).css('background-color','#000000');
+  });
+
+  $(".tab,.tab_active").mouseout(function(event) {
+    var curClass = $(this).attr('class');
+    if ( curClass != "tab_active" ) {
+      $(this).css('color','#adadad');
+      $(this).css('background-color','#333333');
     }
-    function closeSubRow() {
-        $("#eview_sub1").remove();
-        $("#" + this.id).attr('class','d_row_sub');
-        $(".d_row_sub").css('opacity','1');
-        $(".d_row_sub_active").find('[class*="sub"]').css('color', 'gray');
-        $(".d_row_sub_active").find('[class*="sub"]').css('border-top', 'none');
-        $(".d_row_sub_active").find('[class*="sub"]').css('background', 'transparent');
-        $(".d_row_sub_active").attr('class','d_row_sub');
-        // Update class_count
-        $("#class_count").text(lastclasscount);
-        curclasscount = lastclasscount;
-        $("#loader").hide();
-        // Reset and show checkbox
-        $(".chk_all").prop("checked",false);
-        $("#ca0").show();
+  });
+
+  $(".tab,.tab_active").click(function(event) {
+    var active = $(".tab_active").attr('id');
+    var content = $(".content_active").attr('id');
+
+    if ( this.id != active ) {
+      $("#" + active).removeClass('tab_active');
+      $("#" + active).addClass('tab');
+      $("#" + active).css('color','#adadad');
+      $("#" + active).css('background-color','#333333');
+      $(this).attr('class','tab_active');         
+      $("#" + content).attr('class','content');
+      $("#" + this.id + "_content").attr('class','content_active');
+      activeTab = $(".tab_active").attr('id')
+      $('#sel_tab').val(activeTab);
+      var ctab = $('#sel_tab').val();
+      var urArgs = "type=" + 5 + "&tab=" + ctab;
+      $.get(".inc/callback.php?" + urArgs, function(){Null});
     }
-    function closeSubRow1() {
-        $("#eview_sub2").remove();
-        $("#" + this.id).attr('class','d_row_sub1');
-        if (!$("#eview_sub3")[0]) {
-            $(".d_row_sub1").css('opacity','1');
-            $(".d_row_sub1_active").find('td').css('border-top', 'none');
-            $(".d_row_sub1_active").attr('class','d_row_sub1');
-        }
-        $("#loader").hide();
-        // Reset checkbox
-        $(".chk_all").prop("checked",false);
+  });
+
+  //
+  // Rows
+  //
+
+  function closeRow() {
+    if ($('#rt').is(':checked') && $(".d_row_active").find(".b_ec_hot").text() == 0) {
+      $("#active_eview").remove();
+      $(".d_row_active").fadeOut('slow', function (event) {
+        $(".d_row_active").remove();
+      });
+      $(".d_row").css('opacity','1');
+    } else {
+      $("#active_eview").remove();
+      $("#" + this.id).attr('class','d_row');
+      $(".d_row").css('opacity','1');
+      $(".d_row_active").find('[class*="row"]').css('color', 'gray');
+      $(".d_row_active").find('[class*="row"]').css('background', 'transparent');
+      $(".d_row_active").find('td').css('border-top', 'none')
+      ltCol = $(".d_row_active").find('td.lt').html();
+      $(".d_row_active").find('td.lt').css('background', ltCol);
+      $(".d_row_active").attr('class','d_row');
     }
-    function closeSubRow2() {
-        $("#eview_sub3").remove();
-        $("#" + this.id).attr('class','d_row_sub1');
-
-        if (!$("#eview_sub2")[0]) {
-            $(".d_row_sub1").css('opacity','1');
-            $(".d_row_sub1_active").find('td').css('border-top', 'none');
-            $(".d_row_sub1_active").attr('class','d_row_sub1');
-        }
-        $("#loader").hide();
+    // Update class_count
+    $("#class_count").text(lastclasscount);
+    // Get rid of any crashed loaders
+    $("#loader").hide();
+    // Reset checkbox
+    $(".chk_all").prop("checked",false);
+  }
+  function closeSubRow() {
+    $("#eview_sub1").remove();
+    $("#" + this.id).attr('class','d_row_sub');
+    $(".d_row_sub").css('opacity','1');
+    $(".d_row_sub_active").find('[class*="sub"]').css('color', 'gray');
+    $(".d_row_sub_active").find('[class*="sub"]').css('border-top', 'none');
+    $(".d_row_sub_active").find('[class*="sub"]').css('background', 'transparent');
+    $(".d_row_sub_active").attr('class','d_row_sub');
+    // Update class_count
+    $("#class_count").text(lastclasscount);
+    curclasscount = lastclasscount;
+    $("#loader").hide();
+    // Reset and show checkbox
+    $(".chk_all").prop("checked",false);
+    $("#ca0").show();
+  }
+  function closeSubRow1() {
+    $("#eview_sub2").remove();
+    $("#" + this.id).attr('class','d_row_sub1');
+    if (!$("#eview_sub3")[0]) {
+      $(".d_row_sub1").css('opacity','1');
+      $(".d_row_sub1_active").find('td').css('border-top', 'none');
+      $(".d_row_sub1_active").attr('class','d_row_sub1');
     }
+    $("#loader").hide();
+    // Reset checkbox
+    $(".chk_all").prop("checked",false);
+  }
+  function closeSubRow2() {
+    $("#eview_sub3").remove();
+    $("#" + this.id).attr('class','d_row_sub1');
 
-    // Reset if headings are clicked
+    if (!$("#eview_sub2")[0]) {
+      $(".d_row_sub1").css('opacity','1');
+      $(".d_row_sub1_active").find('td').css('border-top', 'none');
+      $(".d_row_sub1_active").attr('class','d_row_sub1');
+    }
+    $("#loader").hide();
+  }
 
-    $(document).on("click", "#ev_close", function(event) {
-        closeRow();
-    });
+  // Reset if headings are clicked
+  $(document).on("click", "#ev_close", function(event) {
+    closeRow();
+  });
 
-    // Close open sub views
-    $(document).on("click", "#ev_close_sub", function(event) {
-        closeSubRow();
-    });
+  // Close open sub views
+  $(document).on("click", "#ev_close_sub", function(event) {
+    closeSubRow();
+  });
 
-    // Close open packet data
-    $(document).on("click", "#ev_close_sub1", function(event) {
-        closeSubRow1();
-    });
+  // Close open packet data
+  $(document).on("click", "#ev_close_sub1", function(event) {
+    closeSubRow1();
+  });
 
-    // Close open TX
-    $(document).on("click", "#ev_close_sub2", function(event) {
-        closeSubRow2();
-    });
+  // Close open TX
+  $(document).on("click", "#ev_close_sub2", function(event) {
+    closeSubRow2();
+  });
 
-    //
-    //  Level 1
-    //
+  //
+  //  Level 1
+  //
 
-    $(document).on("click", ".row_active", function(event) {
+  $(document).on("click", ".row_active", function(event) {
+    var curID = $(this).parent().attr('id');        
+    // What type of row are we?
+    rowType = curID.substr(0,3);
 
-        var curID = $(this).parent().attr('id');        
-        // What type of row are we?
-        rowType = curID.substr(0,3);
-
-        // Make sure no other instances are open
-        if (!$(".d_row_active")[0] && rowType == 'sid') {          
-
-            $("#loader").show(); 
+    // Make sure no other instances are open
+    if (!$(".d_row_active")[0] && rowType == 'sid') {          
+      $("#loader").show(); 
             
-            // This leaves us with sid-gid
-            rowValue = curID.replace("sid-","");
+      // This leaves us with sid-gid
+      rowValue = curID.replace("sid-","");
      
-            // Lookup rule
-            urArgs = "type=" + 4 + "&sid=" + rowValue;
+      // Lookup rule
+      var urArgs = "type=" + 4 + "&sid=" + rowValue;
 
-            $(function(){
-                $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
-            });
+      $(function(){
+        $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
+      });
 
-            $(".d_row_active").attr('class', 'd_row');
-            $("#active_eview").attr('class','d_row');
+      $(".d_row_active").attr('class', 'd_row');
+      $("#active_eview").attr('class','d_row');
             
-            // This is now the active row
-            $("#" + curID).attr('class','d_row_active');
-            $("#" + curID).find('[class*="row"]').css('border-top', '1pt solid #c9c9c9');
-            // Set the class count (counted again after load)
-            curclasscount = $('.d_row_active').data('event_count');
+      // This is now the active row
+      $("#" + curID).attr('class','d_row_active');
+      $("#" + curID).find('[class*="row"]').css('border-top', '1pt solid #c9c9c9');
+      // Set the class count (counted again after load)
+      curclasscount = $('.d_row_active').data('event_count');
 
-            function cb(data){
-                eval("sigData=" + data);
-                sigtxt = sigData.ruletxt;
-                sigfile = sigData.rulefile;
-                sigline = sigData.ruleline;
+      function cb(data){
+        eval("sigData=" + data);
+        sigtxt = sigData.ruletxt;
+        sigfile = sigData.rulefile;
+        sigline = sigData.ruleline;
 
-                var tbl = '';
-                tbl += "<tr class=eview id=active_eview><td colspan=10><div id=eview class=eview>";
-                tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
-                tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
-                tbl += "<span class=small>";
-                tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span><br>";
-                tbl += "<canvas id=chart_timestamps width=930 height=130>[No canvas support]</canvas>";
-                tbl += "</div><br>";
-                tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
-                tbl += "categorize <span class=bold id=class_count>";
-                tbl += curclasscount + "</span> event(s)</div>";
-                tbl += "</td></tr>";
-                $("#" + curID).after(tbl);
-                eventList("1-" + rowValue);
-                $("#eview").show();
-                $(".d_row").fadeTo('0','0.2');
-            }
-        }
-    });
+        var tbl = '';
+        tbl += "<tr class=eview id=active_eview><td colspan=11><div id=eview class=eview>";
+        tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
+        tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
+        tbl += "<span class=small>";
+        tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span><br>";
+        tbl += "<canvas id=chart_timestamps width=930 height=130>[No canvas support]</canvas>";
+        tbl += "</div><br>";
+        tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
+        tbl += "categorize <span class=bold id=class_count>";
+        tbl += curclasscount + "</span> event(s)</div>";
+        tbl += "</td></tr>";
+        $("#" + curID).after(tbl);
+        eventList("1-" + rowValue);
+        $("#eview").show();
+        $(".d_row").fadeTo('0','0.2');
+      }
+    }
+  });
  
-    //
-    //  Level 2
-    //
+  //
+  //  Level 2
+  //
 
-    $(document).on("click", ".sub_active", function() {
-        if (!$(".d_row_sub_active")[0]) {
-            baseID = $(this).parent().attr('id');
-            columnType = this.id[2];
+  $(document).on("click", ".sub_active", function() {
+    if (!$(".d_row_sub_active")[0]) {
+      baseID = $(this).parent().attr('id');
+      columnType = this.id[2];
 
-            // Reset checkbox
-            $(".chk_all").prop("checked",false);
+      // Reset checkbox
+      $(".chk_all").prop("checked",false);
 
-            // Did they click RT or ALL?
-            switch (columnType) {
-                case "l": adqp = s2h("AND event.status = 0"); break;
-                case "r": adqp = s2h("empty"); break;
-            }
+      // Did they click RT or ALL?
+      switch (columnType) {
+        case "l": adqp = s2h("AND event.status = 0"); break;
+        case "r": adqp = s2h("empty"); break;
+      }
 
-            rowcall = baseID.split("-");
-            callerID = rowcall[0];
-            $("#" + callerID).attr('class','d_row_sub_active');
-            $("#" + callerID).find('[class*="sub"]').css('border-top', '1pt solid #c9c9c9');
-            $("#loader").show();
-            eventList("2-" + baseID + "-" + adqp);
-        }  
-    });
+      rowcall = baseID.split("-");
+      callerID = rowcall[0];
+      $("#" + callerID).attr('class','d_row_sub_active');
+      $("#" + callerID).find('[class*="sub"]').css('border-top', '1pt solid #c9c9c9');
+      $("#loader").show();
+      eventList("2-" + baseID + "-" + adqp);
+    }  
+  });
 
-    //
-    //  Level 3 (a or b) request payload
-    //
+  //
+  //  Level 3 (a or b) request payload
+  //
     
-    $(document).on("click", ".b_PL", function() {
-        if (!$("#eview_sub2")[0] && !$("#eview_sub3")[0]) {
-            baseID = $(this).data('eidl');
-            rowcall = baseID.split("-");
-            callerID = rowcall[0];
-            $("#" + callerID).attr('class','d_row_sub1_active');
-            $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
-            $("#loader").show();           
-            eventList("3-" + baseID);
-        }
-    });
+  $(document).on("click", ".b_PL", function() {
+    if (!$("#eview_sub2")[0] && !$("#eview_sub3")[0]) {
+      baseID = $(this).data('eidl');
+      rowcall = baseID.split("-");
+      callerID = rowcall[0];
+      $("#" + callerID).attr('class','d_row_sub1_active');
+      $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+      $("#loader").show();           
+      eventList("3-" + baseID);
+    }
+  });
 
-    //
-    // Level 3 (a or b) request transcript
-    //
+  //
+  // Level 3 (a or b) request transcript
+  //
 
-    $(document).on("click", ".b_TX", function(event) {
-        if (!$(".eview_sub3")[0] && !$(".eview_sub2")[0]) {
-            $("#loader").show();
-            composite = $(this).data('tx').split("-");
-            rowLoke = composite[0];
-            $("#" + rowLoke).attr('class','d_row_sub1_active');
-            $("#" + rowLoke).find('td').css('border-top', '1pt solid #c9c9c9');
-            nCols = $("#" + rowLoke).find('td').length;
-            cid = composite[1];
-            txdata = composite[2];
+  $(document).on("click", ".b_TX", function(event) {
+    if (!$(".eview_sub3")[0] && !$(".eview_sub2")[0]) {
+      $("#loader").show();
+      composite = $(this).data('tx').split("-");
+      rowLoke = composite[0];
+      $("#" + rowLoke).attr('class','d_row_sub1_active');
+      $("#" + rowLoke).find('td').css('border-top', '1pt solid #c9c9c9');
+      nCols = $("#" + rowLoke).find('td').length;
+      cid = composite[1];
+      txdata = composite[2];
          
-            // See if a transcript is available
-            urArgs = "type=" + 7 + "&txdata=" + txdata;
-            $(function(){
-                $.get(".inc/callback.php?" + urArgs, function(data){cb5(data)});
-            });
+      // See if a transcript is available
+      var urArgs = "type=" + 7 + "&txdata=" + txdata;
+      $(function(){
+        $.get(".inc/callback.php?" + urArgs, function(data){cb5(data)});
+      });
 
-            function cb5(data){
-                eval("txRaw=" + data);
-                txCMD    = txRaw.cmd;
-                txResult = txRaw.tx;
+      function cb5(data){
+        eval("txRaw=" + data);
+        txCMD    = txRaw.cmd;
+        txResult = txRaw.tx;
 
-                var row = '',tbl = '';
-                row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
-                row += "<tr>";
-                row += "<td class=txtext>";
-                row += txResult;
-                row += "</td></tr></table>";
+        var row = '',tbl = '';
+        row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+        row += "<tr>";
+        row += "<td class=txtext>";
+        row += txResult;
+        row += "</td></tr></table>";
 
-                tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=" + nCols + ">";
-                tbl += "<div id=ev_close_sub2 class=close_sub1>";
-                tbl += "<div class=b_close title='Close'>X</div></div>";
-                tbl += row;
-                tbl += "</td></tr>";
-                $("#" + rowLoke).after(tbl);
+        tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=" + nCols + ">";
+        tbl += "<div id=ev_close_sub2 class=close_sub1>";
+        tbl += "<div class=b_close title='Close'>X</div></div>";
+        tbl += row;
+        tbl += "</td></tr>";
+        $("#" + rowLoke).after(tbl);
 
-                // Turn off fade effect for large results
-                rC = $(".d_row_sub1").length;
-                if ( rC <= 399 ) {
-                    $(".d_row_sub1").fadeTo('fast','0.2');
-                }
-
-                $("#loader").hide();
-            }
+        // Turn off fade effect for large results
+        rC = $(".d_row_sub1").length;
+        if ( rC <= 399 ) {
+          $(".d_row_sub1").fadeTo('fast','0.2');
         }
-    });
 
-    //
-    // This creates the views for each level
-    //
+        $("#loader").hide();
+      }
+    }
+  });
+
+  //
+  // This creates the views for each level
+  //
 
     function eventList (type) {
         var parts = type.split("-");
@@ -778,7 +793,7 @@ $(document).ready(function(){
 
         // Level 0 view - Grouped by Signature
         case "0":
-          urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
+          var urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
           });
@@ -787,8 +802,10 @@ $(document).ready(function(){
               tbl = '';
               head = '';
               row = '';
-              head += "<thead><tr><th class=sort width=60>QUEUED</th>";
-              head += "<th class=sort width=60>ALL</th>";
+              head += "<thead><tr>";
+              head += "<th class=sort></th>"; 
+              head += "<th class=sort width=45>QUEUED</th>";
+              head += "<th class=sort width=45>ALL</th>";
               head += "<th class=sort width=35>SC</th>";
               head += "<th class=sort width=35>DC</th>";
               head += "<th class=sort width=70>ACTIVITY</th>";
@@ -823,7 +840,7 @@ $(document).ready(function(){
               for (var i=0; i<d0.length; i++) {
 
                   // How many events are not categorized?
-                  unClass = d0[i].f11.split(",").filter(function(x){return x==0}).length;
+                  var unClass = d0[i].f11.split(",").filter(function(x){return x==0}).length;
 
                   // Colour based on event presence
                   if ( unClass > 0 ) {
@@ -845,6 +862,7 @@ $(document).ready(function(){
                   cells = mkGrid(d0[i].f12);
                   row += "<tr class=d_row id=sid-" + d0[i].f3 + "-" + d0[i].f4;
                   row += " data-class=" + " data-sid=" + " data-event_count=" + d0[i].f1 + ">";
+                  row += "<td class=row><div class=pr" + d0[i].f13 + ">" + d0[i].f13 + "</div></td>";
                   row += "<td class=" + isActive + "><div class=" + rtClass + ">" + unClass + "</div></td>";
                   row += "<td class=" + ttlActive + "><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
                   row += "<td class=row><span class=red>" +d0[i].f6+ "</span></td>";
@@ -901,7 +919,7 @@ $(document).ready(function(){
         // Level 1 view - Grouped by signature, source, destination
 
         case "1":
-          urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
+          var urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
           });
@@ -1030,7 +1048,12 @@ $(document).ready(function(){
               tbl += row;
               tbl += "</table></div>";
               $("#eview").after(tbl);
-              $("#tl2").tablesorter();
+              $("#tl2").tablesorter({
+                headers: {
+                  4: {sorter:'ipv4'},
+                  6: {sorter:'ipv4'}
+                }
+              });
               $("#loader").hide();
           }
         break;
@@ -1041,7 +1064,7 @@ $(document).ready(function(){
           var rowLoke = parts[1];
           var filter = $('#' + parts[1]).data('filter');
 
-          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2] + "&sv=" + sortval;
+          var urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2] + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb3(data)});
           });
@@ -1131,7 +1154,14 @@ $(document).ready(function(){
               $("#" + rowLoke).after(tbl);
               $(".d_row_sub").fadeTo('0','0.2');
               $("#loader").hide();
-              $("#tl3").tablesorter({headers:{0:{sorter:false}},cancelSelection:false});
+              $("#tl3").tablesorter({
+                headers: {
+                  0:{sorter:false},
+                  4:{sorter:'ipv4'},
+                  6:{sorter:'ipv4'}
+                },
+                cancelSelection:false
+              });
               $("#ca0").hide();
           }
         break;
@@ -1139,7 +1169,7 @@ $(document).ready(function(){
         // Level 2a view - No grouping, individual events
 
         case "2a":
-          urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
+          var urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb3a(data)});
           });
@@ -1152,6 +1182,7 @@ $(document).ready(function(){
               row = '';
               head += "<thead><tr>";
               head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox></th>";
+              head += "<th class=sub></th>";
               head += "<th class=sub width=20>ST</th>";
               head += "<th class=sub width=120>TIMESTAMP</th>";
               head += "<th class=sub width=110>ID</th>";
@@ -1210,9 +1241,10 @@ $(document).ready(function(){
                       txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
                   }
    
-                  row += "<tr class=d_row_sub1 id=s" + i + " data-cols=11 data-filter=\"" + eid + "\">";
+                  row += "<tr class=d_row_sub1 id=s" + i + " data-cols=12 data-filter=\"" + eid + "\">";
                   row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
                   row += "type=checkbox value=\"" + sid + "." + cid + "\">";
+                  row += "<td class=row><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
                   row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
                   row += cv + "</div></td>";
                   row += "<td class=row>" + timestamp + "</td>";
@@ -1258,7 +1290,14 @@ $(document).ready(function(){
               chartInterval(timeValues);
               $("#tl3a,#tl3b").fadeIn('slow');
               $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");
-              $("#tl3b").tablesorter({headers:{0:{sorter:false}},cancelSelection:false});
+              $("#tl3b").tablesorter({
+                headers: {
+                  0:{sorter:false},
+                  4:{sorter:'ipv4'},
+                  7:{sorter:'ipv4'}
+                },
+                cancelSelection:false
+              });
               $("#loader").hide();
           }
         break;
@@ -1270,7 +1309,7 @@ $(document).ready(function(){
           var nCols = $('#' + parts[1]).data('cols');
           var filter = $('#' + parts[1]).data('filter');
 
-          urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
+          var urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
 
           $(function(){
               $.get(".inc/callback.php?" + urArgs, function(data){cb4(data)});
@@ -1390,6 +1429,8 @@ $(document).ready(function(){
                 break;
 
               }
+
+              var p_hex = '', p_ascii = '', p_ascii_l = '';
                    
               // Data
               if (!theData[2]) {
@@ -1398,9 +1439,7 @@ $(document).ready(function(){
               } else {
                   p_pl = theData[2].data_payload;
                   p_length = theData[2].data_payload.length;
-                  p_hex = '';
-                  p_ascii = '';
-                  b0 = 0;
+                  var b0 = 0;
 
                   for(var i=0; i < p_length; i+=2) {
                       b0++;
@@ -1408,17 +1447,21 @@ $(document).ready(function(){
                       t_int = parseInt(t_hex,16);
 
                       if ((t_int < 32) || (t_int > 126)) {
-                          p_hex   += t_hex + " ";
-                          p_ascii += ".";
+                          p_hex     += t_hex + " ";
+                          p_ascii   += ".";
+                          p_ascii_l += ".";
                       } else if (t_int == 60) {
-                          p_hex += t_hex + " ";
-                          p_ascii += "&lt;";
+                          p_hex     += t_hex + " ";
+                          p_ascii   += "&lt;";
+                          p_ascii_l += "&lt;";
                       } else if (t_int == 62) {
-                          p_hex += t_hex + " ";
-                          p_ascii += "&gt;";
+                          p_hex     += t_hex + " ";
+                          p_ascii   += "&gt;";
+                          p_ascii_l += "&gt;";
                       } else {
-                          p_hex += t_hex + " ";
-                          p_ascii += String.fromCharCode(parseInt(t_hex, 16));
+                          p_hex     += t_hex + " ";
+                          p_ascii   += String.fromCharCode(parseInt(t_hex, 16));
+                          p_ascii_l += String.fromCharCode(parseInt(t_hex, 16));
                       }
 
                       if ((b0 == 16) && (i < p_length)) {
@@ -1438,7 +1481,11 @@ $(document).ready(function(){
               row += "<tr class=d_row_sub2>";
               row += "<td class=sub><samp>" + p_hex + "</samp></td>";
               row += "<td class=sub><samp>" + p_ascii + "<samp></td>";
-              row += "</td></tr></table>";
+              row += "</td></tr>";
+              row += "<tr class=d_row_sub2>";
+              row += "<th class=sub2 width=40>ASCII</th>";
+              row += "<td class=sub_txt colspan=2><samp>" + p_ascii_l + "<samp></td>";
+              row += "</table>";
                     
               tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
               tbl += "<div class=notes_sub2 id=notes></div>";
@@ -1547,7 +1594,7 @@ $(document).ready(function(){
     // Show comment box
     $(document).on("click", ".b_ME", function(event) {
         if ($('#tlcom').length > 0) return;
-        urArgs = "type=11";
+        var urArgs = "type=11";
 
         $(function(){
             $.get(".inc/callback.php?" + urArgs, function(data){cb11(data)});
@@ -1617,7 +1664,7 @@ $(document).ready(function(){
         if (oktoRM) {
             var theComment = s2h($(this).data('comment'));
             var rowNumber = $(this).data('rn');
-            urArgs = "type=12&comment=" + theComment;
+            var urArgs = "type=12&comment=" + theComment;
             $(function(){
                  $.get(".inc/callback.php?" + urArgs, function(data){cb12(data)});
             }); 
@@ -1774,7 +1821,7 @@ $(document).ready(function(){
         var catdata = intclass + "|||" + msg + "|||" + scidlist;
         if (catdata.length <= 8000) {
             // We are now ready to class
-            urArgs = "type=" + 9 + "&catdata=" + catdata;
+            var urArgs = "type=" + 9 + "&catdata=" + catdata;
             $(function(){
                 $.get(".inc/callback.php?" + urArgs, function(data){cb9(data)});
             });
@@ -1907,21 +1954,24 @@ $(document).ready(function(){
                 if ( count > 1 ) {
                     ess = 's';
                 }
-               
+                
+                var newboxtotal = 0;  
                 // If we are just rt update Total boxes as we go
                 if (!$("#ca2")[0]) {
                     newboxtotal = parseInt($("#qtotal").text() - count);
                     if (newboxtotal < 0) { // We are out of sync
                         newView("u");
                     } else {   
-                        newsigtotal = parseInt($("#esignature").text() - 1);
+                        var newsigtotal = parseInt($("#esignature").text() - 1);
                         $("#qtotal").text(newboxtotal);
                         $("#esignature").text(newsigtotal);
                     }
                 } else {
                     newboxtotal = parseInt($("#cat_count").text() - count);
-                    $("#cat_count").text(newboxtotal);
+                    //$("#cat_count").text(newboxtotal);
                 }
+
+                $("#cat_count").text(newboxtotal);
         
                 if (newboxtotal == 0) { 
                     newView("u");
@@ -1989,7 +2039,7 @@ $(document).ready(function(){
 
     function loadFilters(show) {
             
-        urArgs = "type=8" + "&mode=query&data=0";
+        var urArgs = "type=8" + "&mode=query&data=0";
         $(function(){
             $.get(".inc/callback.php?" + urArgs, function(data){cb6(data)}); 
         });
@@ -2214,7 +2264,7 @@ $(document).ready(function(){
             // Continue..
             oldCL = currentCL;
             fd = s2h(filterTxt.alias + "||" + filterTxt.name + "||" + filterTxt.notes + "||" + filterTxt.filter);
-            urArgs = "type=8&mode=update&data=" + fd;
+            var urArgs = "type=8&mode=update&data=" + fd;
 
             $(function(){
                 $.get(".inc/callback.php?" + urArgs, function(data){cb7(data)}); 
@@ -2278,7 +2328,7 @@ $(document).ready(function(){
     $(document).on("click", ".filter_remove", function(event) {
         var oktoRM = confirm("Are you sure you want to remove this filter?");
         if (oktoRM) {
-            urArgs = "type=8&mode=remove&data=" + currentCL;
+            var urArgs = "type=8&mode=remove&data=" + currentCL;
             $(function(){
                  $.get(".inc/callback.php?" + urArgs, function(data){cb8(data)});
             }); 

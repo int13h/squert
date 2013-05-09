@@ -269,6 +269,16 @@ font-size:11px;
 padding:3px 5px;
 }
 
+td.row_nopad {
+background:transparent;
+border:1pt solid #c4c4c4;
+border-top:none;
+border-right:none;
+border-left:none;
+color:#000;
+font-size:11px;
+}
+
 td.f_row_active {
 background:#e9e9e9;
 border:1pt solid #c4c4c4;
@@ -406,6 +416,21 @@ color:#000;
 font-size:11px;
 text-decoration:none;
 padding:3px 5px;
+}
+
+td.sub_txt {
+width:900px;
+background: #f4f4f4;
+border:1pt solid #c4c4c4;
+border-top:none;
+border-right:none;
+border-left:none;
+color:#000;
+font-size:11px;
+text-decoration:none;
+padding:10px;
+word-wrap:break-word;
+word-break:break-all;
 }
 
 td.sub_light {
@@ -801,7 +826,6 @@ cursor:pointer;
 z-index:20;
 }
 
-
 div.big {
 font-size:11px;
 font-weight:700;
@@ -812,7 +836,7 @@ padding-bottom:5px;
 
 div.b_ec_cold {
 float:left;
-font-weight:700;
+font-weight:normal;
 text-align:center;
 border-radius:3px;
 background:gray;
@@ -822,9 +846,9 @@ font-size:12px;
 padding:5px 0;
 }
 
-div.b_ec_hot {
+.b_ec_hot {
 float:left;
-font-weight:700;
+font-weight:normal;
 text-align:center;
 border-radius:3px;
 background:#c8000a;
@@ -836,7 +860,7 @@ padding:5px 0;
 
 div.b_ec_total {
 float:left;
-font-weight:700;
+font-weight:normal;
 text-align:center;
 border-radius:3px;
 background:#e9e9e9;
@@ -1466,4 +1490,24 @@ font-size:11px;
 
 .mb_links:hover {
 text-decoration:underline;
+}
+.pr1,.pr2,.pr3 {
+float:right;
+padding-top:2px;
+padding-bottom:2px;
+width:3px;
+height:15px;
+font-size:0px;
+border:1pt solid #545454;
+border-radius:2px;
+margin-right:-5px;
+}
+.pr1 {
+background-color:red;
+}
+.pr2 {
+background-color:orange;
+}
+.pr3 {
+background-color:yellow;
 }

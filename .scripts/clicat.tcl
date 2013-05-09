@@ -1,4 +1,6 @@
-#!/usr/local/bin/tclsh
+#!/bin/sh
+# Run tcl from users PATH \
+exec tclsh "$0" "$@"
 
 # clicat.tcl - Based on "quickscript.tcl"
 # Portions Copyright (C) 2013 Paul Halliday <paul.halliday@gmail.com>
