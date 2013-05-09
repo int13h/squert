@@ -180,7 +180,8 @@ function es() {
               GROUP_CONCAT(DISTINCT(event.status)) AS f9,
               GROUP_CONCAT(DISTINCT(event.sid)) AS f10,
               GROUP_CONCAT(event.status) AS f11,
-              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12
+              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
+              event.priority AS f13
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
@@ -246,7 +247,8 @@ function eg() {
               GROUP_CONCAT(event.cid) AS c_cid,
               GROUP_CONCAT(event.status) AS c_status,
               GROUP_CONCAT(SUBSTR(CONVERT_TZ(event.timestamp,'+00:00','$offset'),12,5)) AS c_ts,
-              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12
+              GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
+              event.priority AS f13
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
@@ -305,7 +307,8 @@ function ed() {
               event.cid AS f8,
               event.ip_proto AS f9,
               event.signature AS f10,
-              event.signature_id AS f11
+              event.signature_id AS f11,
+              event.priority AS f12
               FROM event
               $qp2
               ORDER BY event.timestamp $sv";
@@ -366,7 +369,8 @@ function ee() {
               event.cid AS f12, 
               event.ip_proto AS f13,
               event.signature AS f14,
-              event.signature_id AS f15
+              event.signature_id AS f15,
+              event.priority AS f16
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip

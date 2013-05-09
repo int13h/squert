@@ -70,7 +70,7 @@ dbC();
 <div class=menu id=menu1>ungroup events</div><div class=menu id=menu2>show map</div></div>
 </div>
 <div id=t_dash_content class=content>
-<table width=970 align=center><tr><td>
+<table width=950 align=center><tr><td>
 <h3>Events grouped by minute and hour</h3>
 <?php include_once '.charts/interval.php';?>
 <h3>Top signatures</h3>

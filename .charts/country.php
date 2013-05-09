@@ -111,8 +111,8 @@ $label2 = rtrim($label2,",");
 // Chart Logic
 
 echo "
-<canvas id=\"scountry\" width=\"480\" height=\"350\">[No canvas support]</canvas>
-<canvas id=\"dcountry\" width=\"480\" height=\"350\">[No canvas support]</canvas>";
+<canvas id=\"scountry\" width=\"470\" height=\"350\">[No canvas support]</canvas>
+<canvas id=\"dcountry\" width=\"470\" height=\"350\">[No canvas support]</canvas>";
 
 echo "\r<script>";
 
