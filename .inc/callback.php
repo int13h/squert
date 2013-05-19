@@ -370,7 +370,8 @@ function ee() {
               event.ip_proto AS f13,
               event.signature AS f14,
               event.signature_id AS f15,
-              event.priority AS f16
+              event.priority AS f16,
+              event.signature_gen AS f17
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip

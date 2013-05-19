@@ -88,25 +88,18 @@ $(document).ready(function(){
   // Rule Lookup
   function sigLookup(sid) {
     // Lookup rule
-    var urArgs = "type=" + 4 + "&sid=" + rowValue;
-
-    $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
-    });
-
-    function cb(data){
+    var urArgs = "type=" + 4 + "&sid=" + sid;
+    $.get(".inc/callback.php?" + urArgs, function(data){
       eval("sigData=" + data);
       sigtxt = sigData.ruletxt;
       sigfile = sigData.rulefile;
       sigline = sigData.ruleline;
-
       var txt = '';
-      txt += "<div class=sigtxt>" + sigtxt + " <br><br>";
+      txt += sigtxt + " <br><br>";
       txt += "<span class=small>";
       txt += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span><br>";
-    }
-    return txt; 
-
+      $(".sigtxt").prepend(txt);
+    });
   }
 
   // Make a map
@@ -593,13 +586,6 @@ $(document).ready(function(){
       // This leaves us with sid-gid
       rowValue = curID.replace("sid-","");
      
-      // Lookup rule
-      var urArgs = "type=" + 4 + "&sid=" + rowValue;
-
-      $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
-      });
-
       $(".d_row_active").attr('class', 'd_row');
       $("#active_eview").attr('class','d_row');
             
@@ -609,29 +595,20 @@ $(document).ready(function(){
       // Set the class count (counted again after load)
       curclasscount = $('.d_row_active').data('event_count');
 
-      function cb(data){
-        eval("sigData=" + data);
-        sigtxt = sigData.ruletxt;
-        sigfile = sigData.rulefile;
-        sigline = sigData.ruleline;
-
-        var tbl = '';
-        tbl += "<tr class=eview id=active_eview><td colspan=11><div id=eview class=eview>";
-        tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
-        tbl += "<div class=sigtxt>" + sigtxt + " <br><br>";
-        tbl += "<span class=small>";
-        tbl += "file: <span class=boldtab>" + sigfile + ":" + sigline + "</span><br>";
-        tbl += "<canvas id=chart_timestamps width=930 height=130>[No canvas support]</canvas>";
-        tbl += "</div><br>";
-        tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
-        tbl += "categorize <span class=bold id=class_count>";
-        tbl += curclasscount + "</span> event(s)</div>";
-        tbl += "</td></tr>";
-        $("#" + curID).after(tbl);
-        eventList("1-" + rowValue);
-        $("#eview").show();
-        $(".d_row").fadeTo('0','0.2');
-      }
+      var tbl = '';
+      tbl += "<tr class=eview id=active_eview><td colspan=11><div id=eview class=eview>";
+      tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
+      tbl += "<div class=sigtxt></div>";
+      tbl += "<br><canvas id=chart_timestamps width=930 height=130>[No canvas support]</canvas>";
+      tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
+      tbl += "categorize <span class=bold id=class_count>";
+      tbl += curclasscount + "</span> event(s)</div>";
+      tbl += "</td></tr>";
+      $("#" + curID).after(tbl);
+      eventList("1-" + rowValue);
+      sigLookup(rowValue);
+      $("#eview").show();
+      $(".d_row").fadeTo('0','0.2');
     }
   });
  
@@ -803,7 +780,7 @@ $(document).ready(function(){
         head = '';
         row = '';
         head += "<thead><tr>";
-        head += "<th class=sort></th>"; 
+        head += "<th class=sort title=Priority></th>"; 
         head += "<th class=sort width=45>QUEUED</th>";
         head += "<th class=sort width=45>ALL</th>";
         head += "<th class=sort width=35>SC</th>";
@@ -1103,7 +1080,7 @@ $(document).ready(function(){
           var txBit     = "";
           rid = "s" + i + "-" + sid + "-" + cid;
           eid = sid + "-" + cid;
-          row += "<tr class=d_row_sub1 id=s" + i + " data-cols=9 data-filter=\"" + eid + "\">";
+          row += "<tr class=d_row_sub1 id=s" + i + " data-sg=0 data-cols=9 data-filter=\"" + eid + "\">";
           tclass = "c" + eclass;
           cv = classifications.class[tclass][0].short;
 
@@ -1180,7 +1157,7 @@ $(document).ready(function(){
         row = '';
         head += "<thead><tr>";
         head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox></th>";
-        head += "<th class=sub></th>";
+        head += "<th class=sub width=2></th>";
         head += "<th class=sub width=20>ST</th>";
         head += "<th class=sub width=120>TIMESTAMP</th>";
         head += "<th class=sub width=110>ID</th>";
@@ -1223,6 +1200,7 @@ $(document).ready(function(){
           var dst_cc    = d2a[i].f10 || "-";
           var dst_clong = d2a[i].f9  || "unknown";
           var sig_id    = d2a[i].f15 || "-";
+          var sig_gen   = d2a[i].f17 || "-";
           var signature = d2a[i].f14 || "-";
           var evt_msg   = "-";
           var cs = getCountry(src_cc).split("|");
@@ -1230,6 +1208,7 @@ $(document).ready(function(){
 
           rid = "s" + i + "-" + sid + "-" + cid;
           eid = sid + "-" + cid;
+          var sg = sig_id + "-" + sig_gen;  
           tclass = "c" + eclass;
           cv = classifications.class[tclass][0].short;
           txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + timestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
@@ -1239,7 +1218,7 @@ $(document).ready(function(){
             txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
           }
    
-          row += "<tr class=d_row_sub1 id=s" + i + " data-cols=12 data-filter=\"" + eid + "\">";
+          row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=12 data-filter=\"" + eid + "\">";
           row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\">";
           row += "<td class=row><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
@@ -1306,7 +1285,7 @@ $(document).ready(function(){
       var nCols = $('#' + parts[1]).data('cols');
       var filter = $('#' + parts[1]).data('filter');
       var urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen;
-
+      var sg = $('#' + parts[1]).data('sg');
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb4(data)});
       });
@@ -1317,7 +1296,7 @@ $(document).ready(function(){
         tbl = '';
         head = '';
         row = '';
-        head += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+        head += "<table class=tlip align=center width=100% cellpadding=0 cellspacing=0>";
         head += "<tr>";
         head += "<th class=sub2 width=40 rowspan=2>IP</th>";
         head += "<th class=sub2>VER</th>";
@@ -1333,16 +1312,16 @@ $(document).ready(function(){
         head += "</tr>";
 
         row += "<tr class=d_row_sub2>";
-        row += "<td class=sub>" + theData[0].ip_ver + "</td>";
-        row += "<td class=sub>" + theData[0].ip_hlen + "</td>";
-        row += "<td class=sub>" + theData[0].ip_tos + "</td>";
-        row += "<td class=sub>" + theData[0].ip_len + "</td>";
-        row += "<td class=sub>" + theData[0].ip_id + "</td>";
-        row += "<td class=sub>" + theData[0].ip_flags + "</td>";
-        row += "<td class=sub>" + theData[0].ip_off + "</td>";
-        row += "<td class=sub>" + theData[0].ip_ttl + "</td>";
-        row += "<td class=sub>" + theData[0].ip_csum + "</td>";
-        row += "<td class=sub>" + theData[0].ip_proto + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_ver + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_hlen + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_tos + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_len + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_id + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_flags + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_off + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_ttl + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_csum + "</td>";
+        row += "<td class=sub3>" + theData[0].ip_proto + "</td>";
         row += "</td></tr></table>";
 
         switch (theData[0].ip_proto) {
@@ -1357,11 +1336,11 @@ $(document).ready(function(){
             row += "<th class=sub2 width=184>SEQ#</th>";
             row += "</tr>";
             row += "<tr class=d_row_sub2>";
-            row += "<td class=sub>" + theData[1].icmp_type + "</td>";
-            row += "<td class=sub>" + theData[1].icmp_code + "</td>";
-            row += "<td class=sub>" + theData[1].icmp_csum + "</td>";
-            row += "<td class=sub>" + theData[1].icmp_id + "</td>";
-            row += "<td class=sub>" + theData[1].icmp_seq + "</td>";
+            row += "<td class=sub3>" + theData[1].icmp_type + "</td>";
+            row += "<td class=sub3>" + theData[1].icmp_code + "</td>";
+            row += "<td class=sub3>" + theData[1].icmp_csum + "</td>";
+            row += "<td class=sub3>" + theData[1].icmp_id + "</td>";
+            row += "<td class=sub3>" + theData[1].icmp_seq + "</td>";
             row += "</td></tr></table>";
             break;
    
@@ -1391,21 +1370,21 @@ $(document).ready(function(){
             row += "<th class=sub2>CHECKSUM</th>";
             row += "</tr>";
             row += "<tr class=d_row_sub2>";
-            row += "<td class=sub>" + tcpFlags[0] + "</td>";
-            row += "<td class=sub>" + tcpFlags[1] + "</td>";
-            row += "<td class=sub>" + tcpFlags[2] + "</td>";
-            row += "<td class=sub>" + tcpFlags[3] + "</td>";
-            row += "<td class=sub>" + tcpFlags[4] + "</td>";
-            row += "<td class=sub>" + tcpFlags[5] + "</td>";
-            row += "<td class=sub>" + tcpFlags[6] + "</td>";
-            row += "<td class=sub>" + tcpFlags[7] + "</td>";
-            row += "<td class=sub>" + theData[1].tcp_seq + "</td>";
-            row += "<td class=sub>" + theData[1].tcp_ack + "</td>";
-            row += "<td class=sub>" + theData[1].tcp_off + "</td>";
-            row += "<td class=sub>" + theData[1].tcp_res + "</td>";
-            row += "<td class=sub>" + theData[1].tcp_win + "</td>";
-            row += "<td class=sub>" + theData[1].tcp_urp + "</td>";
-            row += "<td class=sub>" + theData[1].tcp_csum + "</td>";
+            row += "<td class=sub3>" + tcpFlags[0] + "</td>";
+            row += "<td class=sub3>" + tcpFlags[1] + "</td>";
+            row += "<td class=sub3>" + tcpFlags[2] + "</td>";
+            row += "<td class=sub3>" + tcpFlags[3] + "</td>";
+            row += "<td class=sub3>" + tcpFlags[4] + "</td>";
+            row += "<td class=sub3>" + tcpFlags[5] + "</td>";
+            row += "<td class=sub3>" + tcpFlags[6] + "</td>";
+            row += "<td class=sub3>" + tcpFlags[7] + "</td>";
+            row += "<td class=sub3>" + theData[1].tcp_seq + "</td>";
+            row += "<td class=sub3>" + theData[1].tcp_ack + "</td>";
+            row += "<td class=sub3>" + theData[1].tcp_off + "</td>";
+            row += "<td class=sub3>" + theData[1].tcp_res + "</td>";
+            row += "<td class=sub3>" + theData[1].tcp_win + "</td>";
+            row += "<td class=sub3>" + theData[1].tcp_urp + "</td>";
+            row += "<td class=sub3>" + theData[1].tcp_csum + "</td>";
             row += "</td></tr></table>";
             break;
    
@@ -1417,8 +1396,8 @@ $(document).ready(function(){
             row += "<th class=sub2 width=460>CHECKSUM</th>";
             row += "</tr>";
             row += "<tr class=d_row_sub2>";
-            row += "<td class=sub>" + theData[1].udp_len + "</td>";
-            row += "<td class=sub>" + theData[1].udp_csum + "</td>";
+            row += "<td class=sub3>" + theData[1].udp_len + "</td>";
+            row += "<td class=sub3>" + theData[1].udp_csum + "</td>";
             row += "</td></tr></table>";               
             break;
         }
@@ -1471,16 +1450,21 @@ $(document).ready(function(){
         row += "<th class=sub2 width=460>ASCII</th>";
         row += "</tr>";
         row += "<tr class=d_row_sub2>";
-        row += "<td class=sub><samp>" + p_hex + "</samp></td>";
-        row += "<td class=sub><samp>" + p_ascii + "<samp></td>";
+        row += "<td class=sub3><samp>" + p_hex + "</samp></td>";
+        row += "<td class=sub3><samp>" + p_ascii + "<samp></td>";
         row += "</td></tr>";
         row += "<tr class=d_row_sub2>";
-        row += "<th class=sub2 width=40>ASCII</th>";
+        row += "<th class=sub3 width=40>ASCII</th>";
         row += "<td class=sub_txt colspan=2><samp>" + p_ascii_l + "<samp></td>";
         row += "</table>";
                     
         tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
-        tbl += "<div class=notes_sub2 id=notes></div>";
+
+        if ( sg != 0 ) {
+          tbl += "<div class=sigtxt></div>";
+          sigLookup(sg);
+        }
+        tbl += "<div class=comments><b>Comments:</b> None.</div>";
         tbl += head;
         tbl += row;
         tbl += "</td></tr>";
