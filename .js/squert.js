@@ -280,57 +280,56 @@ $(document).ready(function(){
     var sum = v.reduce(function(a,b) { return a + b; }, 0);
     var v0 = 0, v1 = 0, v2 = 0, v3 = 0; 
     if( sum > 0) {
-      var v0 = Number(v[0]/sum*100).toFixed(1);
-      var v1 = Number(v[1]/sum*100).toFixed(1);
-      var v2 = Number(v[2]/sum*100).toFixed(1);
-      var v3 = Number(v[3]/sum*100).toFixed(1);
+      var w = [Number(v[0]/sum*100).toFixed(1),Number(v[1]/sum*100).toFixed(1),
+               Number(v[2]/sum*100).toFixed(1),Number(v[3]/sum*100).toFixed(1)];
     }
     var bar = "<table class=pribar cellpadding=none cellspacing=none><tr>";
-    bar += "<td data-pr=1 class=bpr1 width=" + v0 + "% title=\"High Severity: " + v[0] + "\">";
-    bar += v0 + "%</td>";
-    bar += "<td data-pr=2 class=bpr2 width=" + v1 + "% title=\"Medium Severity: " + v[1] + "\">";
-    bar += v1 + "%</td>";
-    bar += "<td data-pr=3 class=bpr3 width=" + v2 + "% title=\"Low Severity: " + v[2] + "\">";
-    bar += v2 + "%</td>";
-    bar += "<td data-pr=4 class=bpr4 width=" + v3 + "% title=\"Other: " + v[3] + "\">";
-    bar += v3 + "%</td>";
+    for (var i=1; i<5;i++) {
+      var t = ['High Priority','Medium Priority','Low Priority','Other'];
+      var j = Number(i - 1);
+
+      if (w[j] > 0) { 
+        bar += "<td data-pr=" + i + " class=bpr" + i + " width=" + w[j] + "% title=\""; 
+        bar += t[i] + ": " + v[j] + "\">" + w[j] + "%</td>";
+      }  
+    }
+
     bar += "</tr></table>";
+
     return bar;  
   }
 
   $(document).on('click', '[class*="bpr"]', function() {
-    if ($(this).text().split('%')[0] > 0) {
-      var prClass = $(this).attr('class').split('b')[1];
-      var prOld = $(this).data('pr');
+    var prClass = $(this).attr('class').split('b')[1];
+    var prOld = $(this).data('pr');
     
-      function flipIt(pattern) {
-        $(pattern).closest('tr').hide();
-        $(pattern).closest('tr').attr('class','hidden'); 
-      }
+    function flipIt(pattern) {
+      $(pattern).closest('tr').hide();
+      $(pattern).closest('tr').attr('class','hidden'); 
+    }
 
-      if ($('.b' + prClass).attr('class') == 'bprA') {
-        $('.b' + prClass).attr('class', 'bpr' + prOld);
+    if ($('.b' + prClass).attr('class') == 'bprA') {
+      $('.b' + prClass).attr('class', 'bpr' + prOld);
+      $('.hidden').attr('class','d_row');
+      $('.d_row').show();
+    } else {
+      // See if we are already filtered
+      if ($('.bprA')[0]) {
         $('.hidden').attr('class','d_row');
         $('.d_row').show();
-      } else {
-        // See if we are already filtered
-        if ($('.bprA')[0]) {
-          $('.hidden').attr('class','d_row');
-          $('.d_row').show();
-          var prPrev = $('.bprA').data('pr');
-          $('.bprA').attr('class', 'bpr' + prPrev);
-        }  
+        var prPrev = $('.bprA').data('pr');
+        $('.bprA').attr('class', 'bpr' + prPrev);
+      }  
 
-        $('.b' + prClass).attr('class','bprA');
-        switch (prClass) {
-          case "pr1": ptrn = ".pr2,.pr3,.pr4"; break;
-          case "pr2": ptrn = ".pr1,.pr3,.pr4"; break;
-          case "pr3": ptrn = ".pr1,.pr2,.pr4"; break;
-          case "pr4": ptrn = ".pr1,.pr2,.pr3"; break;
-        }
-
-        flipIt(ptrn);
+      $('.b' + prClass).attr('class','bprA');
+      switch (prClass) {
+        case "pr1": ptrn = ".pr2,.pr3,.pr4"; break;
+        case "pr2": ptrn = ".pr1,.pr3,.pr4"; break;
+        case "pr3": ptrn = ".pr1,.pr2,.pr4"; break;
+        case "pr4": ptrn = ".pr1,.pr2,.pr3"; break;
       }
+
+      flipIt(ptrn);
     }
   });
   
