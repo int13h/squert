@@ -275,6 +275,65 @@ $(document).ready(function(){
     }
   }, emTimeout);
 
+  // Event priority bar
+  function mkPribar(v) {
+    var sum = v.reduce(function(a,b) { return a + b; }, 0);
+     
+    if( sum > 0) {
+      var v0 = Number(v[0]/sum*100).toFixed(1);
+      var v1 = Number(v[1]/sum*100).toFixed(1);
+      var v2 = Number(v[2]/sum*100).toFixed(1);
+      var v3 = Number(v[3]/sum*100).toFixed(1);
+    }
+    var bar = "<table class=pribar cellpadding=none cellspacing=none><tr>";
+    bar += "<td data-pr=1 class=bpr1 width=" + v0 + "% title=\"High Severity: " + v[0] + "\">";
+    bar += v0 + "%</td>";
+    bar += "<td data-pr=2 class=bpr2 width=" + v1 + "% title=\"Medium Severity: " + v[1] + "\">";
+    bar += v1 + "%</td>";
+    bar += "<td data-pr=3 class=bpr3 width=" + v2 + "% title=\"Low Severity: " + v[2] + "\">";
+    bar += v2 + "%</td>";
+    bar += "<td data-pr=4 class=bpr4 width=" + v3 + "% title=\"Other: " + v[3] + "\">";
+    bar += v3 + "%</td>";
+    bar += "</tr></table>";
+    return bar;  
+  }
+
+  $(document).on('click', '[class*="bpr"]', function() {
+    if ($(this).text()[0] != 0) {
+      var prClass = $(this).attr('class').split('b')[1];
+      var prOld = $(this).data('pr');
+    
+      function flipIt(pattern) {
+        $(pattern).closest('tr').hide();
+        $(pattern).closest('tr').attr('class','hidden'); 
+      }
+
+      if ($('.b' + prClass).attr('class') == 'bprA') {
+        $('.b' + prClass).attr('class', 'bpr' + prOld);
+        $('.hidden').attr('class','d_row');
+        $('.d_row').show();
+      } else {
+        // See if we are already filtered
+        if ($('.bprA')[0]) {
+          $('.hidden').attr('class','d_row');
+          $('.d_row').show();
+          var prPrev = $('.bprA').data('pr');
+          $('.bprA').attr('class', 'bpr' + prPrev);
+        }  
+
+        $('.b' + prClass).attr('class','bprA');
+        switch (prClass) {
+          case "pr1": ptrn = ".pr2,.pr3,.pr4"; break;
+          case "pr2": ptrn = ".pr1,.pr3,.pr4"; break;
+          case "pr3": ptrn = ".pr1,.pr2,.pr4"; break;
+          case "pr4": ptrn = ".pr1,.pr2,.pr3"; break;
+        }
+
+        flipIt(ptrn);
+      }
+    }
+  });
+  
   // 24 Grid
   function mkGrid(values) {
     var cells = "<table class=grid cellspacing=none><tr>";
@@ -779,7 +838,9 @@ $(document).ready(function(){
         tbl = '';
         head = '';
         row = '';
-        head += "<thead><tr>";
+        head += "<thead>";
+        head += "<tr><th id=priority_bar colspan=11></th></tr>";
+        head += "<tr>";
         head += "<th class=sort title=Priority></th>"; 
         head += "<th class=sort width=45>QUEUED</th>";
         head += "<th class=sort width=45>ALL</th>";
@@ -793,7 +854,7 @@ $(document).ready(function(){
         head += "<th class=sort width=60>% TOTAL</th>";
         head += "</tr></thead>";
 
-        var sumEC = 0, sumSC = 0, sumDC = 0, sumSI = 0;
+        var sumEC = 0, sumSC = 0, sumDC = 0, sumSI = 0, spr1 = 0, spr2 = 0, spr3 = 0, spr4 = 0;
 
         if (d0.length > 0) {
           // Sums for boxes 
@@ -833,7 +894,16 @@ $(document).ready(function(){
           ttlActive = "row_active";
           if (rt == 1) {
             ttlActive = "row";
-          }                  
+          }
+
+          // Sum priorities
+          var prC = Number(d0[i].f1);
+          switch (d0[i].f13) {
+            case "1": spr1 += prC; break;
+            case "2": spr2 += prC; break;
+            case "3": spr3 += prC; break;
+            default: spr4 += prC; break;
+          }                   
 
           rid = "r" + i + "-" + parts[1];
           cells = mkGrid(d0[i].f12);
@@ -864,7 +934,9 @@ $(document).ready(function(){
           row += "<td class=row><b>" + rowPer + "%</b></td>";
           row += "</td></tr>";
         }
-
+        
+        var prVals = [spr1,spr2,spr3,spr4];
+        var pryBar =  mkPribar(prVals);
         tbl += "<table id=tl0 width=950 cellpadding=0 cellspacing=0 align=center>";
         tbl += "<td align=center><div class=big>Queued Events (RT)</div><div class=box_red><span id=qtotal>";
         tbl += sumRT + "</span><div class=rt_notice title=\"update results\">!</div></div></td>";
@@ -877,15 +949,20 @@ $(document).ready(function(){
         tbl += "<td align=center><div class=big>Total Destinations</div><div class=box>";
         tbl += sumDC + "</div></td>";
         tbl += "</table><br>";
-              
         tbl += "<table id=tl1 class=main width=950 cellpadding=0 cellspacing=0 align=center>";
         tbl += head;
         tbl += row;
         tbl += "</table>";
+        
         $('#' + parts[1] + '-' + parts[2]).after(tbl);
+        $('#priority_bar').append(pryBar);  
         $('#tl0,#tl1').fadeIn('slow');
         $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");
-        $("#tl1").tablesorter();
+        $("#tl1").tablesorter({
+          headers: {
+            0:{sorter:false}
+          }
+        });
         if ($('#tl4').length == 0) {
           loadFilters(0);
         }
@@ -1218,7 +1295,7 @@ $(document).ready(function(){
             txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
           }
    
-          row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=12 data-filter=\"" + eid + "\">";
+          row += "<tr class=d_row id=s" + i + " data-sg=\"" + sg + "\" data-cols=12 data-filter=\"" + eid + "\">";
           row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\">";
           row += "<td class=row><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";

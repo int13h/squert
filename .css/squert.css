@@ -269,7 +269,7 @@ border-bottom:1pt solid #c9c9c9;
 }
 
 td.sub2 {
-background-color:#fafafa;
+background-color:#FCE700;
 border-bottom:2pt solid #c9c9c9;
 }
 td.sub3 {
@@ -1165,7 +1165,7 @@ padding:none;
 }
 
 table.tlip {
-border-top:2pt solid #c9c9c9;
+border-top:1pt solid #000;
 }
 #chart_timestamps {
 float:right;
@@ -1532,12 +1532,47 @@ font-size:0px;
 border:1pt solid #545454;
 border-radius:2px;
 }
-.pr1 {
-background-color:red;
+.pr1,.bpr1 {
+background-color:#cc0000;
+color:#fff;
 }
-.pr2 {
+.pr2,.bpr2 {
 background-color:orange;
+color:#000;
 }
-.pr3 {
+.pr3,.bpr3 {
 background-color:yellow;
+color:#000;
+}
+.bpr4 {
+background-color:#e9e9e9;
+color:#000;
+}
+.bprA {
+font-weight:normal;
+text-align:center;
+border:1pt solid #fff;
+font-size:9px;
+height:8px;
+cursor:pointer;
+border-radius:2px;
+color:#fff;
+background-color:#000;
+padding:0px 3px 0px 3px;
+}
+
+.bpr1,.bpr2,.bpr3,.bpr4 {
+font-weight:normal;
+text-align:center;
+border:1pt solid #000;
+font-size:9px;
+height:5px;
+cursor:pointer;
+border-radius:2px;
+padding:0px 3px 0px 3px;
+}
+table.pribar {
+width:100%;
+border:none;
+background-color:#c9c7c7;
 }
