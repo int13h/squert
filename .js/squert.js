@@ -299,7 +299,7 @@ $(document).ready(function(){
   }
 
   $(document).on('click', '[class*="bpr"]', function() {
-    if ($(this).text()[0] != 0) {
+    if ($(this).text().split('%')[0] > 0) {
       var prClass = $(this).attr('class').split('b')[1];
       var prOld = $(this).data('pr');
     
