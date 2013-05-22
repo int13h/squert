@@ -278,7 +278,7 @@ $(document).ready(function(){
   // Event priority bar
   function mkPribar(v) {
     var sum = v.reduce(function(a,b) { return a + b; }, 0);
-     
+    var v0 = 0, v1 = 0, v2 = 0, v3 = 0; 
     if( sum > 0) {
       var v0 = Number(v[0]/sum*100).toFixed(1);
       var v1 = Number(v[1]/sum*100).toFixed(1);
