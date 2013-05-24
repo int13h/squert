@@ -283,14 +283,14 @@ $(document).ready(function(){
       var w = [Number(v[0]/sum*100).toFixed(1),Number(v[1]/sum*100).toFixed(1),
                Number(v[2]/sum*100).toFixed(1),Number(v[3]/sum*100).toFixed(1)];
     }
-    var bar = "<table class=pribar cellpadding=none cellspacing=none><tr>";
+    var bar = "<table class=pribar><tr>";
+    var t = ['High Priority','Medium Priority','Low Priority','Other'];
     for (var i=1; i<5;i++) {
-      var t = ['High Priority','Medium Priority','Low Priority','Other'];
       var j = Number(i - 1);
 
       if (w[j] > 0) { 
         bar += "<td data-pr=" + i + " class=bpr" + i + " width=" + w[j] + "% title=\""; 
-        bar += t[i] + ": " + v[j] + "\">" + w[j] + "%</td>";
+        bar += t[j] + ": " + v[j] + "\">" + w[j] + "%</td>";
       }  
     }
 
@@ -300,6 +300,7 @@ $(document).ready(function(){
   }
 
   $(document).on('click', '[class*="bpr"]', function() {
+    if ($('.d_row_active')[0]) return;
     var prClass = $(this).attr('class').split('b')[1];
     var prOld = $(this).data('pr');
     
@@ -840,9 +841,9 @@ $(document).ready(function(){
         head += "<thead>";
         head += "<tr><th id=priority_bar colspan=11></th></tr>";
         head += "<tr>";
-        head += "<th class=sort title=Priority></th>"; 
         head += "<th class=sort width=45>QUEUED</th>";
         head += "<th class=sort width=45>ALL</th>";
+        head += "<th class=sort width=5 title=Priority></th>";
         head += "<th class=sort width=35>SC</th>";
         head += "<th class=sort width=35>DC</th>";
         head += "<th class=sort width=70>ACTIVITY</th>";
@@ -908,9 +909,9 @@ $(document).ready(function(){
           cells = mkGrid(d0[i].f12);
           row += "<tr class=d_row id=sid-" + d0[i].f3 + "-" + d0[i].f4;
           row += " data-class=" + " data-sid=" + " data-event_count=" + d0[i].f1 + ">";
-          row += "<td class=row><div class=pr" + d0[i].f13 + ">" + d0[i].f13 + "</div></td>";
           row += "<td class=" + isActive + "><div class=" + rtClass + ">" + unClass + "</div></td>";
           row += "<td class=" + ttlActive + "><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
+          row += "<td class=row><div class=pr" + d0[i].f13 + ">" + d0[i].f13 + "</div></td>";
           row += "<td class=row><span class=red>" +d0[i].f6+ "</span></td>";
           row += "<td class=row><span class=blue>" +d0[i].f7+ "</span></td>";
 
@@ -1231,7 +1232,9 @@ $(document).ready(function(){
         tbl = '';
         head = '';
         row = '';
-        head += "<thead><tr>";
+        head += "<thead>";
+        head += "<tr><th id=priority_bar colspan=13></th></tr>";
+        head += "<tr>";
         head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox></th>";
         head += "<th class=sub width=2></th>";
         head += "<th class=sub width=20>ST</th>";
@@ -1258,7 +1261,12 @@ $(document).ready(function(){
           timeValues += datetimestamp[1] + ",";
         }
 
+        // Counters for priorities
+        var spr1 = 0, spr2 = 0, spr3 = 0, spr4 = 0;
+        
+        // Max iterations
         var maxI = 500; 
+
         // Update class_count
         $("#class_count").html(d2a.length);
         for (var i=0; i<d2a.length; i++) {
@@ -1277,10 +1285,20 @@ $(document).ready(function(){
           var dst_clong = d2a[i].f9  || "unknown";
           var sig_id    = d2a[i].f15 || "-";
           var sig_gen   = d2a[i].f17 || "-";
+          var sig_pri   = d2a[i].f16 || "0";
           var signature = d2a[i].f14 || "-";
           var evt_msg   = "-";
           var cs = getCountry(src_cc).split("|");
           var cd = getCountry(dst_cc).split("|");
+
+          // Sum priorities
+          var prC = Number(1);
+          switch (sig_pri) {
+            case "1": spr1 += prC; break;
+            case "2": spr2 += prC; break;
+            case "3": spr3 += prC; break;
+            default: spr4 += prC; break;
+          }
 
           rid = "s" + i + "-" + sid + "-" + cid;
           eid = sid + "-" + cid;
@@ -1315,7 +1333,7 @@ $(document).ready(function(){
         }
  
         var sumED = 0, sumEC = 0, sumSI = 0, sumSC = "-", sumDC = "-", cmsg = "";
-              
+
         if (d2a.length > 0) {
           sumED = i;  
           sumEC = d2a.length;
@@ -1325,6 +1343,9 @@ $(document).ready(function(){
           sumRE = sumEC - maxI;
           cmsg = " / <span class=bold>"  + sumRE + "</span> not shown";
         }
+
+        var prVals = [spr1,spr2,spr3,spr4];
+        var pryBar =  mkPribar(prVals);    
 
         tbl += "<table id=tl3a class=chart align=center width=950 border=0 cellpadding=0 cellspacing=0>";
         tbl += "<tr><td class=dark colspan=10><div>";
@@ -1339,6 +1360,7 @@ $(document).ready(function(){
         tbl += row;
         tbl += "</table>";
         $('#' + parts[1] + '-' + parts[2]).after(tbl);
+        $('#priority_bar').append(pryBar);
         chartInterval(timeValues);
         $("#tl3a,#tl3b").fadeIn('slow');
         $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");
