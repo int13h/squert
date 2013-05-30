@@ -279,9 +279,10 @@ $(document).ready(function(){
   function mkPribar(v) {
     var sum = v.reduce(function(a,b) { return a + b; }, 0);
     var v0 = 0, v1 = 0, v2 = 0, v3 = 0; 
+    var w = [];
     if( sum > 0) {
-      var w = [Number(v[0]/sum*100).toFixed(1),Number(v[1]/sum*100).toFixed(1),
-               Number(v[2]/sum*100).toFixed(1),Number(v[3]/sum*100).toFixed(1)];
+      w = [Number(v[0]/sum*100).toFixed(1),Number(v[1]/sum*100).toFixed(1),
+           Number(v[2]/sum*100).toFixed(1),Number(v[3]/sum*100).toFixed(1)];
     }
     var bar = "<table class=pribar><tr>";
     var t = ['High Priority','Medium Priority','Low Priority','Other'];
@@ -323,6 +324,8 @@ $(document).ready(function(){
       }  
 
       $('.b' + prClass).attr('class','bprA');
+      
+ 
       switch (prClass) {
         case "pr1": ptrn = ".pr2,.pr3,.pr4"; break;
         case "pr2": ptrn = ".pr1,.pr3,.pr4"; break;
@@ -935,8 +938,6 @@ $(document).ready(function(){
           row += "</td></tr>";
         }
         
-        var prVals = [spr1,spr2,spr3,spr4];
-        var pryBar =  mkPribar(prVals);
         tbl += "<table id=tl0 width=950 cellpadding=0 cellspacing=0 align=center>";
         tbl += "<td align=center><div class=big>Queued Events (RT)</div><div class=box_red><span id=qtotal>";
         tbl += sumRT + "</span><div class=rt_notice title=\"update results\">!</div></div></td>";
@@ -955,7 +956,14 @@ $(document).ready(function(){
         tbl += "</table>";
         
         $('#' + parts[1] + '-' + parts[2]).after(tbl);
-        $('#priority_bar').append(pryBar);  
+        
+        if (d0.length > 0) {
+          var prVals = [spr1,spr2,spr3,spr4];
+          var pryBar =  mkPribar(prVals);
+          $('#priority_bar').append(pryBar);
+        } else {
+          $('#priority_bar').hide();        
+        }
         $('#tl0,#tl1').fadeIn('slow');
         $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");
         $("#tl1").tablesorter({
@@ -1344,9 +1352,6 @@ $(document).ready(function(){
           cmsg = " / <span class=bold>"  + sumRE + "</span> not shown";
         }
 
-        var prVals = [spr1,spr2,spr3,spr4];
-        var pryBar =  mkPribar(prVals);    
-
         tbl += "<table id=tl3a class=chart align=center width=950 border=0 cellpadding=0 cellspacing=0>";
         tbl += "<tr><td class=dark colspan=10><div>";
         tbl += "<canvas id=chart_timestamps width=950 height=130>[No canvas support]</canvas>";
@@ -1360,7 +1365,15 @@ $(document).ready(function(){
         tbl += row;
         tbl += "</table>";
         $('#' + parts[1] + '-' + parts[2]).after(tbl);
-        $('#priority_bar').append(pryBar);
+
+        if (d2a.length > 0) {
+          var prVals = [spr1,spr2,spr3,spr4];
+          var pryBar =  mkPribar(prVals);
+          $('#priority_bar').append(pryBar);
+        } else {
+          $('#priority_bar').hide();        
+        }
+
         chartInterval(timeValues);
         $("#tl3a,#tl3b").fadeIn('slow');
         $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");

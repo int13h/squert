@@ -1,6 +1,4 @@
-#!/bin/sh
-# Run tcl from users PATH \
-exec tclsh "$0" "$@"
+#!/usr/local/bin/tclsh
 
 # cliscript.tcl - Based on "quickscript.tcl"
 # Portions Copyright (C) 2012 Paul Halliday <paul.halliday@gmail.com>
