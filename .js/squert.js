@@ -1380,6 +1380,7 @@ $(document).ready(function(){
         $("#tl3b").tablesorter({
         headers: {
           0:{sorter:false},
+          1:{sorter:false},
           4:{sorter:'ipv4'},
           7:{sorter:'ipv4'}
           },
@@ -1457,10 +1458,22 @@ $(document).ready(function(){
    
           case "6":
             // TCP flags
-            binFlags = Number(theData[1].tcp_flags).toString(2);
-            binPad = 8 - binFlags.length;
-            tcpFlags = "00000000".substring(0,binPad) + binFlags;
-                
+            var tmpFlags = theData[1].tcp_flags || 'z';
+            switch (tmpFlags) {
+              case 'z': var tcpFlags = '--------'; break;
+              default:
+                var binFlags = Number(theData[1].tcp_flags).toString(2);
+                var binPad = 8 - binFlags.length;
+                var tcpFlags = "00000000".substring(0,binPad) + binFlags;
+                break;
+            }
+            var tcp_seq  = theData[1].tcp_seq  || '-';
+            var tcp_ack  = theData[1].tcp_ack  || '-';
+            var tcp_off  = theData[1].tcp_off  || '-';
+            var tcp_res  = theData[1].tcp_res  || '-';
+            var tcp_win  = theData[1].tcp_win  || '-';
+            var tcp_urp  = theData[1].tcp_urp  || '-';
+            var tcp_csum = theData[1].tcp_csum || '-';
             row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
             row += "<tr>";
             row += "<th class=sub2 width=40 rowspan=2>TCP</th>";
@@ -1489,13 +1502,13 @@ $(document).ready(function(){
             row += "<td class=sub3>" + tcpFlags[5] + "</td>";
             row += "<td class=sub3>" + tcpFlags[6] + "</td>";
             row += "<td class=sub3>" + tcpFlags[7] + "</td>";
-            row += "<td class=sub3>" + theData[1].tcp_seq + "</td>";
-            row += "<td class=sub3>" + theData[1].tcp_ack + "</td>";
-            row += "<td class=sub3>" + theData[1].tcp_off + "</td>";
-            row += "<td class=sub3>" + theData[1].tcp_res + "</td>";
-            row += "<td class=sub3>" + theData[1].tcp_win + "</td>";
-            row += "<td class=sub3>" + theData[1].tcp_urp + "</td>";
-            row += "<td class=sub3>" + theData[1].tcp_csum + "</td>";
+            row += "<td class=sub3>" + tcp_seq + "</td>";
+            row += "<td class=sub3>" + tcp_ack + "</td>";
+            row += "<td class=sub3>" + tcp_off + "</td>";
+            row += "<td class=sub3>" + tcp_res + "</td>";
+            row += "<td class=sub3>" + tcp_win + "</td>";
+            row += "<td class=sub3>" + tcp_urp + "</td>";
+            row += "<td class=sub3>" + tcp_csum + "</td>";
             row += "</td></tr></table>";
             break;
    
