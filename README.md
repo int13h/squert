@@ -50,9 +50,8 @@ Find the my.cnf that your client is using and add:
 to the client section. If you just have the client installed and you cant find this 
 file just create it in /etc and add:
 
-`[client]
-
-local-infile=1`
+`[client]`
+`local-infile=1`
 
 5) Create additional tables:
 
