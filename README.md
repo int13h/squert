@@ -38,6 +38,21 @@ SQueRT is a tool that is used to query event data.
 
 this should be placed in the "[mysqld]" section of my.cnf
 
+Also,
+
+The ip2c TCL scripts uses "LOAD DATA LOCAL INFILE" to dump the results into the database. 
+While most stock MySQL installs are compiled with this, they don't always allow it.
+
+Find the my.cnf that your client is using and add:
+
+local-infile=1
+
+to the client section. If you just have the client installed and you cant find this 
+file just create it in /etc and add:
+
+[client]
+local-infile=1
+
 5) Create additional tables:
 
 `cat squert/.scripts/squert.sql | mysql -uroot -p -U sguildb`
