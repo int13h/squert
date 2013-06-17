@@ -544,6 +544,97 @@ $(document).ready(function(){
   });
 
   //
+  // Date Ribbon
+  //
+
+  function mkRibbon() {
+/*
+    //global $id, $today, $startDate, $endDate;
+    //$currentYear = date('Y', strtotime($startDate));
+    //$currentMonth = date('F', strtotime($startDate));
+    //$daysInMonth = date('t', strtotime($startDate));
+    //$page = ltrim($_SERVER['PHP_SELF'],"");
+
+    var bd = new Date();
+    var dd = bd.getDate();
+    var mm = bd.getMonth() + 1;
+    var yy = bd.getFullYear();
+    if (mm < 10) mm = '0' + mm;
+    if (dd < 10) dd = '0' + dd;
+
+    var html = "<table align=center width=100% cellpadding=0 cellspacing=0><tr class=month>";
+
+    // Create month and year links
+    for (var n = 1; n <= 12; n++) {
+        $link = date('Y-m', strtotime("$currentYear-$n"));
+        $month = date('F', strtotime("$currentYear-$n"));
+        if ($month == $currentMonth) {
+            $mClass = "cmonth";
+        } else {
+            $mClass = "month";
+        }
+
+        if ($n == 1) {
+            $previousYear = date('Y-m-d', strtotime("$startDate -1 year"));
+            $pyL = substr($previousYear,0,4);
+            $href = "$page?id=$id&s=$previousYear&e=$previousYear";
+            $html .= "<td class=month><a class=month href=\"$href\">&lt; $pyL</a></td>\n";
+        }
+
+        if ($link > $today || $month == $currentMonth) {
+            $html .= "<td class=$mClass>$month</td>\n";
+        } else {
+            $href = "$page?id=$id&s=${link}-01&e=${link}-01";
+            $html .= "<td class=$mClass><a class=month href=\"$href\">$month</a></td>\n";
+        }
+
+        if ($n == 12) {
+            $nextYear = date('Y-m-d', strtotime("$startDate +1 year"));
+            $nyL = substr($nextYear, 0,4);
+            if ($link > $today) {
+                $html .= "<td class=$mClass><b>$nyL &gt;</b></td>\n";
+            } else {
+                $href = "$page?id=$id&s=$nextYear&e=$nextYear";
+                $html .= "<td class=month><a class=month href=\"$href\">$nyL &gt;</a></td>\n";
+            }
+        }
+    }
+
+    $html .= "</tr></table><table class=noprint align=center width=100% cellpadding=0 cellspacing=0><tr class=day>";
+
+    // Create Day links
+    for ($n = 0; $n <= $daysInMonth -1; $n++) {
+        $baseDay = date('Y-m-', strtotime("$startDate")) . "01";
+        $link = date('Y-m-d', strtotime("$baseDay +$n day"));
+        $lbl = date('Dd', strtotime($link));
+        if ($link == $today) {
+            $dClass = "tday";
+            $aClass = "day";
+        } else {
+            $dClass = "day";
+            $aClass = "day";
+        }
+
+        if ($link == $startDate) {
+            $dClass = "cday";
+            $aClass = "cday";
+        }
+
+        if ($link <= $today) {
+            $href="$page?id=$id&s=$link&e=$link";
+            $html .= "<td class=$dClass><a class=$aClass href=\"$href\">${lbl}</a></td>\n";
+        } else {
+            $html .= "<td class=$dClass>${lbl}</td>\n";
+        }
+    }
+
+    $html .= "</tr></table>";
+
+    return $html;
+*/
+  }
+
+  //
   // Rows
   //
 
@@ -758,7 +849,7 @@ $(document).ready(function(){
         $("#" + rowLoke).after(tbl);
 
         // Turn off fade effect for large results
-        rC = $(".d_row_sub1").length;
+        var rC = $(".d_row_sub1").length;
         if ( rC <= 399 ) {
           $(".d_row_sub1").fadeTo('fast','0.2');
         }
@@ -1244,8 +1335,8 @@ $(document).ready(function(){
         head += "<tr><th id=priority_bar colspan=13></th></tr>";
         head += "<tr>";
         head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox></th>";
-        head += "<th class=sub width=2></th>";
         head += "<th class=sub width=20>ST</th>";
+        head += "<th class=sub width=2></th>";
         head += "<th class=sub width=120>TIMESTAMP</th>";
         head += "<th class=sub width=110>ID</th>";
         head += "<th class=sub width=90>SOURCE</th>";
@@ -1320,12 +1411,12 @@ $(document).ready(function(){
             txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
           }
    
-          row += "<tr class=d_row id=s" + i + " data-sg=\"" + sg + "\" data-cols=12 data-filter=\"" + eid + "\">";
+          row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=12 data-filter=\"" + eid + "\">";
           row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\">";
-          row += "<td class=row><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
           row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
+          row += "<td class=row><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
           row += "<td class=row>" + timestamp + "</td>";
           row += "<td class=sub><div class=b_PL data-eidl=s" + i + " title=\"View Payload\">";
           row += sid + "." + cid + "</div>" + txBit + "</td>";
@@ -1596,8 +1687,8 @@ $(document).ready(function(){
         $("#loader").hide();
 
         // Turn off fade effect for large results
-        rC = $(".d_row_sub1").length;
-        if ( rC <= 399 ) {
+        var rC = $(".d_row_sub1").length;
+        if ( rC <= 499 ) {
           $(".d_row_sub1").fadeTo('fast','0.2');
         }
         $("#" + rowLoke).find('.getpl').html(theData[0].sid + "." + theData[0].cid);
