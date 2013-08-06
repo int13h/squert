@@ -13,7 +13,7 @@ SQueRT is a tool that is used to query event data.
 
 ## Requirements
 
-* A working Sguil installation [http://sguil.net](http://sguil.net). If you use Security Onion [http://securityonion.blogspot.ca](http://sguil.net) you can get everything setup rather quickly.
+* A working Sguil installation [http://sguil.net](http://sguil.net). If you use Security Onion [http://securityonion.blogspot.ca](http://securityonion.blogspot.ca) you can get everything setup rather quickly.
   
 
 * PHP5 with CLI
