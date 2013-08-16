@@ -2,15 +2,6 @@
 
 $(document).ready(function(){
 
-  // Base timestamp
-  var theWhen = $("#timestamp").val();
-    
-  // Load main content
-  eventList("0-aaa-00");
-  $("#loader").show();
-
-  var lastclasscount = 0;
-
   function d2h(d) {
     return d.toString(16);
   }
@@ -56,6 +47,33 @@ $(document).ready(function(){
       }
     });        
   }
+
+  $.alt = function(key, callback, args) {
+    $(document).keydown(function(e) {
+      if(!args) {args=[];}
+      if(e.keyCode == key.charCodeAt(0) && e.altKey) {
+        callback.apply(this, args);
+        return false;
+      }
+    });        
+  }
+
+  function getTimestamp() {
+    // Timeparts
+    var ts_sd = $('#ts_sdate').val();
+    var ts_ed = $('#ts_edate').val();
+    var ts_st = $('#ts_stime').val();
+    var ts_et = $('#ts_etime').val();
+    var ts_os = $('#ts_offset').val();
+    var theWhen = s2h(ts_sd + "|" + ts_ed + "|" + ts_st + "|" + ts_et + "|" + ts_os);
+    return theWhen;
+  }  
+ 
+  // Load main content
+  eventList("0-aaa-00");
+  $("#loader").show();
+
+  var lastclasscount = 0;
 
   function getCountry(cc) {
 
@@ -104,6 +122,7 @@ $(document).ready(function(){
 
   // Make a map
   function doMap(req) {
+    theWhen = getTimestamp();
     var filter = 0;
     var urArgs = "type=" + 10 + "&filter=" + filter + "&ts=" + theWhen;
     $(function(){
@@ -186,16 +205,18 @@ $(document).ready(function(){
   $("#menu2").click(function(event) {
     var cv = $("#menu2").text();
       switch (cv) {
-        case "show map":
-          $("#menu2").text("hide map");
+        case "off":
+          $("#menu2").text("on");
+          $("#menu2").attr('class','tvalue_on');
           if (!$("#wm0")[0]) {
             doMap("draw");
           } else {
             $("#map_box").show();
           }
           break;
-        case "hide map":
-          $("#menu2").text("show map");
+        case "on":
+          $("#menu2").text("off");
+          $("#menu2").attr('class','tvalue_off');
           $("#map_box").hide();
           break;
       }
@@ -209,6 +230,7 @@ $(document).ready(function(){
   // Get event statuses
   var eTotal = 0, qTotal = 0;
   function statusPoll(caller) {
+    theWhen = getTimestamp();
     var urArgs = "type=" + 6 + "&ts=" + theWhen;
     $(function(){
       $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
@@ -222,7 +244,7 @@ $(document).ready(function(){
         var ecount = ec[i].count;
         var eclass = ec[i].status;
         esum += parseInt(ecount);
-        $("#b_class-" + eclass).next().html("&nbsp;" + ecount);
+        $("#c-" + eclass).text(ecount);
       }
           
       for (var i=0; i<ec.length; i++) {
@@ -230,20 +252,18 @@ $(document).ready(function(){
         var eclass = ec[i].status;
         var w = 0;
         if (esum > 0) {
-          var p = parseFloat(ecount/esum*100).toFixed(3);
+          var p = parseFloat(ecount/esum*100).toFixed(1);
           var w = parseInt(p*2);
         }
         if (eclass == 0) {
           qTotal = ecount;
-          $("#b_class-" + 0).next().css("background-color", "#D9ABAB");
         } 
-        $("#b_class-" + eclass).next().append("<span class=per>(" + p + "%)</span>");
-        $("#b_class-" + eclass).next().css("width", w + "px");
+        $("#c-" + eclass).append("<span class=per>(" + p + "%)</span>");
       }
             
-      var lastcount = $(".cat_sum").text();
+      var lastcount = $("#cat_sum").val();
       var newcount = esum;
-      $(".cat_sum").text(esum);
+      $("#cat_sum").val(esum);
       eTotal = esum;
       $("#event_sum").val(eTotal);
 
@@ -260,7 +280,7 @@ $(document).ready(function(){
     }
   }
 
-  if ($(".cat_sum").text() == 0) {
+  if ($("#cat_sum").val() == 0) {
     statusPoll(0);
   }
 
@@ -275,7 +295,7 @@ $(document).ready(function(){
     }
   }, emTimeout);
 
-  // Event priority bar
+  // Event priority bar and counts
   function mkPribar(v) {
     var sum = v.reduce(function(a,b) { return a + b; }, 0);
     var v0 = 0, v1 = 0, v2 = 0, v3 = 0; 
@@ -292,6 +312,7 @@ $(document).ready(function(){
       if (w[j] > 0) { 
         bar += "<td data-pr=" + i + " class=bpr" + i + " width=" + w[j] + "% title=\""; 
         bar += t[j] + ": " + v[j] + "\">" + w[j] + "%</td>";
+        $('#pr_' + i).html(v[j] + "<span class=per>(" + w[j] + "%)</span>");
       }  
     }
 
@@ -398,16 +419,7 @@ $(document).ready(function(){
     $(".cat_msg_txt").val(ct);
     $('#b_class-' + nc[1]).click();
   });
-
     
-  // Filter search box
-  $('#clear_search').click(function() {
-    if ($('#search').val() != '') {
-      $('#search').val('');
-      $("#b_update").click();           
-    }
-  });
-
   //
   // Toggle and update views
   //
@@ -421,24 +433,25 @@ $(document).ready(function(){
         break; 
       case "c":
         switch(cv) {
-          case "ungroup events": $("#menu1").text("regroup events");
+          case "on": $("#menu1").text("off");
             if ($("#search").val().length == 0) {
-              $("#rt").prop("checked", true);
+              $("#rt").text("on");
+              $("#rt").attr('class','tvalue_on');
             }
           break;  
-          case "regroup events": $("#menu1").text("ungroup events"); break;
+          case "off": $("#menu1").text("on"); break;
        }
        f = "2a-aaa-00";
        s = "0-aaa-00";
        break;
     }
     switch (cv) {
-      case "ungroup events":
+      case "on":
         $("#tl0,#tl1").remove();
         eventList(f);
         $("#loader").show();
         break;
-      case "regroup events":
+      case "off":
         $("#tl3a,#tl3b").remove();
         eventList(s);
         $("#loader").show();
@@ -449,14 +462,24 @@ $(document).ready(function(){
 
   // Group and ungroup
   $(document).on("click", "#menu1", function(event) {
-    newView("c");
+   var cv = $(this).text();
+   switch (cv) {
+      case  'on': $(this).attr('class','tvalue_off'); break;
+      case 'off': $(this).attr('class','tvalue_on'); break;
+   } 
+   newView("c");
   });
 
   // RT check/uncheck
   $(document).on("click", "#rt", function(event) {
+    var cv = $('#rt').text();
+    switch (cv) {
+      case  'on': $('#rt').text('off'); $(this).attr('class','tvalue_off'); break;
+      case 'off': $('#rt').text('on'); $(this).attr('class','tvalue_on'); break;
+    }
     newView("u");
   });
-
+   
   $(document).on("click", ".rt_notice", function(event) {
     newView("u");        
   });
@@ -491,6 +514,14 @@ $(document).ready(function(){
         }
         newView("u");
       }
+  });
+
+  // Clear search and refresh
+  $('#clear_search').click(function() {
+    if ($('#search').val() != '') {
+      $('#search').val('');
+      $("#search").focus();           
+    }
   });
 
   //
@@ -544,102 +575,11 @@ $(document).ready(function(){
   });
 
   //
-  // Date Ribbon
-  //
-
-  function mkRibbon() {
-/*
-    //global $id, $today, $startDate, $endDate;
-    //$currentYear = date('Y', strtotime($startDate));
-    //$currentMonth = date('F', strtotime($startDate));
-    //$daysInMonth = date('t', strtotime($startDate));
-    //$page = ltrim($_SERVER['PHP_SELF'],"");
-
-    var bd = new Date();
-    var dd = bd.getDate();
-    var mm = bd.getMonth() + 1;
-    var yy = bd.getFullYear();
-    if (mm < 10) mm = '0' + mm;
-    if (dd < 10) dd = '0' + dd;
-
-    var html = "<table align=center width=100% cellpadding=0 cellspacing=0><tr class=month>";
-
-    // Create month and year links
-    for (var n = 1; n <= 12; n++) {
-        $link = date('Y-m', strtotime("$currentYear-$n"));
-        $month = date('F', strtotime("$currentYear-$n"));
-        if ($month == $currentMonth) {
-            $mClass = "cmonth";
-        } else {
-            $mClass = "month";
-        }
-
-        if ($n == 1) {
-            $previousYear = date('Y-m-d', strtotime("$startDate -1 year"));
-            $pyL = substr($previousYear,0,4);
-            $href = "$page?id=$id&s=$previousYear&e=$previousYear";
-            $html .= "<td class=month><a class=month href=\"$href\">&lt; $pyL</a></td>\n";
-        }
-
-        if ($link > $today || $month == $currentMonth) {
-            $html .= "<td class=$mClass>$month</td>\n";
-        } else {
-            $href = "$page?id=$id&s=${link}-01&e=${link}-01";
-            $html .= "<td class=$mClass><a class=month href=\"$href\">$month</a></td>\n";
-        }
-
-        if ($n == 12) {
-            $nextYear = date('Y-m-d', strtotime("$startDate +1 year"));
-            $nyL = substr($nextYear, 0,4);
-            if ($link > $today) {
-                $html .= "<td class=$mClass><b>$nyL &gt;</b></td>\n";
-            } else {
-                $href = "$page?id=$id&s=$nextYear&e=$nextYear";
-                $html .= "<td class=month><a class=month href=\"$href\">$nyL &gt;</a></td>\n";
-            }
-        }
-    }
-
-    $html .= "</tr></table><table class=noprint align=center width=100% cellpadding=0 cellspacing=0><tr class=day>";
-
-    // Create Day links
-    for ($n = 0; $n <= $daysInMonth -1; $n++) {
-        $baseDay = date('Y-m-', strtotime("$startDate")) . "01";
-        $link = date('Y-m-d', strtotime("$baseDay +$n day"));
-        $lbl = date('Dd', strtotime($link));
-        if ($link == $today) {
-            $dClass = "tday";
-            $aClass = "day";
-        } else {
-            $dClass = "day";
-            $aClass = "day";
-        }
-
-        if ($link == $startDate) {
-            $dClass = "cday";
-            $aClass = "cday";
-        }
-
-        if ($link <= $today) {
-            $href="$page?id=$id&s=$link&e=$link";
-            $html .= "<td class=$dClass><a class=$aClass href=\"$href\">${lbl}</a></td>\n";
-        } else {
-            $html .= "<td class=$dClass>${lbl}</td>\n";
-        }
-    }
-
-    $html .= "</tr></table>";
-
-    return $html;
-*/
-  }
-
-  //
   // Rows
   //
 
   function closeRow() {
-    if ($('#rt').is(':checked') && $(".d_row_active").find(".b_ec_hot").text() == 0) {
+    if ($('#rt').text() == 'on' && $(".d_row_active").find(".b_ec_hot").text() == 0) {
       $("#active_eview").remove();
       $(".d_row_active").fadeOut('slow', function (event) {
         $(".d_row_active").remove();
@@ -733,9 +673,8 @@ $(document).ready(function(){
     rowType = curID.substr(0,3);
 
     // Make sure no other instances are open
-    if (!$(".d_row_active")[0] && rowType == 'sid') {          
+    if (!$(".d_row_active")[0] && rowType == 'sid') {
       $("#loader").show(); 
-            
       // This leaves us with sid-gid
       rowValue = curID.replace("sid-","");
      
@@ -745,6 +684,7 @@ $(document).ready(function(){
       // This is now the active row
       $("#" + curID).attr('class','d_row_active');
       $("#" + curID).find('[class*="row"]').css('border-top', '1pt solid #c9c9c9');
+      $("html, body").animate({ scrollTop: $('.d_row_active').offset().top - 100 }, 20);
       // Set the class count (counted again after load)
       curclasscount = $('.d_row_active').data('event_count');
 
@@ -752,7 +692,7 @@ $(document).ready(function(){
       tbl += "<tr class=eview id=active_eview><td colspan=11><div id=eview class=eview>";
       tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
       tbl += "<div class=sigtxt></div>";
-      tbl += "<br><canvas id=chart_timestamps width=930 height=130>[No canvas support]</canvas>";
+      tbl += "<br><canvas id=chart_timestamps width=950 height=130>[No canvas support]</canvas>";
       tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
       tbl += "categorize <span class=bold id=class_count>";
       tbl += curclasscount + "</span> event(s)</div>";
@@ -864,13 +804,14 @@ $(document).ready(function(){
   //
 
   function eventList (type) {
+    theWhen = getTimestamp();
     var parts = type.split("-");
     var filterMsg = '';
     var rt = 0;
     var theFilter = s2h('empty');
 
     // See if we are just RT events
-    if ($('#rt').is(':checked')) {
+    if ($('#rt').text() == 'on' ) {
       rt = 1;
     }
 
@@ -923,6 +864,8 @@ $(document).ready(function(){
 
     // Level 0 view - Grouped by Signature
     case "0":
+      $('.value').text('-');
+      statusPoll(0);
       var urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
@@ -935,17 +878,17 @@ $(document).ready(function(){
         head += "<thead>";
         head += "<tr><th id=priority_bar colspan=11></th></tr>";
         head += "<tr>";
-        head += "<th class=sort width=45>QUEUED</th>";
-        head += "<th class=sort width=45>ALL</th>";
-        head += "<th class=sort width=5 title=Priority></th>";
-        head += "<th class=sort width=35>SC</th>";
-        head += "<th class=sort width=35>DC</th>";
-        head += "<th class=sort width=70>ACTIVITY</th>";
-        head += "<th class=sort width=80>LAST EVENT</th>";
+        head += "<th class=sort>QUEUED</th>";
+        head += "<th class=sort>ALL</th>";
+        head += "<th class=sort title=Priority></th>";
+        head += "<th class=sort>SC</th>";
+        head += "<th class=sort>DC</th>";
+        head += "<th class=sort>ACTIVITY</th>";
+        head += "<th class=sort>LAST EVENT</th>";
         head += "<th class=sort>SIGNATURE</th>";
-        head += "<th class=sort width=80>ID</th>";
-        head += "<th class=sort width=60>PROTO</th>";
-        head += "<th class=sort width=60>% TOTAL</th>";
+        head += "<th class=sort>ID</th>";
+        head += "<th class=sort>PROTO</th>";
+        head += "<th class=sort>% TOTAL</th>";
         head += "</tr></thead>";
 
         var sumEC = 0, sumSC = 0, sumDC = 0, sumSI = 0, spr1 = 0, spr2 = 0, spr3 = 0, spr4 = 0;
@@ -1006,8 +949,8 @@ $(document).ready(function(){
           row += "<td class=" + isActive + "><div class=" + rtClass + ">" + unClass + "</div></td>";
           row += "<td class=" + ttlActive + "><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
           row += "<td class=row><div class=pr" + d0[i].f13 + ">" + d0[i].f13 + "</div></td>";
-          row += "<td class=row><span class=red>" +d0[i].f6+ "</span></td>";
-          row += "<td class=row><span class=blue>" +d0[i].f7+ "</span></td>";
+          row += "<td class=row><span class=blue>" +d0[i].f6+ "</span></td>";
+          row += "<td class=row><span class=red>" +d0[i].f7+ "</span></td>";
 
           timeParts = d0[i].f5.split(" ");
           timeStamp = timeParts[1];
@@ -1029,19 +972,14 @@ $(document).ready(function(){
           row += "</td></tr>";
         }
         
-        tbl += "<table id=tl0 width=950 cellpadding=0 cellspacing=0 align=center>";
-        tbl += "<td align=center><div class=big>Queued Events (RT)</div><div class=box_red><span id=qtotal>";
-        tbl += sumRT + "</span><div class=rt_notice title=\"update results\">!</div></div></td>";
-        tbl += "<td align=center><div class=big>Total Events</div><div class=box id=etotal>"; 
-        tbl += sumEC + "</div></td>";
-        tbl += "<td align=center><div class=big>Total Signatures</div><div id=esignature class=box>";
-        tbl += sumSI + "</div></td>";
-        tbl += "<td align=center><div class=big>Total Sources</div><div class=box>";
-        tbl += sumSC + "</div></td>";
-        tbl += "<td align=center><div class=big>Total Destinations</div><div class=box>";
-        tbl += sumDC + "</div></td>";
-        tbl += "</table><br>";
-        tbl += "<table id=tl1 class=main width=950 cellpadding=0 cellspacing=0 align=center>";
+        // Populate event summary
+        $('#qtotal').text(sumRT); 
+        $('#etotal').text(sumEC); 
+        $('#esignature').text(sumSI);
+        $('#esrc').text(sumSC);
+        $('#edst').text(sumDC); 
+        
+        tbl += "<table width=100% id=tl1 cellpadding=0 cellspacing=0 align=center>";
         tbl += head;
         tbl += row;
         tbl += "</table>";
@@ -1443,7 +1381,7 @@ $(document).ready(function(){
           cmsg = " / <span class=bold>"  + sumRE + "</span> not shown";
         }
 
-        tbl += "<table id=tl3a class=chart align=center width=950 border=0 cellpadding=0 cellspacing=0>";
+        tbl += "<table id=tl3a class=chart align=center width=100% border=0 cellpadding=0 cellspacing=0>";
         tbl += "<tr><td class=dark colspan=10><div>";
         tbl += "<canvas id=chart_timestamps width=950 height=130>[No canvas support]</canvas>";
         tbl += "</div><div class=event_class>";
@@ -1451,7 +1389,7 @@ $(document).ready(function(){
         tbl += " of <span id=cat_count class=bold>" + sumED + "</span> event(s)" + cmsg;
         tbl += "</div><div class=event_time>" + sorttxt + "</div>";
         tbl += "</td></tr></table>";
-        tbl += "<table id=tl3b class=main align=center width=950 cellpadding=0 cellspacing=0>";
+        tbl += "<table id=tl3b class=main align=center width=100% cellpadding=0 cellspacing=0>";
         tbl += head;
         tbl += row;
         tbl += "</table>";
@@ -1472,8 +1410,8 @@ $(document).ready(function(){
         headers: {
           0:{sorter:false},
           1:{sorter:false},
-          4:{sorter:'ipv4'},
-          7:{sorter:'ipv4'}
+          5:{sorter:'ipv4'},
+          8:{sorter:'ipv4'}
           },
           cancelSelection:false
         });
@@ -1701,33 +1639,50 @@ $(document).ready(function(){
   // Add filter parts to box
   //
 
+  function hItemAdd(item) {
+    var itemTitle = item;
+    // Truncate
+    if (item.length > 35) {
+      itemTitle = item.substring(0,35) + "..";
+    }
+    var toAdd = "<span class=h_item title=\"" + item + "\"> " + itemTitle + " </span>";
+    $('.h_box').append(toAdd);
+  }
+
   $(document).on("click", ".sub_filter,.row_filter,.tof", function() {
     var prefix = $(this).data('type');
     var suffix = $(this).html();
     var tfocus = "#search";
     switch (prefix) {
       case    'ip': $('#search').val(prefix + " " + suffix);
+                    hItemAdd(suffix);
         break;
       case    'cc': var cc = $(this).data('value');
-                          $('#search').val(prefix + " " + cc);
+                    $('#search').val(prefix + " " + cc);
+                    hItemAdd(cc);
         break;
 
-      case   'cmt': suffix = $(this).next().data('comment');
-                          $('#search').val(prefix + " " + suffix);
+      case   'cmt': suffix = $(this).data('comment');
+                    $('#search').val(prefix + " " + suffix);
+                    hItemAdd(suffix);
         break;
           
       case 'cmt_c': $('.cat_msg_txt').val(suffix);
-                          tfocus = ".cat_msg_txt";
+                    hItemAdd(suffix);
+                    tfocus = ".cat_msg_txt";
         break;
  
       case   'sid': var value = $(this).data('value');
-                          $('#search').val(prefix + " " + value);
+                    $('#search').val(prefix + " " + value);
+                    hItemAdd(suffix);
         break;
  
       case   'spt': $('#search').val(prefix + " " + suffix);
+                    hItemAdd(suffix);
         break;
 
       case   'dpt': $('#search').val(prefix + " " + suffix);
+                    hItemAdd(suffix);
         break;
     } 
     $(tfocus).focus();
@@ -1737,27 +1692,6 @@ $(document).ready(function(){
   // Event classification
   //
     
-  $(document).on("click", "#b_class-0", function(event) {
-    var nw, txt, cw = $(".cat_box").css("width");
-    switch (cw) {
-      case "290px": 
-        nw = 50; 
-        $(".cat_val").fadeOut(function () {
-          $(".cat_box").css("width", nw + "px");
-        });
-        break;
-      case  "50px": 
-        nw = 290; 
-        $(".cat_box").css("width", nw + "px");
-        $(".cat_val").fadeIn();
-        break;
-    }
-  });
-
-  $.ctrl('X', function() {
-    $("#b_class-0").click();
-  });
-
   // Use function keys to trigger status buttons
   $(document).keydown(function(event){
 
@@ -1780,71 +1714,84 @@ $(document).ready(function(){
     }
   });
 
-  // Show comment box
-  $(document).on("click", ".b_ME", function(event) {
-    if ($('#tlcom').length > 0) return;
-    var urArgs = "type=11";
+  // 
+  // Comment box
+  //
 
-    $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb11(data)});
-    });
-
-    function cb11(data){
-      eval("comraw=" + data);
-      var tbl = '', head = '', row = ''; 
-
-      head += "<thead><tr>";
-      head += "<th class=sub width=20>ST</th>";
-      head += "<th class=sub>COMMENT</th>";
-      head += "<th class=sub width=70>COUNT</th>";
-      head += "<th class=sub width=100>USERNAME</th>";
-      head += "<th class=sub width=75>EPOCH</th>";
-      head += "<th class=sub width=75>LAST</th>";
-      head += "<th class=sub width=75>ACTIONS</th>";
-      head += "</tr></thead>";         
+  $(document).on("click", "#menu3", function(event) {
  
-      for (var i=0; i<comraw.length; i++) {
-        var comment = comraw[i].f2  || "-";
-        var count   = comraw[i].f1  || "-";
-        var user    = comraw[i].f3 || "-";  
-        var epoch   = comraw[i].f4 || "-";
-        var last    = comraw[i].f5 || "-";
-        var eclass  = comraw[i].f6 || "-";
-        var rowid   = "comrow" + i;
-        var cgrid = catGrid(eclass,comment);
-        row += "<tr id=" + rowid + " class=pcomm>";
-        row += "<td class=sub>" + cgrid + "</td>"; 
-        row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
-        row += "<td class=sub>" + count + "</td>";
-        row += "<td class=sub>" + user + "</td>";
-        row += "<td class=sub>" + epoch + "</td>";
-        row += "<td class=sub>" + last + "</td>";
-        row += "<td class=sub><div class=tof title=\"Add as filter\" data-type=cmt>F</div>";
-        row += "<div class=tod title=\"Delete Entry\" data-rn=\"" + rowid + "\" data-comment=\"" + comment + "\">X</div></td>";
-        row += "<row>"; 
+    if ($('#tlcom').length > 0) {
+      $(".cat_msg").fadeOut();
+      $(".content_active").fadeTo('fast',1);
+      $(".pcomm").remove();
+      $(".cat_msg_txt").val("");
+      $("#menu3").text("off");
+      $("#menu3").attr('class','tvalue_off');
+
+    } else {
+
+      $("#menu3").text("on");
+      $("#menu3").attr('class','tvalue_on');
+      var urArgs = "type=11";
+
+      $(function(){
+        $.get(".inc/callback.php?" + urArgs, function(data){cb11(data)});
+      });
+
+      function cb11(data){
+        eval("comraw=" + data);
+        var tbl = '', head = '', row = ''; 
+
+        head += "<thead><tr>";
+        head += "<th class=sub width=20>ST</th>";
+        head += "<th class=sub width=50>COUNT</th>";
+        head += "<th class=sub>COMMENT</th>";
+        head += "<th class=sub width=70>FILTER</th>";
+        head += "<th class=sub width=100>USERNAME</th>";
+        head += "<th class=sub width=75>EPOCH</th>";
+        head += "<th class=sub width=75>LAST</th>";
+        head += "<th class=sub width=70>REMOVE</th>";
+        head += "</tr></thead>";         
+ 
+        for (var i=0; i<comraw.length; i++) {
+          var comment = comraw[i].f2 || "-";
+          var count   = comraw[i].f1 || "-";
+          var user    = comraw[i].f3 || "-";  
+          var epoch   = comraw[i].f4 || "-";
+          var last    = comraw[i].f5 || "-";
+          var eclass  = comraw[i].f6 || "-";
+          var rowid   = "comrow" + i;
+          var cgrid = catGrid(eclass,comment);
+          row += "<tr id=" + rowid + " class=pcomm>";
+          row += "<td class=sub>" + cgrid + "</td>"; 
+          row += "<td class=sub>" + count + "</td>";
+          row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
+          row += "<td class=sub>";
+          row += "<div class=tof title=\"Add as filter\" data-type=cmt data-comment=\"" + comment + "\">F</div></td>";
+          row += "<td class=sub>" + user + "</td>";
+          row += "<td class=sub>" + epoch + "</td>";
+          row += "<td class=sub>" + last + "</td>";
+          row += "<td class=sub>";
+          row += "<div class=tod title=\"Delete Entry\" data-rn=\"" + rowid + "\" data-comment=\"" + comment + "\">X</div></td>";
+          row += "<row>"; 
+        }
+
+        tbl += "<div class=pcomm>";
+        tbl += "<b>Note:</b> you can click a comment below to reuse it (followed by a classification action) <b>or</b> ";
+        tbl += "click on the \"F\" icon followed by \"enter\" to use as a filter<br>";
+        tbl += "<table id=tlcom width=930 class=table cellpadding=0 cellspacing=0>";
+        tbl += head;
+        tbl += row;
+        tbl += "</table></div>";
+        $(".cm_tbl").append(tbl);
+        $("#tlcom").tablesorter();
       }
 
-      tbl += "<div class=pcomm>";
-      tbl += "<b>Note:</b> you can click a comment below to reuse it (followed by a classification action) <b>or</b> ";
-      tbl += "click on the \"F\" icon followed by \"enter\" to use as a filter<br>";
-      tbl += "<table id=tlcom width=930 class=table cellpadding=0 cellspacing=0>";
-      tbl += head;
-      tbl += row;
-      tbl += "</table></div>";
-      $(".cm_tbl").append(tbl);
-      $("#tlcom").tablesorter();
-    }
-    $(".content_active").fadeTo('fast',0.2);
-    $(".cat_msg").fadeIn();
-    $(".cat_msg_txt").focus();   
-  });
+      $(".content_active").fadeTo('fast',0.2);
+      $(".cat_msg").fadeIn();
+      $(".cat_msg_txt").focus();   
 
-  // Hide comment box
-  $(document).on("click", ".cat_msg_add", function(event) {
-    $(".cat_msg").fadeOut();
-    $(".content_active").fadeTo('fast',1);
-    $(".pcomm").remove();
-    $(".cat_msg_txt").val("");
+    }
   });
 
   // Remove a comment
@@ -1871,9 +1818,33 @@ $(document).ready(function(){
     }
   });
 
-  $.ctrl('C', function() {
-    $(".b_ME").click();
+  $.alt('2', function() {
+    $("#menu3").click();
   });    
+
+  // Remove a comment
+  $(document).on("click", ".tod", function(event) {
+    var oktoRM = confirm("Are you sure you want to remove this comment?");
+    if (oktoRM) {
+      var theComment = s2h($(this).data('comment'));
+      var rowNumber = $(this).data('rn');
+      var urArgs = "type=12&comment=" + theComment;
+      $(function(){
+        $.get(".inc/callback.php?" + urArgs, function(data){cb12(data)});
+      }); 
+
+      function cb12(data){
+        eval("theData=" + data);
+        if (theData.msg != '') {
+          alert(theData.msg);
+        } else {
+          $("#" + rowNumber).fadeOut('slow', function() {
+            $("#" + rowNumber).remove();
+          });
+        }
+      }
+    }
+  });
 
   // Highlight colour for selected events
   var hlcol = "#FFFFE0";
@@ -2004,7 +1975,7 @@ $(document).ready(function(){
     var msg = "none";
     if($(".cat_msg_txt").val().length != 0) {
       msg = $(".cat_msg_txt").val();
-      $(".cat_msg_add").click();
+      $("#menu3").click();
     }        
         
     var catdata = intclass + "|||" + msg + "|||" + scidlist;
@@ -2081,7 +2052,7 @@ $(document).ready(function(){
         
         // Change visible class and disable if RT
         // If we are RT ungrouped, we just remove 
-        if ($('#rt').is(':checked') && $("#ca2")[0]) {
+        if ($('#rt').text() == 'on' && $("#ca2")[0]) {
           $(".chk_event:checked").each(function() {
             var pid = $(this).attr("id").split("_");
             var nid = parseInt(Number(pid[1]) + 1);
@@ -2149,7 +2120,7 @@ $(document).ready(function(){
           newboxtotal = parseInt($("#qtotal").text() - count);
           if (newboxtotal < 0) { // We are out of sync
             newView("u");
-          } else {   
+          } else { 
             var newsigtotal = parseInt($("#esignature").text() - 1);
             $("#qtotal").text(newboxtotal);
             $("#esignature").text(newsigtotal);
@@ -2264,7 +2235,7 @@ $(document).ready(function(){
         row += "</tr>";
       }
 
-      tbl += "<table id=tl4 class=padded width=970 cellpadding=0 cellspacing=0 align=center>";
+      tbl += "<table id=tl4 class=padded width=100% cellpadding=0 cellspacing=0 align=center>";
       tbl += head;
       tbl += row;
       tbl += "</table>";

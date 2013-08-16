@@ -1,12 +1,10 @@
 <?php
 // Terminate if this launches without a valid session
-///*
 session_start();
 if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
     header ("Location: session.php?id=0");
     exit();
 }
-//*/
 
 $base = dirname(__FILE__);
 include_once "$base/config.php";
@@ -37,7 +35,16 @@ $types = array(
 $type = $types[$type];
 
 if (isset($_REQUEST['ts'])) {
-    $when = hextostr(mysql_real_escape_string($_REQUEST['ts']));
+    // Need EC
+    $tsParts = explode("|", hextostr(mysql_real_escape_string($_REQUEST['ts'])));
+    $sdate  = $tsParts[0]; 
+    $edate  = $tsParts[1];
+    $stime  = $tsParts[2];
+    $etime  = $tsParts[3];
+    $offset = $tsParts[4];
+    $when = "event.timestamp BETWEEN 
+             CONVERT_TZ('$sdate $stime','$offset','+00:00') AND
+             CONVERT_TZ('$edate $etime','$offset','+00:00')";
 }
 
 if (!$type) {
@@ -52,7 +59,6 @@ function ec() {
               FROM event
               LEFT JOIN sensor AS s ON event.sid = s.sid
               WHERE $when
-              AND agent_type = 'snort'
               GROUP BY status";
 
     $result = mysql_query($query);
