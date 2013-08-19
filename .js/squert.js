@@ -168,6 +168,7 @@ $(document).ready(function(){
         color: '#f4f3f0',
         backgroundColor: '#a5bfdd',
         onRegionClick: function(event, code){
+        hItemAdd(code);
         $('#search').val("cc" + " " + code);
         $('#search').focus();
         },
@@ -273,7 +274,6 @@ $(document).ready(function(){
 
       if (lastcount < newcount) {
         $(".rt_notice").fadeIn();
-        $("#b_event").html("<b>Status:</b> New events are available");
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
       }
@@ -499,7 +499,7 @@ $(document).ready(function(){
   });
 
   // Update page
-  $("#b_update").click(function(event) {
+  $(".b_update").click(function(event) {
     newView("u");
   });
  
@@ -673,7 +673,7 @@ $(document).ready(function(){
     rowType = curID.substr(0,3);
 
     // Make sure no other instances are open
-    if (!$(".d_row_active")[0] && rowType == 'sid') {
+    if (!$(".d_row_active")[0] && rowType == 'sid' && $('#search').val().length == 0 ) {
       $("#loader").show(); 
       // This leaves us with sid-gid
       rowValue = curID.replace("sid-","");
@@ -685,6 +685,9 @@ $(document).ready(function(){
       $("#" + curID).attr('class','d_row_active');
       $("#" + curID).find('[class*="row"]').css('border-top', '1pt solid #c9c9c9');
       $("html, body").animate({ scrollTop: $('.d_row_active').offset().top - 100 }, 20);
+      // History
+      var itemToAdd = $("#" + curID).find('[class*="row_filter"]').text();
+      hItemAdd(itemToAdd);
       // Set the class count (counted again after load)
       curclasscount = $('.d_row_active').data('event_count');
 
@@ -710,7 +713,7 @@ $(document).ready(function(){
   //
 
   $(document).on("click", ".sub_active", function() {
-    if (!$(".d_row_sub_active")[0]) {
+    if (!$(".d_row_sub_active")[0] && $('#search').val().length == 0) {
       baseID = $(this).parent().attr('id');
       columnType = this.id[2];
 
@@ -726,6 +729,15 @@ $(document).ready(function(){
       rowcall = baseID.split("-");
       callerID = rowcall[0];
       $("#" + callerID).attr('class','d_row_sub_active');
+      // History
+      $("#" + callerID).find('[class*="sub_filter"]').each(function() {
+        if ($(this).data('type') == 'cc') {
+          var itemToAdd = $(this).data('value');
+        } else {
+          var itemToAdd = $(this).text();
+        } 
+        hItemAdd(itemToAdd);
+      });
       $("#" + callerID).find('[class*="sub"]').css('border-top', '1pt solid #c9c9c9');
       $("#loader").show();
       eventList("2-" + baseID + "-" + adqp);
@@ -737,7 +749,7 @@ $(document).ready(function(){
   //
     
   $(document).on("click", ".b_PL", function() {
-    if (!$("#eview_sub2")[0] && !$("#eview_sub3")[0]) {
+    if (!$("#eview_sub2")[0] && !$("#eview_sub3")[0] && $('#search').val().length == 0) {
       baseID = $(this).data('eidl');
       rowcall = baseID.split("-");
       callerID = rowcall[0];
@@ -753,7 +765,7 @@ $(document).ready(function(){
   //
 
   $(document).on("click", ".b_TX", function(event) {
-    if (!$(".eview_sub3")[0] && !$(".eview_sub2")[0]) {
+    if (!$(".eview_sub3")[0] && !$(".eview_sub2")[0] && $('#search').val().length == 0) {
       $("#loader").show();
       composite = $(this).data('tx').split("-");
       rowLoke = composite[0];
@@ -994,7 +1006,6 @@ $(document).ready(function(){
           $('#priority_bar').hide();        
         }
         $('#tl0,#tl1').fadeIn('slow');
-        $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");
         $("#tl1").tablesorter({
           headers: {
             0:{sorter:false}
@@ -1405,7 +1416,6 @@ $(document).ready(function(){
 
         chartInterval(timeValues);
         $("#tl3a,#tl3b").fadeIn('slow');
-        $("#b_event").html("<b>Status:</b>&nbsp;&nbsp;Synchronized");
         $("#tl3b").tablesorter({
         headers: {
           0:{sorter:false},
@@ -1645,8 +1655,24 @@ $(document).ready(function(){
     if (item.length > 35) {
       itemTitle = item.substring(0,35) + "..";
     }
-    var toAdd = "<span class=h_item title=\"" + item + "\"> " + itemTitle + " </span>";
-    $('.h_box').append(toAdd);
+    // If the item doesn't exist, add it. Otherwise, we start counting.
+    if ($(".h_item:contains('" + itemTitle + "')")[0]) {
+      var oc = $(".h_item:contains('" + itemTitle + "')").data('n');
+      var nc = Number(oc) + 1;
+      var bg = '#000';
+      if (nc <= 3) { 
+        bg = '#d98602';  
+      } else if (nc > 3) {
+        bg = '#cc0000';
+      } 
+ 
+      $(".h_item:contains('" + itemTitle + "')").css('background-color', bg);
+      $(".h_item:contains('" + itemTitle + "')").data('n',nc);
+      $(".h_item:contains('" + itemTitle + "')").text(itemTitle + "(" + nc + ")");
+    } else {
+      var toAdd = "<span data-n=1 class=h_item title=\"" + item + "\"> " + itemTitle + "</span>";
+      $('.h_box').append(toAdd);
+    }
   }
 
   $(document).on("click", ".sub_filter,.row_filter,.tof", function() {

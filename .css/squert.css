@@ -9,15 +9,6 @@ margin:0;
 tr.none {
 border:none;
 }
-.loader {
-font-weight:bold;
-margin-left:15px;
-display:none;
-}
-.ldimg {
-padding-left:10px;
-vertical-align:middle;
-}
 div.wm {
 width:100%;
 text-align:center;
@@ -122,6 +113,7 @@ cursor:pointer;
 div.h_box {
 margin-left:4px;
 width:100%;
+height:100%;
 float:left;
 clear:right;
 }
@@ -450,8 +442,11 @@ background:#0ff;
 float:left;
 padding:none;
 }
-.txtext_dst {
+.txtext_src {
 color:#00f;
+}
+.txtext_dst {
+color:red;
 }
 .txtext_dbg {
 width:inherit;
@@ -630,49 +625,54 @@ font-weight:700;
 }
 div.bottom {
 width:100%;
-height:40px;
 bottom:0;
 left:0;
 position:fixed;
-color:#fff;
+color:#000;
 border-top:1pt solid #000;
+background-color:#e9e9e9;
+height:24px;
 }
 div.b_tray {
-width:38%;
-background-color:#333;
 text-align:left;
 float:left;
-padding-top:10px;
-height:40px;
+margin-top:4px;
+}
+.loader {
+margin-left:15px;
+display:none;
+}
+.ldimg {
+padding-left:10px;
+vertical-align:middle;
 }
 div.b_class {
-width:28%;
-background-color:#333;
 text-align:left;
 float:left;
-padding-top:10px;
-height:40px;
+margin-top:4px;
+margin-right:10px;
 }
-div.b_event {
-width:20%;
-background-color:#333;
-text-align:left;
-float:left;
-padding-top:10px;
-height:40px;
-}
-div.b_update,div.b_top {
-width:7%;
-background-color:#c9c9c9;
+span.class_msg {
 color:#000;
+display:none;
+background-color:#f9edbe;
+border-radius:3px;
+border:1pt solid #f0c36d;
+padding:0 25px;
+}
+div.b_update{
+width:100px;
+font-weight:bold;
+height:24px;
+background-color:#000;
+color:#fff;
 cursor:pointer;
 text-align:center;
-float:left;
-height:40px;
-padding-top:10px;
+float:right;
+padding-top:4px;
 }
-div.b_update:hover,div.b_top:hover {
-background-color:#e9e9e9;
+div.b_update:hover {
+text-decoration:underline;
 }
 .toggle-button {
 margin-right:10px;
@@ -892,14 +892,6 @@ span.bold {
 font-size:11px;
 font-weight:700;
 color:#000;
-}
-span.class_msg {
-color:#000;
-display:none;
-background-color:#f9edbe;
-border-radius:3px;
-border:1pt solid #f0c36d;
-padding:0 25px;
 }
 div.class_msg_cont {
 font-weight:400;
@@ -1239,7 +1231,7 @@ tr.d_row,tr.s_row,tr.d_row_sub,tr.d_row_sub1,tr.f_row {
 background-color:#fafafa;
 }
 
-.txtext_src,span.red {
+span.red {
 color:red;
 }
 

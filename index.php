@@ -80,8 +80,6 @@ dbC();
       <div class=label>Comments:</div><div id=menu3 class=tvalue_off>off</div>
     </div>
 
-    <!--div id=rt class=menu_rt title="Queue">RT</div-->
-
     <div class=event_cont>
       <div class=label_l>Event Summary</div>
       <div class=label>Queued Events:</div><div id=qtotal class=value>-</div><div class=rt_notice title="update results">!</div>
@@ -145,6 +143,7 @@ dbC();
     <div id=t_sum_content class=content>
       <div id=usr_filters></div>
       <div id=aaa-00 class=aaa></div>
+      <br><br><br>
     </div>
   </div>
 </div>
@@ -154,12 +153,10 @@ dbC();
 <div class=cm_tbl></div>
 </div>
 
-<div id=bottom class=bottom>
-<div id=b_tray class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
-<div id=b_class class=b_class><span class=class_msg></span>&nbsp;</div>
-<div id=b_event class=b_event></div>
-<div id=b_update class=b_update>update</div>
-<div id=b_top class=b_top>top</div>
+<div class=bottom>
+  <div class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
+  <div class=b_class><span class=class_msg></span>&nbsp;</div>
+  <div class=b_update>update</div>
 </div>
 
 <input id=event_sort type=hidden value="DESC">
