@@ -58,14 +58,32 @@ $(document).ready(function(){
     });        
   }
 
+  // Used for search sync
+  var eF = 0;
+
   function getTimestamp() {
+    // If we have an error in the input fields we clear and fire.
+    if ($('.dt_error').data('err') == 1) {
+      $('.dt_reset').click();
+    }
+
     // Timeparts
     var ts_sd = $('#ts_sdate').val();
     var ts_ed = $('#ts_edate').val();
     var ts_st = $('#ts_stime').val();
     var ts_et = $('#ts_etime').val();
-    var ts_os = $('#ts_offset').val();
+    var ts_os = $('#ts_offset').data('offset');
     var theWhen = s2h(ts_sd + "|" + ts_ed + "|" + ts_st + "|" + ts_et + "|" + ts_os);
+
+    if (eF == 1) {
+      var fval = 'YES';
+    } else {
+      var fval = 'NO';
+    }
+    var tl = '<span class=tl>Timeline: </span>';
+    tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
+    tl += "<span class=fl>Filtered: </span><span class=fl_val>" + fval + "</span>";
+    $('.timeline').html(tl);
     return theWhen;
   }  
  
@@ -231,7 +249,8 @@ $(document).ready(function(){
   // Get event statuses
   var eTotal = 0, qTotal = 0;
   function statusPoll(caller) {
-    theWhen = getTimestamp();
+
+    //theWhen = getTimestamp();
     var urArgs = "type=" + 6 + "&ts=" + theWhen;
     $(function(){
       $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
@@ -457,7 +476,6 @@ $(document).ready(function(){
         $("#loader").show();
         break;
     }
-    $(".rt_notice").fadeOut();
   }
 
   // Group and ungroup
@@ -481,6 +499,7 @@ $(document).ready(function(){
   });
    
   $(document).on("click", ".rt_notice", function(event) {
+    $(".rt_notice").hide();
     newView("u");        
   });
 
@@ -500,6 +519,7 @@ $(document).ready(function(){
 
   // Update page
   $(".b_update").click(function(event) {
+    $(".rt_notice").hide();
     newView("u");
   });
  
@@ -508,6 +528,7 @@ $(document).ready(function(){
     if(!e) e=window.event;
       key = e.keyCode ? e.keyCode : e.which;
       if(key == 13) {
+        eF = 1;
         // Close comment box if it is open
         if ($('.cat_msg')[0]) {
           $('.cat_msg_add').click();
@@ -673,7 +694,7 @@ $(document).ready(function(){
     rowType = curID.substr(0,3);
 
     // Make sure no other instances are open
-    if (!$(".d_row_active")[0] && rowType == 'sid' && $('#search').val().length == 0 ) {
+    if (!$(".d_row_active")[0] && rowType == 'sid') {
       $("#loader").show(); 
       // This leaves us with sid-gid
       rowValue = curID.replace("sid-","");
@@ -713,7 +734,7 @@ $(document).ready(function(){
   //
 
   $(document).on("click", ".sub_active", function() {
-    if (!$(".d_row_sub_active")[0] && $('#search').val().length == 0) {
+    if (!$(".d_row_sub_active")[0]) {
       baseID = $(this).parent().attr('id');
       columnType = this.id[2];
 
@@ -749,7 +770,7 @@ $(document).ready(function(){
   //
     
   $(document).on("click", ".b_PL", function() {
-    if (!$("#eview_sub2")[0] && !$("#eview_sub3")[0] && $('#search').val().length == 0) {
+    if (!$("#eview_sub2")[0] && !$("#eview_sub3")[0]) {
       baseID = $(this).data('eidl');
       rowcall = baseID.split("-");
       callerID = rowcall[0];
@@ -765,7 +786,7 @@ $(document).ready(function(){
   //
 
   $(document).on("click", ".b_TX", function(event) {
-    if (!$(".eview_sub3")[0] && !$(".eview_sub2")[0] && $('#search').val().length == 0) {
+    if (!$(".eview_sub3")[0] && !$(".eview_sub2")[0]) {
       $("#loader").show();
       composite = $(this).data('tx').split("-");
       rowLoke = composite[0];
@@ -821,7 +842,6 @@ $(document).ready(function(){
     var filterMsg = '';
     var rt = 0;
     var theFilter = s2h('empty');
-
     // See if we are just RT events
     if ($('#rt').text() == 'on' ) {
       rt = 1;
@@ -835,8 +855,10 @@ $(document).ready(function(){
     }
 
     // Check for any filters
-    if ($('#search').val().length > 0) {
+    if ($('#search').val().length > 0 && eF == 1) {
       var fParts = $('#search').val().split(" ");
+      // Left the filter notifier know
+      $('.fl_val').text('YES');
       if (fParts[0] == 'cmt') {
         theFilter = s2h($('#search').val()); 
       } else {
@@ -870,6 +892,9 @@ $(document).ready(function(){
           }
         }
       }
+    } else {
+      $('.fl_val').text('NO');
+      eF = 0;
     }
 
     switch (parts[0]) {
@@ -1655,6 +1680,9 @@ $(document).ready(function(){
     if (item.length > 35) {
       itemTitle = item.substring(0,35) + "..";
     }
+    // Remove empty message
+    $('#h_empty').remove();
+
     // If the item doesn't exist, add it. Otherwise, we start counting.
     if ($(".h_item:contains('" + itemTitle + "')")[0]) {
       var oc = $(".h_item:contains('" + itemTitle + "')").data('n');
@@ -1671,8 +1699,30 @@ $(document).ready(function(){
       $(".h_item:contains('" + itemTitle + "')").text(itemTitle + "(" + nc + ")");
     } else {
       var toAdd = "<span data-n=1 class=h_item title=\"" + item + "\"> " + itemTitle + "</span>";
-      $('.h_box').append(toAdd);
+      $('#h_box').append(toAdd);
     }
+  }
+
+  $(document).on("click", ".pop", function() {
+    var cid = $('.pop').attr('id');
+    switch (cid) {
+      case 'pi': 
+        $('.pop').attr('id','po');
+        $('.pop').attr('src','.css/pi.png');
+        $('#h_box').attr('class','h_box_o');
+        $('.pop').attr('title','Click to collapse'); 
+      break;
+      case 'po':
+        $('.pop').attr('id','pi');
+        $('.pop').attr('src','.css/po.png');
+        $('#h_box').attr('class','h_box');
+        $('.pop').attr('title','Click to expand');
+      break;
+    } 
+  });
+
+  if (!$('.h_item')[0]) {
+    $('#h_box').append('<span id=h_empty>History is empty</span>');
   }
 
   $(document).on("click", ".sub_filter,.row_filter,.tof", function() {
@@ -1744,6 +1794,10 @@ $(document).ready(function(){
   // Comment box
   //
 
+  $(document).on("click", ".cat_close", function(event) {
+    $('#menu3').click();
+  });
+
   $(document).on("click", "#menu3", function(event) {
  
     if ($('#tlcom').length > 0) {
@@ -1751,13 +1805,7 @@ $(document).ready(function(){
       $(".content_active").fadeTo('fast',1);
       $(".pcomm").remove();
       $(".cat_msg_txt").val("");
-      $("#menu3").text("off");
-      $("#menu3").attr('class','tvalue_off');
-
     } else {
-
-      $("#menu3").text("on");
-      $("#menu3").attr('class','tvalue_on');
       var urArgs = "type=11";
 
       $(function(){
@@ -2180,10 +2228,12 @@ $(document).ready(function(){
 
   // Open and close the view
   $('#filters').click(function() {
-    $('#usr_filters').toggle();
-    if ($('#usr_filters').css('display') == "none") {
+    $('.fltr_box').toggle();
+    if ($('.fltr_box').css('display') == "none") {
       $('#tl4').hide();
+      $(".content_active").fadeTo('fast',1);
     } else {
+      $(".content_active").fadeTo('fast',0.2); 
       $('#tl4').fadeIn();
       if ($('#tl4').length == 0) {
         loadFilters(1);
@@ -2235,16 +2285,12 @@ $(document).ready(function(){
       head = '';
       row = '';
       head += "<thead><tr>";
-      head += "<th class=sort width=70>ALIAS</th>";
-      head += "<th class=sort width=200>NAME</th>";
-      head += "<th class=sort>NOTES</th>";
-      head += "<th class=sort width=150>LAST MODIFIED</th>";
-      head += "<th class=sortr width=120>";
-      head += "<div title=close class=filter_close>x</div>";
-      head += "<div title=add class=filter_new>+</div>";
-      head += "<div title=refresh class=filter_refresh>&#x21BA;</div>";
-      head += "<div title=help class=filter_help>?</div>";
-      head += "</th></tr></thead>";
+      head += "<th class=sub width=70>ALIAS</th>";
+      head += "<th class=sub width=200>NAME</th>";
+      head += "<th class=sub>NOTES</th>";
+      head += "<th class=sub width=120>LAST MODIFIED</th>";
+      head += "<th class=sub width=60>MODIFY</th>";
+      head += "</tr></thead>";
 
       for (var i=0; i<theData.length; i++) {
         row += "<tr class=f_row id=\"tr_" + theData[i].alias + "\" ";
@@ -2260,12 +2306,11 @@ $(document).ready(function(){
         row += "<td class=row><div id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</div></td>";
         row += "</tr>";
       }
-
-      tbl += "<table id=tl4 class=padded width=100% cellpadding=0 cellspacing=0 align=center>";
+      tbl += "<table id=tl4 width=930 class=table cellpadding=0 cellspacing=0>";
       tbl += head;
       tbl += row;
       tbl += "</table>";
-      $('#usr_filters').after(tbl);
+      $('.fltr_tbl').append(tbl);
       if (show == 1) {
         $('#tl4').fadeIn('slow');
       }
@@ -2302,74 +2347,70 @@ $(document).ready(function(){
 
   // Help!?
   $(document).on("click", ".filter_help", function(event) {
-    if ($('#tr_help').length == 0) {
-      row = "<tr id=tr_help><td class=fhelp colspan=5>";
-      row += "<div class=filter_parts><u><b>Filters</b></u><br><br>";
-      row += "Filters are used to add extra conditions to base queries before they are performed. ";
-      row += "When the main event page loads it displays <b>ALL</b> events for the current day. ";
-      row += "Using filters lets you manipulate the base query to return just the results you are interested in. ";
-      row += "Filters can either be explicit statements or shells that accept arguments.</div>";
-      row += "<div class=filter_parts><u><b>Usage</b></u><br><br>";  
-      row += "Once a filter has been created you can start using it right away. To do so, simply type the ";
-      row += "filters alias in the input box located at the top right corner of the interface and press the ";
-      row += "enter key. If you create a filter with the alias 'a', then you would ";
-      row += "just type 'a' and then 'enter' to perform the query and return the filtered results.<br><br>"; 
-      row += "<b>Explicit</b> filters are ";
-      row += "intended to be used for frequent queries that contain multiple but static conditions, say ";
-      row += "a filter called 'finance' that contains three sensors and IPs in a few  different "; 
-      row += "ranges.<br><br>";
-      row += "<b>Shells</b> on the other hand are a little more dynamic. For example, one of the base filters ";
-      row += "with the alias 'ip' looks like this: <br><br>";
-      row += "<b>\"filter\": \"(src_ip = INET_ATON('$') OR dst_ip = INET_ATON('$'))\"</b><br><br>";
-      row += "This filter can be used either like this <b>'ip 10.1.2.3'</b>  or like this ";
-      row += "<b>'ip 10.1.2.3,10.1.2.4,10.1.2.5'</b>. ";
-      row += "Shell filters expand '$' to whatever immediately follows the filter alias. If commas are used ";
-      row += "each additional item will also be added to the query.</div>";
-      row += "<div class=filter_parts><u><b>Query examples</b></u><br><br>";
-      row += "We are using standard MySQL vernacular so we can make use of all native functions ";
-      row += "and conditional operators. A few simple examples:<br><br>";
-      row += "=> (src_port NOT IN('80','443') AND dst_port > 1024)<br>";
-      row += "=> (src_ip NOT BETWEEN 167772160 AND 184549375 AND src_ip NOT BETWEEN 2886729728 AND 2886795263)<br>";
-      row += "=> (signature LIKE '%malware%' AND INET_ATON(dst_ip) LIKE '10.%.1.%')</div>";  
-      row += "<div class=filter_parts><u><b>Available filter fields</b></u><br><br>";
-      row += "<div class=filter_fields>";
-      row += "<div class=boldf>cid</div> - The event ID. sid + cid = distinct event<br>";
-      row += "<div class=boldf>class</div> - Event Classification<br>";
-      row += "<div class=boldf>dst_ip</div> - Destination IP<br>";
-      row += "<div class=boldf>dst_port</div> - Destination Port<br>";
-      row += "<div class=boldf>icmp_code</div> - ICMP Code<br>";
-      row += "<div class=boldf>icmp_type</div> - ICMP Type<br>";
-      row += "<div class=boldf>ip_csum</div> - IP Header Checksum<br>";
-      row += "<div class=boldf>ip_flags</div> - IP Flags<br>";
-      row += "<div class=boldf>ip_hlen</div> - IP Header Length<br>";
-      row += "<div class=boldf>ip_id</div> - IP Identification<br>";
-      row += "<div class=boldf>ip_len</div> - IP Total Length<br>";
-      row += "<div class=boldf>ip_off</div> - IP Fragment Offset<br>";
-      row += "<div class=boldf>ip_proto</div> - IP Protocol<br>";
-      row += "<div class=boldf>ip_tos</div> - IP Type Of Service</div>";
-      row += "<div class=filter_fields>";
-      row += "<div class=boldf>ip_ttl</div> - IP Time To Live<br>";
-      row += "<div class=boldf>ip_ver</div> - IP Version<br>";
-      row += "<div class=boldf>msrc.cc</div> - Source Country Code<br>";
-      row += "<div class=boldf>mdst.cc</div> - Destination Country Code<br>";
-      row += "<div class=boldf>priority</div> - Event Priority<br>";
-      row += "<div class=boldf>sid</div> - The sensor ID. sid + cid = distinct event<br>";
-      row += "<div class=boldf>signature</div> - Event Signature<br>";
-      row += "<div class=boldf>signature_gen</div> - Event Signature Generator<br>";
-      row += "<div class=boldf>signature_id</div> - Event Signature ID<br>";
-      row += "<div class=boldf>signature_rev</div> - Event Signature Revision<br>";
-      row += "<div class=boldf>src_ip</div> - Source IP<br>";
-      row += "<div class=boldf>src_port</div> - Source Port<br>";
-      row += "<div class=boldf>status</div> - Analyst Classification</div></div>";
-      row += "</td></tr>"; 
-      $('#tl4').prepend(row);
-      $('.filter_help').css('background-color','#cc0000');
-      $('.filter_help').css('color','#fff');
-      $('.filter_help').text('X');
+    if ($('#tbl_help').length == 0) {
+      tbl = "<table id=tbl_help><tr><td class=fhelp>";
+      tbl += "<div class=filter_parts><u><b>Filters</b></u><br><br>";
+      tbl += "Filters are used to add extra conditions to base queries before they are performed. ";
+      tbl += "When the main event page loads it displays <b>ALL</b> events for the current day. ";
+      tbl += "Using filters lets you manipulate the base query to return just the results you are interested in. ";
+      tbl += "Filters can either be explicit statements or shells that accept arguments.</div>";
+      tbl += "<div class=filter_parts><u><b>Usage</b></u><br><br>";  
+      tbl += "Once a filter has been created you can start using it right away. To do so, simply type the ";
+      tbl += "filters alias in the input box located at the top right corner of the interface and press the ";
+      tbl += "enter key. If you create a filter with the alias 'a', then you would ";
+      tbl += "just type 'a' and then 'enter' to perform the query and return the filtered results.<br><br>"; 
+      tbl += "<b>Explicit</b> filters are ";
+      tbl += "intended to be used for frequent queries that contain multiple but static conditions, say ";
+      tbl += "a filter called 'finance' that contains three sensors and IPs in a few  different "; 
+      tbl += "ranges.<br><br>";
+      tbl += "<b>Shells</b> on the other hand are a little more dynamic. For example, one of the base filters ";
+      tbl += "with the alias 'ip' looks like this: <br><br>";
+      tbl += "<b>\"filter\": \"(src_ip = INET_ATON('$') OR dst_ip = INET_ATON('$'))\"</b><br><br>";
+      tbl += "This filter can be used either like this <b>'ip 10.1.2.3'</b>  or like this ";
+      tbl += "<b>'ip 10.1.2.3,10.1.2.4,10.1.2.5'</b>. ";
+      tbl += "Shell filters expand '$' to whatever immediately follows the filter alias. If commas are used ";
+      tbl += "each additional item will also be added to the query.</div>";
+      tbl += "<div class=filter_parts><u><b>Query examples</b></u><br><br>";
+      tbl += "We are using standard MySQL vernacular so we can make use of all native functions ";
+      tbl += "and conditional operators. A few simple examples:<br><br>";
+      tbl += "=> (src_port NOT IN('80','443') AND dst_port > 1024)<br>";
+      tbl += "=> (src_ip NOT BETWEEN 167772160 AND 184549375 AND src_ip NOT BETWEEN 2886729728 AND 2886795263)<br>";
+      tbl += "=> (signature LIKE '%malware%' AND INET_ATON(dst_ip) LIKE '10.%.1.%')</div>";  
+      tbl += "<div class=filter_parts><u><b>Available filter fields</b></u><br><br>";
+      tbl += "<div class=filter_fields>";
+      tbl += "<div class=boldf>cid</div> - The event ID. sid + cid = distinct event<br>";
+      tbl += "<div class=boldf>class</div> - Event Classification<br>";
+      tbl += "<div class=boldf>dst_ip</div> - Destination IP<br>";
+      tbl += "<div class=boldf>dst_port</div> - Destination Port<br>";
+      tbl += "<div class=boldf>icmp_code</div> - ICMP Code<br>";
+      tbl += "<div class=boldf>icmp_type</div> - ICMP Type<br>";
+      tbl += "<div class=boldf>ip_csum</div> - IP Header Checksum<br>";
+      tbl += "<div class=boldf>ip_flags</div> - IP Flags<br>";
+      tbl += "<div class=boldf>ip_hlen</div> - IP Header Length<br>";
+      tbl += "<div class=boldf>ip_id</div> - IP Identification<br>";
+      tbl += "<div class=boldf>ip_len</div> - IP Total Length<br>";
+      tbl += "<div class=boldf>ip_off</div> - IP Fragment Offset<br>";
+      tbl += "<div class=boldf>ip_proto</div> - IP Protocol<br>";
+      tbl += "<div class=boldf>ip_tos</div> - IP Type Of Service</div>";
+      tbl += "<div class=filter_fields>";
+      tbl += "<div class=boldf>ip_ttl</div> - IP Time To Live<br>";
+      tbl += "<div class=boldf>ip_ver</div> - IP Version<br>";
+      tbl += "<div class=boldf>msrc.cc</div> - Source Country Code<br>";
+      tbl += "<div class=boldf>mdst.cc</div> - Destination Country Code<br>";
+      tbl += "<div class=boldf>priority</div> - Event Priority<br>";
+      tbl += "<div class=boldf>sid</div> - The sensor ID. sid + cid = distinct event<br>";
+      tbl += "<div class=boldf>signature</div> - Event Signature<br>";
+      tbl += "<div class=boldf>signature_gen</div> - Event Signature Generator<br>";
+      tbl += "<div class=boldf>signature_id</div> - Event Signature ID<br>";
+      tbl += "<div class=boldf>signature_rev</div> - Event Signature Revision<br>";
+      tbl += "<div class=boldf>src_ip</div> - Source IP<br>";
+      tbl += "<div class=boldf>src_port</div> - Source Port<br>";
+      tbl += "<div class=boldf>status</div> - Analyst Classification</div></div>";
+      tbl += "</td></tr></table>"; 
+      $('#tl4').before(tbl);
+      $('.filter_help').text('-');
     } else {
-      $('#tr_help').remove();
-      $('.filter_help').css('background-color','#888888');
-      $('.filter_help').css('color','#fff');
+      $('#tbl_help').remove();
       $('.filter_help').text('?');
     }
   });

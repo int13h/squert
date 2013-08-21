@@ -63,7 +63,8 @@ dbC();
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
   </div>
   <div id=t_search class=search>
-    <div id=filters class=filter_show>filter</div>
+    <div id=menu3 class=button>comment</div>
+    <div id=filters class=button>filter</div>
     <input class=search id=search type=text size=75 maxlength=1000><span id=clear_search class=clear>&#x21BA;</span>
   </div>
   <div id=cal></div>
@@ -73,15 +74,14 @@ dbC();
   <div class=content-left>
 
     <div class=event_cont_bar>
-      <div class=label_l>Toggle</div>
+      <div class=label_l><span class=ec_label>Toggle</span></div>
       <div class=label>Event Queue Only:</div><div id=rt class=tvalue_off>off</div>
       <div class=label>Event Grouping:</div><div id=menu1 class=tvalue_on>on</div>
       <div class=label>Map:</div><div id=menu2 class=tvalue_off>off</div>
-      <div class=label>Comments:</div><div id=menu3 class=tvalue_off>off</div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l>Event Summary</div>
+      <div class=label_l><span class=ec_label>Event Summary</span></div>
       <div class=label>Queued Events:</div><div id=qtotal class=value>-</div><div class=rt_notice title="update results">!</div>
       <div class=label>Total Events:</div><div id=etotal class=value>-</div>
       <div class=label>Total Signatures:</div><div id=esignature class=value>-</div>
@@ -90,7 +90,7 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l>Event Count by Classification</div>
+      <div class=label_l><span class=ec_label>Event Count by Classification</span></div>
       <div class=label_c data-c=11>Admin Access:
       <div id=b_class-11 class=b_C1 title='Unauthorized Admin Access (F1)'>C1</div></div><div id=c-11 class=value>-</div>
       <div class=label_c data-c=12>User Access:
@@ -112,7 +112,7 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l>Event Count by Priority</div>
+      <div class=label_l><span class=ec_label>Event Count by Priority</span></div>
       <div class=label>High:</div><div id=pr_1 class=value>-</div>
       <div class=label>Medium:</div><div id=pr_2 class=value>-</div>
       <div class=label>Low:</div><div id=pr_3 class=value>-</div>
@@ -120,13 +120,16 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l>History</div>
-      <div class=h_box></div>
+      <div class=label_l><span class=ec_label>History</span>
+        <img title="Click to expand" id=pi class=pop src=.css/po.png>
+      </div>
+      <div id=h_box class=h_box></div>
     </div>
 
   </div>  
 
   <div class=content-right>
+
     <div id=t_dash_content class=content>
       <table width=950 align=right><tr><td>
       <h3>Events grouped by minute and hour</h3>
@@ -141,7 +144,7 @@ dbC();
     </div>
 
     <div id=t_sum_content class=content>
-      <div id=usr_filters></div>
+      <div class=timeline></div>
       <div id=aaa-00 class=aaa></div>
       <br><br><br>
     </div>
@@ -149,8 +152,18 @@ dbC();
 </div>
 
 <div class=cat_msg>
-<div class=cm_top>Add a comment to the selected events: <input class=cat_msg_txt type=text maxlength=255></div>
-<div class=cm_tbl></div>
+<div class=cm_top>Add a comment to the selected events: <input class=cat_msg_txt type=text maxlength=255><div title="close" class="cat_close">x</div></div>
+  <div class=cm_tbl></div>
+</div>
+
+<div class=fltr_box>
+  <div class=fltr_top>
+    <div title=close class=filter_close>x</div>
+    <div title=add class=filter_new>+</div>
+    <div title=refresh class=filter_refresh>&#x21BA;</div>
+    <div title=help class=filter_help>?</div>
+  </div>
+  <div class=fltr_tbl></div>
 </div>
 
 <div class=bottom>
@@ -165,4 +178,3 @@ dbC();
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
 </body>
 </html>
-<?php $_SESSION['LAST_ACTIVITY'] = time();?>

@@ -19,12 +19,12 @@ font-weight:bold;
 .cog {
 width:30px;
 text-align:center;
-padding:2px 0px 2px 0px;
+padding:4px 0px 4px 0px;
 background-color:#e9e9e9;
 }
-.cog:hover {
+img.lr:hover {
 cursor:pointer;
-background-color:#fff;
+opacity:.6;
 }
 .month {
 background-color:#000;
@@ -107,10 +107,11 @@ font-weight:normal;
 font-size:10px;
 font-weight:bold;
 color:#666;
-margin-top:-2px;
-border-bottom:2pt solid #c9c9c9;
-background-color:#f4f4f4;
-padding:3px;
+border:1pt solid #000;
+border-left:none;
+border-right:none;
+background-color:#e9e9e9;
+padding:9px 0px 9px 0px;
 }
 .dt_content {
 text-align:right;
@@ -130,4 +131,34 @@ background-color:#f4f4f4;
 font-size:10px;
 text-align:center;
 vertical-align:middle;
+}
+.dt_reset,.dt_update {
+float:right;
+font-size:11px;
+font-weight:normal;
+text-align:center;
+margin-right:5px;
+border:1pt solid #c9c9c9;
+border-radius:2px;
+width:65px;
+padding:2px;
+background-color:#fafafa;
+color:#666;
+}
+.dt_update {
+background-color:#000;
+color:#fff;
+}
+.dt_reset {
+background-color:#000;
+color:#fff;
+}
+.dt_reset:hover,.dt_update:hover {
+cursor:pointer;
+text-decoration:underline;
+}
+.dt_error{
+display:none;
+color:#cc0000;
+padding-right:20px;
 }
