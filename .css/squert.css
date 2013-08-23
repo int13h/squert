@@ -35,6 +35,12 @@ span.fl {
 font-weight:bold;
 margin-left:20px;
 }
+span.today {
+color:blue;
+cursor:pointer;
+text-decoration:underline;
+padding-left:8px;
+}
 div.lr {
 }
 div.content-left {

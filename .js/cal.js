@@ -376,6 +376,7 @@ $(document).ready(function(){
   createHours();
   createControls();
   $('#ts_sdate').val(yy + "-" + today + "-" + dd);
+  $('#ts_sdate').data('today',yy + "-" + today + "-" + dd);
   $('#ts_edate').val(yy + "-" + today + "-" + dd);
   $('#ts_stime').val('00:00:00');
   $('#ts_etime').val('23:59:59');

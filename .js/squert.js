@@ -82,6 +82,7 @@ $(document).ready(function(){
     }
     var tl = '<span class=tl>Timeline: </span>';
     tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
+    tl += "<span class=today>view today</span>";
     tl += "<span class=fl>Filtered: </span><span class=fl_val>" + fval + "</span>";
     $('.timeline').html(tl);
     return theWhen;
@@ -1677,8 +1678,8 @@ $(document).ready(function(){
   function hItemAdd(item) {
     var itemTitle = item;
     // Truncate
-    if (item.length > 35) {
-      itemTitle = item.substring(0,35) + "..";
+    if (item.length > 33) {
+      itemTitle = item.substring(0,33) + "..";
     }
     // Remove empty message
     $('#h_empty').remove();
@@ -2120,9 +2121,8 @@ $(document).ready(function(){
         }
 
         // What the new classification is
-        selClass = $(caller).attr("class");
-        selTxt = selClass.split("_");
-        newClass = "a_" + selTxt[1];
+        selClass = $(caller).data("cn");
+        newClass = "a_" + selClass;
         
         // Change visible class and disable if RT
         // If we are RT ungrouped, we just remove 
@@ -2156,7 +2156,7 @@ $(document).ready(function(){
           $(".chk_event:checked").each(function() {
             var n = this.id.split("_");          
             $("#class_box_" + n[1]).attr('class', newClass);
-            $("#class_box_" + n[1]).text(selTxt[1]);
+            $("#class_box_" + n[1]).text(selClass);
             if (curtotalparentcount > 0) {
               $(this).prop("disabled",true);
             }
