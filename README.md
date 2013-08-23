@@ -13,6 +13,9 @@ SQueRT is a tool that is used to query event data.
 
 ## Requirements
 
+* A working Sguil installation [http://sguil.net](http://sguil.net). If you use Security Onion [http://securityonion.blogspot.ca](http://securityonion.blogspot.ca) you can get everything setup rather quickly.
+  
+
 * PHP5 with CLI
 	* pecl-stats
 	* mysql
@@ -37,6 +40,21 @@ SQueRT is a tool that is used to query event data.
 `group_concat_max_len = 100000`
 
 this should be placed in the "[mysqld]" section of my.cnf
+
+Also,
+
+The ip2c TCL scripts uses "LOAD DATA LOCAL INFILE" to dump the results into the database. 
+While most stock MySQL installs are compiled with this, they don't always allow it.
+
+Find the my.cnf that your client is using and add:
+
+`local-infile=1`
+
+to the client section. If you just have the client installed and you cant find this 
+file just create it in /etc and add:
+
+`[client]`
+`local-infile=1`
 
 5) Create additional tables:
 

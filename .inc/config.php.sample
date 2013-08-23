@@ -23,8 +23,4 @@ $rulePath = "../.rules";
 
 // DNS server to query
 $dns = "8.8.8.8";
-
-// Timezone offset. If you want UTC use the second option.
-$offset = date("P");    // Option #1: Local Time
-//$offset = "+00:00";   // Option #2: UTC
 ?>
