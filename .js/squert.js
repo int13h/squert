@@ -82,12 +82,11 @@ $(document).ready(function(){
     }
     var tl = '<span class=tl>Timeline: </span>';
     tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
-    tl += "<span class=today>view today</span>";
     tl += "<span class=fl>Filtered: </span><span class=fl_val>" + fval + "</span>";
     $('.timeline').html(tl);
     return theWhen;
-  }  
- 
+  }
+  
   // Load main content
   eventList("0-aaa-00");
   $("#loader").show();
@@ -481,12 +480,12 @@ $(document).ready(function(){
 
   // Group and ungroup
   $(document).on("click", "#menu1", function(event) {
-   var cv = $(this).text();
-   switch (cv) {
+    var cv = $(this).text();
+    newView("c");
+    switch (cv) {
       case  'on': $(this).attr('class','tvalue_off'); break;
       case 'off': $(this).attr('class','tvalue_on'); break;
-   } 
-   newView("c");
+    } 
   });
 
   // RT check/uncheck
@@ -531,8 +530,8 @@ $(document).ready(function(){
       if(key == 13) {
         eF = 1;
         // Close comment box if it is open
-        if ($('.cat_msg')[0]) {
-          $('.cat_msg_add').click();
+        if ($('#tlcom').length > 0) {
+          cmtbRemove(); 
         }
         newView("u");
       }
@@ -836,8 +835,8 @@ $(document).ready(function(){
   //
   // This creates the views for each level
   //
-
   function eventList (type) {
+
     theWhen = getTimestamp();
     var parts = type.split("-");
     var filterMsg = '';
@@ -1795,17 +1794,20 @@ $(document).ready(function(){
   // Comment box
   //
 
+  function cmtbRemove() {
+    $(".cat_msg").fadeOut();
+    $(".cat_msg_txt").val("");
+    $(".pcomm").remove();
+    $(".content_active").fadeTo('fast',1);
+  }
+
   $(document).on("click", ".cat_close", function(event) {
-    $('#menu3').click();
+    cmtbRemove();
   });
 
   $(document).on("click", "#menu3", function(event) {
- 
     if ($('#tlcom').length > 0) {
-      $(".cat_msg").fadeOut();
-      $(".content_active").fadeTo('fast',1);
-      $(".pcomm").remove();
-      $(".cat_msg_txt").val("");
+      cmtbRemove();
     } else {
       var urArgs = "type=11";
 
@@ -1865,7 +1867,6 @@ $(document).ready(function(){
       $(".content_active").fadeTo('fast',0.2);
       $(".cat_msg").fadeIn();
       $(".cat_msg_txt").focus();   
-
     }
   });
 
@@ -1896,30 +1897,6 @@ $(document).ready(function(){
   $.alt('2', function() {
     $("#menu3").click();
   });    
-
-  // Remove a comment
-  $(document).on("click", ".tod", function(event) {
-    var oktoRM = confirm("Are you sure you want to remove this comment?");
-    if (oktoRM) {
-      var theComment = s2h($(this).data('comment'));
-      var rowNumber = $(this).data('rn');
-      var urArgs = "type=12&comment=" + theComment;
-      $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb12(data)});
-      }); 
-
-      function cb12(data){
-        eval("theData=" + data);
-        if (theData.msg != '') {
-          alert(theData.msg);
-        } else {
-          $("#" + rowNumber).fadeOut('slow', function() {
-            $("#" + rowNumber).remove();
-          });
-        }
-      }
-    }
-  });
 
   // Highlight colour for selected events
   var hlcol = "#FFFFE0";
