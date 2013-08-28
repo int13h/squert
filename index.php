@@ -65,7 +65,7 @@ dbC();
   <div id=t_search class=search>
     <div id=menu3 class=button>comment</div>
     <div id=filters class=button>filter</div>
-    <input class=search id=search type=text size=75 maxlength=1000><span id=clear_search class=clear>&#x21BA;</span>
+    <input class=search id=search type=text size=60 maxlength=1000><span id=clear_search class=clear>&#x21BA;</span>
   </div>
   <div id=cal></div>
 </div>
@@ -142,7 +142,7 @@ dbC();
   <div class=content-right>
 
     <div id=t_dash_content class=content>
-      <table width=950 align=right><tr><td>
+      <table width=100% align=left><tr><td>
       <h3>Events grouped by minute and hour</h3>
       <?php include_once '.charts/interval.php';?>
       <h3>Top signatures</h3>

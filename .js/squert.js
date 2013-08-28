@@ -600,23 +600,15 @@ $(document).ready(function(){
   //
 
   function closeRow() {
-    if ($('#rt').text() == 'on' && $(".d_row_active").find(".b_ec_hot").text() == 0) {
-      $("#active_eview").remove();
-      $(".d_row_active").fadeOut('slow', function (event) {
-        $(".d_row_active").remove();
-      });
-      $(".d_row").css('opacity','1');
-    } else {
-      $("#active_eview").remove();
-      $("#" + this.id).attr('class','d_row');
-      $(".d_row").css('opacity','1');
-      $(".d_row_active").find('[class*="row"]').css('color', 'gray');
-      $(".d_row_active").find('[class*="row"]').css('background', 'transparent');
-      $(".d_row_active").find('td').css('border-top', 'none')
-      ltCol = $(".d_row_active").find('td.lt').html();
-      $(".d_row_active").find('td.lt').css('background', ltCol);
-      $(".d_row_active").attr('class','d_row');
-    }
+    $("#active_eview").remove();
+    $("#" + this.id).attr('class','d_row');
+    $(".d_row").css('opacity','1');
+    $(".d_row_active").find('[class*="row"]').css('color', 'gray');
+    $(".d_row_active").find('[class*="row"]').css('background', 'transparent');
+    $(".d_row_active").find('td').css('border-top', 'none')
+    ltCol = $(".d_row_active").find('td.lt').html();
+    $(".d_row_active").find('td.lt').css('background', ltCol);
+    $(".d_row_active").attr('class','d_row');
     // Update class_count
     $("#class_count").text(lastclasscount);
     // Get rid of any crashed loaders
@@ -716,7 +708,7 @@ $(document).ready(function(){
       tbl += "<tr class=eview id=active_eview><td colspan=11><div id=eview class=eview>";
       tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
       tbl += "<div class=sigtxt></div>";
-      tbl += "<br><canvas id=chart_timestamps width=950 height=130>[No canvas support]</canvas>";
+      tbl += "<div class=chrt_ts><canvas id=chart_timestamps width=950 height=130></canvas></div>";
       tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
       tbl += "categorize <span class=bold id=class_count>";
       tbl += curclasscount + "</span> event(s)</div>";
@@ -2129,16 +2121,23 @@ $(document).ready(function(){
           // Update table (for sorter)
           $("#tl3b").trigger('update');
         } else {
-
-          $(".chk_event:checked").each(function() {
-            var n = this.id.split("_");          
-            $("#class_box_" + n[1]).attr('class', newClass);
-            $("#class_box_" + n[1]).text(selClass);
-            if (curtotalparentcount > 0) {
-              $(this).prop("disabled",true);
-            }
-          });
-
+          // If we are RT and all events are classed we just remove
+          if ($('#rt').text() == 'on' && $(".d_row_active").find(".b_ec_hot").text() == 0) {
+            $("#active_eview").remove();
+            $(".d_row_active").fadeOut('slow', function (event) {
+              $(".d_row_active").remove();
+            });
+            $(".d_row").css('opacity','1');
+          } else {
+            $(".chk_event:checked").each(function() {
+              var n = this.id.split("_");          
+              $("#class_box_" + n[1]).attr('class', newClass);
+              $("#class_box_" + n[1]).text(selClass);
+              if (curtotalparentcount > 0) {
+                $(this).prop("disabled",true);
+              }
+            });
+          }
           $(".d_row_sub1").css("background-color", "#fafafa");
           $(".d_row_sub1").hover(function(){$(this).css("background-color", "#f4f4f4")},
             function(){$(this).css("background-color", "#fafafa")});

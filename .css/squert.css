@@ -49,7 +49,6 @@ top:86px;
 bottom:0px;
 left:0px;
 width:18%;
-max-width:237px;
 background-color:#fafafa;
 border-right:1px solid #545454;
 padding-top:10px;
@@ -570,11 +569,16 @@ padding-bottom:5px;
 padding-left:10px;
 }
 div.event_class {
-float:left;
 background-color:transparent;
 font-weight:400;
 padding-bottom:10px;
 margin-left:10px;
+float:left;
+clear:right;
+}
+div.ct_ts {
+float:left;
+clear:right;
 }
 div.event_time {
 float:right;
@@ -1067,9 +1071,6 @@ padding:none;
 }
 table.tlip {
 border-top:1pt solid #000;
-}
-#chart_timestamps {
-float:right;
 }
 span.blue {
 color:blue;
