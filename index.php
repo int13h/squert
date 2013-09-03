@@ -63,8 +63,9 @@ dbC();
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
   </div>
   <div id=t_search class=search>
-    <div id=menu3 class=button>comment</div>
-    <div id=filters class=button>filter</div>
+    <div id=comments class=button>comments</div>
+    <div id=sensors class=button>sensors</div>
+    <div id=filters class=button>filters</div>
     <input class=search id=search type=text size=60 maxlength=1000><span id=clear_search class=clear>&#x21BA;</span>
   </div>
   <div id=cal></div>
@@ -144,13 +145,9 @@ dbC();
     <div id=t_dash_content class=content>
       <table width=100% align=left><tr><td>
       <h3>Events grouped by minute and hour</h3>
-      <?php include_once '.charts/interval.php';?>
       <h3>Top signatures</h3>
-      <?php include_once '.charts/sigsum.php';?>
       <h3>Top source and destination IPs</h3>
-      <?php include_once '.charts/ip.php';?>
       <h3>Top source and destination Countries</h3>
-      <?php include_once '.charts/country.php';?>
       </td></tr></table>
     </div>
 
@@ -162,9 +159,18 @@ dbC();
   </div>
 </div>
 
-<div class=cat_msg>
-<div class=cm_top>Add a comment to the selected events: <input class=cat_msg_txt type=text maxlength=255><div title="close" class="cat_close">x</div></div>
+<div class=cat_box>
+  <div class=cat_top>Add a comment to the selected events: <input class=cat_msg_txt type=text maxlength=255>
+    <div title="close" class="cat_close">x</div>
+  </div>
   <div class=cm_tbl></div>
+</div>
+
+<div class=sen_box>
+  <div class=sen_top>
+    <div title=close class=sen_close>x</div>
+  </div>
+  <div class=sen_tbl></div>
 </div>
 
 <div class=fltr_box>

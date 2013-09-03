@@ -167,21 +167,6 @@ margin-bottom:5px;
 margin-right:2px;
 display:inline-block;
 }
-div.cat_box {
-position:fixed;
-bottom:0px;
-left:0;
-width:33px;
-border-left:2pt solid #d6d6d6;
-border-top:2pt solid #d6d6d6;
-border-bottom:2pt solid #d6d6d6;
-border-bottom-left-radius:5px;
-border-top-left-radius:5px;
-padding-top:5px;
-text-align:center;
-background-color:#e9e9e9;
-z-index:10;
-}
 div.cat_f {
 width:15px;
 padding-top:5px;
@@ -210,19 +195,18 @@ font-weight:normal;
 font-size:9px;
 margin-left:5px;
 }
-div.cm_top,div.fltr_top {
+div.cat_top,div.fltr_top,div.sen_top {
 float:left;
 padding:10px;
-position:fixed;
 background-color:#000;
 color:#fff;
 width:900px;
 text-align:right;
 }
-div.cat_msg,div.fltr_box {
+div.cat_box,div.fltr_box,div.sen_box {
 position:fixed;
-top:150px;
-left:240px;
+top:100px;
+left:220px;
 height:510px;
 width:920px;
 background-color:#f4f4f4;
@@ -231,7 +215,7 @@ border:1pt solid #000;
 display:none;
 z-index:30;
 }
-div.cm_tbl,div.fltr_tbl {
+div.cm_tbl,div.fltr_tbl,div.sen_tbl {
 overflow:auto;
 margin-top:50px;
 padding:10px;
@@ -454,8 +438,12 @@ font-weight:700;
 tr.d_row_active:hover {
 text-decoration:none;
 }
-tr.d_row:hover,tr.s_row:hover,tr.d_row_sub:hover,.d_row_sub1:hover {
+tr.d_row:hover,tr.d_row_sub:hover,.d_row_sub1:hover {
 background-color:#f4f4f4;
+}
+tr.s_row:hover {
+cursor:pointer;
+background-color:lightyellow;
 }
 td.txtext {
 width:930px;
@@ -1117,19 +1105,19 @@ border:1pt solid #185FAB;
 }
 
 .button {
-font-weight:400;
 text-align:center;
 border-radius:2px;
 margin-right:4px;
 margin-top:2px;
 font-size:11px;
+font-weight:normal;
 float:left;
 cursor:pointer;
 padding:2px;
 background-color:#185FAB;
 color:#ffffff;
 height:13px;
-width:60px;
+width:55px;
 border:1pt solid #185FAB;
 }
 
@@ -1169,12 +1157,12 @@ background-color:green;
 color:#fff;
 margin-left:10px;
 }
-div.cat_msg_add:hover,.filter_help:hover,.cat_close,.filter_close:hover,.filter_new:hover,.filter_refresh:hover,.filter_edit:hover,.filter_update:hover,.filter_remove:hover {
+div.cat_msg_add:hover,.filter_help:hover,.cat_close:hover,.filter_close:hover,.sen_close:hover,.filter_new:hover,.filter_refresh:hover,.filter_edit:hover,.filter_update:hover,.filter_remove:hover {
 background-color:#fff;
 color:#000;
 cursor:pointer;
 }
-.filter_new,.filter_refresh,.filter_help,.filter_close,.cat_close {
+.filter_new,.filter_refresh,.filter_help,.filter_close,.cat_close,.sen_close {
 background-color:#e9e9e9;
 color:#000;
 border:1pt solid #c9c9c9;
@@ -1253,7 +1241,7 @@ h3.live,td.row_active:hover {
 cursor:pointer;
 }
 
-tr.d_row,tr.s_row,tr.d_row_sub,tr.d_row_sub1,tr.f_row {
+tr.d_row,tr.d_row_sub,tr.d_row_sub1,tr.f_row {
 background-color:#fafafa;
 }
 
@@ -1476,4 +1464,26 @@ border-radius:3px;
 #priority_bar {
 padding: 5px 5px 0px 5px;
 background-color:#f4f4f4;
+}
+div.quick {
+padding:0px 5px 10px 5px;
+font-weight:bold;
+float:left;
+text-align:right;
+width:100px;
+clear:left;
+}
+div.quickl{
+float:left;
+text-align:left;
+clear:right;
+}
+span.qlink {
+color:#757575;
+text-decoration:underline;
+padding:0px 5px 0px 5px;
+}
+span.qlink:hover {
+cursor:pointer;
+color:#000;
 }

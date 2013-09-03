@@ -89,6 +89,7 @@ $(document).ready(function(){
   
   // Load main content
   eventList("0-aaa-00");
+  
   $("#loader").show();
 
   var lastclasscount = 0;
@@ -250,8 +251,21 @@ $(document).ready(function(){
   var eTotal = 0, qTotal = 0;
   function statusPoll(caller) {
 
-    //theWhen = getTimestamp();
-    var urArgs = "type=" + 6 + "&ts=" + theWhen;
+    // See if we are filtering by sensor
+    var theSensors = s2h('empty');
+    if ($('.chk_sen:checked').length > 0) {
+      var active_sensors = "AND event.sid IN(";
+      var iter  = $('.chk_sen:checked').length;
+      $('.chk_sen:checked').each(function() {
+        active_sensors += "'" + $(this).val() + "',";
+      });
+      active_sensors = active_sensors.replace(/,+$/,'');
+      active_sensors += ")";
+      theSensors = s2h(active_sensors);
+    }
+
+    var urArgs = "type=" + 6 + "&ts=" + theWhen + "&sensors=" + theSensors;
+
     $(function(){
       $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
     });
@@ -462,6 +476,7 @@ $(document).ready(function(){
        }
        f = "2a-aaa-00";
        s = "0-aaa-00";
+       eF = 1;
        break;
     }
     switch (cv) {
@@ -834,6 +849,7 @@ $(document).ready(function(){
     var filterMsg = '';
     var rt = 0;
     var theFilter = s2h('empty');
+    var theSensors = s2h('empty');
     // See if we are just RT events
     if ($('#rt').text() == 'on' ) {
       rt = 1;
@@ -846,10 +862,22 @@ $(document).ready(function(){
       case  "ASC": sorttxt = "show newest first"; break;
     }
 
+    // See if we are filtering by sensor
+    if ($('.chk_sen:checked').length > 0) {
+      var active_sensors = "AND event.sid IN(";
+      var iter  = $('.chk_sen:checked').length;
+      $('.chk_sen:checked').each(function() {
+        active_sensors += "'" + $(this).val() + "',";
+      });
+      active_sensors = active_sensors.replace(/,+$/,'');
+      active_sensors += ")";
+      theSensors = s2h(active_sensors);
+    }
+
     // Check for any filters
     if ($('#search').val().length > 0 && eF == 1) {
       var fParts = $('#search').val().split(" ");
-      // Left the filter notifier know
+      // Let the filter notifier know
       $('.fl_val').text('YES');
       if (fParts[0] == 'cmt') {
         theFilter = s2h($('#search').val()); 
@@ -895,7 +923,7 @@ $(document).ready(function(){
     case "0":
       $('.value').text('-');
       statusPoll(0);
-      var urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
+      var urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&sensors=" + theSensors + "&rt=" + rt + "&sv=" + sortval;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
       });
@@ -1038,7 +1066,7 @@ $(document).ready(function(){
     // Level 1 view - Grouped by signature, source, destination
 
     case "1":
-      var urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
+      var urArgs = "type=" + parts[0] + "&object=" + parts[1] + "&ts=" + theWhen + "&filter=" + theFilter + "&sensors=" + theSensors + "&rt=" + rt + "&sv=" + sortval;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb2(data)});
       });
@@ -1182,8 +1210,7 @@ $(document).ready(function(){
     case "2":
       var rowLoke = parts[1];
       var filter = $('#' + parts[1]).data('filter');
-
-      var urArgs = "type=" + parts[0] + "&object=" + filter + "&ts=" + theWhen + "&adqp=" + parts[2] + "&sv=" + sortval;
+      var urArgs = "type=" + parts[0] + "&object=" + filter + "&filter=" + theFilter + "&sensors=" + theSensors + "&ts=" + theWhen + "&adqp=" + parts[2] + "&sv=" + sortval;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb3(data)});
       });
@@ -1379,7 +1406,7 @@ $(document).ready(function(){
    
           row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=12 data-filter=\"" + eid + "\">";
           row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
-          row += "type=checkbox value=\"" + sid + "." + cid + "\">";
+          row += "type=checkbox value=\"" + sid + "." + cid + "\"></td>";
           row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
           row += "<td class=row><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
@@ -1787,7 +1814,7 @@ $(document).ready(function(){
   //
 
   function cmtbRemove() {
-    $(".cat_msg").fadeOut();
+    $(".cat_box").fadeOut();
     $(".cat_msg_txt").val("");
     $(".pcomm").remove();
     $(".content_active").fadeTo('fast',1);
@@ -1797,7 +1824,7 @@ $(document).ready(function(){
     cmtbRemove();
   });
 
-  $(document).on("click", "#menu3", function(event) {
+  $(document).on("click", "#comments", function(event) {
     if ($('#tlcom').length > 0) {
       cmtbRemove();
     } else {
@@ -1857,7 +1884,7 @@ $(document).ready(function(){
       }
 
       $(".content_active").fadeTo('fast',0.2);
-      $(".cat_msg").fadeIn();
+      $(".cat_box").fadeIn();
       $(".cat_msg_txt").focus();   
     }
   });
@@ -1887,7 +1914,7 @@ $(document).ready(function(){
   });
 
   $.alt('2', function() {
-    $("#menu3").click();
+    $("#comments").click();
   });    
 
   // Highlight colour for selected events
@@ -2019,7 +2046,7 @@ $(document).ready(function(){
     var msg = "none";
     if($(".cat_msg_txt").val().length != 0) {
       msg = $(".cat_msg_txt").val();
-      $("#menu3").click();
+      $("#comments").click();
     }        
         
     var catdata = intclass + "|||" + msg + "|||" + scidlist;
@@ -2196,6 +2223,148 @@ $(document).ready(function(){
         $(".class_msg").fadeOut('slow');
       }, 3000);
     });
+  }
+
+  // Cleanup: comments, sensors and filters need to be refined. 
+
+  // 
+  // Sensor box 
+  //
+
+  // Open and close the view
+  $('#sensors').click(function() {
+    $('.sen_box').toggle();
+    if ($('.sen_box').css('display') == "none") {
+      $(".content_active").fadeTo('fast',1);
+    } else {
+      $(".content_active").fadeTo('fast',0.2);
+      if (!$('#tlsen')[0]) {
+        mkSensorBox();
+      }
+    }
+  });
+
+  // Select All
+  $(document).on("click", "#csa", function(event) {
+    var chkLen = $(".chk_sen_all:checked").length;
+    switch(chkLen) {
+      case 0:
+        $(".chk_sen").prop("checked",false);
+      break;
+      default:
+        $(".chk_sen").prop("checked",true);
+      break;
+    }    
+  });
+  
+  // Select one
+  $(document).on("click", ".s_row", function(event) {
+    var cbid = "#cb_sen_" + $(this).data('cbn');
+    $(cbid).prop('checked', !$(cbid).is(':checked'));     
+  });
+
+  $(document).on("click", ".chk_sen", function(event) {
+    $(this).prop('checked', !$(this).is(':checked'));    
+  });
+
+  // Select group and clear
+  $(document).on("click", ".qlink", function(event) {
+    var at = $(this).text();
+    var col = $(this).data('en');
+    switch (col) {
+      case  0: $(this).data('en',1); break;
+      case  1: $(this).data('en',0); break;
+      case 42: $('.chk_sen').prop('checked',true); break;
+      case 43: $('.chk_sen').prop('checked',false); break; 
+    }
+     
+    $(".s_row:contains('" + at + "')").each(function() {
+      var cbid = "#cb_sen_" + $(this).data('cbn');
+      $(cbid).prop('checked', !$(cbid).is(':checked'));  
+    });
+  });  
+
+  $(document).on("click", ".sen_close", function(event) {
+    $('#sensors').click();
+  });
+
+  function mkSensorBox() {
+    var urArgs = "type=13";
+
+    $(function(){
+      $.get(".inc/callback.php?" + urArgs, function(data){cb13(data)});
+    });
+
+    function cb13(data){
+      eval("raw=" + data);
+      var tbl = '', head = '', row = ''; 
+
+      head += "<thead><tr>";
+      head += "<th colspan=2 class=sub width=300>NETWORK</th>";
+      head += "<th class=sub>HOSTNAME</th>";
+      head += "<th width=90 class=sub>AGENT TYPE</th>";
+      head += "<th width=90 class=sub>SENSOR ID</th>";
+      head += "</tr></thead>";         
+  
+      var agents   = new Array();
+      var networks = new Array();
+
+      for (var i=0; i<raw.length; i++) {
+        var network  = raw[i].f1 || "-";
+        var hostname = raw[i].f2 || "-";
+        var agent    = raw[i].f3 || "-";  
+        var sid      = raw[i].f4 || "-";
+        var rowid    = "senrow" + i;
+
+        if (agents.indexOf(agent) == -1) {
+          agents.push(agent);
+        }
+        if (networks.indexOf(network) == -1) {
+          networks.push(network);
+        }
+        row += "<tr class=s_row data-cbn=" + i + " data-en=0>";
+        row += "<td class=row><input id=cb_sen_" + i + " class=chk_sen "; 
+        row += "type=checkbox value=\"" + sid + "\"></td>";
+        row += "<td class=row><b>" + network + "</b></td>";
+        row += "<td class=row>" + hostname + "</td>";
+        row += "<td class=row>" + agent + "</td>";
+        row += "<td class=row>" + sid + "</td>";
+        row += "</tr>";
+      }
+      networks.sort();
+      var quick = "<div class=quick>Network:</div><div class=quickl>";
+      for (var i=0; i<networks.length; i++) {
+        quick += "<span class=qlink data-en=0>" + networks[i] + "</span>";
+      }
+      quick += "</div>";
+      agents.sort();
+      quick += "<div class=quick>Agent Type:</div><div class=quickl>";
+      for (var i=0; i<agents.length; i++) {
+        quick += "<span class=qlink data-en=0>" + agents[i] + "</span>";
+      }
+      quick += "</div>";
+      quick += "<div class=quick>Actions:</div><div class=quickl>";
+      quick += "<span class=qlink data-en=42>Select All</span>";
+      quick += "<span class=qlink data-en=43>Clear All</span>";
+      quick += "</div>";
+      
+      tbl += "<table id=tlsen width=930 class=table cellpadding=0 cellspacing=0>";
+      tbl += head;
+      tbl += row;
+      tbl += "</table>";
+      $(".sen_tbl").append(quick);
+      $(".sen_tbl").append(tbl);
+
+      $("#tlsen").tablesorter({
+        headers: {
+          0:{sorter:false},
+        },
+          cancelSelection:false
+      });
+    }
+
+    $(".content_active").fadeTo('fast',0.2);
+    $(".sen_box").fadeIn();
   }
 
   //
