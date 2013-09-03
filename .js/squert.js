@@ -2323,7 +2323,7 @@ $(document).ready(function(){
           networks.push(network);
         }
         row += "<tr class=s_row data-cbn=" + i + " data-en=0>";
-        row += "<td class=row><input id=cb_sen_" + i + " class=chk_sen "; 
+        row += "<td class=row width=20><input id=cb_sen_" + i + " class=chk_sen "; 
         row += "type=checkbox value=\"" + sid + "\"></td>";
         row += "<td class=row><b>" + network + "</b></td>";
         row += "<td class=row>" + hostname + "</td>";
