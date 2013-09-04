@@ -485,9 +485,13 @@ $(document).ready(function(){
           break;  
           case "off": $("#menu1").text("on"); break;
        }
+       if ($("#search").val().length > 0) {
+         eF = 1;
+       } else {
+         eF = 0;
+       }
        f = "2a-aaa-00";
        s = "0-aaa-00";
-       eF = 1;
        break;
     }
     switch (cv) {
@@ -556,7 +560,11 @@ $(document).ready(function(){
     if(!e) e=window.event;
       key = e.keyCode ? e.keyCode : e.which;
       if(key == 13) {
-        if ($('#search').val().length > 0) eF = 1;
+        if ($('#search').val().length > 0) {
+          eF = 1;
+        } else {
+          eF = 0;
+        }
         // Close comment box if it is open
         if ($('#tlcom').length > 0) {
           cmtbRemove(); 

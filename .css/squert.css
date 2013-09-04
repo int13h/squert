@@ -45,10 +45,12 @@ margin-left:20px;
 margin-right:5px;
 }
 span.fl_val_on {
-color:yellow;
+color:#fff;
+font-weight:bold;
 }
 span.fl_val_off {
-color:#c9c9c9;
+color:#8c8c8c;
+font-weight:normal;
 }
 span.today {
 color:blue;
@@ -129,7 +131,7 @@ clear:right;
 }
 div.tvalue_on, div.tvalue_off{
 font-size:11px;
-font-weight:normal;
+font-weight:bold;
 float:left;
 text-align:center;
 margin-right:5px;
@@ -145,7 +147,7 @@ background-color:green;
 }
 div.tvalue_off {
 color:#fff;
-background-color:red;
+background-color:#cc0000;
 }
 div.tvalue_on:hover,div.tvalue_off:hover {
 cursor:pointer;
