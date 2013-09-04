@@ -69,6 +69,7 @@ dbC();
     <input class=search id=search type=text size=60 maxlength=1000><span id=clear_search class=clear>&#x21BA;</span>
   </div>
   <div id=cal></div>
+  <div class=timeline></div>
 </div>
 
 <div class=lr>
@@ -151,7 +152,6 @@ dbC();
     </div>
 
     <div id=t_sum_content class=content>
-      <div class=timeline></div>
       <div id=aaa-00 class=aaa></div></div>
       <br><br><br>
     </div>

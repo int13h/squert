@@ -74,22 +74,24 @@ $(document).ready(function(){
     var ts_et = $('#ts_etime').val();
     var ts_os = $('#ts_offset').data('offset');
     var theWhen = s2h(ts_sd + "|" + ts_ed + "|" + ts_st + "|" + ts_et + "|" + ts_os);
+    var fval = 'NO';
+    var fval_c = 'fl_val_off';
+    var fbs = 'NO';
+    var fbs_c = 'fl_val_off';
 
     if (eF == 1) {
-      var fval = 'YES';
-    } else {
-      var fval = 'NO';
+      fval = 'YES';
+      fval_c = 'fl_val_on';
     }
     var tl = '<span class=tl>Timeline: </span>';
     tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
-    tl += "<span class=fl>Filtered by Object: </span><span class=fl_val>" + fval + "</span>";
+    tl += "<span class=fl>Filtered by Object: </span><span class=" + fval_c + ">" + fval + "</span>";
  
     if ($('.chk_sen:checked').length > 0) {
-      var fbs = 'YES';
-    } else {
-      var fbs = 'NO';
+      fbs = 'YES';
+      fbs_c = 'fl_val_on';
     } 
-    tl += "<span class=fl>Filtered by Sensor: </span><span>" + fbs + "</span>";
+    tl += "<span class=fl>Filtered by Sensor: </span><span class=" + fbs_c + ">" + fbs + "</span>";
     tl += "<span class=fl>Status: </span><span class=rt_notice title=\"update results\">Synchronized</span>";
     $('.timeline').html(tl);
     return theWhen;
@@ -165,7 +167,7 @@ $(document).ready(function(){
         tbl += "<tr><td class=mb_header align=right></td></tr>"; 
         tbl += "<tr><td class=mb_box>" + working + "</td></tr>";
         tbl += "</table>";
-        $("#aaa-00").before(tbl);
+        $("#aaa-00").append(tbl);
         break;
       case "redraw":
         $('.mb_box').html(working);
@@ -315,7 +317,7 @@ $(document).ready(function(){
 
       if (lastcount < newcount) {
         $(".rt_notice").text('New Events are Available');
-        $(".rt_notice").css('color','#cc0000');
+        $(".rt_notice").css('color','yellow');
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
       }
@@ -523,7 +525,7 @@ $(document).ready(function(){
   });
    
   $(document).on("click", ".rt_notice", function(event) {
-    $(".rt_notice").css('color','#666');
+    $(".rt_notice").css('color','#c9c9c9');
     $(".rt_notice").text('Synchronized');
     newView("u");        
   });
@@ -544,7 +546,7 @@ $(document).ready(function(){
 
   // Update page
   $(".b_update").click(function(event) {
-    $(".rt_notice").css('color','#666');
+    $(".rt_notice").css('color','#c9c9c9');
     $(".rt_notice").text('Synchronized');
     newView("u");
   });
@@ -554,7 +556,7 @@ $(document).ready(function(){
     if(!e) e=window.event;
       key = e.keyCode ? e.keyCode : e.which;
       if(key == 13) {
-        eF = 1;
+        if ($('#search').val().length > 0) eF = 1;
         // Close comment box if it is open
         if ($('#tlcom').length > 0) {
           cmtbRemove(); 
@@ -580,10 +582,6 @@ $(document).ready(function(){
     $.get("index.php?id=0", function(){location.reload()});
   });
 
-  $("#b_top").click(function() {
-    $('html, body').animate({ scrollTop: 0 }, 'slow');
-  });
- 
   var tab_cached = $("#sel_tab").val();
   $('#' + tab_cached).attr('class','tab_active');
   $("#" + tab_cached + "_content").attr('class','content_active');
@@ -723,7 +721,7 @@ $(document).ready(function(){
       // This is now the active row
       $("#" + curID).attr('class','d_row_active');
       $("#" + curID).find('[class*="row"]').css('border-top', '1pt solid #c9c9c9');
-      $("html, body").animate({ scrollTop: $('.d_row_active').offset().top - 100 }, 20);
+      $("html, body").animate({ scrollTop: $('.d_row_active').offset().top - 120 }, 20);
       // History
       var itemToAdd = $("#" + curID).find('[class*="row_filter"]').text();
       hItemAdd(itemToAdd);
