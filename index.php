@@ -141,7 +141,6 @@ dbC();
   </div>  
 
   <div class=content-right>
-
     <div id=t_dash_content class=content>
       <table width=100% align=left><tr><td>
       <h3>Events grouped by minute and hour</h3>
@@ -153,7 +152,7 @@ dbC();
 
     <div id=t_sum_content class=content>
       <div class=timeline></div>
-      <div id=aaa-00 class=aaa></div>
+      <div id=aaa-00 class=aaa></div></div>
       <br><br><br>
     </div>
   </div>
