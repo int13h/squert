@@ -82,7 +82,15 @@ $(document).ready(function(){
     }
     var tl = '<span class=tl>Timeline: </span>';
     tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
-    tl += "<span class=fl>Filtered: </span><span class=fl_val>" + fval + "</span>";
+    tl += "<span class=fl>Filtered by Object: </span><span class=fl_val>" + fval + "</span>";
+ 
+    if ($('.chk_sen:checked').length > 0) {
+      var fbs = 'YES';
+    } else {
+      var fbs = 'NO';
+    } 
+    tl += "<span class=fl>Filtered by Sensor: </span><span>" + fbs + "</span>";
+    tl += "<span class=fl>Status: </span><span class=rt_notice title=\"update results\">Synchronized</span>";
     $('.timeline').html(tl);
     return theWhen;
   }
@@ -306,7 +314,8 @@ $(document).ready(function(){
       }
 
       if (lastcount < newcount) {
-        $(".rt_notice").fadeIn();
+        $(".rt_notice").text('New Events are Available');
+        $(".rt_notice").css('color','#cc0000');
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
       }
@@ -514,7 +523,8 @@ $(document).ready(function(){
   });
    
   $(document).on("click", ".rt_notice", function(event) {
-    $(".rt_notice").hide();
+    $(".rt_notice").css('color','#666');
+    $(".rt_notice").text('Synchronized');
     newView("u");        
   });
 
@@ -534,7 +544,8 @@ $(document).ready(function(){
 
   // Update page
   $(".b_update").click(function(event) {
-    $(".rt_notice").hide();
+    $(".rt_notice").css('color','#666');
+    $(".rt_notice").text('Synchronized');
     newView("u");
   });
  
@@ -1313,7 +1324,7 @@ $(document).ready(function(){
     // Level 2a view - No grouping, individual events
 
     case "2a":
-      var urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter + "&rt=" + rt + "&sv=" + sortval;
+      var urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter + "&sensors=" + theSensors + "&rt=" + rt + "&sv=" + sortval;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb3a(data)});
       });
@@ -1671,7 +1682,8 @@ $(document).ready(function(){
           tbl += "<div class=sigtxt></div>";
           sigLookup(sg);
         }
-        tbl += "<div class=comments><b>Comments:</b> None.</div>";
+        var eventComment = theData[0].comment || 'None.';
+        tbl += "<div class=comments><b>Comments:</b> " + eventComment + "</div>";
         tbl += head;
         tbl += row;
         tbl += "</td></tr>";

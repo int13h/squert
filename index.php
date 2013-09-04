@@ -83,7 +83,7 @@ dbC();
 
     <div class=event_cont>
       <div class=label_l><span class=ec_label>Event Summary</span></div>
-      <div class=label>Queued Events:</div><div id=qtotal class=value>-</div><div class=rt_notice title="update results">!</div>
+      <div class=label>Queued Events:</div><div id=qtotal class=value>-</div>
       <div class=label>Total Events:</div><div id=etotal class=value>-</div>
       <div class=label>Total Signatures:</div><div id=esignature class=value>-</div>
       <div class=label>Total Sources:</div><div id=esrc class=value>-</div>
