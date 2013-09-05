@@ -26,11 +26,11 @@ set configFile "../.inc/config.php"
 set countryFile "../.inc/countries.php"
 
 ### The RIR's
-set site1 "AFRINIC ftp://ftp.afrinic.net/pub/stats/afrinic/ delegated-afrinic-latest"
-set site2 "APNIC ftp://ftp.apnic.net/pub/stats/apnic/ delegated-apnic-latest"
-set site3 "ARIN ftp://ftp.arin.net/pub/stats/arin/ delegated-arin-latest"
-set site4 "LACNIC ftp://ftp.lacnic.net/pub/stats/lacnic/ delegated-lacnic-latest"
-set site5 "RIPE ftp://ftp.ripe.net/ripe/stats/ delegated-ripencc-latest"
+set site1 "AFRINIC ftp://ftp.afrinic.net/pub/stats/afrinic/ delegated-afrinic-extended-latest"
+set site2 "APNIC ftp://ftp.apnic.net/pub/stats/apnic/ delegated-apnic-extended-latest"
+set site3 "ARIN ftp://ftp.arin.net/pub/stats/arin/ delegated-arin-extended-latest"
+set site4 "LACNIC ftp://ftp.lacnic.net/pub/stats/lacnic/ delegated-lacnic-extended-latest"
+set site5 "RIPE ftp://ftp.ripe.net/ripe/stats/ delegated-ripencc-extended-latest"
 
 ### Consolidated outfile (the results)
 set workDir "[pwd]"
@@ -122,7 +122,7 @@ proc proData { data fileID } {
             set yesCount [expr $yesCount + 1]
         } else {
             set go no
-            set noCount [expr $noCount +1]
+            set noCount [expr $noCount + 1]
         }
  
         if {$go == "yes"} {                              
@@ -180,7 +180,13 @@ proc ipLong { start value } {
 proc cLong { cc } {
 
     global countryArray
-    set answer $countryArray($cc)
+
+    if { $cc != "" && [info exists $countryArray($cc)] } { 
+        set answer $countryArray($cc)
+    } else {
+        set answer 'Unknown'
+    }
+
     return $answer
 
 }
