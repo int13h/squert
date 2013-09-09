@@ -116,6 +116,7 @@ proc proData { data fileID } {
         #### Strip !IPv4 lines and lines w/o enough fields (headers and comments)
         set test1 [lindex $line 2]
         set test2 [llength $line]
+        set test3 [lindex $line 1] 
     
         if {$test1 == "ipv4" && $test2 >= 7 } {
             set go yes
@@ -135,7 +136,6 @@ proc proData { data fileID } {
                                                          
             ### We can now build the results               
             set registry [lindex $line 0]                
-            set cc [lindex $line 1]                      
             set type [lindex $line 2]                    
             set start [lindex $result 0]                 
             set end [lindex $result 1]                   
@@ -143,7 +143,14 @@ proc proData { data fileID } {
             set status [lindex $line 6]
 
             ### Output to file
-            puts -nonewline $fileID "$registry||$cc||[cLong $cc]||$type||$start||$end||$date||$status\n"
+            if {$test3 eq ""} {
+                set cc "01"                
+                set thisDay [clock format [clock seconds] -format %Y%m%d]
+                puts -nonewline $fileID "$registry||$cc||$status||$type||$start||$end||$thisDay||$status\n"
+            } else { 
+                set cc [lindex $line 1]
+                puts -nonewline $fileID "$registry||$cc||[cLong $cc]||$type||$start||$end||$date||$status\n"
+            }
         }
     }
 
@@ -180,13 +187,11 @@ proc ipLong { start value } {
 proc cLong { cc } {
 
     global countryArray
-
-    if { $cc != "" && [info exists $countryArray($cc)] } { 
+    if { $cc != "" && [info exists countryArray($cc)] } {
         set answer $countryArray($cc)
     } else {
-        set answer 'Unknown'
+        set answer "Unknown"
     }
-
     return $answer
 
 }
