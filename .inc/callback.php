@@ -31,6 +31,7 @@ $types = array(
                 '11' => 'comments',
                 '12' => 'remove_comment',
                 '13' => 'sensors',
+                '14' => 'server_time',
 );
 
 $type = $types[$type];
@@ -818,6 +819,10 @@ function sensors() {
     }
     $theJSON = json_encode($rows);
     echo $theJSON;
+}
+
+function server_time() {
+    echo date(DATE_RFC822);
 }
 
 $type();
