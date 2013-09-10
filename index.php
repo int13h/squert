@@ -63,11 +63,13 @@ dbC();
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
   </div>
   <div id=t_search class=search>
-    <div id=menu3 class=button>comment</div>
-    <div id=filters class=button>filter</div>
-    <input class=search id=search type=text size=75 maxlength=1000><span id=clear_search class=clear>&#x21BA;</span>
+    <div id=comments class=button>comments</div>
+    <div id=sensors class=button>sensors</div>
+    <div id=filters class=button>filters</div>
+    <input class=search id=search type=text size=60 maxlength=1000><span id=clear_search class=clear>&#x21BA;</span>
   </div>
   <div id=cal></div>
+  <div class=timeline></div>
 </div>
 
 <div class=lr>
@@ -82,7 +84,7 @@ dbC();
 
     <div class=event_cont>
       <div class=label_l><span class=ec_label>Event Summary</span></div>
-      <div class=label>Queued Events:</div><div id=qtotal class=value>-</div><div class=rt_notice title="update results">!</div>
+      <div class=label>Queued Events:</div><div id=qtotal class=value>-</div>
       <div class=label>Total Events:</div><div id=etotal class=value>-</div>
       <div class=label>Total Signatures:</div><div id=esignature class=value>-</div>
       <div class=label>Total Sources:</div><div id=esrc class=value>-</div>
@@ -91,24 +93,35 @@ dbC();
 
     <div class=event_cont>
       <div class=label_l><span class=ec_label>Event Count by Classification</span></div>
-      <div class=label_c data-c=11>Admin Access:
-      <div id=b_class-11 class=b_C1 title='Unauthorized Admin Access (F1)'>C1</div></div><div id=c-11 class=value>-</div>
-      <div class=label_c data-c=12>User Access:
-      <div id=b_class-12 class=b_C2 title='Unauthorized User Access (F2)'>C2</div></div><div id=c-12 class=value>-</div>
-      <div class=label_c data-c=13>Attempted Access:
-      <div id=b_class-13 class=b_C3 title='Attempted Unauthorized Access (F3)'>C3</div></div><div id=c-13 class=value>-</div>
-      <div class=label_c data-c=14=>Denial of Service:
-      <div id=b_class-14 class=b_C4 title='Denial of Service Attack (F4)'>C4</div></div><div id=c-14 class=value>-</div>
-      <div class=label_c data-c=15>Policy Violation:
-      <div id=b_class-15 class=b_C5 title='Policy Violation (F5)'>C5</div></div><div id=c-15 class=value>-</div>
-      <div class=label_c data-c=16>Reconnaissance:
-      <div id=b_class-16 class=b_C6 title='Reconnaissance (F6)'>C6</div></div><div id=c-16 class=value>-</div>
-      <div class=label_c data-c=17>Malware:
-      <div id=b_class-17 class=b_C7 title='Malware (F7)'>C7</div></div><div id=c-17 class=value>-</div>
-      <div class=label_c data-c=1>No Action Req&#x2019;d.:
-      <div id=b_class-1  class=b_NA title='No Action Req&#x2019;d. (F8)'>NA</div></div><div id=c-1 class=value>-</div>
-      <div class=label_c data-c=2>Escalated Event:
-      <div id=b_class-2  class=b_ES title='Escalate Event (F9)'>ES</div></div><div id=c-2 class=value>-</div>
+
+      <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Unauthorized Admin Access (F1)'>
+      <div class=b_C1></div>Admin Access:</div><div id=c-11 class=value>-</div>
+
+      <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Unauthorized User Access (F2)'>
+      <div class=b_C2></div>User Access:</div><div id=c-12 class=value>-</div>
+      
+      
+      <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='Attempted Unauthorized Access (F3)'>
+      <div class=b_C3></div>Attempted Access:</div><div id=c-13 class=value>-</div>
+
+      <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='Denial of Service Attack (F4)'>
+      <div class=b_C4></div>Denial of Service:</div><div id=c-14 class=value>-</div>
+      
+      
+      <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='Policy Violation (F5)'>
+      <div class=b_C5></div>Policy Violation</div><div id=c-15 class=value>-</div>
+
+      <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='Reconnaissance (F6)'>
+      <div class=b_C6></div>Reconnaissance:</div><div id=c-16 class=value>-</div>
+      
+      <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='Malware (F7)'>
+      <div class=b_C7></div>Malware:</div><div id=c-17 class=value>-</div>
+
+      <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='No Further Action Required (F8)'>
+      <div class=b_NA></div>No Action Req&#x2019;d.:</div><div id=c-1 class=value>-</div>
+      
+      <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='Escalate Event (F9)'>
+      <div class=b_ES></div>Escalated Event:</div><div id=c-2 class=value>-</div>
     </div>
 
     <div class=event_cont>
@@ -129,31 +142,34 @@ dbC();
   </div>  
 
   <div class=content-right>
-
     <div id=t_dash_content class=content>
-      <table width=950 align=right><tr><td>
+      <table width=100% align=left><tr><td>
       <h3>Events grouped by minute and hour</h3>
-      <?php include_once '.charts/interval.php';?>
       <h3>Top signatures</h3>
-      <?php include_once '.charts/sigsum.php';?>
       <h3>Top source and destination IPs</h3>
-      <?php include_once '.charts/ip.php';?>
       <h3>Top source and destination Countries</h3>
-      <?php include_once '.charts/country.php';?>
       </td></tr></table>
     </div>
 
     <div id=t_sum_content class=content>
-      <div class=timeline></div>
-      <div id=aaa-00 class=aaa></div>
+      <div id=aaa-00 class=aaa></div></div>
       <br><br><br>
     </div>
   </div>
 </div>
 
-<div class=cat_msg>
-<div class=cm_top>Add a comment to the selected events: <input class=cat_msg_txt type=text maxlength=255><div title="close" class="cat_close">x</div></div>
+<div class=cat_box>
+  <div class=cat_top>Add a comment to the selected events: <input class=cat_msg_txt type=text maxlength=255>
+    <div title="close" class="cat_close">x</div>
+  </div>
   <div class=cm_tbl></div>
+</div>
+
+<div class=sen_box>
+  <div class=sen_top>
+    <div title=close class=sen_close>x</div>
+  </div>
+  <div class=sen_tbl></div>
 </div>
 
 <div class=fltr_box>

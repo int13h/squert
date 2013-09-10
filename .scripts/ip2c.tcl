@@ -26,11 +26,11 @@ set configFile "../.inc/config.php"
 set countryFile "../.inc/countries.php"
 
 ### The RIR's
-set site1 "AFRINIC ftp://ftp.afrinic.net/pub/stats/afrinic/ delegated-afrinic-latest"
-set site2 "APNIC ftp://ftp.apnic.net/pub/stats/apnic/ delegated-apnic-latest"
-set site3 "ARIN ftp://ftp.arin.net/pub/stats/arin/ delegated-arin-latest"
-set site4 "LACNIC ftp://ftp.lacnic.net/pub/stats/lacnic/ delegated-lacnic-latest"
-set site5 "RIPE ftp://ftp.ripe.net/ripe/stats/ delegated-ripencc-latest"
+set site1 "AFRINIC ftp://ftp.afrinic.net/pub/stats/afrinic/ delegated-afrinic-extended-latest"
+set site2 "APNIC ftp://ftp.apnic.net/pub/stats/apnic/ delegated-apnic-extended-latest"
+set site3 "ARIN ftp://ftp.arin.net/pub/stats/arin/ delegated-arin-extended-latest"
+set site4 "LACNIC ftp://ftp.lacnic.net/pub/stats/lacnic/ delegated-lacnic-extended-latest"
+set site5 "RIPE ftp://ftp.ripe.net/ripe/stats/ delegated-ripencc-extended-latest"
 
 ### Consolidated outfile (the results)
 set workDir "[pwd]"
@@ -116,13 +116,14 @@ proc proData { data fileID } {
         #### Strip !IPv4 lines and lines w/o enough fields (headers and comments)
         set test1 [lindex $line 2]
         set test2 [llength $line]
+        set test3 [lindex $line 1] 
     
         if {$test1 == "ipv4" && $test2 >= 7 } {
             set go yes
             set yesCount [expr $yesCount + 1]
         } else {
             set go no
-            set noCount [expr $noCount +1]
+            set noCount [expr $noCount + 1]
         }
  
         if {$go == "yes"} {                              
@@ -135,7 +136,6 @@ proc proData { data fileID } {
                                                          
             ### We can now build the results               
             set registry [lindex $line 0]                
-            set cc [lindex $line 1]                      
             set type [lindex $line 2]                    
             set start [lindex $result 0]                 
             set end [lindex $result 1]                   
@@ -143,7 +143,14 @@ proc proData { data fileID } {
             set status [lindex $line 6]
 
             ### Output to file
-            puts -nonewline $fileID "$registry||$cc||[cLong $cc]||$type||$start||$end||$date||$status\n"
+            if {$test3 eq ""} {
+                set cc "01"                
+                set thisDay [clock format [clock seconds] -format %Y%m%d]
+                puts -nonewline $fileID "$registry||$cc||$status||$type||$start||$end||$thisDay||$status\n"
+            } else { 
+                set cc [lindex $line 1]
+                puts -nonewline $fileID "$registry||$cc||[cLong $cc]||$type||$start||$end||$date||$status\n"
+            }
         }
     }
 
@@ -180,7 +187,11 @@ proc ipLong { start value } {
 proc cLong { cc } {
 
     global countryArray
-    set answer $countryArray($cc)
+    if { $cc != "" && [info exists countryArray($cc)] } {
+        set answer $countryArray($cc)
+    } else {
+        set answer "Unknown"
+    }
     return $answer
 
 }

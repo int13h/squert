@@ -30,6 +30,7 @@ $types = array(
                 '10' => 'map',
                 '11' => 'comments',
                 '12' => 'remove_comment',
+                '13' => 'sensors',
 );
 
 $type = $types[$type];
@@ -47,18 +48,26 @@ if (isset($_REQUEST['ts'])) {
              CONVERT_TZ('$edate $etime','$offset','+00:00')";
 }
 
+if (isset($_REQUEST['sensors'])) {
+    $sensors = hextostr($_REQUEST['sensors']);
+    if ($sensors == 'empty') {
+        $sensors = '';
+    }
+}
+
 if (!$type) {
     exit;
 }
 
 function ec() {
 
-    global $when;
+    global $when, $sensors;
 
     $query = "SELECT COUNT(status) AS count, status
               FROM event
               LEFT JOIN sensor AS s ON event.sid = s.sid
               WHERE $when
+              $sensors
               GROUP BY status";
 
     $result = mysql_query($query);
@@ -144,7 +153,7 @@ function si() {
 }
 
 function es() {   
-    global $offset, $when;
+    global $offset, $when, $sensors;
     $object = mysql_real_escape_string($_REQUEST['object']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
@@ -166,14 +175,15 @@ function es() {
             $filter = str_replace('&gt;','>', $filter);
             $filter = "AND " . $filter;
             $qp2 = "WHERE $when
+                    $sensors
                     $rt
                     $filter";
         }
     } else {
         $qp2 = "WHERE $when
+                $sensors
                 $rt";
     }
-
 
     $query = "SELECT COUNT(event.signature) AS f1,
               event.signature AS f2,
@@ -208,7 +218,7 @@ function es() {
 
 function eg() {
 
-    global $offset, $when;
+    global $offset, $when, $sensors;
     $sid = mysql_real_escape_string($_REQUEST['object']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
@@ -231,12 +241,14 @@ function eg() {
             $filter = str_replace('&gt;','>', $filter);
             $filter = "AND " . $filter;
             $qp2 = "WHERE $when
+                    $sensors
                     $rt
                     AND event.signature_id = '$sid'
                     $filter";
         }
     } else {
         $qp2 = "WHERE $when
+                $sensors
                 $rt
                 AND event.signature_id = '$sid'";
     }
@@ -273,35 +285,50 @@ function eg() {
     echo $theJSON;
 }
 
+// 2
 function ed() {
 
-    global $offset, $when;
+    global $offset, $when, $sensors;
     $comp = mysql_real_escape_string($_REQUEST['object']);
+    $filter = hextostr($_REQUEST['filter']);
     $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
     $adqp = hextostr(mysql_real_escape_string($_REQUEST['adqp']));
-    if ($rt == 1) {
-        $rt = "AND event.status = 0";
-    } else {
-        $rt = "";
-    }
-
-    if ($adqp === "empty") {
-        $adqp = "";
-    } else {
-        $rt = "";
-    }
-
     list($ln,$sid,$src_ip,$dst_ip) = explode("-", $comp);
     $src_ip = sprintf("%u", ip2long($src_ip));
     $dst_ip = sprintf("%u", ip2long($dst_ip));
 
-    $qp2 = "WHERE $when
-            $rt
-            $adqp
-            AND (event.signature_id = '$sid' 
-            AND event.src_ip = '$src_ip' 
-            AND event.dst_ip = '$dst_ip')";
+    if ($filter != 'empty') {
+        if (substr($filter, 0,4) == 'cmt ') {
+            $comment = explode('cmt ', $filter);
+            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
+                    WHERE history.comment = '$comment[1]'
+                    AND (event.signature_id = '$sid'
+                    AND event.src_ip = '$src_ip'
+                    AND event.dst_ip = '$dst_ip')";
+        }
+    } else {
+
+        if ($rt == 1) {
+            $rt = "AND event.status = 0";
+        } else {
+            $rt = "";
+        }
+
+        if ($adqp === "empty") {
+            $adqp = "";
+        } else {
+            $rt = "";
+        }
+
+        $qp2 = "WHERE $when
+                $sensors
+                $rt
+                $adqp
+                AND (event.signature_id = '$sid' 
+                AND event.src_ip = '$src_ip' 
+                AND event.dst_ip = '$dst_ip')";
+    }
 
     $query = "SELECT event.status AS f1, 
               CONVERT_TZ(event.timestamp,'+00:00','$offset') AS f2,
@@ -330,9 +357,10 @@ function ed() {
 
 }
 
+// 2a
 function ee() {
 
-    global $offset, $when;
+    global $offset, $when, $sensors;
     $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
     $filter = hextostr($_REQUEST['filter']);
@@ -353,11 +381,13 @@ function ee() {
             $filter = str_replace('&gt;','>', $filter);
             $filter = "AND " . $filter;
             $qp2 = "WHERE $when
+                    $sensors
                     $rt
                     $filter";
         }
     } else {
         $qp2 = "WHERE $when
+                $sensors
                 $rt";
     }
 
@@ -400,16 +430,18 @@ function pd() {
     $comp = mysql_real_escape_string($_REQUEST['object']);
     list($sid,$cid) = explode("-", $comp);
 
-    $query = "SELECT INET_NTOA(src_ip), 
-              INET_NTOA(dst_ip),
-              ip_ver, ip_hlen, ip_tos,
-              ip_len, ip_id, ip_flags,
-              ip_off, ip_ttl, ip_csum,
-              src_port, dst_port, ip_proto,
-              signature, signature_id,
-              CONVERT_TZ(timestamp,'+00:00','$offset'), sid, cid
+    $query = "SELECT INET_NTOA(event.src_ip), 
+              INET_NTOA(event.dst_ip),
+              event.ip_ver, event.ip_hlen, event.ip_tos,
+              event.ip_len, event.ip_id, event.ip_flags,
+              event.ip_off, event.ip_ttl, event.ip_csum,
+              event.src_port, event.dst_port, event.ip_proto,
+              event.signature, event.signature_id,
+              CONVERT_TZ(event.timestamp,'+00:00','$offset'), event.sid, event.cid,
+              GROUP_CONCAT(history.comment SEPARATOR ' || ') AS comment
               FROM event
-              WHERE sid='$sid' and cid='$cid'";
+              LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid
+              WHERE event.sid='$sid' AND event.cid='$cid'";
 
     $result = mysql_query($query);
 
@@ -637,7 +669,6 @@ function comments() {
     echo $theJSON;
 }
 
-
 function remove_comment() {   
     $user = $_SESSION['sUser'];
     $comment = hextostr($_REQUEST['comment']);
@@ -767,6 +798,26 @@ function map() {
     $theJSON = json_encode($result);
     echo $theJSON;
 
+}
+
+function sensors() {
+    $query = "SELECT net_name AS f1, 
+                     hostname AS f2,
+                     agent_type AS f3,
+                     sid AS f4
+                     FROM sensor
+                     WHERE agent_type != 'pcap' 
+                     AND active = 'Y'
+                     ORDER BY net_name ASC";
+
+    $result = mysql_query($query);
+    $rows = array();
+
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
+    $theJSON = json_encode($rows);
+    echo $theJSON;
 }
 
 $type();

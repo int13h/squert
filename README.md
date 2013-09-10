@@ -56,6 +56,15 @@ file just create it in /etc and add:
 `[client]`
 `local-infile=1`
 
+Lastly,
+
+You will need to add indexes to the sid and cid columns in Sguils history table:
+
+`mysql -N -B --user=root -p -e "CREATE INDEX sid ON history (sid);"`
+`mysql -N -B --user=root -p -e "CREATE INDEX cid ON history (cid);"`
+
+Performance WILL suffer if you do not do this.
+
 5) Create additional tables:
 
 `cat squert/.scripts/squert.sql | mysql -uroot -p -U sguildb`
