@@ -60,7 +60,7 @@ dbC();
   <div id=t_dash class=tab>Dashboard</div>
   <div id=t_sum class=tab>Events</div>
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>
-    Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
+    Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|&nbsp;&nbsp;<span class=rt_time><?php echo date(DATE_RFC822);?></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id=logout class=links>Logout</span>
   </div>
   <div id=t_search class=search>
     <div id=comments class=button>comments</div>

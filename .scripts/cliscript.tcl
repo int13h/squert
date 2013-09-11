@@ -1,4 +1,4 @@
-#!/usr/local/bin/tclsh
+#!/bin/env tclsh
 
 # cliscript.tcl - Based on "quickscript.tcl"
 # Portions Copyright (C) 2012 Paul Halliday <paul.halliday@gmail.com>
