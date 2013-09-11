@@ -17,7 +17,6 @@ SQueRT is a tool that is used to query event data.
   
 
 * PHP5 with CLI
-	* pecl-stats
 	* mysql
 * TCL, TclX
 	* mysqltcl
