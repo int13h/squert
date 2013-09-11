@@ -1,0 +1,15 @@
+.axis path,
+.axis line {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
+}
+.bar {
+fill:#c9c9c9;
+}
+.x.axis path {
+display: none;
+}
+.chrt_ts {
+font-size:11px;
+}

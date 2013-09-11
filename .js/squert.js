@@ -2,6 +2,11 @@
 
 $(document).ready(function(){
 
+  d3.selectAll(".sub").style("color", function(d, i) {
+  return i % 2 ? "#fff" : "#eee";
+  });
+
+
   function d2h(d) {
     return d.toString(16);
   }
@@ -740,7 +745,7 @@ $(document).ready(function(){
       tbl += "<tr class=eview id=active_eview><td colspan=11><div id=eview class=eview>";
       tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
       tbl += "<div class=sigtxt></div>";
-      tbl += "<div class=chrt_ts><canvas id=chart_timestamps width=950 height=130></canvas></div>";
+      tbl += "<div class=chrt_ts></div>";
       tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
       tbl += "categorize <span class=bold id=class_count>";
       tbl += curclasscount + "</span> event(s)</div>";
@@ -952,13 +957,13 @@ $(document).ready(function(){
         head += "<thead>";
         head += "<tr><th id=priority_bar colspan=11></th></tr>";
         head += "<tr>";
-        head += "<th class=sort>QUEUED</th>";
-        head += "<th class=sort>ALL</th>";
-        head += "<th class=sort title=Priority></th>";
-        head += "<th class=sort>SC</th>";
-        head += "<th class=sort>DC</th>";
-        head += "<th class=sort>ACTIVITY</th>";
-        head += "<th class=sort>LAST EVENT</th>";
+        head += "<th class=sort width=45>QUEUED</th>";
+        head += "<th class=sort width=45>ALL</th>";
+        head += "<th class=sort width=15 title=Priority></th>";
+        head += "<th class=sort width=40>SC</th>";
+        head += "<th class=sort width=40>DC</th>";
+        head += "<th class=sort width=70>ACTIVITY</th>";
+        head += "<th class=sort width=90>LAST EVENT</th>";
         head += "<th class=sort>SIGNATURE</th>";
         head += "<th class=sort>ID</th>";
         head += "<th class=sort>PROTO</th>";
@@ -1094,7 +1099,7 @@ $(document).ready(function(){
         head = '';
         row = '';
         head += "<thead><tr><th class=sub width=45>QUEUE</th>";
-        head += "<th class=sub width=110>TOTAL</th>";
+        head += "<th class=sub width=45>TOTAL</th>";
         head += "<th class=sub width=70>ACTIVITY</th>";
         head += "<th class=sub>LAST EVENT</th>";
         head += "<th class=sub width=110>SOURCE</th>";
@@ -1176,7 +1181,7 @@ $(document).ready(function(){
         }
      
         // Pass timestamps for chart creation
-        chartInterval(timeValues);
+        //chartInterval(timeValues);
               
         // Add scid's to checkbox
         $("#ca0").data("scid", scid.replace(/,$/, ""));
@@ -1455,7 +1460,7 @@ $(document).ready(function(){
 
         tbl += "<table id=tl3a class=chart align=center width=100% border=0 cellpadding=0 cellspacing=0>";
         tbl += "<tr><td class=dark colspan=10><div>";
-        tbl += "<canvas id=chart_timestamps width=950 height=130>[No canvas support]</canvas>";
+        tbl += "<div class=chrt_ts></div>";
         tbl += "</div><div class=event_class>";
         tbl += "categorize <span class=bold id=class_count>" + 0 + "</span>";
         tbl += " of <span id=cat_count class=bold>" + sumED + "</span> event(s)" + cmsg;
@@ -1475,7 +1480,7 @@ $(document).ready(function(){
           $('#priority_bar').hide();        
         }
 
-        chartInterval(timeValues);
+        //chartInterval(timeValues);
         $("#tl3a,#tl3b").fadeIn('slow');
         $("#tl3b").tablesorter({
         headers: {
@@ -2541,7 +2546,7 @@ $(document).ready(function(){
       tbl += "=> (signature LIKE '%malware%' AND INET_ATON(dst_ip) LIKE '10.%.1.%')</div>";  
       tbl += "<div class=filter_parts><u><b>Available filter fields</b></u><br><br>";
       tbl += "<div class=filter_fields>";
-      tbl += "<div class=boldf>cid</div> - The event ID. sid + cid = distinct event<br>";
+      tbl += "<div class=boldf>event.cid</div> - The event ID. sid + cid = distinct event<br>";
       tbl += "<div class=boldf>class</div> - Event Classification<br>";
       tbl += "<div class=boldf>dst_ip</div> - Destination IP<br>";
       tbl += "<div class=boldf>dst_port</div> - Destination Port<br>";
@@ -2561,14 +2566,14 @@ $(document).ready(function(){
       tbl += "<div class=boldf>msrc.cc</div> - Source Country Code<br>";
       tbl += "<div class=boldf>mdst.cc</div> - Destination Country Code<br>";
       tbl += "<div class=boldf>priority</div> - Event Priority<br>";
-      tbl += "<div class=boldf>sid</div> - The sensor ID. sid + cid = distinct event<br>";
+      tbl += "<div class=boldf>event.sid</div> - The sensor ID. sid + cid = distinct event<br>";
       tbl += "<div class=boldf>signature</div> - Event Signature<br>";
       tbl += "<div class=boldf>signature_gen</div> - Event Signature Generator<br>";
       tbl += "<div class=boldf>signature_id</div> - Event Signature ID<br>";
       tbl += "<div class=boldf>signature_rev</div> - Event Signature Revision<br>";
       tbl += "<div class=boldf>src_ip</div> - Source IP<br>";
       tbl += "<div class=boldf>src_port</div> - Source Port<br>";
-      tbl += "<div class=boldf>status</div> - Analyst Classification</div></div>";
+      tbl += "<div class=boldf>event.status</div> - Analyst Classification</div></div>";
       tbl += "</td></tr></table>"; 
       $('#tl4').before(tbl);
       $('.filter_help').text('-');
