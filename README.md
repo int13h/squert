@@ -9,7 +9,7 @@ Demo: [https://demo.sguil.net](https://demo.sguil.net)
 
 ## Description
 
-SQueRT is a tool that is used to query event data.
+SQueRT is a tool that is used to query event data
 
 ## Requirements
 
