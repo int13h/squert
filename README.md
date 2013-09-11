@@ -103,5 +103,12 @@ Performance WILL suffer if you do not do this.
 
 This entry updates the database every 5 minutes. Make sure you use the correct paths to php and ip2c.php.
 
+14) Create a scheduled task to keep the ip2c table up to date:
+
+`0	0	1	*	*       <path_to_squert>/.scripts/ip2c.tcl > /dev/null 2>&1`
+
+This entry updates the ip2c database on the first day of every month.
+
+
 
 That's it. Point your browser to https://yourhost/squert
