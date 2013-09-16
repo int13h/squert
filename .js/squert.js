@@ -266,6 +266,10 @@ $(document).ready(function(){
   var eTotal = 0, qTotal = 0;
   function statusPoll(caller) {
 
+    $.get(".inc/callback.php?type=14", function(data){
+	$(".rt_time").html(data)
+    });
+
     // See if we are filtering by sensor
     var theSensors = s2h('empty');
     if ($('.chk_sen:checked').length > 0) {
