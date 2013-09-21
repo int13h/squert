@@ -291,7 +291,6 @@ function ed() {
     global $offset, $when, $sensors;
     $comp = mysql_real_escape_string($_REQUEST['object']);
     $filter = hextostr($_REQUEST['filter']);
-    $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
     $adqp = hextostr(mysql_real_escape_string($_REQUEST['adqp']));
     list($ln,$sid,$src_ip,$dst_ip) = explode("-", $comp);
@@ -306,24 +305,20 @@ function ed() {
                     AND (event.signature_id = '$sid'
                     AND event.src_ip = '$src_ip'
                     AND event.dst_ip = '$dst_ip')";
+        } else {
+        
+          $qp2 = "WHERE $when
+                  $sensors
+                  AND (event.signature_id = '$sid' 
+                  AND event.src_ip = '$src_ip' 
+                  AND event.dst_ip = '$dst_ip')";
         }
     } else {
-
-        if ($rt == 1) {
-            $rt = "AND event.status = 0";
-        } else {
-            $rt = "";
-        }
-
         if ($adqp === "empty") {
             $adqp = "";
-        } else {
-            $rt = "";
         }
-
         $qp2 = "WHERE $when
                 $sensors
-                $rt
                 $adqp
                 AND (event.signature_id = '$sid' 
                 AND event.src_ip = '$src_ip' 

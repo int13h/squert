@@ -2,11 +2,6 @@
 
 $(document).ready(function(){
 
-  d3.selectAll(".sub").style("color", function(d, i) {
-  return i % 2 ? "#fff" : "#eee";
-  });
-
-
   function d2h(d) {
     return d.toString(16);
   }
@@ -734,7 +729,7 @@ $(document).ready(function(){
       // This is now the active row
       $("#" + curID).attr('class','d_row_active');
       $("#" + curID).find('[class*="row"]').css('border-top', '1pt solid #c9c9c9');
-      $("html, body").animate({ scrollTop: $('.d_row_active').offset().top - 120 }, 20);
+      $("html, body").animate({ scrollTop: $('.d_row_active').offset().top - 140 }, 20);
       // History
       var itemToAdd = $("#" + curID).find('[class*="row_filter"]').text();
       hItemAdd(itemToAdd);
@@ -966,8 +961,8 @@ $(document).ready(function(){
         head += "<th class=sort width=90>LAST EVENT</th>";
         head += "<th class=sort>SIGNATURE</th>";
         head += "<th class=sort>ID</th>";
-        head += "<th class=sort>PROTO</th>";
-        head += "<th class=sort>% TOTAL</th>";
+        head += "<th class=sort width=60>PROTO</th>";
+        head += "<th class=sort width=80>% TOTAL</th>";
         head += "</tr></thead>";
 
         var sumEC = 0, sumSC = 0, sumDC = 0, sumSI = 0, spr1 = 0, spr2 = 0, spr3 = 0, spr4 = 0;

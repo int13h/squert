@@ -69,6 +69,7 @@ width:18%;
 background-color:#fafafa;
 border-right:1pt solid #545454;
 padding-top:10px;
+z-index:1;
 }
 div.content-right {
 width:82%;
@@ -613,7 +614,7 @@ text-align:center;
 background-color:#e9e9e9;
 color:#adadad;
 float:left;
-z-index:10;
+z-index:20;
 clear:both;
 }
 div.tab {
@@ -677,10 +678,11 @@ width:100%;
 bottom:0;
 left:0;
 position:fixed;
-color:#000;
+color:#c9c9c9;
 border-top:1pt solid #000;
-background-color:#e9e9e9;
-height:24px;
+background-color:#000;
+height:25px;
+z-index:2;
 }
 div.b_tray {
 text-align:left;
@@ -713,7 +715,7 @@ div.b_update{
 width:100px;
 font-weight:bold;
 height:24px;
-background-color:#000;
+background-color:#545454;
 color:#fff;
 cursor:pointer;
 text-align:center;
