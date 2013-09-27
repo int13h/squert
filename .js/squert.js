@@ -1129,16 +1129,17 @@ $(document).ready(function(){
           // Create sid.cid list
           sids = c_sid.split(",");
           cids = c_cid.split(",");
-          $.each(sids, function(a,b) {
-            scid += b + "." + cids[a] + ",";
-          });
 
-          // How many events are not categorized?
+          // How many events are not categorized? Create scid based on status.
           es0 = theData[i].c_status.split(",");
           var unclass = 0;                  
           $.each(es0, function(a,b) {
             switch (b) {
-              case "0": unclass++; break;
+              case "0": unclass++; 
+                        $.each(sids, function(a,b) {
+                           scid += b + "." + cids[a] + ",";
+                        });
+                        break;
             }
           });
                  
@@ -1189,6 +1190,7 @@ $(document).ready(function(){
         // If queue is empty provide event sums in case the user 
         // intends to reclass anything
         if (rtCount == 0) {
+          $("#ca0").hide();
           curclasscount = tlCount;
         } else {
           curclasscount = rtCount;
