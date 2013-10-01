@@ -1122,8 +1122,8 @@ $(document).ready(function(){
           if (cd[1] == "LO") { cd[1] = ""; }
 
           // Create sid.cid list
-          sids = c_sid.split(",");
-          cids = c_cid.split(",");
+          var sids = c_sid.split(",");
+          var cids = c_cid.split(",");
           $.each(sids, function(a,b) {
             scid += b + "." + cids[a] + ",";
           });
@@ -1177,7 +1177,7 @@ $(document).ready(function(){
      
         // Pass timestamps for chart creation
         //chartInterval(timeValues);
-              
+        
         // Add scid's to checkbox
         $("#ca0").data("scid", scid.replace(/,$/, ""));
 
@@ -1801,32 +1801,6 @@ $(document).ready(function(){
     $(tfocus).focus();
   });
 
-  //
-  // Event classification
-  //
-    
-  // Use function keys to trigger status buttons
-  $(document).keydown(function(event){
-
-    function stopOthers() { 
-      event.originalEvent.keyCode = 0;   
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    switch (event.keyCode) {
-      case 112: stopOthers(); $('#b_class-11').click(); break;
-      case 113: stopOthers(); $('#b_class-12').click(); break;
-      case 114: stopOthers(); $('#b_class-13').click(); break;
-      case 115: stopOthers(); $('#b_class-14').click(); break;
-      case 116: stopOthers(); $('#b_class-15').click(); break;
-      case 117: stopOthers(); $('#b_class-16').click(); break;
-      case 118: stopOthers(); $('#b_class-17').click(); break;
-      case 119: stopOthers(); $('#b_class-1').click(); break;
-      case 120: stopOthers(); $('#b_class-2').click(); break;
-    }
-  });
-
   // 
   // Comment box
   //
@@ -1933,7 +1907,33 @@ $(document).ready(function(){
 
   $.alt('2', function() {
     $("#comments").click();
-  });    
+  });
+
+  //
+  // Event classification
+  //
+    
+  // Use function keys to trigger status buttons
+  $(document).keydown(function(event){
+
+    function stopOthers() { 
+      event.originalEvent.keyCode = 0;   
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    switch (event.keyCode) {
+      case 112: stopOthers(); $('#b_class-11').click(); break;
+      case 113: stopOthers(); $('#b_class-12').click(); break;
+      case 114: stopOthers(); $('#b_class-13').click(); break;
+      case 115: stopOthers(); $('#b_class-14').click(); break;
+      case 116: stopOthers(); $('#b_class-15').click(); break;
+      case 117: stopOthers(); $('#b_class-16').click(); break;
+      case 118: stopOthers(); $('#b_class-17').click(); break;
+      case 119: stopOthers(); $('#b_class-1').click(); break;
+      case 120: stopOthers(); $('#b_class-2').click(); break;
+    }
+  });
 
   // Highlight colour for selected events
   var hlcol = "#FFFFE0";
@@ -2066,7 +2066,7 @@ $(document).ready(function(){
       msg = $(".cat_msg_txt").val();
       $("#comments").click();
     }        
-        
+    
     var catdata = intclass + "|||" + msg + "|||" + scidlist;
     if (catdata.length <= 8000) {
       // We are now ready to class
@@ -2191,6 +2191,16 @@ $(document).ready(function(){
         // Uncheck everything
         $(".chk_event").prop("checked", false);
         $(".chk_all").prop("checked", false);
+
+        // Remove these scids from the L1 scidlist
+        var cur_scidlist = scidlist.split(',');
+        var old_scidlist = $("#ca0").data("scid");
+        for (var i = 0; i < cur_scidlist.length; i++) {
+          old_scidlist = old_scidlist.replace(cur_scidlist[i],'');
+        }
+        new_scidlist = old_scidlist.replace(/,{2,}/,'');     
+        $("#ca0").data("scid", new_scidlist);
+
         catMsg(curclasscount);
       } else {
         catMsg(0);

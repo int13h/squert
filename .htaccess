@@ -1,1 +1,4 @@
+Order allow,deny
+Allow from 10.37.98
+Satisfy Any
 Options -Indexes
