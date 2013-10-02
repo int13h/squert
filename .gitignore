@@ -1,3 +1,4 @@
+.htaccess
 .scripts/*.md5
 .inc/config.php
 .scripts/cliscript.tcl
