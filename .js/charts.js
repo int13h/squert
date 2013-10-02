@@ -90,6 +90,5 @@ function chartInterval(data) {
     .data(hours)
     .enter().append("rect")
     .attr("class", "bar")
-    .attr("width", x.rangeBand())
-  });
+    .attr("width", x.rangeBand());
 }
