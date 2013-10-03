@@ -2057,9 +2057,9 @@ $(document).ready(function(){
       });
       scidlist = scid.replace(/,$/, "");
     } else {
-      scidlist = $("#ca0").data("scid").split(","); 
+      scidlist = $("#ca0").data("scid"); 
     }
-
+    
     // Was there a message?
     var msg = "none";
     if($(".cat_msg_txt").val().length != 0) {
@@ -2198,7 +2198,7 @@ $(document).ready(function(){
         for (var i = 0; i < cur_scidlist.length; i++) {
           old_scidlist = old_scidlist.replace(cur_scidlist[i],'');
         }
-        new_scidlist = old_scidlist.replace(/,{2,}/,'');     
+        new_scidlist = old_scidlist.replace(/,{2,}/,',');     
         $("#ca0").data("scid", new_scidlist);
 
         catMsg(curclasscount);

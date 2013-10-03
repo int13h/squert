@@ -40,7 +40,7 @@ dbC();
 <script type="text/javascript" src=".js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src=".js/cal.js"></script>
 <script type="text/javascript" src=".js/squert.js"></script>
-<script type="text/javascript" src=".js/charts.js"></script>
+<!-- script type="text/javascript" src=".js/charts.js"></script -->
 <script type="text/javascript" src=".js/jquery-jvectormap-1.2.2.min.js"></script>
 <script type="text/javascript" src=".js/jquery-jvectormap-world-mill-en.js"></script>
 <script type="text/javascript" src=".js/d3/d3.v3.min.js"></script>
