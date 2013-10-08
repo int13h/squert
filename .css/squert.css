@@ -457,7 +457,7 @@ tr.d_row_active:hover {
 text-decoration:none;
 }
 tr.d_row:hover,tr.d_row_sub:hover,.d_row_sub1:hover {
-background-color:#f4f4f4;
+background-color:#e0e0e0;
 }
 tr.s_row:hover {
 cursor:pointer;
@@ -788,7 +788,7 @@ border-radius:3px;
 background:gray;
 color:#fff;
 width:45px;
-font-size:12px;
+font-size:13px;
 padding:5px 0;
 }
 .b_ec_hot {
@@ -799,7 +799,7 @@ border-radius:3px;
 background:#c8000a;
 color:#fff;
 width:45px;
-font-size:12px;
+font-size:13px;
 padding:5px 0;
 }
 div.b_ec_total {
@@ -810,43 +810,55 @@ border-radius:3px;
 background:#e9e9e9;
 color:gray;
 width:45px;
-font-size:12px;
+font-size:13px;
 padding:5px 0;
 }
 table.grid {
 border-radius:3px;
-border:1pt solid #c9c9c9;
 background-color:#fff;
 padding:none;
+border-spacing:0;
+border-collapse:collapse;
+}
+table.grid_nopad {
+background-color:#fff;
+padding:none;
+border-spacing:0;
+border-collapse:collapse;
 }
 td.c_on {
-border-radius:2px;
-background-color:#545454;
+background-color:#adadad;
 font-size:0;
-padding:2px;
+padding:3px;
 border:none;
+border:1pt solid #e9e9e9;
 }
 td.c_off {
-border-radius:2px;
-background-color:#e9e9e9;
+background-color:#fafafa;
 font-size:0;
-padding:2px;
+padding:3px;
 border:none;
+border:1pt solid #e9e9e9;
 }
 td.cl_on {
 border-radius:2px;
 font-size:0;
-padding:4px;
+padding:3px;
 border:none;
 cursor:pointer;
 }
-.cl_11,.cl_12,.cl_13,.cl_14,.cl_15,.cl_16,.cl_17,.cl_1,.cl_2 {
-border-radius:2px;
-background-color:#e9e9e9;
+.nl_11,.nl_12,.nl_13,.nl_14,.nl_15,.nl_16,.nl_17,.nl_1,.nl_2 {
+background-color:#fafafa;
 font-size:0;
-padding:4px;
-border:none;
+padding:3px;
+border:1pt solid #e9e9e9;
+}
+.cl_11,.cl_12,.cl_13,.cl_14,.cl_15,.cl_16,.cl_17,.cl_1,.cl_2 {
+background-color:#fafafa;
+font-size:0;
+padding:3px;
 cursor:pointer;
+border:1pt solid #e9e9e9;
 }
 .cl_11:hover {
 background-color:#c00;

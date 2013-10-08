@@ -70,8 +70,8 @@ dbC();
 
     <div class=event_cont_bar>
       <div class=label_l><span class=ec_label>Toggle</span></div>
-      <div class=label>Event Queue Only:</div><div id=rt class=tvalue_off>off</div>
       <div class=label>Event Grouping:</div><div id=menu1 class=tvalue_on>on</div>
+      <div class=label>Event Queue Only:</div><div id=rt class=tvalue_on>on</div>
       <div class=label>Map:</div><div id=menu2 class=tvalue_off>off</div>
     </div>
 
@@ -82,6 +82,14 @@ dbC();
       <div class=label>Total Signatures:</div><div id=esignature class=value>-</div>
       <div class=label>Total Sources:</div><div id=esrc class=value>-</div>
       <div class=label>Total Destinations:</div><div id=edst class=value>-</div>
+    </div>
+
+    <div class=event_cont>
+      <div class=label_l><span class=ec_label>Event Count by Priority</span></div>
+      <div class=label>High:</div><div id=pr_1 class=value>-</div>
+      <div class=label>Medium:</div><div id=pr_2 class=value>-</div>
+      <div class=label>Low:</div><div id=pr_3 class=value>-</div>
+      <div class=label>Other:</div><div id=pr_4 class=value>-</div>   
     </div>
 
     <div class=event_cont>
@@ -115,14 +123,6 @@ dbC();
       
       <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='Escalate Event (F9)'>
       <div class=b_ES></div>Escalated Event:</div><div id=c-2 class=value>-</div>
-    </div>
-
-    <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Count by Priority</span></div>
-      <div class=label>High:</div><div id=pr_1 class=value>-</div>
-      <div class=label>Medium:</div><div id=pr_2 class=value>-</div>
-      <div class=label>Low:</div><div id=pr_3 class=value>-</div>
-      <div class=label>Other:</div><div id=pr_4 class=value>-</div>   
     </div>
 
     <div class=event_cont>

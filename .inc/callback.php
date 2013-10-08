@@ -55,6 +55,15 @@ if (isset($_REQUEST['sensors'])) {
     }
 }
 
+if (isset($_REQUEST['rt'])) {
+    $rt = mysql_real_escape_string($_REQUEST['rt']);
+    if ($rt == 1) {
+        $rt = "AND event.status = 0";
+    } else {
+        $rt = "";
+    }
+}
+
 if (!$type) {
     exit;
 }
@@ -153,17 +162,10 @@ function si() {
 }
 
 function es() {   
-    global $offset, $when, $sensors;
+    global $offset, $when, $sensors, $rt;
     $object = mysql_real_escape_string($_REQUEST['object']);
-    $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
     $filter = hextostr($_REQUEST['filter']);
-
-    if ($rt == 1) {
-        $rt = "AND event.status = 0";
-    } else {
-        $rt = "";
-    }
     
     if ($filter != 'empty') {
         if (substr($filter, 0,4) == 'cmt ') {
@@ -176,8 +178,8 @@ function es() {
             $filter = "AND " . $filter;
             $qp2 = "WHERE $when
                     $sensors
-                    $rt
-                    $filter";
+                    $filter
+                    $rt";
         }
     } else {
         $qp2 = "WHERE $when
@@ -218,17 +220,10 @@ function es() {
 
 function eg() {
 
-    global $offset, $when, $sensors;
+    global $offset, $when, $sensors, $rt;
     $sid = mysql_real_escape_string($_REQUEST['object']);
-    $rt = mysql_real_escape_string($_REQUEST['rt']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
     $filter = hextostr($_REQUEST['filter']);
-
-    if ($rt == 1) {
-        $rt = "AND event.status = 0";
-    } else {
-        $rt = "";
-    }
     
     if ($filter != 'empty') {
         if (substr($filter, 0,4) == 'cmt ') {
@@ -242,15 +237,15 @@ function eg() {
             $filter = "AND " . $filter;
             $qp2 = "WHERE $when
                     $sensors
-                    $rt
                     AND event.signature_id = '$sid'
-                    $filter";
+                    $filter
+                    $rt";
         }
     } else {
         $qp2 = "WHERE $when
                 $sensors
-                $rt
-                AND event.signature_id = '$sid'";
+                AND event.signature_id = '$sid'
+                $rt";
     }
 
     $query = "SELECT COUNT(event.signature) AS count,
@@ -288,7 +283,7 @@ function eg() {
 // 2
 function ed() {
 
-    global $offset, $when, $sensors;
+    global $offset, $when, $sensors, $rt;
     $comp = mysql_real_escape_string($_REQUEST['object']);
     $filter = hextostr($_REQUEST['filter']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
@@ -339,6 +334,7 @@ function ed() {
               event.priority AS f12
               FROM event
               $qp2
+              $rt
               ORDER BY event.timestamp $sv";
     
     $result = mysql_query($query);
@@ -355,17 +351,10 @@ function ed() {
 // 2a
 function ee() {
 
-    global $offset, $when, $sensors;
-    $rt = mysql_real_escape_string($_REQUEST['rt']);
+    global $offset, $when, $sensors, $rt;
     $sv = mysql_real_escape_string($_REQUEST['sv']);
     $filter = hextostr($_REQUEST['filter']);
 
-    if ($rt == 1) {
-        $rt = "AND event.status = 0";
-    } else {
-        $rt = "";
-    }
- 
     if ($filter != 'empty') {
         if (substr($filter, 0,4) == 'cmt ') {
             $comment = explode('cmt ', $filter);
