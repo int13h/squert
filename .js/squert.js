@@ -2275,29 +2275,22 @@ $(document).ready(function(){
         if ( count > 1 ) ess = 's';
 
         var newboxtotal = 0, newcatcount = 0; 
+        newboxtotal = parseInt($("#qtotal").text() - rtcount);
+        $("#qtotal").text(newboxtotal);
+
         // If we are just rt update Total boxes as we go
-        if (!$("#ca2")[0]) {
-          newboxtotal = parseInt($("#qtotal").text() - rtcount);
-          if (newboxtotal < 0) { // We are out of sync
+        if ($("#ca2")[0]) { // We are ungrouped
+          newcatcount = parseInt($("#cat_count").text() - count);
+          if (newcatcount == 0) {
             newView("u");
-          } else { 
-            $("#qtotal").text(newboxtotal);
+          } else {
+            $("#cat_count").text(newcatcount);
           }
-        } else {
-          newboxtotal = parseInt($("#qtotal").text() - rtcount);
-          $("#qtotal").text(newboxtotal);
-          newcatcount = parseInt($("#cat_count").text() - count); 
-          $("#cat_count").text(newcatcount);
         }
         
-        if (newboxtotal == 0 && rtbit == 1) { 
-          newView("u");
-        } 
-
         var msg = count + " event" + ess + " categorized";
         break;
     }
-
 
     $("span.class_msg").text(msg);
     $("span.class_msg").fadeIn('slow', function() {
