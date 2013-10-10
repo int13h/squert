@@ -50,7 +50,7 @@ dbC();
 </head>
 <body>
 <div id=tab_group class=tab_group>
-  <div id=t_dash class=tab>Dashboard</div>
+  <!-- div id=t_dash class=tab>Dashboard</div -->
   <div id=t_sum class=tab>Events</div>
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
@@ -101,13 +101,11 @@ dbC();
       <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Unauthorized User Access (F2)'>
       <div class=b_C2></div>User Access:</div><div id=c-12 class=value>-</div>
       
-      
       <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='Attempted Unauthorized Access (F3)'>
       <div class=b_C3></div>Attempted Access:</div><div id=c-13 class=value>-</div>
 
       <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='Denial of Service Attack (F4)'>
       <div class=b_C4></div>Denial of Service:</div><div id=c-14 class=value>-</div>
-      
       
       <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='Policy Violation (F5)'>
       <div class=b_C5></div>Policy Violation</div><div id=c-15 class=value>-</div>
@@ -136,12 +134,6 @@ dbC();
 
   <div class=content-right>
     <div id=t_dash_content class=content>
-      <table width=100% align=left><tr><td>
-      <h3>Events grouped by minute and hour</h3>
-      <h3>Top signatures</h3>
-      <h3>Top source and destination IPs</h3>
-      <h3>Top source and destination Countries</h3>
-      </td></tr></table>
     </div>
 
     <div id=t_sum_content class=content>
@@ -184,6 +176,8 @@ dbC();
 <input id=event_sort type=hidden value="DESC">
 <input id=event_sum type=hidden value="0">
 <input id=cat_sum type=hidden value="0">
+<input id=user_tz type=hidden value="<?php echo $_SESSION['tzoffset'];?>">
 <input id=sel_tab type=hidden value="<?php echo $_SESSION['sTab'];?>">
+
 </body>
 </html>

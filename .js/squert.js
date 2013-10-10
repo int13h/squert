@@ -117,6 +117,26 @@ $(document).ready(function(){
     return answer;
   }
 
+  //
+  // User Profile Changes
+  //
+
+  function profileUpdate(r, v) {
+    switch(r) {
+      case "tz":  
+        var urArgs = "type=" + 14 + "&tz=" + v;
+        $.get(".inc/callback.php?" + urArgs);
+      break;
+    }
+  }
+
+  $(document).on("click", "#savetz", function(event) {
+    if ($('.dt_error').data('err') == 0) {
+      var newOffset = s2h($('#ts_offset').val());
+      profileUpdate("tz", newOffset);
+    }
+  });  
+
   // Classifications
   var classifications = {"class":{  
     "c11":[{"colour": "#c00", "short": "C1", "long": "Unauthorized Admin Access"}],
@@ -148,7 +168,7 @@ $(document).ready(function(){
       $(".sigtxt").prepend(txt);
     });
   }
-
+ 
   // Make a map
   function doMap(req) {
     theWhen = getTimestamp();
@@ -490,10 +510,13 @@ $(document).ready(function(){
       case "u":
         var f = "0-aaa-00";
         var s = "2a-aaa-00";
-        break; 
+      break; 
       case "c":
         switch(cv) {
           case "on": $("#menu1").text("off");
+            // If we are searching for something we show all events 
+            // mainly because of specificity but also because 
+            // returning nothing may be confusing (there are no RT but classed events do exist) 
             if ($("#search").val().length == 0) {
               $("#rt").text("on");
               $("#rt").attr('class','tvalue_on');
@@ -508,11 +531,10 @@ $(document).ready(function(){
        }
        f = "2a-aaa-00";
        s = "0-aaa-00";
-       break;
+      break;
     }
 
     var bail = $("#loader").css('display');
-
     if (bail != 'none') return;
 
     switch (cv) {
@@ -878,7 +900,7 @@ $(document).ready(function(){
   });
 
   // Toggle RT depending on entry point
-  var rtbit = 0;
+  var rtbit;
   $(document).on("click", ".b_ec_hot", function() {
     rtbit = 1;
   });
@@ -1810,40 +1832,47 @@ $(document).ready(function(){
   }
 
   $(document).on("click", ".sub_filter,.row_filter,.tof", function() {
+    // If the person was looking in the queue and then performs a search
+    // we need to reset to all events
+    rtbit = 0;
+
     var prefix = $(this).data('type');
     var suffix = $(this).html();
     var tfocus = "#search";
     switch (prefix) {
       case    'ip': $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
-        break;
+      break;
+
       case    'cc': var cc = $(this).data('value');
                     $('#search').val(prefix + " " + cc);
                     hItemAdd(cc);
-        break;
+      break;
 
       case   'cmt': suffix = $(this).data('comment');
+                    $("#rt").text("off");
+                    $("#rt").attr('class','tvalue_off');
                     $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
-        break;
+      break;
           
       case 'cmt_c': $('.cat_msg_txt').val(suffix);
                     hItemAdd(suffix);
                     tfocus = ".cat_msg_txt";
-        break;
+      break;
  
       case   'sid': var value = $(this).data('value');
                     $('#search').val(prefix + " " + value);
                     hItemAdd(suffix);
-        break;
+      break;
  
       case   'spt': $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
-        break;
+      break;
 
       case   'dpt': $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
-        break;
+      break;
     } 
     $(tfocus).focus();
   });

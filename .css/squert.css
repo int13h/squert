@@ -110,6 +110,7 @@ clear:right;
 padding-top:5px;
 }
 span.ec_label {
+font-size:11px;
 font-weight:bold;
 text-decoration:underline;
 }
@@ -739,6 +740,7 @@ opacity:0.8;
 cursor:pointer;
 }
 span.links {
+font-weight:normal;
 color:#adadad;
 text-decoration:none;
 padding:0 5px;

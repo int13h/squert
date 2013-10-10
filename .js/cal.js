@@ -45,15 +45,24 @@ $(document).ready(function(){
   }
 
   // Create controls
-  function createControls() {  
+  function createControls() {
+
+    var dOffset = $('#user_tz').val();
+    var checkUTC = '', inputUTC = '';
+    if (dOffset == "+00:00") {
+      checkUTC = " checked";
+      inputUTC = " disabled";
+    }
+ 
     var html = '';
     html += "<table class=dt_table><tr><td class=dt_content><span class=dt_error data-err=0>Format Error!</span>";
     html += "Date:&nbsp;<input class=dt_input id=ts_sdate type=text maxlength=10>"; 
     html += " - <input class=dt_input id=ts_edate type=text maxlength=10>";
     html += "&nbsp;&nbsp;Time:&nbsp;<input class=dt_input id=ts_stime type=text maxlength=8>";
     html += " - <input class=dt_input id=ts_etime type=text maxlength=8>";
-    html += "&nbsp;&nbsp;UTC:&nbsp;<input class=dt_utc id=ts_utc type=checkbox checked>";
-    html += "&nbsp;&nbsp;TZ offset:&nbsp;<input class=dt_input id=ts_offset data-offset=\"+00:00\" type=text disabled></td>";
+    html += "&nbsp;&nbsp;UTC:&nbsp;<input class=dt_utc id=ts_utc type=checkbox" + checkUTC + ">";
+    html += "&nbsp;&nbsp;TZ offset:&nbsp;<input class=dt_input id=ts_offset data-offset=\"" + dOffset + "\"";
+    html += " type=text" + inputUTC + "><span id=savetz class=links>Save</span></td>";
     html += "<td width=165px class=dt_content><div class=dt_reset>reset values</div>";
     html += "<div class=dt_update>update</div></td>";
     html += "<td class=cog><img class=lr src=.css/lr.png></td><tr></table>";
@@ -301,7 +310,7 @@ $(document).ready(function(){
   var dd = td.getDate();
   var tz = baseDate.getTimezoneOffset() / 60; 
   var tzs = tz.toString();
-  var tzoffset = '+00:00';
+  var tzoffset = $('#user_tz').val();
   var tzpre = '-';
 
   // Check prefix

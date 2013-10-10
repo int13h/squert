@@ -31,6 +31,7 @@ $types = array(
                 '11' => 'comments',
                 '12' => 'remove_comment',
                 '13' => 'sensors',
+                '14' => 'user_profile',
 );
 
 $type = $types[$type];
@@ -801,6 +802,23 @@ function sensors() {
         $rows[] = $row;
     }
     $theJSON = json_encode($rows);
+    echo $theJSON;
+}
+
+function user_profile() {
+    $user = $_SESSION['sUser'];
+    $tz = hextostr($_REQUEST['tz']);
+    $validtz = "/^(-12:00|-11:00|-10:00|-09:30|-09:00|-08:00|-07:00|-06:00|-05:00|-04:30|-04:00|-03:30|-03:00|-02:00|-01:00|\+00:00|\+01:00|\+02:00|\+03:00|\+03:30|\+04:00|\+04:30|\+05:00|\+05:30|\+05:45|\+06:00|\+06:30|\+07:00|\+08:00|\+08:45|\+09:00|\+09:30|\+10:00|\+10:30|\+11:00|\+11:30|\+12:00|\+12:45|\+13:00|\+14:00)$/";
+
+    if (preg_match($validtz, $tz)) { 
+        $query = "UPDATE user_info SET tzoffset = '$tz' WHERE username = '$user'";
+        mysql_query($query);
+        $result = mysql_error();
+    } else {
+        $result = "Invalid timezone offset";
+    }
+    $return = array("msg" => $result);
+    $theJSON = json_encode($return); 
     echo $theJSON;
 }
 
