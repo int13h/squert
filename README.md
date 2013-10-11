@@ -11,6 +11,18 @@ Demo: [https://demo.sguil.net](https://demo.sguil.net)
 
 SQueRT is a tool that is used to query event data
 
+## Updating
+
+If you are updating to version 1.1.5 you will need to do the following:
+
+1) mysql> ALTER TABLE sguildb.user_info ADD tzoffset varchar(6) NOT NULL DEFAULT '+00:00';
+
+2) mysql> GRANT UPDATE ON sguildb.user_info TO '<your_squert_user>';
+
+Squert lets you specify a timezone offset that will then be used when displaying events. These changes
+allow you to save your preference. Note: This does not change the timestamps in the database.
+
+
 ## Requirements
 
 * A working Sguil installation [http://sguil.net](http://sguil.net). If you use Security Onion [http://securityonion.blogspot.ca](http://securityonion.blogspot.ca) you can get everything setup rather quickly.
