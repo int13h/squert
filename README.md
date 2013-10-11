@@ -3,6 +3,7 @@
 Home: [http://www.squertproject.org](http://www.squertproject.org)
 
 Demo: [https://demo.sguil.net](https://demo.sguil.net)
+
 * Login: sguil
 * Password: demo
 
@@ -17,7 +18,7 @@ If you are updating to version 1.1.5 you will need to do the following:
 
 1) mysql> ALTER TABLE sguildb.user_info ADD tzoffset varchar(6) NOT NULL DEFAULT '+00:00';
 
-2) mysql> GRANT UPDATE ON sguildb.user_info TO '<your_squert_user>';
+2) mysql> GRANT UPDATE ON sguildb.user_info TO 'your_squert_user';
 
 Squert lets you specify a timezone offset that will then be used when displaying events. These changes
 allow you to save your preference. Note: This does not change the timestamps in the database.
