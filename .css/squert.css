@@ -741,9 +741,9 @@ cursor:pointer;
 }
 span.links {
 font-weight:normal;
-color:#adadad;
-text-decoration:none;
+color:#185FAB;
 padding:0 5px;
+text-decoration:underline;
 }
 span.links_enabled {
 color:#fff;
@@ -1261,7 +1261,7 @@ display:none;
 }
 
 span.links:hover,span.links_enabled:hover {
-color:#000;
+color:#666;
 cursor:pointer;
 text-decoration:underline;
 }

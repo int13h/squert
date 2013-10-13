@@ -46,14 +46,16 @@ $(document).ready(function(){
 
   // Create controls
   function createControls() {
-
+    // Users timezone offset
     var dOffset = $('#user_tz').val();
     var checkUTC = '', inputUTC = '';
     if (dOffset == "+00:00") {
       checkUTC = " checked";
       inputUTC = " disabled";
+    } else {
+      $('#ts_offset').val(dOffset);
     }
- 
+   
     var html = '';
     html += "<table class=dt_table><tr><td class=dt_content><span class=dt_error data-err=0>Format Error!</span>";
     html += "Date:&nbsp;<input class=dt_input id=ts_sdate type=text maxlength=10>"; 
@@ -61,7 +63,7 @@ $(document).ready(function(){
     html += "&nbsp;&nbsp;Time:&nbsp;<input class=dt_input id=ts_stime type=text maxlength=8>";
     html += " - <input class=dt_input id=ts_etime type=text maxlength=8>";
     html += "&nbsp;&nbsp;UTC:&nbsp;<input class=dt_utc id=ts_utc type=checkbox" + checkUTC + ">";
-    html += "&nbsp;&nbsp;TZ offset:&nbsp;<input class=dt_input id=ts_offset data-offset=\"" + dOffset + "\"";
+    html += "&nbsp;&nbsp;TZ offset:&nbsp;<input class=dt_input id=ts_offset";
     html += " type=text" + inputUTC + "><span id=savetz class=links>Save</span></td>";
     html += "<td width=165px class=dt_content><div class=dt_reset>reset values</div>";
     html += "<div class=dt_update>update</div></td>";
@@ -215,14 +217,12 @@ $(document).ready(function(){
   // TZ offset
   $(document).on('click', '#ts_utc', function(event) {
     switch ($('#ts_utc:checked').length) {
-      case 0: 
+      case 0:
         $('#ts_offset').val(tzoffset);
         $('#ts_offset').prop('disabled',false);
-        $('#ts_offset').data('offset',tzoffset);
       break;
       case 1:
-        $('#ts_offset').val(tzoffset);
-        $('#ts_offset').data('offset','+00:00');
+        $('#ts_offset').val('+00:00');
         $('#ts_offset').prop('disabled',true);
       break;
     }   
@@ -293,7 +293,7 @@ $(document).ready(function(){
     $('#ts_edate').val(yy + "-" + today + "-" + dd);
     $('#ts_stime').val('00:00:00');
     $('#ts_etime').val('23:59:59');
-    $('#ts_offset').val(tzoffset);
+    $('#ts_offset').val($('#user_tz').val()); 
     $('.dt_input').css('color','#000');
     $('.dt_error').hide();
   });
@@ -389,5 +389,5 @@ $(document).ready(function(){
   $('#ts_edate').val(yy + "-" + today + "-" + dd);
   $('#ts_stime').val('00:00:00');
   $('#ts_etime').val('23:59:59');
-  $('#ts_offset').val(tzoffset);
+  $('#ts_offset').val($('#user_tz').val());
 });

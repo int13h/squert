@@ -495,7 +495,6 @@ function pd() {
 }
 
 function tb() {
-    //session_start();
     $tab = $_REQUEST['tab'];
     $_SESSION['sTab'] = $tab;
 }
@@ -814,6 +813,8 @@ function user_profile() {
         $query = "UPDATE user_info SET tzoffset = '$tz' WHERE username = '$user'";
         mysql_query($query);
         $result = mysql_error();
+        // Update session offset
+        $_SESSION['tzoffset'] = $tz;
     } else {
         $result = "Invalid timezone offset";
     }

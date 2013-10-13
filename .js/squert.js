@@ -72,7 +72,7 @@ $(document).ready(function(){
     var ts_ed = $('#ts_edate').val();
     var ts_st = $('#ts_stime').val();
     var ts_et = $('#ts_etime').val();
-    var ts_os = $('#ts_offset').data('offset');
+    var ts_os = $('#ts_offset').val();
     var theWhen = s2h(ts_sd + "|" + ts_ed + "|" + ts_st + "|" + ts_et + "|" + ts_os);
     var fval = 'NO';
     var fval_c = 'fl_val_off';
@@ -132,8 +132,9 @@ $(document).ready(function(){
 
   $(document).on("click", "#savetz", function(event) {
     if ($('.dt_error').data('err') == 0) {
-      var newOffset = s2h($('#ts_offset').val());
-      profileUpdate("tz", newOffset);
+      var newOffset = $('#ts_offset').val();
+      profileUpdate("tz", s2h(newOffset));
+      $('#user_tz').val(newOffset);
     }
   });  
 
