@@ -478,6 +478,10 @@ function pd() {
             $row = mysql_fetch_assoc($result);
             $rows[] = $row;
             break;
+        default:
+            $result = array(0 => 0);
+            $rows[] = $row;
+            break;
     }
 
     // Data

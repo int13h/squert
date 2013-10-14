@@ -1575,182 +1575,203 @@ $(document).ready(function(){
       function cb4(data){
         eval("theData=" + data);
 
-        tbl = '';
-        head = '';
-        row = '';
-        head += "<table class=tlip align=center width=100% cellpadding=0 cellspacing=0>";
-        head += "<tr>";
-        head += "<th class=sub2 width=40 rowspan=2>IP</th>";
-        head += "<th class=sub2>VER</th>";
-        head += "<th class=sub2>IHL</th>";
-        head += "<th class=sub2>TOS</th>";
-        head += "<th class=sub2>LENGTH</th>";
-        head += "<th class=sub2>ID</th>";
-        head += "<th class=sub2>FLAGS</th>";
-        head += "<th class=sub2>OFFSET</th>";
-        head += "<th class=sub2>TTL</th>";
-        head += "<th class=sub2>CHECKSUM</th>";
-        head += "<th class=sub2>PROTO</th>";
-        head += "</tr>";
+        var tbl = '', head = '', row = '';
+        
+        // If IP version is 0 we can jump right to the payload (likely bro, http or ossec agent) 
+        if (theData[0].ip_ver != 0) {       
+   
+          head += "<table class=tlip align=center width=100% cellpadding=0 cellspacing=0>";
+          head += "<tr>";
+          head += "<th class=sub2 width=40 rowspan=2>IP</th>";
+          head += "<th class=sub2>VER</th>";
+          head += "<th class=sub2>IHL</th>";
+          head += "<th class=sub2>TOS</th>";
+          head += "<th class=sub2>LENGTH</th>";
+          head += "<th class=sub2>ID</th>";
+          head += "<th class=sub2>FLAGS</th>";
+          head += "<th class=sub2>OFFSET</th>";
+          head += "<th class=sub2>TTL</th>";
+          head += "<th class=sub2>CHECKSUM</th>";
+          head += "<th class=sub2>PROTO</th>";
+          head += "</tr>";
 
-        row += "<tr class=d_row_sub2>";
-        row += "<td class=sub3>" + theData[0].ip_ver + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_hlen + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_tos + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_len + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_id + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_flags + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_off + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_ttl + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_csum + "</td>";
-        row += "<td class=sub3>" + theData[0].ip_proto + "</td>";
-        row += "</td></tr></table>";
+          row += "<tr class=d_row_sub2>";
+          row += "<td class=sub3>" + theData[0].ip_ver + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_hlen + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_tos + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_len + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_id + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_flags + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_off + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_ttl + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_csum + "</td>";
+          row += "<td class=sub3>" + theData[0].ip_proto + "</td>";
+          row += "</td></tr></table>";
 
-        switch (theData[0].ip_proto) {
-          case "1": 
-            row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
-            row += "<tr>";
-            row += "<th class=sub2 width=40 rowspan=2>ICMP</th>";
-            row += "<th class=sub2 width=184>TYPE</th>";
-            row += "<th class=sub2 width=184>CODE</th>";
-            row += "<th class=sub2 width=184>CHECKSUM</th>";
-            row += "<th class=sub2 width=184>ID</th>";
-            row += "<th class=sub2 width=184>SEQ#</th>";
-            row += "</tr>";
-            row += "<tr class=d_row_sub2>";
-            row += "<td class=sub3>" + theData[1].icmp_type + "</td>";
-            row += "<td class=sub3>" + theData[1].icmp_code + "</td>";
-            row += "<td class=sub3>" + theData[1].icmp_csum + "</td>";
-            row += "<td class=sub3>" + theData[1].icmp_id + "</td>";
-            row += "<td class=sub3>" + theData[1].icmp_seq + "</td>";
-            row += "</td></tr></table>";
+          switch (theData[0].ip_proto) {
+            case "1": 
+              row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+              row += "<tr>";
+              row += "<th class=sub2 width=40 rowspan=2>ICMP</th>";
+              row += "<th class=sub2 width=184>TYPE</th>";
+              row += "<th class=sub2 width=184>CODE</th>";
+              row += "<th class=sub2 width=184>CHECKSUM</th>";
+              row += "<th class=sub2 width=184>ID</th>";
+              row += "<th class=sub2 width=184>SEQ#</th>";
+              row += "</tr>";
+              row += "<tr class=d_row_sub2>";
+              row += "<td class=sub3>" + theData[1].icmp_type + "</td>";
+              row += "<td class=sub3>" + theData[1].icmp_code + "</td>";
+              row += "<td class=sub3>" + theData[1].icmp_csum + "</td>";
+              row += "<td class=sub3>" + theData[1].icmp_id + "</td>";
+              row += "<td class=sub3>" + theData[1].icmp_seq + "</td>";
+              row += "</td></tr></table>";
             break;
    
-          case "6":
-            // TCP flags
-            var tmpFlags = theData[1].tcp_flags || 'z';
-            switch (tmpFlags) {
-              case 'z': var tcpFlags = '--------'; break;
-              default:
-                var binFlags = Number(theData[1].tcp_flags).toString(2);
-                var binPad = 8 - binFlags.length;
-                var tcpFlags = "00000000".substring(0,binPad) + binFlags;
+            case "6":
+              // TCP flags
+              var tmpFlags = theData[1].tcp_flags || 'z';
+              switch (tmpFlags) {
+                case 'z': var tcpFlags = '--------'; break;
+                default:
+                  var binFlags = Number(theData[1].tcp_flags).toString(2);
+                  var binPad = 8 - binFlags.length;
+                  var tcpFlags = "00000000".substring(0,binPad) + binFlags;
                 break;
-            }
-            var tcp_seq  = theData[1].tcp_seq  || '-';
-            var tcp_ack  = theData[1].tcp_ack  || '-';
-            var tcp_off  = theData[1].tcp_off  || '-';
-            var tcp_res  = theData[1].tcp_res  || '-';
-            var tcp_win  = theData[1].tcp_win  || '-';
-            var tcp_urp  = theData[1].tcp_urp  || '-';
-            var tcp_csum = theData[1].tcp_csum || '-';
-            row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
-            row += "<tr>";
-            row += "<th class=sub2 width=40 rowspan=2>TCP</th>";
-            row += "<th class=sub2 width=30>R1</th>";
-            row += "<th class=sub2 width=30>R0</th>";
-            row += "<th class=sub2 width=30>URG</th>";
-            row += "<th class=sub2 width=30>ACK</th>";
-            row += "<th class=sub2 width=30>PSH</th>";
-            row += "<th class=sub2 width=30>RST</th>";
-            row += "<th class=sub2 width=30>SYN</th>";
-            row += "<th class=sub2 width=50>FIN</th>";
-            row += "<th class=sub2>SEQ#</th>";
-            row += "<th class=sub2>ACK#</th>";
-            row += "<th class=sub2>OFFSET</th>";
-            row += "<th class=sub2>RES</th>";
-            row += "<th class=sub2>WIN</th>";
-            row += "<th class=sub2>URP</th>";
-            row += "<th class=sub2>CHECKSUM</th>";
-            row += "</tr>";
-            row += "<tr class=d_row_sub2>";
-            row += "<td class=sub3>" + tcpFlags[0] + "</td>";
-            row += "<td class=sub3>" + tcpFlags[1] + "</td>";
-            row += "<td class=sub3>" + tcpFlags[2] + "</td>";
-            row += "<td class=sub3>" + tcpFlags[3] + "</td>";
-            row += "<td class=sub3>" + tcpFlags[4] + "</td>";
-            row += "<td class=sub3>" + tcpFlags[5] + "</td>";
-            row += "<td class=sub3>" + tcpFlags[6] + "</td>";
-            row += "<td class=sub3>" + tcpFlags[7] + "</td>";
-            row += "<td class=sub3>" + tcp_seq + "</td>";
-            row += "<td class=sub3>" + tcp_ack + "</td>";
-            row += "<td class=sub3>" + tcp_off + "</td>";
-            row += "<td class=sub3>" + tcp_res + "</td>";
-            row += "<td class=sub3>" + tcp_win + "</td>";
-            row += "<td class=sub3>" + tcp_urp + "</td>";
-            row += "<td class=sub3>" + tcp_csum + "</td>";
-            row += "</td></tr></table>";
+              }
+              var tcp_seq  = theData[1].tcp_seq  || '-';
+              var tcp_ack  = theData[1].tcp_ack  || '-';
+              var tcp_off  = theData[1].tcp_off  || '-';
+              var tcp_res  = theData[1].tcp_res  || '-';
+              var tcp_win  = theData[1].tcp_win  || '-';
+              var tcp_urp  = theData[1].tcp_urp  || '-';
+              var tcp_csum = theData[1].tcp_csum || '-';
+              row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+              row += "<tr>";
+              row += "<th class=sub2 width=40 rowspan=2>TCP</th>";
+              row += "<th class=sub2 width=30>R1</th>";
+              row += "<th class=sub2 width=30>R0</th>";
+              row += "<th class=sub2 width=30>URG</th>";
+              row += "<th class=sub2 width=30>ACK</th>";
+              row += "<th class=sub2 width=30>PSH</th>";
+              row += "<th class=sub2 width=30>RST</th>";
+              row += "<th class=sub2 width=30>SYN</th>";
+              row += "<th class=sub2 width=50>FIN</th>";
+              row += "<th class=sub2>SEQ#</th>";
+              row += "<th class=sub2>ACK#</th>";
+              row += "<th class=sub2>OFFSET</th>";
+              row += "<th class=sub2>RES</th>";
+              row += "<th class=sub2>WIN</th>";
+              row += "<th class=sub2>URP</th>";
+              row += "<th class=sub2>CHECKSUM</th>";
+              row += "</tr>";
+              row += "<tr class=d_row_sub2>";
+              row += "<td class=sub3>" + tcpFlags[0] + "</td>";
+              row += "<td class=sub3>" + tcpFlags[1] + "</td>";
+              row += "<td class=sub3>" + tcpFlags[2] + "</td>";
+              row += "<td class=sub3>" + tcpFlags[3] + "</td>";
+              row += "<td class=sub3>" + tcpFlags[4] + "</td>";
+              row += "<td class=sub3>" + tcpFlags[5] + "</td>";
+              row += "<td class=sub3>" + tcpFlags[6] + "</td>";
+              row += "<td class=sub3>" + tcpFlags[7] + "</td>";
+              row += "<td class=sub3>" + tcp_seq + "</td>";
+              row += "<td class=sub3>" + tcp_ack + "</td>";
+              row += "<td class=sub3>" + tcp_off + "</td>";
+              row += "<td class=sub3>" + tcp_res + "</td>";
+              row += "<td class=sub3>" + tcp_win + "</td>";
+              row += "<td class=sub3>" + tcp_urp + "</td>";
+              row += "<td class=sub3>" + tcp_csum + "</td>";
+              row += "</td></tr></table>";
             break;
    
-          case "17":
-            row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
-            row += "<tr>";
-            row += "<th class=sub2 width=40 rowspan=2>UDP</th>";
-            row += "<th class=sub2 width=460>LENGTH</th>";
-            row += "<th class=sub2 width=460>CHECKSUM</th>";
-            row += "</tr>";
-            row += "<tr class=d_row_sub2>";
-            row += "<td class=sub3>" + theData[1].udp_len + "</td>";
-            row += "<td class=sub3>" + theData[1].udp_csum + "</td>";
-            row += "</td></tr></table>";               
+            case "17":
+              row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+              row += "<tr>";
+              row += "<th class=sub2 width=40 rowspan=2>UDP</th>";
+              row += "<th class=sub2 width=460>LENGTH</th>";
+              row += "<th class=sub2 width=460>CHECKSUM</th>";
+              row += "</tr>";
+              row += "<tr class=d_row_sub2>";
+              row += "<td class=sub3>" + theData[1].udp_len + "</td>";
+              row += "<td class=sub3>" + theData[1].udp_csum + "</td>";
+              row += "</td></tr></table>";               
             break;
-        }
+          }
 
-        var p_hex = '', p_ascii = '', p_ascii_l = '';
+          var p_hex = '', p_ascii = '', p_ascii_l = '';
                    
-        // Data
-        if (!theData[2]) {
-          p_hex   = "No Data Sent.";
-          p_ascii = "No Data Sent.";
-        } else {
-          p_pl = theData[2].data_payload;
-          p_length = theData[2].data_payload.length;
-          var b0 = 0;
+          // Data
+          if (!theData[2]) {
+            p_hex   = "No Data Sent.";
+            p_ascii = "No Data Sent.";
+          } else {
+            p_pl = theData[2].data_payload;
+            p_length = theData[2].data_payload.length;
+            var b0 = 0;
 
-          for(var i=0; i < p_length; i+=2) {
-            b0++;
-            t_hex = p_pl.substr(i,2);
-            t_int = parseInt(t_hex,16);
+            for(var i=0; i < p_length; i+=2) {
+              b0++;
+              t_hex = p_pl.substr(i,2);
+              t_int = parseInt(t_hex,16);
 
-            if ((t_int < 32) || (t_int > 126)) {
-              p_hex     += t_hex + " ";
-              p_ascii   += ".";
-              p_ascii_l += ".";
-            } else if (t_int == 60) {
-              p_hex     += t_hex + " ";
-              p_ascii   += "&lt;";
-              p_ascii_l += "&lt;";
-            } else if (t_int == 62) {
-              p_hex     += t_hex + " ";
-              p_ascii   += "&gt;";
-              p_ascii_l += "&gt;";
-            } else {
-              p_hex     += t_hex + " ";
-              p_ascii   += String.fromCharCode(parseInt(t_hex, 16));
-              p_ascii_l += String.fromCharCode(parseInt(t_hex, 16));
-            }
+              if ((t_int < 32) || (t_int > 126)) {
+                p_hex     += t_hex + " ";
+                p_ascii   += ".";
+                p_ascii_l += ".";
+              } else if (t_int == 60) {
+                p_hex     += t_hex + " ";
+                p_ascii   += "&lt;";
+                p_ascii_l += "&lt;";
+              } else if (t_int == 62) {
+                p_hex     += t_hex + " ";
+                p_ascii   += "&gt;";
+                p_ascii_l += "&gt;";
+              } else {
+                p_hex     += t_hex + " ";
+                p_ascii   += String.fromCharCode(parseInt(t_hex, 16));
+                p_ascii_l += String.fromCharCode(parseInt(t_hex, 16));
+              }
 
-            if ((b0 == 16) && (i < p_length)) {
-              p_hex   += "<br>";
-              p_ascii += "<br>";
-              b0 = 0;
+              if ((b0 == 16) && (i < p_length)) {
+                p_hex   += "<br>";
+                p_ascii += "<br>";
+                b0 = 0;
+              }
             }
           }
+
+          row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+          row += "<tr>";
+          row += "<th class=sub2 width=40 rowspan=2>DATA</th>";
+          row += "<th class=sub2 width=460>HEX</th>";
+          row += "<th class=sub2 width=460>ASCII</th>";
+          row += "</tr>";
+          row += "<tr class=d_row_sub2>";
+          row += "<td class=sub3><samp>" + p_hex + "</samp></td>";
+          row += "<td class=sub3><samp>" + p_ascii + "<samp></td>";
+          row += "</td></tr>";
+          row += "<tr class=d_row_sub2>";
+          row += "<th class=sub3 width=40>ASCII</th>";
+          row += "<td class=sub_txt colspan=2><samp>" + p_ascii_l + "<samp></td>";
+          row += "</tr></table>";
+
+        } else {
+
+          head += "<table class=tlip align=center width=100% cellpadding=0 cellspacing=0>";
+          head += "<tr>";
+          head += "<th class=sub2>EVENT DETAIL</th>";
+          head += "</tr>";
+
+          var p_ascii = "No Data Sent.";
+          if (theData[2]) {
+            p_ascii = h2s(theData[2].data_payload);
+          }
+
+          row += "<tr class=d_row_sub2>";
+          row += "<td class=sub3>" + p_ascii + "</td>";
+          row += "</tr></table>";
+           
         }
-        row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
-        row += "<tr>";
-        row += "<th class=sub2 width=40 rowspan=2>DATA</th>";
-        row += "<th class=sub2 width=460>HEX</th>";
-        row += "<th class=sub2 width=460>ASCII</th>";
-        row += "</tr>";
-        row += "<tr class=d_row_sub2>";
-        row += "<td class=sub3><samp>" + p_hex + "</samp></td>";
-        row += "<td class=sub3><samp>" + p_ascii + "<samp></td>";
-        row += "</td></tr>";
-        row += "<tr class=d_row_sub2>";
-        row += "<th class=sub3 width=40>ASCII</th>";
-        row += "<td class=sub_txt colspan=2><samp>" + p_ascii_l + "<samp></td>";
-        row += "</table>";
                     
         tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
 
@@ -1794,7 +1815,7 @@ $(document).ready(function(){
     if ($(".h_item:contains('" + itemTitle + "')")[0]) {
       var oc = $(".h_item:contains('" + itemTitle + "')").data('n');
       var nc = Number(oc) + 1;
-      var bg = '#000';
+      var bg = '#f4f4f4';
       if (nc <= 3) { 
         bg = '#d98602';  
       } else if (nc > 3) {

@@ -7,6 +7,8 @@ Demo: [https://demo.sguil.net](https://demo.sguil.net)
 * Login: sguil
 * Password: demo
 
+Intro: [http://www.youtube.com/watch?v=ZOsVw96XM8E](http://www.youtube.com/watch?v=ZOsVw96XM8E)
+
 
 ## Description
 
