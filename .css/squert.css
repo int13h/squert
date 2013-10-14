@@ -363,6 +363,17 @@ font-size:11px;
 text-decoration:none;
 padding:3px 5px;
 }
+td.sub3_d {
+background-color:#fafafa;
+border:1pt solid #c4c4c4;
+border-top:none;
+border-right:none;
+border-left:none;
+color:#000;
+font-size:12px;
+text-decoration:none;
+padding:15px;
+}
 td.row,td.row_active,.row_filter {
 background:transparent;
 border-bottom:1pt solid #c9c9c9;

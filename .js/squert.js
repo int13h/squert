@@ -1764,11 +1764,11 @@ $(document).ready(function(){
 
           var p_ascii = "No Data Sent.";
           if (theData[2]) {
-            p_ascii = h2s(theData[2].data_payload);
+            var re = /\n/g;
+            p_ascii = h2s(theData[2].data_payload).replace(re, "<br>");
           }
-
           row += "<tr class=d_row_sub2>";
-          row += "<td class=sub3>" + p_ascii + "</td>";
+          row += "<td class=sub3_d>" + p_ascii + "</td>";
           row += "</tr></table>";
            
         }
