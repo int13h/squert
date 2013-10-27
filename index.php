@@ -50,7 +50,7 @@ dbC();
 </head>
 <body>
 <div id=tab_group class=tab_group>
-  <!-- div id=t_dash class=tab>Dashboard</div -->
+  <div id=t_dash class=tab>Dashboard</div>
   <div id=t_sum class=tab>Events</div>
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>

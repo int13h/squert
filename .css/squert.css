@@ -62,7 +62,7 @@ div.lr {
 }
 div.content-left {
 position:fixed;
-top:110px;
+top:106px;
 bottom:0px;
 left:0px;
 width:18%;
@@ -630,23 +630,23 @@ z-index:20;
 clear:both;
 }
 div.tab {
-width:80px;
+width:60px;
 background-color:#333;
 color:#adadad;
 font-weight:400;
 float:left;
-font-size:10pt;
+font-size:10px;
 border-right:1pt solid #545454;
 cursor:pointer;
 padding:10px;
 }
 div.tab_active {
-width:80px;
+width:60px;
 background-color:#000;
 color:#fff;
 font-weight:400;
 float:left;
-font-size:10pt;
+font-size:10px;
 border-right:1pt solid #545454;
 padding:10px;
 }

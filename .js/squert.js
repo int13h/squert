@@ -1809,10 +1809,10 @@ $(document).ready(function(){
       itemTitle = item.substring(0,33) + "..";
     }
     // Remove empty message
-    $('#h_empty').remove();
+    if ($('#h_empty')[0]) $('#h_empty').remove();
 
     // If the item doesn't exist, add it. Otherwise, we start counting.
-    if ($(".h_item:contains('" + itemTitle + "')")[0]) {
+    if ($(".h_item:contains('" + itemTitle + "')").length > 0) {
       var oc = $(".h_item:contains('" + itemTitle + "')").data('n');
       var nc = Number(oc) + 1;
       var bg = '#f4f4f4';
@@ -1854,7 +1854,7 @@ $(document).ready(function(){
   }
 
   $(document).on("click", ".sub_filter,.row_filter,.tof", function() {
-    // If the person was looking in the queue and then performs a search
+    // If someone is looking in the live queue and then performs a search
     // we need to reset to all events
     rtbit = 0;
 
