@@ -68,66 +68,78 @@ dbC();
 <div class=lr>
   <div class=content-left>
 
-    <div class=event_cont_bar>
-      <div class=label_l><span class=ec_label>Toggle</span></div>
-      <div class=label>Event Grouping:</div><div id=menu1 class=tvalue_on>on</div>
-      <div class=label>Event Queue Only:</div><div id=rt class=tvalue_on>on</div>
-      <div class=label>Map:</div><div id=menu2 class=tvalue_off>off</div>
+    <div class=event_cont>
+      <div class=label_l><span class=ec_label>Toggle</span><div class=label_m data-sec=t><img src=.css/uarr.png></div></div>
+      <div class=secl id=sec_t>
+        <div class=label>Event Grouping:</div><div id=menu1 class=tvalue_on>on</div>
+        <div class=label>Event Queue Only:</div><div id=rt class=tvalue_on>on</div>
+        <div class=label>Map:</div><div id=menu2 class=tvalue_off>off</div>
+      </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Summary</span></div>
-      <div class=label>Queued Events:</div><div id=qtotal class=value>-</div>
-      <div class=label>Total Events:</div><div id=etotal class=value>-</div>
-      <div class=label>Total Signatures:</div><div id=esignature class=value>-</div>
-      <div class=label>Total Sources:</div><div id=esrc class=value>-</div>
-      <div class=label>Total Destinations:</div><div id=edst class=value>-</div>
+      <div class=label_l><span class=ec_label>Event Summary</span><div class=label_m data-sec=s><img src=.css/uarr.png></div></div>
+      <div class=secl id=sec_s>  
+        <div class=label>Queued Events:</div><div id=qtotal class=value>-</div>
+        <div class=label>Total Events:</div><div id=etotal class=value>-</div>
+        <div class=label>Total Signatures:</div><div id=esignature class=value>-</div>
+        <div class=label>Total Sources:</div><div id=esrc class=value>-</div>
+        <div class=label>Total Destinations:</div><div id=edst class=value>-</div>
+      </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Count by Priority</span></div>
-      <div class=label>High:</div><div id=pr_1 class=value>-</div>
-      <div class=label>Medium:</div><div id=pr_2 class=value>-</div>
-      <div class=label>Low:</div><div id=pr_3 class=value>-</div>
-      <div class=label>Other:</div><div id=pr_4 class=value>-</div>   
+      <div class=label_l><span class=ec_label>Event Count by Priority</span><div class=label_m data-sec=p><img src=.css/uarr.png></div></div>
+      <div class=secl id=sec_p>
+        <div class=label>High:</div><div id=pr_1 class=value>-</div>
+        <div class=label>Medium:</div><div id=pr_2 class=value>-</div>
+        <div class=label>Low:</div><div id=pr_3 class=value>-</div>
+        <div class=label>Other:</div><div id=pr_4 class=value>-</div>
+      </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Count by Classification</span></div>
+      <div class=label_l><span class=ec_label>Event Count by Classification</span><div class=label_m data-sec=c><img src=.css/uarr.png></div></div>
+      <div class=secl id=sec_c>  
 
-      <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Unauthorized Admin Access (F1)'>
-      <div class=b_C1></div>Admin Access:</div><div id=c-11 class=value>-</div>
+        <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Unauthorized Admin Access (F1)'>
+        <div class=b_C1></div>Admin Access:</div><div id=c-11 class=value>-</div>
 
-      <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Unauthorized User Access (F2)'>
-      <div class=b_C2></div>User Access:</div><div id=c-12 class=value>-</div>
+        <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Unauthorized User Access (F2)'>
+        <div class=b_C2></div>User Access:</div><div id=c-12 class=value>-</div>
       
-      <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='Attempted Unauthorized Access (F3)'>
-      <div class=b_C3></div>Attempted Access:</div><div id=c-13 class=value>-</div>
+        <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='Attempted Unauthorized Access (F3)'>
+        <div class=b_C3></div>Attempted Access:</div><div id=c-13 class=value>-</div>
 
-      <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='Denial of Service Attack (F4)'>
-      <div class=b_C4></div>Denial of Service:</div><div id=c-14 class=value>-</div>
+        <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='Denial of Service Attack (F4)'>
+        <div class=b_C4></div>Denial of Service:</div><div id=c-14 class=value>-</div>
       
-      <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='Policy Violation (F5)'>
-      <div class=b_C5></div>Policy Violation</div><div id=c-15 class=value>-</div>
+        <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='Policy Violation (F5)'>
+        <div class=b_C5></div>Policy Violation</div><div id=c-15 class=value>-</div>
 
-      <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='Reconnaissance (F6)'>
-      <div class=b_C6></div>Reconnaissance:</div><div id=c-16 class=value>-</div>
+        <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='Reconnaissance (F6)'>
+        <div class=b_C6></div>Reconnaissance:</div><div id=c-16 class=value>-</div>
       
-      <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='Malware (F7)'>
-      <div class=b_C7></div>Malware:</div><div id=c-17 class=value>-</div>
+        <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='Malware (F7)'>
+        <div class=b_C7></div>Malware:</div><div id=c-17 class=value>-</div>
 
-      <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='No Further Action Required (F8)'>
-      <div class=b_NA></div>No Action Req&#x2019;d.:</div><div id=c-1 class=value>-</div>
+        <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='No Further Action Required (F8)'>
+        <div class=b_NA></div>No Action Req&#x2019;d.:</div><div id=c-1 class=value>-</div>
       
-      <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='Escalate Event (F9)'>
-      <div class=b_ES></div>Escalated Event:</div><div id=c-2 class=value>-</div>
+        <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='Escalate Event (F9)'>
+        <div class=b_ES></div>Escalated Event:</div><div id=c-2 class=value>-</div>
+
+      </div>
     </div>
 
     <div class=event_cont>
       <div class=label_l><span class=ec_label>History</span>
         <img title="Click to expand" id=pi class=pop src=.css/po.png>
+        <div class=label_m data-sec=h><img src=.css/uarr.png></div>  
       </div>
-      <div id=h_box class=h_box></div>
+      <div class=secl id=sec_h>
+        <div id=h_box class=h_box></div>
+      </div>
     </div>
 
   </div>  

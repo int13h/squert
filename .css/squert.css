@@ -60,14 +60,20 @@ padding-left:8px;
 }
 div.lr {
 }
+div.secl {
+width:100%;
+padding-top:10px;
+padding-bottom:5px;
+float:left;
+}
 div.content-left {
 position:fixed;
-top:106px;
+top:98px;
 bottom:0px;
 left:0px;
 width:18%;
 background-color:#fafafa;
-border-right:1pt solid #545454;
+border-right:1pt dotted #666;
 padding-top:10px;
 z-index:1;
 }
@@ -104,15 +110,24 @@ div.label_l {
 width:100%;
 float:left;
 text-align:left;
-padding-bottom:10px;
-padding-left:5px;
+padding-bottom:3px;
+padding-top:4px;
+background-color:#AFF794;
+background-color:#D9FACD;
+border-bottom:1pt dotted #666;
+border-top:1pt dotted #666;
 clear:right;
-padding-top:5px;
 }
 span.ec_label {
-font-size:11px;
+margin-left:5px;
+font-size:10px;
 font-weight:bold;
-text-decoration:underline;
+}
+div.label_m {
+float:right;
+margin-right:10px;
+cursor:pointer;
+padding-top:2px;
 }
 img.pop {
 margin-left:5px;
@@ -133,15 +148,15 @@ clear:right;
 }
 div.tvalue_on, div.tvalue_off{
 font-size:11px;
-font-weight:bold;
+font-weight:normal;
 float:left;
 text-align:center;
 margin-right:5px;
 clear:right;
 border:1pt solid #000;
 border-radius:2px;
-width:25px;
-padding:3px;
+width:20px;
+padding:2px;
 }
 div.tvalue_on {
 color:#fff;
@@ -178,9 +193,7 @@ z-index:70;
 }
 span.h_item{
 font-size:11px;
-border:1pt solid #666;
-background-color:#000;
-color:#fff;
+color:#b5b5b5;
 padding:2px;
 margin-bottom:5px;
 margin-right:2px;
@@ -635,7 +648,7 @@ background-color:#333;
 color:#adadad;
 font-weight:400;
 float:left;
-font-size:10px;
+font-size:12px;
 border-right:1pt solid #545454;
 cursor:pointer;
 padding:10px;
@@ -646,7 +659,7 @@ background-color:#000;
 color:#fff;
 font-weight:400;
 float:left;
-font-size:10px;
+font-size:12px;
 border-right:1pt solid #545454;
 padding:10px;
 }
