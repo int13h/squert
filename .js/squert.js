@@ -802,7 +802,7 @@ $(document).ready(function(){
       var cols = $('th.sort').length;
       var tbl = '';
       tbl += "<tr class=eview id=active_eview><td colspan=" + cols + "><div id=eview class=eview>";
-      tbl += "<div id=ev_close class=close><div class=b_close title='Close'>X</div></div>";
+      tbl += "<div id=ev_close class=close><div class=b_close title='Close'><img src=.css/close.png></div></div>";
       tbl += "<div class=sigtxt></div>";
       tbl += "<div class=chrt_ts></div>";
       tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
@@ -904,7 +904,7 @@ $(document).ready(function(){
 
         tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=" + nCols + ">";
         tbl += "<div id=ev_close_sub2 class=close_sub1>";
-        tbl += "<div class=b_close title='Close'>X</div></div>";
+        tbl += "<div class=b_close title='Close'><img src=.css/close.png></div></div>";
         tbl += row;
         tbl += "</td></tr>";
         $("#" + rowLoke).after(tbl);
@@ -1389,7 +1389,7 @@ $(document).ready(function(){
         var cols = $('th.sort').length;
 
         tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=" + cols + "><div id=ev_close_sub ";
-        tbl += "class=close_sub><div class=b_close title='Close'>X</div></div>";
+        tbl += "class=close_sub><div class=b_close title='Close'><img src=.css/close.png></div></div>";
         tbl += "<div class=notes></div>";
         tbl += "<table id=tl3 class=table align=center width=100% cellpadding=0 cellspacing=0>";
         tbl += head;
@@ -1793,7 +1793,7 @@ $(document).ready(function(){
            
         }
                     
-        tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'>X</div></div>";
+        tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'><img src=.css/close.png></div></div>";
 
         if ( sg != 0 ) {
           tbl += "<div class=sigtxt></div>";
