@@ -58,13 +58,17 @@ cursor:pointer;
 text-decoration:underline;
 padding-left:8px;
 }
-div.lr {
-}
 div.secl {
 width:100%;
 padding-top:10px;
 padding-bottom:5px;
 float:left;
+}
+div.rl {
+float:left;
+clear:both;
+width:100%;
+background-color:#e9e9e9;
 }
 div.content-left {
 position:fixed;

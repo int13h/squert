@@ -42,6 +42,28 @@ CREATE TABLE IF NOT EXISTS mappings
   INDEX age (age)
 );
 
+CREATE TABLE IF NOT EXISTS stats
+(
+  timestamp	DATETIME,
+  type		TINYINT,
+  object        INT UNSIGNED NOT NULL DEFAULT 0,
+  count		INT UNSIGNED NOT NULL DEFAULT 0,
+  INDEX type (type),
+  INDEX object (object)
+);
+
+CREATE TABLE IF NOT EXISTS stat_types
+(
+  type		TINYINT,
+  description   VARCHAR(255)
+);
+
+INSERT IGNORE INTO stat_types (type,description) VALUES ('1','Event Severity');
+INSERT IGNORE INTO stat_types (type,description) VALUES ('2','Sensor ID');
+INSERT IGNORE INTO stat_types (type,description) VALUES ('3','Source IP');
+INSERT IGNORE INTO stat_types (type,description) VALUES ('4','Destination IP');
+INSERT IGNORE INTO stat_types (type,description) VALUES ('5','Signature ID'); 
+ 
 ALTER TABLE user_info
 ADD email VARCHAR(320) NOT NULL DEFAULT 'none',
 ADD type ENUM('ADMIN','USER') NOT NULL DEFAULT 'USER',

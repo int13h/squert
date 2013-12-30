@@ -625,15 +625,12 @@ $(document).ready(function(){
     }
   });
 
-  //
-  // Tab manipulations
-  //
-
   // Logout
   $("#logout").click(function(event) {
     $.get("index.php?id=0", function(){location.reload()});
   });
 
+  // Tabs
   var tab_cached = $("#sel_tab").val();
   $('#' + tab_cached).attr('class','tab_active');
   $("#" + tab_cached + "_content").attr('class','content_active');
@@ -660,10 +657,22 @@ $(document).ready(function(){
       $("#" + active).addClass('tab');
       $("#" + active).css('color','#adadad');
       $("#" + active).css('background-color','#333333');
-      $(this).attr('class','tab_active');         
+      $(this).attr('class','tab_active');
       $("#" + content).attr('class','content');
       $("#" + this.id + "_content").attr('class','content_active');
-      activeTab = $(".tab_active").attr('id')
+      activeTab = $(".tab_active").attr('id');
+      
+      switch (activeTab) {
+        case "t_sum": 
+          $('.content-right').show();
+          $('.content-left').show();
+        break;
+        default:
+          $('.content-right').hide();
+          $('.content-left').hide();
+        break;
+      }
+
       $('#sel_tab').val(activeTab);
       var ctab = $('#sel_tab').val();
       var urArgs = "type=" + 5 + "&tab=" + ctab;
@@ -1822,61 +1831,7 @@ $(document).ready(function(){
   // Add filter parts to box
   //
 
-  function hItemAdd(item) {
-    var itemTitle = item;
-    // Truncate
-    if (item.length > 33) {
-      itemTitle = item.substring(0,33) + "..";
-    }
-    // Remove empty message
-    if ($('#h_empty')[0]) $('#h_empty').remove();
-
-    // If the item doesn't exist, add it. Otherwise, we start counting.
-    if ($(".h_item:contains('" + itemTitle + "')").length > 0) {
-      var oc = $(".h_item:contains('" + itemTitle + "')").data('n');
-      var nc = Number(oc) + 1;
-      var bg = '#c9c9c9';
-      var fn = 'normal';
-      if (nc <= 3) { 
-        bg = '#000';
-      } else if (nc > 3) {
-        bg = '#cc0000';
-        fn = 'bold';
-      } 
- 
-      $(".h_item:contains('" + itemTitle + "')").css('color', bg);
-      $(".h_item:contains('" + itemTitle + "')").css('font-weight', fn);
-      $(".h_item:contains('" + itemTitle + "')").data('n',nc);
-      $(".h_item:contains('" + itemTitle + "')").text(itemTitle + "(" + nc + ")");
-    } else {
-      var toAdd = "<span data-n=1 class=h_item title=\"" + item + "\"> " + itemTitle + "</span>";
-      $('#h_box').append(toAdd);
-    }
-  }
-
-  $(document).on("click", ".pop", function() {
-    var cid = $('.pop').attr('id');
-    switch (cid) {
-      case 'pi': 
-        $('.pop').attr('id','po');
-        $('.pop').attr('src','.css/pi.png');
-        $('#h_box').attr('class','h_box_o');
-        $('.pop').attr('title','Click to collapse'); 
-      break;
-      case 'po':
-        $('.pop').attr('id','pi');
-        $('.pop').attr('src','.css/po.png');
-        $('#h_box').attr('class','h_box');
-        $('.pop').attr('title','Click to expand');
-      break;
-    } 
-  });
-
-  if (!$('.h_item')[0]) {
-    $('#h_box').append('<span id=h_empty>History is empty</span>');
-  }
-
-  $(document).on("click", ".sub_filter,.row_filter,.tof", function() {
+ $(document).on("click", ".sub_filter,.row_filter,.tof", function() {
     // If someone is looking in the live queue and then performs a search
     // we need to reset to all events
     rtbit = 0;
@@ -1921,6 +1876,64 @@ $(document).ready(function(){
     } 
     $(tfocus).focus();
   });
+
+  //
+  // Object History
+  //
+
+  function hItemAdd(item) {
+    var itemTitle = item;
+    // Truncate
+    if (item.length > 33) {
+      itemTitle = item.substring(0,33) + "..";
+    }
+    // Remove empty message
+    if ($('#h_empty')[0]) $('#h_empty').remove();
+
+    // If the item doesn't exist, add it. Otherwise, we start counting.
+    if ($(".h_item:contains('" + itemTitle + "')").length > 0) {
+      var oc = $(".h_item:contains('" + itemTitle + "')").data('n');
+      var nc = Number(oc) + 1;
+      var bg = '#c9c9c9';
+      var fn = 'normal';
+      if (nc <= 3) { 
+        bg = '#000';
+      } else if (nc > 3) {
+        bg = '#cc0000';
+        fn = 'bold';
+      } 
+ 
+      $(".h_item:contains('" + itemTitle + "')").css('color', bg);
+      $(".h_item:contains('" + itemTitle + "')").css('font-weight', fn);
+      $(".h_item:contains('" + itemTitle + "')").data('n',nc);
+      $(".h_item:contains('" + itemTitle + "')").text(itemTitle + "(" + nc + ")");
+    } else {
+      var toAdd = "<span data-n=1 class=h_item title=\"" + item + "\"> " + itemTitle + "</span>";
+      $('#h_box').prepend(toAdd);
+    }
+  }
+
+  $(document).on("click", ".pop", function() {
+    var cid = $('.pop').attr('id');
+    switch (cid) {
+      case 'pi': 
+        $('.pop').attr('id','po');
+        $('.pop').attr('src','.css/pi.png');
+        $('#h_box').attr('class','h_box_o');
+        $('.pop').attr('title','Click to collapse'); 
+      break;
+      case 'po':
+        $('.pop').attr('id','pi');
+        $('.pop').attr('src','.css/po.png');
+        $('#h_box').attr('class','h_box');
+        $('.pop').attr('title','Click to expand');
+      break;
+    } 
+  });
+
+  if (!$('.h_item')[0]) {
+    $('#h_box').append('<span id=h_empty>History is empty</span>');
+  }
 
   // 
   // Comment box

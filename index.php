@@ -52,6 +52,7 @@ dbC();
 <div id=tab_group class=tab_group>
   <div id=t_dash class=tab>Dashboard</div>
   <div id=t_sum class=tab>Events</div>
+  <div id=t_inc class=tab>Incidents</div>
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
   </div>
@@ -102,11 +103,11 @@ dbC();
       <div class=label_l><span class=ec_label>Event Count by Classification</span><div class=label_m data-sec=c><img src=.css/uarr.png></div></div>
       <div class=secl id=sec_c>  
 
-        <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Unauthorized Admin Access (F1)'>
-        <div class=b_C1></div>Admin Access:</div><div id=c-11 class=value>-</div>
+        <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Compromised Host (F1)'>
+        <div class=b_C1></div>Compromised Host:</div><div id=c-11 class=value>-</div>
 
-        <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Unauthorized User Access (F2)'>
-        <div class=b_C2></div>User Access:</div><div id=c-12 class=value>-</div>
+        <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Compromised L2 (F2)'>
+        <div class=b_C2></div>Compromised L2:</div><div id=c-12 class=value>-</div>
       
         <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='Attempted Unauthorized Access (F3)'>
         <div class=b_C3></div>Attempted Access:</div><div id=c-13 class=value>-</div>
@@ -142,17 +143,19 @@ dbC();
       </div>
     </div>
 
-  </div>  
-
+  </div>
+  
   <div class=content-right>
-    <div id=t_dash_content class=content>
-    </div>
-
     <div id=t_sum_content class=content>
       <div id=aaa-00 class=aaa></div></div>
       <br><br><br>
     </div>
   </div>
+</div>
+
+<div class=rl>
+  <div id=t_dash_content class=content>Dashboard</div>
+  <div id=t_inc_content class=content>Incidents</div>
 </div>
 
 <div class=cat_box>
