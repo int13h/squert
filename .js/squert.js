@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 Paul Halliday <paul.halliday@gmail.com> */
+/* Copyright (C) 2012 Paul Halliday <paul.halliday@gmail.com> */
 
 $(document).ready(function(){
 
@@ -83,7 +83,8 @@ $(document).ready(function(){
       fval = 'YES';
       fval_c = 'fl_val_on';
     }
-    var tl = '<span class=tl>Timeline: </span>';
+    var tl = "<span class=tl>Status: </span><span class=rt_notice>Synchronized</span>";
+    tl += "<span class=fl>Timeline: </span>";
     tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
     tl += "<span class=fl>Filtered by Object: </span><span class=" + fval_c + ">" + fval + "</span>";
  
@@ -92,7 +93,7 @@ $(document).ready(function(){
       fbs_c = 'fl_val_on';
     } 
     tl += "<span class=fl>Filtered by Sensor: </span><span class=" + fbs_c + ">" + fbs + "</span>";
-    tl += "<span class=fl>Status: </span><span class=rt_notice title=\"update results\">Synchronized</span>";
+    tl += "<div class=b_update>Update</div>";
     $('.timeline').html(tl);
     return theWhen;
   }
@@ -337,7 +338,7 @@ $(document).ready(function(){
       if (lastcount < newcount) {
         if (caller != 0) {
           $(".rt_notice").text('New Events are Available');
-          $(".rt_notice").css('color','yellow');
+          $(".rt_notice").css('color','red');
         }
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
@@ -572,12 +573,6 @@ $(document).ready(function(){
     newView("u");
   });
    
-  $(document).on("click", ".rt_notice", function(event) {
-    $(".rt_notice").css('color','#c9c9c9');
-    $(".rt_notice").text('Synchronized');
-    newView("u");        
-  });
-
   // Sort ASC/DESC
   $(document).on("click", ".event_time", function(event) {
     var csv = $(".event_time").text();
@@ -593,7 +588,7 @@ $(document).ready(function(){
   });
 
   // Update page
-  $(".b_update").click(function(event) {
+  $(document).on("click", ".b_update", function(event) {
     $(".rt_notice").css('color','#c9c9c9');
     $(".rt_notice").text('Synchronized');
     newView("u");
@@ -673,10 +668,10 @@ $(document).ready(function(){
         break;
       }
 
-      $('#sel_tab').val(activeTab);
-      var ctab = $('#sel_tab').val();
-      var urArgs = "type=" + 5 + "&tab=" + ctab;
-      $.get(".inc/callback.php?" + urArgs, function(){Null});
+      //$('#sel_tab').val(activeTab);
+      //var ctab = $('#sel_tab').val();
+      //var urArgs = "type=" + 5 + "&tab=" + ctab;
+      //$.get(".inc/callback.php?" + urArgs, function(){Null});
     }
   });
 

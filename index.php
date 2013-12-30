@@ -53,6 +53,7 @@ dbC();
   <div id=t_dash class=tab>Dashboard</div>
   <div id=t_sum class=tab>Events</div>
   <div id=t_inc class=tab>Incidents</div>
+  <div id=t_ovr class=tab>Summary</div> 
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
   </div>
@@ -103,8 +104,8 @@ dbC();
       <div class=label_l><span class=ec_label>Event Count by Classification</span><div class=label_m data-sec=c><img src=.css/uarr.png></div></div>
       <div class=secl id=sec_c>  
 
-        <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Compromised Host (F1)'>
-        <div class=b_C1></div>Compromised Host:</div><div id=c-11 class=value>-</div>
+        <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Compromised L1 (F1)'>
+        <div class=b_C1></div>Compromised L1:</div><div id=c-11 class=value>-</div>
 
         <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Compromised L2 (F2)'>
         <div class=b_C2></div>Compromised L2:</div><div id=c-12 class=value>-</div>
@@ -151,11 +152,26 @@ dbC();
       <br><br><br>
     </div>
   </div>
-</div>
 
-<div class=rl>
-  <div id=t_dash_content class=content>Dashboard</div>
-  <div id=t_inc_content class=content>Incidents</div>
+  <div class=rl>
+    <div id=t_dash_content class=content></div>
+    <div id=t_inc_content class=content></div>
+    <div id=t_ovr_content class=content>
+      <div class=ovbl>Brief</div>
+      <div id=ov_content00></div>
+      <div class=ovbl>Event Distribution by Sensor</div>
+      <div id=ov_content01></div>
+      <div class=ovbl>Event Distribution by Category</div>
+      <div id=ov_content02></div>
+      <div class=ovbl>Top Signatures</div>
+      <div id=ov_content03></div>
+      <div class=ovbl>Top Source IPs</div>
+      <div id=ov_content04></div> 
+      <div class=ovbl>Top Destination IPs</div>
+      <div id=ov_content05></div>
+    </div>
+  </div>
+
 </div>
 
 <div class=cat_box>
@@ -185,7 +201,6 @@ dbC();
 <div class=bottom>
   <div class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
   <div class=b_class><span class=class_msg></span>&nbsp;</div>
-  <div class=b_update>update</div>
 </div>
 
 <input id=event_sort type=hidden value="DESC">
