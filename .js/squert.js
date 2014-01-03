@@ -83,7 +83,7 @@ $(document).ready(function(){
       fval = 'YES';
       fval_c = 'fl_val_on';
     }
-    var tl = "<span class=tl>Status: </span><span class=rt_notice>Synchronized</span>";
+    var tl = "<div class=b_update>Update</div>";
     tl += "<span class=fl>Timeline: </span>";
     tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
     tl += "<span class=fl>Filtered by Object: </span><span class=" + fval_c + ">" + fval + "</span>";
@@ -93,13 +93,13 @@ $(document).ready(function(){
       fbs_c = 'fl_val_on';
     } 
     tl += "<span class=fl>Filtered by Sensor: </span><span class=" + fbs_c + ">" + fbs + "</span>";
-    tl += "<div class=b_update>Update</div>";
     $('.timeline').html(tl);
     return theWhen;
   }
   
   // Load main content
   eventList("0-aaa-00");
+  loadSummary();
   
   $("#loader").show();
 
@@ -111,7 +111,9 @@ $(document).ready(function(){
       case "LO": 
         answer = "sub_light|LO"; break;
       case "-": 
-        answer = "sub_light|-"; break;
+        answer = "sub_light|"; break;
+      case "01":
+        answer = "sub_light|"; break; 
       default:
         answer = "sub_filter|<span class=flag><img src=\".flags/" + cc + ".png\"></span>"; break;
     }
@@ -213,7 +215,7 @@ $(document).ready(function(){
             
       // What is our current event total?
       var esum = $('#event_sum').val();
-      $(".mb_box").html("<div id=wm0 style=\"width:950px;height:500px;\"></div>");
+      $(".mb_box").html("<div id=wm0 style=\"width:951px;height:500px;\"></div>");
       $('#wm0').vectorMap({
         map: 'world_mill_en',
         color: '#f4f3f0',
@@ -337,8 +339,7 @@ $(document).ready(function(){
       }
       if (lastcount < newcount) {
         if (caller != 0) {
-          $(".rt_notice").text('New Events are Available');
-          $(".rt_notice").css('color','red');
+          $(".b_update").css('border-left','4pt solid lime');
         }
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
@@ -589,9 +590,17 @@ $(document).ready(function(){
 
   // Update page
   $(document).on("click", ".b_update", function(event) {
-    $(".rt_notice").css('color','#c9c9c9');
-    $(".rt_notice").text('Synchronized');
-    newView("u");
+    // Where are we?
+    var curTab = $('.tab_active').attr('id');
+    switch (curTab) {
+      case 't_ovr':
+        loadSummary();
+      break;
+      default:
+        $(".b_update").css('border-left','4pt solid #666');
+        newView("u");
+      break;
+    }
   });
  
   // If search is in focus, update on enter
@@ -1135,8 +1144,6 @@ $(document).ready(function(){
         $('#qtotal').text(sumRT); 
         $('#etotal').text(sumEC); 
         $('#esignature').text(sumSI);
-        $('#esrc').text(sumSC);
-        $('#edst').text(sumDC); 
         
         tbl += "<table width=100% id=tl1 cellpadding=0 cellspacing=0 align=center>";
         tbl += head;
@@ -2875,5 +2882,172 @@ $(document).ready(function(){
       }
     }
   });
+
+  // Load summary tab
+  function loadSummary() {
+    mkSummary("sig");
+    mkSummary("srcip");
+    mkSummary("dstip");
+    mkSummary("srccc");
+    mkSummary("dstcc");
+  }
+
+  // Summary tab 
+  function mkSummary(box) {
+    var theWhen = getTimestamp();
+    var limit = 10;
+
+    switch (box) {
+      case "srcip":
+        var cbArgs = "srcip";
+        var qargs = "ip-src";
+        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        $(function(){
+          $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
+        }); 
+      break;
+      case "dstip":
+        var cbArgs = "dstip";
+        var qargs = "ip-dst";
+        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        $(function(){
+          $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
+        });
+      break;
+      case "sig":
+        var qargs = "sig-sig";
+        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        $(function(){
+          $.get(".inc/callback.php?" + urArgs, function(data){cb16(data)});
+        });    
+      break;
+      case "srccc":
+        var cbArgs = "srccc";
+        var qargs = "cc-src";
+        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        $(function(){
+          $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
+        });
+      break;
+      case "dstcc":
+        var cbArgs = "dstcc";
+        var qargs = "cc-dst";
+        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        $(function(){
+          $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
+        });
+      break;
+    }   
+
+    // IP and Country
+    function cb15(data,cbArgs){
+      var ch = "SRC";
+      if (cbArgs[0] == "s") ch = "DST";
+      eval("raw=" + data);
+      var tbl = '', head = '', row = ''; 
+      head += "<thead><tr>";
+      head += "<th width=60 class=sub>COUNT</th>";
+      head += "<th width=60 class=sub>%TOTAL</th>";
+      head += "<th width=50 class=sub>#SIGs</th>";
+      head += "<th width=50 class=sub>#" + ch + "s</th>";
+      if (cbArgs[3] == "c") {
+        head += "<th class=sub>COUNTRY</th>";
+        head += "<th width=50 class=sub>#IPs</th>"; 
+      } else {
+        head += "<th width=120 class=sub>IP</th>";
+        head += "<th class=sub>COUNTRY</th>";	
+      }
+      head += "</tr></thead>";         
+     
+      var eventsum = raw[raw.length - 1].n;
+      for (var i=0; i<raw.length - 1; i++) {
+        var cnt   = raw[i].f1 || "-";
+        var sigs  = raw[i].f2 || "-";
+        var ip2   = raw[i].f3 || "-";
+        var cc    = raw[i].f4 || "-";
+        var clong = raw[i].f5 || "-";
+        var ip    = raw[i].f6 || "-"; 
+        var cs = getCountry(cc).split("|");
+        if (cs[1] == "LO") { cs[1] = ""; }
+        var per = 0;
+        if (eventsum > 0) per = parseFloat(cnt/eventsum*100).toFixed(2);
+        row += "<tr class=d_row>";
+        row += "<td class=row><b>" + cnt + "</b></td>";
+        row += "<td class=row><b>" + per + "%</b></td>";
+        row += "<td class=row><b>" + sigs + "</b></td>";
+        row += "<td class=row><b>" + ip2 + "</b></td>";
+        
+        if (cbArgs[3] == "c") {
+          row += "<td class=" + cs[0] + " data-type=cc data-value=" + cc + ">";
+          row += cs[1] + clong + " (." + cc.toLowerCase() + ")" + "</td>";
+          row += "<td class=row><b>" + ip + "</b></td>";         
+        } else {
+          row += "<td class=sub_filter data-type=ip>" + ip + "</td>";
+          row += "<td class=" + cs[0] + " data-type=cc data-value=" + cc + ">"; 
+          row += cs[1] + clong + " (." + cc.toLowerCase() + ")" + "</td>";
+        }
+
+        row += "</tr>";
+      }
+      
+      tbl += "<table id=top" + cbArgs + " class=dash cellpadding=0 cellspacing=0>";
+      tbl += head;
+      tbl += row;
+      tbl += "</table>";
+      if ($("#top" + cbArgs)[0]) $("#top" + cbArgs).remove();
+      $("#ov_" + cbArgs).after(tbl);
+
+      $("#top" + cbArgs).tablesorter({
+          cancelSelection:true
+      });
+    }
+
+    // Signature
+    function cb16(data){
+      eval("raw=" + data);
+      var tbl = '', head = '', row = ''; 
+      head += "<thead><tr>";
+      head += "<th width=60 class=sub>COUNT</th>";
+      head += "<th width=60 class=sub>%TOTAL</th>";
+      head += "<th width=40 class=sub>#SRC</th>";
+      head += "<th width=40 class=sub>#DST</th>";
+      head += "<th class=sub>SIGNATURE</th>";
+      head += "<th width=100 class=sub>ID</th>";
+      head += "</tr></thead>";         
+     
+      var eventsum = raw[raw.length - 1].n;
+      for (var i=0; i<raw.length - 1; i++) {
+        var cnt = raw[i].f1 || "-";
+        var src = raw[i].f2 || "-";
+        var dst = raw[i].f3 || "-";
+        var sid = raw[i].f4 || "-";
+        var sig = raw[i].f5 || "-";
+        var per = 0;
+        if (eventsum > 0) per = parseFloat(cnt/eventsum*100).toFixed(2);
+        row += "<tr class=d_row>";
+        row += "<td class=row><b>" + cnt + "</b></td>";
+        row += "<td class=row><b>" + per + "%</b></td>";
+        row += "<td class=row><b>" + src + "</b></td>";
+        row += "<td class=row><b>" + dst + "</b></td>";
+        row += "<td class=row_filter data-type=sid data-value=";
+        row += sid + ">" + sig + "</td>";
+        row += "<td class=row>" + sid + "</td>";   
+        row += "</tr>";
+      }
+      
+      tbl += "<table id=topsigs class=dash cellpadding=0 cellspacing=0>";
+      tbl += head;
+      tbl += row;
+      tbl += "</table>";
+      if ($('#topsigs')[0]) $('#topsigs').remove(); 
+      $("#ov_signature").after(tbl);
+
+      $("#topsigs").tablesorter({
+          cancelSelection:true
+      });
+    }
+  }
+
+
 // The End.
 });

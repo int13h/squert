@@ -157,21 +157,32 @@ dbC();
     <div id=t_dash_content class=content></div>
     <div id=t_inc_content class=content></div>
     <div id=t_ovr_content class=content>
-      <div class=ovbl>Brief</div>
-      <div id=ov_content00></div>
-      <div class=ovbl>Event Distribution by Sensor</div>
-      <div id=ov_content01></div>
-      <div class=ovbl>Event Distribution by Category</div>
-      <div id=ov_content02></div>
-      <div class=ovbl>Top Signatures</div>
-      <div id=ov_content03></div>
-      <div class=ovbl>Top Source IPs</div>
-      <div id=ov_content04></div> 
-      <div class=ovbl>Top Destination IPs</div>
-      <div id=ov_content05></div>
+      <div class=onepane>
+        <div class=ovbl>Top Signatures</div>
+        <div id=ov_signature></div>
+      </div>
+      <div class=twopane>
+        <div class=leftpane>
+          <div class=ovbl>Top Source IPs</div>
+          <div id=ov_srcip></div>
+        </div>
+        <div class=rightpane> 
+          <div class=ovbl>Top Destination IPs</div>
+          <div id=ov_dstip></div>
+        </div>
+      </div>
+      <div class=twopane>
+        <div class=leftpane>
+          <div class=ovbl>Top Source Countries</div>
+          <div id=ov_srccc></div>
+        </div>
+        <div class=rightpane> 
+          <div class=ovbl>Top Destination Countries</div>
+          <div id=ov_dstcc></div>
+        </div>
+      </div>
     </div>
   </div>
-
 </div>
 
 <div class=cat_box>

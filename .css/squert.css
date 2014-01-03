@@ -38,6 +38,7 @@ padding-top:40px;
 }
 span.tl {
 font-weight:bold;
+margin-right:5px;
 }
 span.fl {
 font-weight:bold;
@@ -68,13 +69,53 @@ div.rl {
 float:left;
 clear:both;
 margin-top:40px;
-padding-left:10px;
-padding-right:10px;
+margin-bottom:60px;
+width:100%;
 }
 div.ovbl {
-font-size:14px;
+font-size:12px;
 font-weight:bold;
 color:#545454;
+padding-bottom:10px;
+}
+div.onepane {
+width:96%;
+padding-right:2%;
+padding-left:2%;
+}
+div.twopane {
+width:100%;
+padding-right:2%;
+padding-left:2%;
+}
+div.leftpane {
+float:left;
+width:47%;
+margin-right:2%;
+}
+div.rightpane {
+float:left;
+width:47%;
+}
+table.dash {
+width:100%;
+border-top:none;
+border: 1pt solid #c9c9c9;
+border-bottom:none;
+margin-bottom:30px;
+border-radius:10px;
+}
+table.dash tr:last-child th:first-child {
+border-top-left-radius:10px
+}
+table.dash tr:last-child th:last-child {
+border-top-right-radius:10px
+}
+table.dash tr:last-child td:first-child {
+border-bottom-left-radius:10px
+}
+table.dash tr:last-child td:last-child {
+border-bottom-right-radius:10px
 }
 div.content-left {
 position:fixed;
@@ -754,7 +795,7 @@ text-align:left;
 float:left;
 margin-left:5px;
 padding-left:5px;
-border-left: 3pt solid lime;
+border-left: 4pt solid #666;
 }
 div.b_update:hover {
 text-decoration:underline;
@@ -802,9 +843,6 @@ padding-right:5px;
 td.bold {
 padding-bottom:5px;
 font-weight:700;
-}
-.rt_notice {
-color:#c9c9c9;
 }
 div.big {
 font-size:11px;

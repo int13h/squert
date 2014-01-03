@@ -32,6 +32,7 @@ $types = array(
                 '12' => 'remove_comment',
                 '13' => 'sensors',
                 '14' => 'user_profile',
+                '15' => 'summary',
 );
 
 $type = $types[$type];
@@ -825,6 +826,68 @@ function user_profile() {
     $return = array("msg" => $result);
     $theJSON = json_encode($return); 
     echo $theJSON;
+}
+
+function summary() {
+    global $when;
+    $limit = $_REQUEST['limit'];
+    $qargs = $_REQUEST['qargs'];
+    list($type,$subtype) = explode("-", $qargs); 
+    $oppip = "src";
+    if ($subtype == "src") { $oppip = "dst"; }
+    switch ($type) {
+        case "ip":
+            $query = "SELECT COUNT(event.{$subtype}_ip) AS f1,
+                      COUNT(DISTINCT(event.signature)) AS f2,
+                      COUNT(DISTINCT(event.{$oppip}_ip)) AS f3,
+                      m{$subtype}.cc AS f4, 
+                      m{$subtype}.c_long AS f5,
+                      INET_NTOA(event.{$subtype}_ip) AS f6
+                      FROM event
+                      LEFT JOIN mappings AS m{$subtype} ON event.{$subtype}_ip = m{$subtype}.ip  
+                      WHERE $when
+                      GROUP BY f6
+                      ORDER BY f1 DESC";
+        break;
+        case "sig":
+            $query = "SELECT COUNT(event.signature) AS f1,
+                      COUNT(DISTINCT(event.src_ip)) AS f2,
+                      COUNT(DISTINCT(event.dst_ip)) AS f3,
+                      event.signature_id AS f4,
+                      event.signature AS f5
+                      FROM event
+                      WHERE $when
+                      GROUP BY f4
+                      ORDER BY f1 DESC";
+        break;
+        case "cc":
+            $query = "SELECT COUNT(event.{$subtype}_ip) AS f1,
+                      COUNT(DISTINCT(event.signature)) AS f2,
+                      COUNT(DISTINCT(event.{$oppip}_ip)) AS f3,
+                      m.cc AS f4,
+                      m.c_long AS f5,
+                      COUNT(DISTINCT(event.{$subtype}_ip)) AS f6
+                      FROM event LEFT JOIN mappings AS m ON event.{$subtype}_ip = m.ip
+                      WHERE $when
+                      AND event.{$subtype}_ip NOT BETWEEN 167772160 AND 184549375
+                      AND event.{$subtype}_ip NOT BETWEEN 2886729728 AND 2886795263 
+                      AND event.{$subtype}_ip NOT BETWEEN 3232235520 AND 3232301055
+                      AND m.cc IS NOT NULL GROUP BY m.cc ORDER BY f1 DESC"; 
+        break; 
+    }
+    $result = mysql_query($query);
+    $rows = array();
+    $i = 0;
+    $n = 0;
+    $r = mysql_num_rows($result);
+    while ($row = mysql_fetch_assoc($result)) {
+        $n += $row["f1"];
+        $i++;
+        if ($i <= $limit) $rows[] = $row; 
+    }
+    $rows[] = array("n" => $n, "r" => $r);
+    $theJSON = json_encode($rows);
+    echo $theJSON;     
 }
 
 $type();
