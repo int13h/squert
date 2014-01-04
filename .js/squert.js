@@ -2885,17 +2885,17 @@ $(document).ready(function(){
 
   // Load summary tab
   function loadSummary() {
-    mkSummary("sig");
-    mkSummary("srcip");
-    mkSummary("dstip");
-    mkSummary("srccc");
-    mkSummary("dstcc");
+    var limit = 10;
+    mkSummary("signature",limit);
+    mkSummary("srcip",limit);
+    mkSummary("dstip",limit);
+    mkSummary("srccc",limit);
+    mkSummary("dstcc",limit);
   }
 
   // Summary tab 
-  function mkSummary(box) {
+  function mkSummary(box,limit) {
     var theWhen = getTimestamp();
-    var limit = 10;
 
     switch (box) {
       case "srcip":
@@ -2914,7 +2914,7 @@ $(document).ready(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
         });
       break;
-      case "sig":
+      case "signature":
         var qargs = "sig-sig";
         var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
@@ -2961,6 +2961,9 @@ $(document).ready(function(){
      
       var eventsum = raw[raw.length - 1].n  || 0;
       var records  = raw[raw.length - 1].r || 0;
+      if (records == 0) {
+        row = "<tr><td class=row colspan=6>No result.</td></tr>";
+      }
       for (var i=0; i<raw.length - 1; i++) {
         var cnt   = raw[i].f1 || "-";
         var sigs  = raw[i].f2 || "-";
@@ -2995,9 +2998,9 @@ $(document).ready(function(){
       tbl += row;
       tbl += "</table>";
       if ($("#top" + cbArgs)[0]) $("#top" + cbArgs).remove();
-      $("#ov_" + cbArgs).after(tbl);
-      $("#ov_" + cbArgs).prev(".ovbi").html("viewing <b>" + i + " </b>of<b> " + records + " </b>results"); 
-
+      $("#ov_" + cbArgs + "_sl").after(tbl);
+      $("#ov_" + cbArgs + "_msg").html("viewing <b><span id=ov_" + cbArgs + "_sl_lbl>" + i + "</b> of <b>" + records + " </b>results"); 
+      if (records > 1) mkSlider("ov_" + cbArgs + "_sl", i, records);
       $("#top" + cbArgs).tablesorter({
           cancelSelection:true
       });
@@ -3018,6 +3021,9 @@ $(document).ready(function(){
      
       var eventsum = raw[raw.length - 1].n;
       var records  = raw[raw.length - 1].r;
+      if (records == 0) {
+        row = "<tr><td class=row colspan=5>No result.</td></tr>";
+      }
       for (var i=0; i<raw.length - 1; i++) {
         var cnt = raw[i].f1 || "-";
         var src = raw[i].f2 || "-";
@@ -3042,14 +3048,21 @@ $(document).ready(function(){
       tbl += row;
       tbl += "</table>";
       if ($('#topsigs')[0]) $('#topsigs').remove(); 
-      $("#ov_signature").after(tbl);
-      $("#ov_signature").prev(".ovbi").html("viewing <b>" + i + " </b>of<b> " + records + " </b>results");
-
+      $("#ov_signature_sl").after(tbl);
+      $("#ov_signature_msg").html("viewing <b><span id=ov_signature_sl_lbl>" + i + "</span></b> of <b>" + records + " </b>results");
+      if (records > 1) mkSlider("ov_signature_sl", i, records);
       $("#topsigs").tablesorter({
           cancelSelection:true
       });
     }
   }
+
+  $(".ovsl").mouseup(function() {
+    var section = $(this).attr('id')
+    var base    = section.split("_")[1];
+    var limit   = Number($("#" + section + "_lbl").text());
+    if (limit > 0) mkSummary(base, limit);
+  });
 
 
 // The End.

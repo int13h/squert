@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <br><br><br><br><br>
 <table class=boxes width=450 align=center cellpadding=1 cellspacing=0>
 <tr><td colspan=2 class=header>
-SQueRT - Please login to continue</td></tr>
+squert - Please login to continue</td></tr>
 <tr><td colspan=2 class=boxes>
 Username<br>
 <input class=in type=text name=username value="<?php echo htmlentities($username);?>" maxlength="32"></td></tr>
@@ -124,7 +124,7 @@ Password<br>
 <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
 <td class=err><?php echo $err;?></td></tr>
 </table>
-<div class=cp>Version 1.1.6<span>&copy;2013 Paul Halliday</span></div>
+<div class=cp>Version 1.1.6<span>&copy;2014 Paul Halliday</span></div>
 </form>
 <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>
 </body>

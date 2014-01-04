@@ -1,15 +1,22 @@
-.axis path,
-.axis line {
+.slideraxis {
+font: 0px sans-serif;
+-webkit-user-select: none;
+-moz-user-select: none;
+user-select: none;
+}
+.slideraxis .sliderdomain {
+display:none;
 fill: none;
 stroke: #000;
-shape-rendering: crispEdges;
 }
-.bar {
-fill:#c9c9c9;
+.slideraxis .sliderhalo {
+fill:none;
+stroke:#000;
+stroke-width:1px;
 }
-.x.axis path {
-display: none;
-}
-.chrt_ts {
-font-size:11px;
+.slider .sliderhandle {
+fill: #fff;
+stroke: #666;
+stroke-width: 1px;
+pointer-events: none;
 }

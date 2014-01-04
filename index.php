@@ -40,7 +40,7 @@ dbC();
 <script type="text/javascript" src=".js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src=".js/cal.js"></script>
 <script type="text/javascript" src=".js/squert.js"></script>
-<!-- script type="text/javascript" src=".js/charts.js"></script -->
+<script type="text/javascript" src=".js/charts.js"></script>
 <script type="text/javascript" src=".js/jquery-jvectormap-1.2.2.min.js"></script>
 <script type="text/javascript" src=".js/jquery-jvectormap-world-mill-en.js"></script>
 <script type="text/javascript" src=".js/d3/d3.v3.min.js"></script>
@@ -158,26 +158,26 @@ dbC();
     <div id=t_inc_content class=content></div>
     <div id=t_ovr_content class=content>
       <div class=onepane>
-        <div class=ovbl>Top Signatures</div><div class=ovbi></span></div>
+        <div class=ovbl>Top Signatures</div><div class=ovbi id=ov_signature_msg></div><div class=ovsl id=ov_signature_sl></div>
         <div id=ov_signature></div>
       </div>
       <div class=twopane>
         <div class=leftpane>
-          <div class=ovbl>Top Source IPs</div><div class=ovbi></div>
+          <div class=ovbl>Top Source IPs</div><div class=ovbi id=ov_srcip_msg></div><div class=ovsl id=ov_srcip_sl></div>
           <div id=ov_srcip></div>
         </div>
         <div class=rightpane> 
-          <div class=ovbl>Top Destination IPs</div><div class=ovbi></div>
+          <div class=ovbl>Top Destination IPs</div><div class=ovbi id=ov_dstip_msg></div><div class=ovsl id=ov_dstip_sl></div>
           <div id=ov_dstip></div>
         </div>
       </div>
       <div class=twopane>
         <div class=leftpane>
-          <div class=ovbl>Top Source Countries</div><div class=ovbi></div>
+          <div class=ovbl>Top Source Countries</div><div class=ovbi id=ov_srccc_msg></div><div class=ovsl id=ov_srccc_sl></div>
           <div id=ov_srccc></div>
         </div>
         <div class=rightpane> 
-          <div class=ovbl>Top Destination Countries</div><div class=ovbi></div>
+          <div class=ovbl>Top Destination Countries</div><div class=ovbi id=ov_dstcc_msg></div><div class=ovsl id=ov_dstcc_sl></div>
           <div id=ov_dstcc></div>
         </div>
       </div>
