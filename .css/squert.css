@@ -88,11 +88,13 @@ div.onepane {
 width:96%;
 padding-right:2%;
 padding-left:2%;
+clear:both;
 }
 div.twopane {
 width:100%;
 padding-right:2%;
 padding-left:2%;
+clear:both;
 }
 div.leftpane {
 float:left;
