@@ -617,6 +617,9 @@ $(document).ready(function(){
         if ($('#tlcom').length > 0) {
           cmtbRemove(); 
         }
+        // If we are in the summary tab and filter on something
+        // jump to the results
+        $('#t_sum').click();
         newView("u");
       }
   });
@@ -1845,33 +1848,41 @@ $(document).ready(function(){
       case    'ip': $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
       break;
-
+      case   'sip': $('#search').val(prefix + " " + suffix);
+                    hItemAdd(suffix);
+      break;
+      case   'dip': $('#search').val(prefix + " " + suffix);
+                    hItemAdd(suffix);
+      break;
       case    'cc': var cc = $(this).data('value');
                     $('#search').val(prefix + " " + cc);
                     hItemAdd(cc);
       break;
-
+      case   'scc': var cc = $(this).data('value');
+                    $('#search').val(prefix + " " + cc);
+                    hItemAdd(cc);
+      break;
+      case   'dcc': var cc = $(this).data('value');
+                    $('#search').val(prefix + " " + cc);
+                    hItemAdd(cc);
+      break;
       case   'cmt': suffix = $(this).data('comment');
                     $("#rt").text("off");
                     $("#rt").attr('class','tvalue_off');
                     $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
       break;
-          
       case 'cmt_c': $('.cat_msg_txt').val(suffix);
                     hItemAdd(suffix);
                     tfocus = ".cat_msg_txt";
       break;
- 
       case   'sid': var value = $(this).data('value');
                     $('#search').val(prefix + " " + value);
                     hItemAdd(suffix);
       break;
- 
       case   'spt': $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
       break;
-
       case   'dpt': $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
       break;
@@ -2941,8 +2952,9 @@ $(document).ready(function(){
 
     // IP and Country
     function cb15(data,cbArgs){
-      var ch = "SRC";
-      if (cbArgs[0] == "s") ch = "DST";
+      var ch  = "SRC";
+      var wip = "d";
+      if (cbArgs[0] == "s") ch = "DST", wip = "s";
       eval("raw=" + data);
       var tbl = '', head = '', row = ''; 
       head += "<thead><tr>";
@@ -2975,19 +2987,19 @@ $(document).ready(function(){
         if (cs[1] == "LO") { cs[1] = ""; }
         var per = 0;
         if (eventsum > 0) per = parseFloat(cnt/eventsum*100).toFixed(2);
-        row += "<tr class=d_row>";
+        row += "<tr class=t_row>";
         row += "<td class=row><b>" + cnt + "</b></td>";
         row += "<td class=row><b>" + per + "%</b></td>";
         row += "<td class=row><b>" + sigs + "</b></td>";
         row += "<td class=row><b>" + ip2 + "</b></td>";
         
         if (cbArgs[3] == "c") {
-          row += "<td class=" + cs[0] + " data-type=cc data-value=" + cc + ">";
+          row += "<td class=" + cs[0] + " data-type=" + wip + "cc data-value=" + cc + ">";
           row += cs[1] + clong + " (." + cc.toLowerCase() + ")" + "</td>";
           row += "<td class=row><b>" + ip + "</b></td>";         
         } else {
-          row += "<td class=sub_filter data-type=ip>" + ip + "</td>";
-          row += "<td class=" + cs[0] + " data-type=cc data-value=" + cc + ">"; 
+          row += "<td class=sub_filter data-type=" + wip + "ip>" + ip + "</td>";
+          row += "<td class=" + cs[0] + " data-type=" + wip + "cc data-value=" + cc + ">"; 
           row += cs[1] + clong + " (." + cc.toLowerCase() + ")" + "</td>";
         }
         row += "</tr>";
@@ -3032,7 +3044,7 @@ $(document).ready(function(){
         var sig = raw[i].f5 || "-";
         var per = 0;
         if (eventsum > 0) per = parseFloat(cnt/eventsum*100).toFixed(2);
-        row += "<tr class=d_row>";
+        row += "<tr class=t_row>";
         row += "<td class=row><b>" + cnt + "</b></td>";
         row += "<td class=row><b>" + per + "%</b></td>";
         row += "<td class=row><b>" + src + "</b></td>";

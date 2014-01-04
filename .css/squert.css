@@ -83,6 +83,8 @@ div.ovbi, div.ovsl {
 float:right;
 font-size:11px;
 margin-right:10px;
+width:150px;
+text-align:right;
 }
 div.onepane {
 width:96%;
@@ -112,6 +114,10 @@ border: 1pt solid #c9c9c9;
 border-bottom:none;
 margin-bottom:30px;
 border-radius:10px;
+}
+tr.t_row:hover {
+text-decoration:underline;
+background-color:#e0e0e0;
 }
 table.dash tr:last-child th:first-child {
 border-top-left-radius:10px

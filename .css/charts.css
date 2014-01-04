@@ -11,12 +11,12 @@ stroke: #000;
 }
 .slideraxis .sliderhalo {
 fill:none;
-stroke:#000;
+stroke:#b1b2b3;
 stroke-width:1px;
 }
 .slider .sliderhandle {
 fill: #fff;
 stroke: #666;
-stroke-width: 1px;
+stroke-width: 2px;
 pointer-events: none;
 }

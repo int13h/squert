@@ -1,4 +1,4 @@
-// Slider for data tables
+// Slider for data tables. Copied most of it from the d3 brush examples.
 function mkSlider(callerID,low,high) {
 
   var margin = {top: 3, right: 15, bottom: 3, left: 5},
