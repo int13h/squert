@@ -77,6 +77,12 @@ font-size:12px;
 font-weight:bold;
 color:#545454;
 padding-bottom:10px;
+float:left;
+}
+div.ovbi {
+float:right;
+font-size:11px;
+margin-right:10px;
 }
 div.onepane {
 width:96%;

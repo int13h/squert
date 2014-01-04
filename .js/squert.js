@@ -2948,18 +2948,19 @@ $(document).ready(function(){
       head += "<thead><tr>";
       head += "<th width=60 class=sub>COUNT</th>";
       head += "<th width=60 class=sub>%TOTAL</th>";
-      head += "<th width=50 class=sub>#SIGs</th>";
-      head += "<th width=50 class=sub>#" + ch + "s</th>";
+      head += "<th width=50 class=sub>#SIG</th>";
+      head += "<th width=50 class=sub>#" + ch + "</th>";
       if (cbArgs[3] == "c") {
         head += "<th class=sub>COUNTRY</th>";
-        head += "<th width=50 class=sub>#IPs</th>"; 
+        head += "<th width=50 class=sub>#IP</th>"; 
       } else {
         head += "<th width=120 class=sub>IP</th>";
         head += "<th class=sub>COUNTRY</th>";	
       }
       head += "</tr></thead>";         
      
-      var eventsum = raw[raw.length - 1].n;
+      var eventsum = raw[raw.length - 1].n  || 0;
+      var records  = raw[raw.length - 1].r || 0;
       for (var i=0; i<raw.length - 1; i++) {
         var cnt   = raw[i].f1 || "-";
         var sigs  = raw[i].f2 || "-";
@@ -2986,7 +2987,6 @@ $(document).ready(function(){
           row += "<td class=" + cs[0] + " data-type=cc data-value=" + cc + ">"; 
           row += cs[1] + clong + " (." + cc.toLowerCase() + ")" + "</td>";
         }
-
         row += "</tr>";
       }
       
@@ -2996,6 +2996,7 @@ $(document).ready(function(){
       tbl += "</table>";
       if ($("#top" + cbArgs)[0]) $("#top" + cbArgs).remove();
       $("#ov_" + cbArgs).after(tbl);
+      $("#ov_" + cbArgs).prev(".ovbi").html("viewing <b>" + i + " </b>of<b> " + records + " </b>results"); 
 
       $("#top" + cbArgs).tablesorter({
           cancelSelection:true
@@ -3016,6 +3017,7 @@ $(document).ready(function(){
       head += "</tr></thead>";         
      
       var eventsum = raw[raw.length - 1].n;
+      var records  = raw[raw.length - 1].r;
       for (var i=0; i<raw.length - 1; i++) {
         var cnt = raw[i].f1 || "-";
         var src = raw[i].f2 || "-";
@@ -3041,6 +3043,7 @@ $(document).ready(function(){
       tbl += "</table>";
       if ($('#topsigs')[0]) $('#topsigs').remove(); 
       $("#ov_signature").after(tbl);
+      $("#ov_signature").prev(".ovbi").html("viewing <b>" + i + " </b>of<b> " + records + " </b>results");
 
       $("#topsigs").tablesorter({
           cancelSelection:true

@@ -158,26 +158,26 @@ dbC();
     <div id=t_inc_content class=content></div>
     <div id=t_ovr_content class=content>
       <div class=onepane>
-        <div class=ovbl>Top Signatures</div>
+        <div class=ovbl>Top Signatures</div><div class=ovbi></span></div>
         <div id=ov_signature></div>
       </div>
       <div class=twopane>
         <div class=leftpane>
-          <div class=ovbl>Top Source IPs</div>
+          <div class=ovbl>Top Source IPs</div><div class=ovbi></div>
           <div id=ov_srcip></div>
         </div>
         <div class=rightpane> 
-          <div class=ovbl>Top Destination IPs</div>
+          <div class=ovbl>Top Destination IPs</div><div class=ovbi></div>
           <div id=ov_dstip></div>
         </div>
       </div>
       <div class=twopane>
         <div class=leftpane>
-          <div class=ovbl>Top Source Countries</div>
+          <div class=ovbl>Top Source Countries</div><div class=ovbi></div>
           <div id=ov_srccc></div>
         </div>
         <div class=rightpane> 
-          <div class=ovbl>Top Destination Countries</div>
+          <div class=ovbl>Top Destination Countries</div><div class=ovbi></div>
           <div id=ov_dstcc></div>
         </div>
       </div>
