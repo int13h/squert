@@ -158,7 +158,7 @@ dbC();
     <div id=t_inc_content class=content>&nbsp;Not broken, just not done.</div>
     <div id=t_ovr_content class=content>
       <div class=onepane>
-        <div class=ovbl>Top Signatures</div><div class=ovbi id=ov_signature_msg></div><div class=ovsl id=ov_signature_sl></div>
+        <div class=ovbl>Top Signatures</div><div class=ovstat></div><div class=ovbi id=ov_signature_msg></div><div class=ovsl id=ov_signature_sl></div>
         <div id=ov_signature></div>
       </div>
       <div class=twopane>

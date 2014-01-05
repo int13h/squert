@@ -2975,6 +2975,7 @@ $(document).ready(function(){
       var records  = raw[raw.length - 1].r || 0;
       if (records == 0) {
         row = "<tr><td class=row colspan=6>No result.</td></tr>";
+        $("#ov_" + cbArgs + "_sl").text("");
       }
       for (var i=0; i<raw.length - 1; i++) {
         var cnt   = raw[i].f1 || "-";
@@ -3034,7 +3035,11 @@ $(document).ready(function(){
       var eventsum = raw[raw.length - 1].n;
       var records  = raw[raw.length - 1].r;
       if (records == 0) {
-        row = "<tr><td class=row colspan=5>No result.</td></tr>";
+        row = "<tr><td class=row colspan=6>No result.</td></tr>";
+        $("#ov_signature_sl").text("");
+        $(".ovstat").html("(No events)");
+      } else {
+        $(".ovstat").html("(" + eventsum + " events)"); 
       }
       for (var i=0; i<raw.length - 1; i++) {
         var cnt = raw[i].f1 || "-";
