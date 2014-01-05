@@ -9,12 +9,21 @@ Demo: [https://demo.sguil.net](https://demo.sguil.net)
 
 Intro: [http://www.youtube.com/watch?v=ZOsVw96XM8E](http://www.youtube.com/watch?v=ZOsVw96XM8E)
 
+Changes v1.1.6: [http://www.youtube.com/watch?v=_eheJv0MJDY](http://www.youtube.com/watch?v=_eheJv0MJDY)
 
 ## Description
 
 SQueRT is a tool that is used to query event data
 
 ## Updating
+
+If you are updating to version 1.1.6 you will need to do the following:
+
+`~$ mysql -N -B --user=root -p -e "INSERT IGNORE INTO filters (username,global,name,notes,alias,filter)
+VALUES ('','1','5368656C6C202D20536F7572636520436F756E74727920436F6465','546869732069732061206275696C742D696E20726561642D6F6E6C792066696C7465722E','scc','286D7372632E6363203D2027242729');"
+
+`~$ mysql -N -B --user=root -p -e "INSERT IGNORE INTO filters (username,global,name,notes,alias,filter)
+VALUES ('','1','5368656C6C202D2044657374696E6174696F6E20436F756E74727920436F6465','546869732069732061206275696C742D696E20726561642D6F6E6C792066696C7465722E','dcc','286D6473742E6363203D2027242729');`
 
 If you are updating to version 1.1.5 you will need to do the following:
 
