@@ -323,7 +323,7 @@ function ed() {
     }
 
     $query = "SELECT event.status AS f1, 
-              CONVERT_TZ(event.timestamp,'+00:00','$offset') AS f2,
+              CONCAT_WS(',',CONVERT_TZ(event.timestamp,'+00:00','$offset'),event.timestamp) AS f2,
               INET_NTOA(event.src_ip) AS f3,
               event.src_port AS f4,
               INET_NTOA(event.dst_ip) AS f5,
@@ -378,7 +378,7 @@ function ee() {
     }
 
     $query = "SELECT event.status AS f1, 
-              CONVERT_TZ(event.timestamp,'+00:00','$offset') AS f2, 
+              CONCAT_WS(',',CONVERT_TZ(event.timestamp,'+00:00','$offset'),event.timestamp) AS f2,
               INET_NTOA(event.src_ip) AS f3,
               event.src_port AS f4, 
               msrc.c_long AS f5,

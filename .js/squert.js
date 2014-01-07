@@ -1349,7 +1349,6 @@ $(document).ready(function(){
         var tlCount=0, rtCount=0;
         for (var i=0; i<d2.length; i++) {
           var eclass    = d2[i].f1  || "-";
-          var timestamp = d2[i].f2  || "-";
           var sid       = d2[i].f7  || "0";
           var cid       = d2[i].f8  || "0"; 
           var src_ip    = d2[i].f3  || "-";
@@ -1365,13 +1364,18 @@ $(document).ready(function(){
           tclass = "c" + eclass;
           cv = classifications.class[tclass][0].short;
 
+          // Timestamp
+          var compts       = d2[i].f2.split(",") || "--";
+          var timestamp    = compts[0];
+          var utctimestamp = compts[1];
+
           // Event sums
           tlCount += parseInt(1,10);
           if (cv == "RT") {
             rtCount += parseInt(1,10);
           }
 
-          txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + timestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
+          txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
 
           txBit = "<div class=n_TX>TX</div>";   
           if (src_port != "-" && dst_port != "-") {
@@ -1382,7 +1386,7 @@ $(document).ready(function(){
           row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + ">";
           row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
-          row += "<td class=sub>" + timestamp + "</td>";
+          row += "<td class=sub title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += "<td class=sub><div class=b_PL data-eidl=s" + i + " title=\"View Payload\">";
           row += sid + "." + cid + "</div>" + txBit + "</td>";
           row += "<td class=sub_filter data-type=ip>" + src_ip + "</td>";
@@ -1484,7 +1488,6 @@ $(document).ready(function(){
         for (var i=0; i<d2a.length; i++) {
           if (i == maxI) { break; }
           var eclass    = d2a[i].f1  || "-";
-          var timestamp = d2a[i].f2  || "-";
           var sid       = d2a[i].f11 || "0";
           var cid       = d2a[i].f12 || "0";
           var src_ip    = d2a[i].f3  || "-";
@@ -1503,6 +1506,11 @@ $(document).ready(function(){
           var cs = getCountry(src_cc).split("|");
           var cd = getCountry(dst_cc).split("|");
 
+          // Timestamp
+          var compts       = d2a[i].f2.split(",") || "--";
+          var timestamp    = compts[0];
+          var utctimestamp = compts[1];
+
           // Sum priorities
           var prC = Number(1);
           switch (sig_pri) {
@@ -1517,7 +1525,8 @@ $(document).ready(function(){
           var sg = sig_id + "-" + sig_gen;  
           tclass = "c" + eclass;
           cv = classifications.class[tclass][0].short;
-          txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + timestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
+
+          txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
 
           txBit = "<div class=n_TX>TX</div>";   
           if (src_port != "-" && dst_port != "-") {
@@ -1530,7 +1539,7 @@ $(document).ready(function(){
           row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
           row += "<td class=row><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
-          row += "<td class=row>" + timestamp + "</td>";
+          row += "<td class=row title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += "<td class=sub><div class=b_PL data-eidl=s" + i + " title=\"View Payload\">";
           row += sid + "." + cid + "</div>" + txBit + "</td>";
           row += "<td class=sub_filter data-type=ip>" + src_ip + "</td>";
@@ -2907,7 +2916,7 @@ $(document).ready(function(){
   // Summary tab 
   function mkSummary(box,limit) {
     var theWhen = getTimestamp();
-
+    $("#loader").show();
     switch (box) {
       case "srcip":
         var cbArgs = "srcip";
@@ -2915,7 +2924,7 @@ $(document).ready(function(){
         var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
-        }); 
+        });
       break;
       case "dstip":
         var cbArgs = "dstip";
@@ -3005,7 +3014,6 @@ $(document).ready(function(){
         }
         row += "</tr>";
       }
-      
       tbl += "<table id=top" + cbArgs + " class=dash cellpadding=0 cellspacing=0>";
       tbl += head;
       tbl += row;
@@ -3017,6 +3025,7 @@ $(document).ready(function(){
       $("#top" + cbArgs).tablesorter({
           cancelSelection:true
       });
+      $("#loader").hide();
     }
 
     // Signature
@@ -3071,16 +3080,16 @@ $(document).ready(function(){
       $("#topsigs").tablesorter({
           cancelSelection:true
       });
+      $("#loader").hide();
     }
   }
 
   $(".ovsl").mouseup(function() {
-    var section = $(this).attr('id')
+    var section = $(this).attr('id');
     var base    = section.split("_")[1];
     var limit   = Number($("#" + section + "_lbl").text());
     if (limit > 0) mkSummary(base, limit);
   });
-
 
 // The End.
 });
