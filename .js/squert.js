@@ -2909,6 +2909,8 @@ $(document).ready(function(){
     mkSummary("signature",limit);
     mkSummary("srcip",limit);
     mkSummary("dstip",limit);
+    mkSummary("srcpt",limit);
+    mkSummary("dstpt",limit);
     mkSummary("srccc",limit);
     mkSummary("dstcc",limit);
   }
@@ -2916,7 +2918,9 @@ $(document).ready(function(){
   // Summary tab 
   function mkSummary(box,limit) {
     var theWhen = getTimestamp();
-    $("#loader").show();
+    var ldr = "<div class=ldr><img src=.css/load.gif></div>";
+    $('#ov_' + box + '_sl').prepend(ldr);
+    $('#top' + box).fadeTo('fast', 0.2);
     switch (box) {
       case "srcip":
         var cbArgs = "srcip";
@@ -2932,6 +2936,22 @@ $(document).ready(function(){
         var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
+        });
+      break;
+      case "srcpt":
+        var cbArgs = "srcpt";
+        var qargs = "pt-src";
+        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        $(function(){
+          $.get(".inc/callback.php?" + urArgs, function(data){cb17(data,cbArgs)});
+        });
+      break;
+      case "dstpt":
+        var cbArgs = "dstpt";
+        var qargs = "pt-dst";
+        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        $(function(){
+          $.get(".inc/callback.php?" + urArgs, function(data){cb17(data,cbArgs)});
         });
       break;
       case "signature":
@@ -3025,9 +3045,55 @@ $(document).ready(function(){
       $("#top" + cbArgs).tablesorter({
           cancelSelection:true
       });
-      $("#loader").hide();
     }
 
+    // Ports
+    function cb17(data,cbArgs){
+      eval("raw=" + data);
+      var tbl = '', head = '', row = ''; 
+      head += "<thead><tr>";
+      head += "<th width=60 class=sub>COUNT</th>";
+      head += "<th width=60 class=sub>%TOTAL</th>";
+      head += "<th width=50 class=sub>#SIG</th>";
+      head += "<th width=50 class=sub>#SRC</th>"
+      head += "<th width=50 class=sub>#DST</th>";
+      head += "<th width=50 class=sub>PORT</th>";
+      head += "</tr></thead>";         
+     
+      var eventsum = raw[raw.length - 1].n  || 0;
+      var records  = raw[raw.length - 1].r || 0;
+      if (records == 0) {
+        row = "<tr><td class=row colspan=6>No result.</td></tr>";
+        $("#ov_" + cbArgs + "_sl").text("");
+      }
+      for (var i=0; i<raw.length - 1; i++) {
+        var cnt   = raw[i].f1 || "-";
+        var sigs  = raw[i].f2 || "-";
+        var src   = raw[i].f3 || "-";
+        var dst   = raw[i].f4 || "-";
+        var port  = raw[i].f5 || "-";
+        if (eventsum > 0) per = parseFloat(cnt/eventsum*100).toFixed(2);
+        row += "<tr class=t_row>";
+        row += "<td class=row><b>" + cnt + "</b></td>";
+        row += "<td class=row><b>" + per + "%</b></td>";
+        row += "<td class=row><b>" + sigs + "</b></td>";
+        row += "<td class=row><b>" + src + "</b></td>";
+        row += "<td class=row><b>" + dst + "</b></td>";
+        row += "<td class=sub_filter data-type=" + cbArgs[0] + "pt>" + port + "</td>";
+        row += "</tr>";
+      }
+      tbl += "<table id=top" + cbArgs + " class=dash cellpadding=0 cellspacing=0>";
+      tbl += head;
+      tbl += row;
+      tbl += "</table>";
+      if ($("#top" + cbArgs)[0]) $("#top" + cbArgs).remove();
+      $("#ov_" + cbArgs + "_sl").after(tbl);
+      $("#ov_" + cbArgs + "_msg").html("viewing <b><span id=ov_" + cbArgs + "_sl_lbl>" + i + "</b> of <b>" + records + " </b>results"); 
+      if (records > 1) mkSlider("ov_" + cbArgs + "_sl", i, records);
+      $("#top" + cbArgs).tablesorter({
+          cancelSelection:true
+      });
+    }
     // Signature
     function cb16(data){
       eval("raw=" + data);
@@ -3069,18 +3135,17 @@ $(document).ready(function(){
         row += "</tr>";
       }
       
-      tbl += "<table id=topsigs class=dash cellpadding=0 cellspacing=0>";
+      tbl += "<table id=topsignature class=dash cellpadding=0 cellspacing=0>";
       tbl += head;
       tbl += row;
       tbl += "</table>";
-      if ($('#topsigs')[0]) $('#topsigs').remove(); 
+      if ($('#topsignature')[0]) $('#topsignature').remove(); 
       $("#ov_signature_sl").after(tbl);
       $("#ov_signature_msg").html("viewing <b><span id=ov_signature_sl_lbl>" + i + "</span></b> of <b>" + records + " </b>results");
       if (records > 1) mkSlider("ov_signature_sl", i, records);
       $("#topsigs").tablesorter({
           cancelSelection:true
       });
-      $("#loader").hide();
     }
   }
 

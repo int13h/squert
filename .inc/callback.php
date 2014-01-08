@@ -849,6 +849,17 @@ function summary() {
                       GROUP BY f6
                       ORDER BY f1 DESC";
         break;
+        case "pt":
+            $query = "SELECT COUNT(event.{$subtype}_port) AS f1,
+                      COUNT(DISTINCT(event.signature)) AS f2,
+                      COUNT(DISTINCT(event.src_ip)) AS f3,
+                      COUNT(DISTINCT(event.dst_ip)) AS f4,
+                      event.{$subtype}_port AS f5
+                      FROM event
+                      WHERE $when
+                      GROUP BY f5
+                      ORDER BY f1 DESC";
+        break;
         case "sig":
             $query = "SELECT COUNT(event.signature) AS f1,
                       COUNT(DISTINCT(event.src_ip)) AS f2,

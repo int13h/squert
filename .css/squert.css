@@ -94,6 +94,10 @@ margin-right:10px;
 width:150px;
 text-align:right;
 }
+div.ldr {
+float:left;
+margin-top:2px;
+}
 div.onepane {
 width:96%;
 padding-right:2%;

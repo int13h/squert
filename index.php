@@ -181,6 +181,16 @@ dbC();
           <div id=ov_dstcc></div>
         </div>
       </div>
+      <div class=twopane>
+        <div class=leftpane>
+          <div class=ovbl>Top Source Ports</div><div class=ovbi id=ov_srcpt_msg></div><div class=ovsl id=ov_srcpt_sl></div>
+          <div id=ov_srcpt></div>
+        </div>
+        <div class=rightpane> 
+          <div class=ovbl>Top Destination Ports</div><div class=ovbi id=ov_dstpt_msg></div><div class=ovsl id=ov_dstpt_sl></div>
+          <div id=ov_dstpt></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
