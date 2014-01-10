@@ -33,6 +33,7 @@ $types = array(
                 '13' => 'sensors',
                 '14' => 'user_profile',
                 '15' => 'summary',
+                '16' => 'dashboard',
 );
 
 $type = $types[$type];
@@ -899,6 +900,59 @@ function summary() {
     $rows[] = array("n" => $n, "r" => $r);
     $theJSON = json_encode($rows);
     echo $theJSON;     
+}
+
+function dashboard() {
+    global $when;
+    $qargs = $_REQUEST['qargs'];
+    list($type,$subtype) = explode("-", $qargs);
+    switch ($type) {
+        case "ip":
+            $query = "SELECT INET_NTOA(event.src_ip) AS source,
+                      INET_NTOA(event.dst_ip) AS target,
+                      COUNT(event.src_ip) AS value
+                      FROM event
+                      WHERE $when
+                      AND (INET_NTOA(event.src_ip) != '0.0.0.0' AND INET_NTOA(event.dst_ip) != '0.0.0.0')
+                      GROUP BY source,target limit 1000";
+        break;
+    }
+    $result = mysql_query($query);
+    $rows = $names = $_names = array();
+
+    // Train wreck. This is ugly as hell and should be done by the client anyway :/
+
+    // Create names
+    while ($row = mysql_fetch_assoc($result)) {
+        if (!in_array($row["source"], $_names)) {
+            $_names[] = $row["source"]; 
+        }
+        
+        if (!in_array($row["target"], $_names)) {
+            $_names[] = $row["target"]; 
+        }
+    }
+
+    mysql_data_seek($result,0);
+    // Now go through the results and map the
+    // sources and targets to the indexes in $names
+    while ($row = mysql_fetch_assoc($result)) {
+        // get source index
+        $skey = array_search($row["source"], $_names);
+
+        // get target index
+        $dkey = array_search($row["target"], $_names);
+
+        $rows[] = array("source" => $skey, "target" => $dkey, "value" => $row["value"]);
+    }
+
+    // Now reformat names
+    foreach ($_names as $name) {
+        $names[] = array("name" => $name);
+    }
+     
+    $theJSON = json_encode(array("nodes" => $names, "links" => $rows));
+    echo $theJSON;
 }
 
 $type();

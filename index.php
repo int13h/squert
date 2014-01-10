@@ -154,7 +154,9 @@ dbC();
   </div>
 
   <div class=rl>
-    <div id=t_dash_content class=content>&nbsp;Not broken, just not done.</div>
+    <div id=t_dash_content class=content>
+      <div id=sankey></div>
+    </div>
     <div id=t_inc_content class=content>&nbsp;Not broken, just not done.</div>
     <div id=t_ovr_content class=content>
       <div class=onepane>

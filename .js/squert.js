@@ -100,6 +100,7 @@ $(document).ready(function(){
   // Load main content
   eventList("0-aaa-00");
   loadSummary();
+  loadDashboard();
   
   $("#loader").show();
 
@@ -3155,6 +3156,28 @@ $(document).ready(function(){
     var limit   = Number($("#" + section + "_lbl").text());
     if (limit > 0) mkSummary(base, limit);
   });
+
+  // Dashboard tab
+  function loadDashboard() {
+    chartSankey();
+  }
+
+  // Charts
+  function chartSankey() {
+    var qargs = "ip-nn";
+    var limit = 20;
+    var urArgs = "type=16&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+    $(function(){
+      $.get(".inc/callback.php?" + urArgs, function(data){cb17(data)});
+    });
+
+    function cb17(data){
+      eval("raw=" + data);
+      var sankeyData = $.parseJSON(raw);
+
+      mkSankey("sankey", raw);
+    }
+  }
 
 // The End.
 });

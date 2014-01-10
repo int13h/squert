@@ -20,3 +20,23 @@ stroke: #666;
 stroke-width: 2px;
 pointer-events: none;
 }
+
+.node rect {
+cursor: move;
+fill-opacity: .9;
+shape-rendering: crispEdges;
+}
+.node text {
+font-size:11px;
+font-family:tahoma,sans-serif,arial;
+pointer-events: none;
+text-shadow: 0 1px 0 #fff;
+}
+.link {
+fill: none;
+stroke: #000;
+stroke-opacity: .2;
+}
+.link:hover {
+stroke-opacity: .5;
+}
