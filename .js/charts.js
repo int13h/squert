@@ -74,10 +74,10 @@ function mkSlider(callerID,low,high) {
 }
 
 // Sankey charts
-function mkSankey(callerID,data) {
+function mkSankey(callerID,data,w,h) {
   var margin = {"top": 20, "right": 1, "bottom": 6, "left": 20},
-      width = 1100 - margin.left - margin.right,
-      height = 15000 - margin.top - margin.bottom;
+      width = w - margin.left - margin.right,
+      height = h - margin.top - margin.bottom;
 
   var formatNumber = d3.format(",.0f"),
       format = function(d) { return formatNumber(d); },

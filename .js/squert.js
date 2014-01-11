@@ -3165,17 +3165,17 @@ $(document).ready(function(){
   // Charts
   function chartSankey() {
     var qargs = "ip-nn";
-    var limit = 20;
+    var limit = 1000;
     var urArgs = "type=16&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
     $(function(){
       $.get(".inc/callback.php?" + urArgs, function(data){cb17(data)});
     });
 
     function cb17(data){
-      eval("raw=" + data);
-      var sankeyData = $.parseJSON(raw);
-
-      mkSankey("sankey", raw);
+      eval("sankeyData=" + data);
+      var w = 1100;
+      var h = sankeyData.links.length * 12;
+      mkSankey("sankey", sankeyData, w, h);
     }
   }
 

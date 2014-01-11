@@ -910,7 +910,9 @@ function dashboard() {
         case "ip":
             $query = "SELECT INET_NTOA(event.src_ip) AS source,
                       INET_NTOA(event.dst_ip) AS target,
-                      COUNT(event.src_ip) AS value
+                      COUNT(event.src_ip) AS value,
+                      COUNT(DISTINCT(event.src_ip)) AS sn,
+                      COUNT(DISTINCT(event.dst_ip)) AS dn
                       FROM event
                       WHERE $when
                       AND (INET_NTOA(event.src_ip) != '0.0.0.0' AND INET_NTOA(event.dst_ip) != '0.0.0.0')
