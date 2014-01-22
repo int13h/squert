@@ -100,7 +100,7 @@ $(document).ready(function(){
   // Load main content
   eventList("0-aaa-00");
   loadSummary();
-  loadDashboard();
+  loadViews();
   
   $("#loader").show();
 
@@ -597,6 +597,9 @@ $(document).ready(function(){
       case 't_ovr':
         loadSummary();
       break;
+      case 't_view':
+        loadViews();
+      break;
       default:
         $(".b_update").css('border-left','4pt solid #666');
         newView("u");
@@ -621,7 +624,7 @@ $(document).ready(function(){
         // If we are in the summary tab and filter on something
         // jump to the results
         $('#t_sum').click();
-        newView("u");
+        newView("c");
       }
   });
 
@@ -697,7 +700,7 @@ $(document).ready(function(){
     switch (thisSecVis) {
       case "none":
         $(this).html("<img src=.css/uarr.png>");
-        if (thisSec != lastSection) $(this).parent().css("border-bottom","1pt dotted #666");
+        if (thisSec != lastSection) $(this).parent().css("border-bottom","1pt solid #c9c9c9");
         $(thisSecID).slideDown();
       break;
       default:
@@ -938,12 +941,12 @@ $(document).ready(function(){
   });
 
   // Toggle RT depending on entry point
-  var rtbit;
+  //var rtbit;
   $(document).on("click", ".b_ec_hot", function() {
-    rtbit = 1;
+    var rtbit = 1;
   });
   $(document).on("click", ".b_ec_total", function() {
-    rtbit = 0;
+    var rtbit = 0;
   });
 
   //
@@ -963,7 +966,6 @@ $(document).ready(function(){
       rt = 1;
       rtbit = 1;
     }
-
     // How are we sorting?
     var sortval = $("#event_sort").val(), sorttxt;
     switch (sortval) {
@@ -1042,7 +1044,7 @@ $(document).ready(function(){
         var head = '';
         var row = '';
         var cols = 11;
-       
+        
         if (rt == 0) cols = 12;
         head += "<thead>";
         head += "<tr><th id=priority_bar colspan=" + cols + "></th></tr>";
@@ -1846,11 +1848,7 @@ $(document).ready(function(){
   // Add filter parts to box
   //
 
- $(document).on("click", ".sub_filter,.row_filter,.tof", function() {
-    // If someone is looking in the live queue and then performs a search
-    // we need to reset to all events
-    rtbit = 0;
-
+ $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link", function() {
     var prefix = $(this).data('type');
     var suffix = $(this).html();
     var tfocus = "#search";
@@ -1895,6 +1893,9 @@ $(document).ready(function(){
       break;
       case   'dpt': $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
+      break;
+      case    'st': var suffix = $(this).attr('id').split('-')[1];
+                    $('#search').val(prefix + " " + suffix);
       break;
     } 
     $(tfocus).focus();
@@ -3157,25 +3158,40 @@ $(document).ready(function(){
     if (limit > 0) mkSummary(base, limit);
   });
 
-  // Dashboard tab
-  function loadDashboard() {
+  // Views tab
+  function loadViews() {
     chartSankey();
   }
 
   // Charts
   function chartSankey() {
-    var qargs = "ip-nn";
-    var limit = 1000;
-    var urArgs = "type=16&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
-    $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb17(data)});
-    });
-
-    function cb17(data){
-      eval("sankeyData=" + data);
-      var w = 1100;
-      var h = sankeyData.links.length * 12;
-      mkSankey("sankey", sankeyData, w, h);
+    $('#sankey_all').remove();
+    if (!$("#db_sankey_ldr")[0]) {
+      var theWhen = getTimestamp();
+      var ldr = "<div id=db_sankey_ldr class=ldr><img src=.css/load.gif></div>";
+      $('#db_sankey').prepend(ldr);
+      var qargs = "ip-nn";
+      var limit = 1000;
+      var urArgs = "type=16&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+      $(function(){
+        $.get(".inc/callback.php?" + urArgs, function(data){cb17(data)});
+      });
+    
+      function cb17(data) {
+        eval("sankeyData=" + data);
+        var records = sankeyData.records;
+        if ($('#sankey_all')[0]) $('#sankey_all').remove();
+        if (records > 0) {
+          var w = $(window).width();
+          var h = sankeyData.links.length * 12;
+          if (h < 100) h = 100;
+          $('#db_sankey').after("<div id=sankey_all></div>");
+          mkSankey("sankey_all", sankeyData, w, h);
+        } else {
+          $('#db_sankey').after("<div id=sankey_all>No Result.</div>");
+        }
+        $('#db_sankey_ldr').remove();
+      } 
     }
   }
 

@@ -209,9 +209,8 @@ function es() {
               $qp2
               GROUP BY f3
               ORDER BY f5 $sv";
-
+    
     $result = mysql_query($query);
-
     $rows = array();
 
     while ($row = mysql_fetch_assoc($result)) {
@@ -904,56 +903,95 @@ function summary() {
 
 function dashboard() {
     global $when;
+    $limit = $_REQUEST['limit'];
     $qargs = $_REQUEST['qargs'];
     list($type,$subtype) = explode("-", $qargs);
     switch ($type) {
         case "ip":
             $query = "SELECT INET_NTOA(event.src_ip) AS source,
                       INET_NTOA(event.dst_ip) AS target,
-                      COUNT(event.src_ip) AS value,
-                      COUNT(DISTINCT(event.src_ip)) AS sn,
-                      COUNT(DISTINCT(event.dst_ip)) AS dn
+                      COUNT(event.src_ip) AS value
                       FROM event
                       WHERE $when
                       AND (INET_NTOA(event.src_ip) != '0.0.0.0' AND INET_NTOA(event.dst_ip) != '0.0.0.0')
-                      GROUP BY source,target limit 1000";
+                      GROUP BY source,target";
         break;
     }
     $result = mysql_query($query);
-    $rows = $names = $_names = array();
-
-    // Train wreck. This is ugly as hell and should be done by the client anyway :/
-
-    // Create names
+    $records = 0;
+    $rows = $srcs = $dsts = $vals = $names = $_names = array();
+    
     while ($row = mysql_fetch_assoc($result)) {
-        if (!in_array($row["source"], $_names)) {
-            $_names[] = $row["source"]; 
+        $srcs[] = $row["source"];
+        $tgts[] = $row["target"];
+        $vals[] = $row["value"];
+        $sads[] = 0;
+        $records++; 
+    }
+    // Value counts
+    $src_c = array_count_values($srcs);
+    $tgt_c = array_count_values($tgts);
+
+    // Accomodate sources that exist as a target with the 
+    // current target as a source 
+    foreach ($srcs as $index => $src) {
+        // Find the target
+        $tgt = $tgts[$index];
+        // Find the keys for all instances of the target as a source
+        $tgt_keys = array_keys($srcs,$tgt);
+        // Now see if any have the source as a target
+        foreach ($tgt_keys as $pos) {
+            if ($tgts[$pos] == $src) {
+                $sads_val = $vals[$pos];
+                unset($srcs[$pos]); 
+                unset($tgts[$pos]);
+                unset($vals[$pos]);
+                unset($sads[$pos]);
+                $records--;
+                // By setting this we flag that this source is also a target
+                $sads[$index] = $sads_val; 
+            }
         }
-        
-        if (!in_array($row["target"], $_names)) {
-            $_names[] = $row["target"]; 
+    }       
+
+    // We have probably truncated these so realign the indexes
+    $srcs = array_slice($srcs, 0);
+    $tgts = array_slice($tgts, 0);
+    $vals = array_slice($vals, 0);
+    $sads = array_slice($sads, 0);
+
+    // Create distinct names array
+    $lc = count($srcs);
+    for ($i = 0; $i < $lc; $i++) {
+        if (!in_array($srcs[$i], $_names)) {
+            $_names[] = $srcs[$i];
+        }
+        if (!in_array($tgts[$i], $_names)) {
+            $_names[] = $tgts[$i]; 
         }
     }
 
-    mysql_data_seek($result,0);
     // Now go through the results and map the
-    // sources and targets to the indexes in $names
-    while ($row = mysql_fetch_assoc($result)) {
+    // sources and targets to the indexes in $_names
+    for ($i = 0; $i < $lc; $i++) {
         // get source index
-        $skey = array_search($row["source"], $_names);
-
+        $skey = array_search($srcs[$i], $_names);
         // get target index
-        $dkey = array_search($row["target"], $_names);
-
-        $rows[] = array("source" => $skey, "target" => $dkey, "value" => $row["value"]);
+        $dkey = array_search($tgts[$i], $_names);
+        $val = (int)$vals[$i];
+        $sad = (int)$sads[$i];
+        $rows[] = array("source" => $skey, "target" => $dkey, "value" => $val, "sad" => $sad);
+        //echo "$skey,$dkey,$val,$sad<br>";
+        
     }
 
-    // Now reformat names
+    // Lastly, we reformat names
     foreach ($_names as $name) {
         $names[] = array("name" => $name);
+        //echo "$name<br>"; 
     }
      
-    $theJSON = json_encode(array("nodes" => $names, "links" => $rows));
+    $theJSON = json_encode(array("nodes" => $names, "links" => $rows, "records" => $records));
     echo $theJSON;
 }
 

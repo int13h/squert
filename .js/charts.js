@@ -75,7 +75,8 @@ function mkSlider(callerID,low,high) {
 
 // Sankey charts
 function mkSankey(callerID,data,w,h) {
-  var margin = {"top": 20, "right": 1, "bottom": 6, "left": 20},
+
+  var margin = {"top": 20, "right": 20, "bottom": 6, "left": 20},
       width = w - margin.left - margin.right,
       height = h - margin.top - margin.bottom;
 
@@ -103,13 +104,13 @@ function mkSankey(callerID,data,w,h) {
   var link = svg.append("g").selectAll(".link")
       .data(data.links)
       .enter().append("path")
-      .attr("class", "link")
+      .attr("class", function(d) { var cl = "link"; if (d.sad > 1) cl = "link1"; return cl })
       .attr("d", path)
       .style("stroke-width", function(d) { return Math.max(1, d.dy); })
       .sort(function(a, b) { return b.dy - a.dy; });
 
   link.append("title")
-      .text(function(d) { return d.source.name + "->" + d.target.name + "\n" + format(d.value); });
+      .text(function(d) { return d.source.name + " > " + d.target.name + ":" + format(d.value) + "\n" + d.source.name + " < " + d.target.name + ":" + format(d.sad); });
 
   var node = svg.append("g").selectAll(".node")
       .data(data.nodes)

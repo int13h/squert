@@ -72,6 +72,15 @@ margin-top:40px;
 margin-bottom:60px;
 width:100%;
 }
+div.ovdl {
+font-size:12px;
+font-weight:bold;
+color:#545454;
+padding-bottom:10px;
+padding-left:20px;
+text-decoration:underline;
+float:left;
+}
 div.ovbl {
 font-size:12px;
 font-weight:bold;
@@ -97,6 +106,7 @@ text-align:right;
 div.ldr {
 float:left;
 margin-top:2px;
+margin-left:10px;
 }
 div.onepane {
 width:96%;
@@ -149,7 +159,7 @@ bottom:0px;
 left:0px;
 width:18%;
 background-color:#fafafa;
-border-right:1pt dotted #666;
+border-right:1pt solid #a1a1a1;
 padding-top:10px;
 z-index:1;
 }
@@ -189,8 +199,8 @@ text-align:left;
 padding-bottom:3px;
 padding-top:4px;
 background-color:#f4f4f4;
-border-bottom:1pt dotted #666;
-border-top:1pt dotted #666;
+border-bottom:1pt solid #c9c9c9;
+border-top:1pt solid #c9c9c9;
 clear:right;
 }
 span.ec_label {
@@ -212,7 +222,7 @@ img.pop:hover {
 opacity:.5;
 cursor:pointer;
 }
-div.value {
+div.value, div.value_link {
 font-size:11px;
 font-weight:bold;
 float:left;
@@ -220,6 +230,9 @@ text-align:left;
 margin-right:5px;
 color:#666;
 clear:right;
+}
+div.value_link:hover {
+cursor:pointer;
 }
 div.tvalue_on, div.tvalue_off{
 font-size:11px;

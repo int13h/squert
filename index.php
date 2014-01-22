@@ -50,10 +50,10 @@ dbC();
 </head>
 <body>
 <div id=tab_group class=tab_group>
-  <div id=t_dash class=tab>Dashboard</div>
   <div id=t_sum class=tab>Events</div>
   <div id=t_inc class=tab>Incidents</div>
-  <div id=t_ovr class=tab>Summary</div> 
+  <div id=t_ovr class=tab>Summary</div>
+  <div id=t_view class=tab>Views</div> 
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
   </div>
@@ -105,31 +105,31 @@ dbC();
       <div class=secl id=sec_c>  
 
         <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Compromised L1 (F1)'>
-        <div class=b_C1></div>Compromised L1:</div><div id=c-11 class=value>-</div>
+        <div class=b_C1></div>Compromised L1:</div><div data-type=st id=c-11 class=value_link>-</div>
 
         <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Compromised L2 (F2)'>
-        <div class=b_C2></div>Compromised L2:</div><div id=c-12 class=value>-</div>
+        <div class=b_C2></div>Compromised L2:</div><div data-type=st id=c-12 class=value_link>-</div>
       
         <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='Attempted Unauthorized Access (F3)'>
-        <div class=b_C3></div>Attempted Access:</div><div id=c-13 class=value>-</div>
+        <div class=b_C3></div>Attempted Access:</div><div data-type=st id=c-13 class=value_link>-</div>
 
         <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='Denial of Service Attack (F4)'>
-        <div class=b_C4></div>Denial of Service:</div><div id=c-14 class=value>-</div>
+        <div class=b_C4></div>Denial of Service:</div><div data-type=st id=c-14 class=value_link>-</div>
       
         <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='Policy Violation (F5)'>
-        <div class=b_C5></div>Policy Violation</div><div id=c-15 class=value>-</div>
+        <div class=b_C5></div>Policy Violation:</div><div data-type=st id=c-15 class=value_link>-</div>
 
         <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='Reconnaissance (F6)'>
-        <div class=b_C6></div>Reconnaissance:</div><div id=c-16 class=value>-</div>
+        <div class=b_C6></div>Reconnaissance:</div><div data-type=st id=c-16 class=value_link>-</div>
       
         <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='Malware (F7)'>
-        <div class=b_C7></div>Malware:</div><div id=c-17 class=value>-</div>
+        <div class=b_C7></div>Malware:</div><div data-type=st id=c-17 class=value_link>-</div>
 
         <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='No Further Action Required (F8)'>
-        <div class=b_NA></div>No Action Req&#x2019;d.:</div><div id=c-1 class=value>-</div>
+        <div class=b_NA></div>No Action Req&#x2019;d.:</div><div data-type=st id=c-1 class=value_link>-</div>
       
         <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='Escalate Event (F9)'>
-        <div class=b_ES></div>Escalated Event:</div><div id=c-2 class=value>-</div>
+        <div class=b_ES></div>Escalated Event:</div><div data-type=st id=c-2 class=value_link>-</div>
 
       </div>
     </div>
@@ -154,8 +154,9 @@ dbC();
   </div>
 
   <div class=rl>
-    <div id=t_dash_content class=content>
-      <div id=sankey></div>
+    <div id=t_view_content class=content>
+      <div class=ovdl></div>
+      <div id=db_sankey></div>
     </div>
     <div id=t_inc_content class=content>&nbsp;Not broken, just not done.</div>
     <div id=t_ovr_content class=content>
