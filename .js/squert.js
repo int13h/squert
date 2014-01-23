@@ -58,9 +58,6 @@ $(document).ready(function(){
     });        
   }
 
-  // Used for search sync
-  var eF = 0;
-
   function getTimestamp() {
     // If we have an error in the input fields we clear and fire.
     if ($('.dt_error').data('err') == 1) {
@@ -79,7 +76,7 @@ $(document).ready(function(){
     var fbs = 'NO';
     var fbs_c = 'fl_val_off';
 
-    if (eF == 1) {
+    if ($('#search').val().length > 0) {
       fval = 'YES';
       fval_c = 'fl_val_on';
     }
@@ -97,10 +94,16 @@ $(document).ready(function(){
     return theWhen;
   }
   
+  //
   // Load main content
+  //
+  
+  // Keep track of context 
+  var rtbit = 0;
+  loadFilters(0);
   eventList("0-aaa-00");
   loadSummary();
-  loadViews();
+  //loadViews();
   
   $("#loader").show();
 
@@ -399,14 +402,14 @@ $(document).ready(function(){
     function flipIt(pattern) {
       $(pattern).closest('tr').hide();
       $(pattern).closest('tr').attr('class','hidden');
-      if ($('#menu1').text('on')) $(pattern).closest('tr').find('.chk_event').prop("disabled",true);
+      if ($('#gr').text('on')) $(pattern).closest('tr').find('.chk_event').prop("disabled",true);
     }
 
     if ($('.b' + prClass).attr('class') == 'bprA') {
       $('.b' + prClass).attr('class', 'bpr' + prOld);
       $('.hidden').attr('class','d_row');
       $('.d_row').show();
-      if ($('#menu1').text('on')) {
+      if ($('#gr').text('on')) {
         $('.chk_event').prop("disabled",false);
         $('.chk_all').prop("checked",false);
         $('.chk_event').css("background-color", "#fafafa");
@@ -416,7 +419,7 @@ $(document).ready(function(){
       if ($('.bprA')[0]) {
         $('.hidden').attr('class','d_row');
         $('.d_row').show();
-        if ($('#menu1').text('on')) {
+        if ($('#gr').text('on')) {
           $('.chk_event').prop("disabled",false);
           $('.chk_all').prop("checked",false);
           $('.chk_event').css("background-color", "#fafafa");
@@ -504,145 +507,20 @@ $(document).ready(function(){
     $('#b_class-' + nc[1]).click();
   });
     
-  //
-  // Toggle and update views
-  //
-
-  function newView(req) {
-    var cv = $("#menu1").text();
-    switch (req) { // Either an update or view change    
-      case "u":
-        var f = "0-aaa-00";
-        var s = "2a-aaa-00";
-      break; 
-      case "c":
-        switch(cv) {
-          case "on": $("#menu1").text("off");
-            // If we are searching for something we show all events 
-            // mainly because of specificity but also because 
-            // returning nothing may be confusing (there are no RT but classed events do exist) 
-            if ($("#search").val().length == 0) {
-              $("#rt").text("on");
-              $("#rt").attr('class','tvalue_on');
-            }
-          break;  
-          case "off": $("#menu1").text("on"); break;
-       }
-       if ($("#search").val().length > 0) {
-         eF = 1;
-       } else {
-         eF = 0;
-       }
-       f = "2a-aaa-00";
-       s = "0-aaa-00";
-      break;
-    }
-
-    var bail = $("#loader").css('display');
-    if (bail != 'none') return;
-
-    switch (cv) {
-      case "on":
-        $("#tl0,#tl1").remove();
-        eventList(f);
-        $("#loader").show();
-        break;
-      case "off":
-        $("#tl3a,#tl3b").remove();
-        eventList(s);
-        $("#loader").show();
-        break;
-    }
-  }
-
-  // Group and ungroup
-  $(document).on("click", "#menu1", function(event) {
-    var cv = $(this).text();
-    switch (cv) {
-      case  'on': $(this).attr('class','tvalue_off'); break;
-      case 'off': $(this).attr('class','tvalue_on'); $("#event_sort").val("DESC"); break;
-    }
-    newView("c"); 
-  });
-
-  // RT check/uncheck
-  $(document).on("click", "#rt", function(event) {
-    var cv = $('#rt').text();
-    switch (cv) {
-      case  'on': $('#rt').text('off'); rtbit = 0; $(this).attr('class','tvalue_off'); break;
-      case 'off': $('#rt').text('on'); rtbit = 1; $(this).attr('class','tvalue_on'); break;
-    }
-    newView("u");
-  });
-   
-  // Sort ASC/DESC
-  $(document).on("click", ".event_time", function(event) {
-    var csv = $(".event_time").text();
-    switch (csv) {
-      case "show oldest first":
-        $("#event_sort").val("ASC");
-        break;
-      case "show newest first":
-        $("#event_sort").val("DESC");
-        break;
-      }
-      newView("u");
-  });
-
-  // Update page
-  $(document).on("click", ".b_update", function(event) {
-    // Where are we?
-    var curTab = $('.tab_active').attr('id');
-    switch (curTab) {
-      case 't_ovr':
-        loadSummary();
-      break;
-      case 't_view':
-        loadViews();
-      break;
-      default:
-        $(".b_update").css('border-left','4pt solid #666');
-        newView("u");
-      break;
-    }
-  });
- 
-  // If search is in focus, update on enter
-  $('#search').keypress(function(e) {
-    if(!e) e=window.event;
-      key = e.keyCode ? e.keyCode : e.which;
-      if(key == 13) {
-        if ($('#search').val().length > 0) {
-          eF = 1;
-        } else {
-          eF = 0;
-        }
-        // Close comment box if it is open
-        if ($('#tlcom').length > 0) {
-          cmtbRemove(); 
-        }
-        // If we are in the summary tab and filter on something
-        // jump to the results
-        $('#t_sum').click();
-        newView("c");
-      }
-  });
-
-  // Clear search and refresh
-  $('#clear_search').click(function() {
-    if ($('#search').val() != '') {
-      $('#search').val('');
-      $("#search").focus();           
-    }
-  });
-
-  // Logout
-  $("#logout").click(function(event) {
-    $.get("index.php?id=0", function(){location.reload()});
-  });
-
   // Tabs
   var tab_cached = $("#sel_tab").val();
+
+  switch (tab_cached) {
+    case "t_sum": 
+      $('.content-right').show();
+      $('.content-left').show();
+    break;
+    default:
+      $('.content-right').hide();
+      $('.content-left').hide();
+    break;
+  }
+
   $('#' + tab_cached).attr('class','tab_active');
   $("#" + tab_cached + "_content").attr('class','content_active');
 
@@ -684,12 +562,142 @@ $(document).ready(function(){
         break;
       }
 
-      //$('#sel_tab').val(activeTab);
-      //var ctab = $('#sel_tab').val();
-      //var urArgs = "type=" + 5 + "&tab=" + ctab;
-      //$.get(".inc/callback.php?" + urArgs, function(){Null});
+      $('#sel_tab').val(activeTab);
+      var ctab = $('#sel_tab').val();
+      var urArgs = "type=" + 5 + "&tab=" + ctab;
+      $.get(".inc/callback.php?" + urArgs, function(){Null});
     }
   });
+
+  // Toggle and update views
+  function newView(req) {
+    // No racing please
+    var bail = $("#loader").css('display');
+    if (bail != 'none') return;
+    // Remove any stale views
+    $("#tl0,#tl1,#tl3a,#tl3b").remove();
+    var f = "0-aaa-00";
+    var s = "2a-aaa-00";
+    var cv = $("#gr").text();
+ 
+    switch (cv) {
+      case "on":
+        eventList(f);
+        $("#loader").show();
+        break;
+      case "off":
+        eventList(s);
+        $("#loader").show();
+        break;
+    }
+  }
+
+  // Group and ungroup
+  $(document).on("click", "#gr", function(event) {
+    var bail = $("#loader").css('display');
+    if (bail != 'none') return;
+    var cv = $('#gr').text();
+    switch (cv) {
+      case  'on': 
+        $('#gr').attr('class','tvalue_off');
+        $('#gr').text('off');
+      break;
+      case 'off':
+        $('#gr').attr('class','tvalue_on');
+        $('#gr').text('on');
+        $("#event_sort").val("DESC");
+      break;
+    }
+  });
+
+  // RT check/uncheck
+  $(document).on("click", "#rt", function(event) {
+    var bail = $("#loader").css('display');
+    if (bail != 'none') return;
+    var cv = $('#rt').text();
+    switch (cv) {
+      case  'on':
+        $('#rt').attr('class','tvalue_off');
+        $('#rt').text('off');
+        rtbit = 0;
+      break;
+      case 'off':
+        $('#rt').attr('class','tvalue_on');
+        $('#rt').text('on');
+        rtbit = 1;
+      break;
+    }
+  });
+  
+  // If search is in focus, update on enter
+  $('#search').keypress(function(e) {
+    if(!e) e=window.event;
+      key = e.keyCode ? e.keyCode : e.which;
+      if(key == 13) {
+        // Close comment box if it is open
+        if ($('#tlcom').length > 0) {
+          cmtbRemove(); 
+        }
+        // Jump to all events if we are not in the events tab
+        var active = $(".tab_active").attr('id');
+        if (active != 't_sum') {
+          $('#gr').attr('class','tvalue_off');
+          $('#gr').text('off');
+          $('#rt').attr('class','tvalue_off');
+          $('#rt').text('off');
+          rtbit = 0;        
+          $('#t_sum').click();
+          $('#t_sum').css('background-color','#000');
+        }
+        newView("u");
+      }
+  });
+
+  // Sort ASC/DESC
+  $(document).on("click", ".event_time", function(event) {
+    var csv = $(".event_time").text();
+    switch (csv) {
+      case "show oldest first":
+        $("#event_sort").val("ASC");
+        break;
+      case "show newest first":
+        $("#event_sort").val("DESC");
+        break;
+      }
+      newView("u");
+  });
+
+  // Update page
+  $(document).on("click", ".b_update", function(event) {
+    // Where are we?
+    var curTab = $('.tab_active').attr('id');
+    switch (curTab) {
+      case 't_ovr':
+        loadSummary();
+      break;
+      case 't_view':
+        loadViews();
+      break;
+      default:
+        $(".b_update").css('border-left','4pt solid #666');
+        newView("u");
+      break;
+    }
+  });
+ 
+  // Clear search and refresh
+  $('#clear_search').click(function() {
+    if ($('#search').val() != '') {
+      $('#search').val('');
+      $("#search").focus();           
+    }
+  });
+
+  // Logout
+  $("#logout").click(function(event) {
+    $.get("index.php?id=0", function(){location.reload()});
+  });
+
 
   // Section show and hide
   $(".label_m").click(function(event) {
@@ -941,26 +949,69 @@ $(document).ready(function(){
   });
 
   // Toggle RT depending on entry point
-  //var rtbit;
   $(document).on("click", ".b_ec_hot", function() {
-    var rtbit = 1;
+    rtbit = 1;
   });
   $(document).on("click", ".b_ec_total", function() {
-    var rtbit = 0;
+    rtbit = 0;
   });
+
+  // Filter constructor
+  function mkFilter() {
+    if ($('#search').val().length > 0) {
+      var fParts = $('#search').val().split(" ");
+      if (fParts[0] == 'cmt') {
+        theFilter = s2h($('#search').val());
+      } else {
+        // Now see if the requested filter exists
+        if ($("#tr_" + fParts[0]).length > 0) {
+          tmpFilter = $("#tr_" + fParts[0]).data('filter');
+          // Now see if we need to modify the query
+          if(fParts[1]) {
+            // This is the base filter
+            preFilter = h2s(tmpFilter);
+            // This is the user supplied text.
+            theQuestion = fParts[1].replace(/['@|&;*\\`]/g, "");
+            // We will accept multiple questions if they are comma delimited
+            questionParts = theQuestion.split(",");
+            if (questionParts.length > 1) {
+              var f = '(';
+              for (var i = 0; i < questionParts.length; i++) {
+                f += preFilter.replace(/\$/g, questionParts[i]);
+                if (i != (questionParts.length - 1)) {
+                  f += " OR ";
+                }
+              }
+              f += ')';
+              theFilter = s2h(f);
+            } else {
+              var newFilter = preFilter.replace(/\$/g, questionParts[0]);
+              theFilter = s2h(newFilter);
+            }
+          } else {
+            theFilter = tmpFilter;
+          }
+        }
+      }
+    } else {
+      theFilter = s2h('empty');
+    }
+    return theFilter;
+  }   
 
   //
   // This creates the views for each level
   //
 
   function eventList (type) {
-
     theWhen = getTimestamp();
+    statusPoll(0);
     var parts = type.split("-");
     var filterMsg = '';
     var rt = 0;
-    var theFilter = s2h('empty');
     var theSensors = s2h('empty');
+    var theFilter = mkFilter();
+
     // See if we are just RT events
     if ($('#rt').text() == 'on' || rtbit == 1) {
       rt = 1;
@@ -984,56 +1035,19 @@ $(document).ready(function(){
       active_sensors += ")";
       theSensors = s2h(active_sensors);
     }
-
+    
     // Check for any filters
-    if ($('#search').val().length > 0 && eF == 1) {
-      var fParts = $('#search').val().split(" ");
-      // Let the filter notifier know
+    if (h2s(theFilter) != 'empty') {
       $('.fl_val').text('YES');
-      if (fParts[0] == 'cmt') {
-        theFilter = s2h($('#search').val()); 
-      } else {
-        // Now see if the requested filter exists
-        if ($("#tr_" + fParts[0]).length > 0) {
-          tmpFilter = $("#tr_" + fParts[0]).data('filter');
-          // Now see if we need to modify the query
-          if(fParts[1]) { 
-            // This is the base filter
-            preFilter = h2s(tmpFilter);
-            // This is the user supplied text.
-            theQuestion = fParts[1].replace(/['@|&;*\\`]/g, "");
-            // We will accept multiple questions if they are comma delimited
-            questionParts = theQuestion.split(",");
-            if (questionParts.length > 1) {
-              var f = '(';
-              for (var i = 0; i < questionParts.length; i++) {
-                f += preFilter.replace(/\$/g, questionParts[i]);
-                if (i != (questionParts.length - 1)) {
-                  f += " OR ";
-                } 
-              }
-              f += ')'; 
-              theFilter = s2h(f); 
-            } else {
-              var newFilter = preFilter.replace(/\$/g, questionParts[0]);
-              theFilter = s2h(newFilter);
-            }        
-          } else {
-            theFilter = tmpFilter;
-          }
-        }
-      }
     } else {
       $('.fl_val').text('NO');
-      eF = 0;
     }
-
+    
     switch (parts[0]) {
 
     // Level 0 view - Grouped by Signature
     case "0":
       $('.value').text('-');
-      statusPoll(0);
       var urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&sensors=" + theSensors + "&rt=" + rt + "&sv=" + sortval;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
@@ -1171,9 +1185,6 @@ $(document).ready(function(){
             0:{sorter:false}
           }
         });
-        if ($('#tl4').length == 0) {
-          loadFilters(0);
-        }
         $("#loader").hide();
       }
       break;
@@ -1435,7 +1446,6 @@ $(document).ready(function(){
 
     case "2a":
       $('.value').text('-');
-      statusPoll(0);
       var urArgs = "type=2a&ts=" + theWhen + "&filter=" + theFilter + "&sensors=" + theSensors + "&rt=" + rt + "&sv=" + sortval;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb3a(data)});
@@ -1848,9 +1858,9 @@ $(document).ready(function(){
   // Add filter parts to box
   //
 
- $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link", function() {
+ $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link", function(event) {
     var prefix = $(this).data('type');
-    var suffix = $(this).html();
+    var suffix = $(this).text();
     var tfocus = "#search";
     switch (prefix) {
       case    'ip': $('#search').val(prefix + " " + suffix);
@@ -1896,6 +1906,10 @@ $(document).ready(function(){
       break;
       case    'st': var suffix = $(this).attr('id').split('-')[1];
                     $('#search').val(prefix + " " + suffix);
+                    // RT must be off to return anything
+                    $('#rt').attr('class','tvalue_off');
+                    $('#rt').text('off');
+                    rtbit = 0;
       break;
     } 
     $(tfocus).focus();
@@ -2248,7 +2262,7 @@ $(document).ready(function(){
         
         var curtotalrtcount = Number(ecls);
         // Working on grouped events
-        if ($("#menu1").text() == "on") {
+        if ($("#gr").text() == "on") {
           curclasscount = Number($("#class_count").text());
           var curtotalparentcount = $(".d_row_active").find(".b_ec_hot").text();
           // Do we have queued events?
@@ -3168,11 +3182,25 @@ $(document).ready(function(){
     $('#sankey_all').remove();
     if (!$("#db_sankey_ldr")[0]) {
       var theWhen = getTimestamp();
-      var ldr = "<div id=db_sankey_ldr class=ldr><img src=.css/load.gif></div>";
-      $('#db_sankey').prepend(ldr);
+      var theSensors = s2h('empty');
+      var theFilter = mkFilter();
+      // See if we are filtering by sensor
+      if ($('.chk_sen:checked').length > 0) {
+        var active_sensors = "AND event.sid IN(";
+        var iter  = $('.chk_sen:checked').length;
+        $('.chk_sen:checked').each(function() {
+          active_sensors += "'" + $(this).val() + "',";
+        });
+        active_sensors = active_sensors.replace(/,+$/,'');
+        active_sensors += ")";
+        theSensors = s2h(active_sensors);
+      }
+
+      var ldr = "<div id=db_sankey_ldr class=ldr100><img src=.css/load.gif></div>";
+      $('#sk_help').after(ldr);
       var qargs = "ip-nn";
       var limit = 1000;
-      var urArgs = "type=16&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+      var urArgs = "type=16&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&limit=" + limit + "&ts=" + theWhen;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb17(data)});
       });
@@ -3188,7 +3216,7 @@ $(document).ready(function(){
           $('#db_sankey').after("<div id=sankey_all></div>");
           mkSankey("sankey_all", sankeyData, w, h);
         } else {
-          $('#db_sankey').after("<div id=sankey_all>No Result.</div>");
+          $('#sk_help').after("<div class=label100 id=sankey_all><b>The query returned no results.</b></div>");
         }
         $('#db_sankey_ldr').remove();
       } 

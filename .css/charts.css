@@ -25,11 +25,14 @@ cursor: move;
 fill-opacity: .9;
 shape-rendering: crispEdges;
 }
-.node text {
+.nodetext {
+cursor:pointer;
 font-size:11px;
 font-family:tahoma,sans-serif,arial;
-pointer-events: none;
-text-shadow: 0 1px 0 #fff;
+/*text-shadow: 0 1px 0 #f4f4f4;*/
+}
+.nodetext:hover {
+text-decoration:underline;
 }
 .link {
 fill: none;

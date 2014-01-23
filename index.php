@@ -73,7 +73,7 @@ dbC();
     <div class=event_cont>
       <div class=label_l><span class=ec_label>Toggle</span><div class=label_m data-sec=t><img src=.css/uarr.png></div></div>
       <div class=secl id=sec_t>
-        <div class=label>Event Grouping:</div><div id=menu1 class=tvalue_on>on</div>
+        <div class=label>Event Grouping:</div><div id=gr class=tvalue_on>on</div>
         <div class=label>Event Queue Only:</div><div id=rt class=tvalue_on>on</div>
         <div class=label>Map:</div><div id=menu2 class=tvalue_off>off</div>
       </div>
@@ -155,7 +155,7 @@ dbC();
 
   <div class=rl>
     <div id=t_view_content class=content>
-      <div class=ovdl></div>
+      <div id=sk_help class=label100>This view shows source and destination connections. The width of each ribbon indicates the volume of events. If a source and destination are linked with a red line then an event has occured in both directions (A -> B, B -> A). When no filters are present and only a single event exists, lone hosts that are associated with other lone hosts are not shown. Nodes can be repositioned by clicking on the desired node and then dragging it to a new position. IPs can be added as filters by double clicking their label. When you are on this page and a filter is in place the 'enter' key will take you to the events. To recreate the view (with the filter) click the update link.</div>
       <div id=db_sankey></div>
     </div>
     <div id=t_inc_content class=content>&nbsp;Not broken, just not done.</div>

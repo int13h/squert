@@ -902,17 +902,39 @@ function summary() {
 }
 
 function dashboard() {
-    global $when;
-    $limit = $_REQUEST['limit'];
-    $qargs = $_REQUEST['qargs'];
+    global $when, $sensors;
+    $limit   = $_REQUEST['limit'];
+    $qargs   = $_REQUEST['qargs'];
+    $filter  = hextostr($_REQUEST['filter']);
     list($type,$subtype) = explode("-", $qargs);
+
+    if ($filter != 'empty') {
+        if (substr($filter, 0,4) == 'cmt ') {
+            $comment = explode('cmt ', $filter);
+            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid
+                    WHERE history.comment = '$comment[1]'";
+        } else {
+            $filter = str_replace('&lt;','<', $filter);
+            $filter = str_replace('&gt;','>', $filter);
+            $filter = "AND " . $filter;
+            $qp2 = "WHERE $when
+                    $sensors
+                    $filter";
+        }
+    } else {
+        $qp2 = "WHERE $when
+                $sensors";
+    }
+
     switch ($type) {
         case "ip":
             $query = "SELECT INET_NTOA(event.src_ip) AS source,
                       INET_NTOA(event.dst_ip) AS target,
                       COUNT(event.src_ip) AS value
                       FROM event
-                      WHERE $when
+                      LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+                      LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip 
+                      $qp2 
                       AND (INET_NTOA(event.src_ip) != '0.0.0.0' AND INET_NTOA(event.dst_ip) != '0.0.0.0')
                       GROUP BY source,target";
         break;
@@ -933,7 +955,7 @@ function dashboard() {
     $tgt_c = array_count_values($tgts);
 
     // Accomodate sources that exist as a target with the 
-    // current target as a source 
+    // current target as a source (not allowed)
     foreach ($srcs as $index => $src) {
         // Find the target
         $tgt = $tgts[$index];
@@ -952,6 +974,16 @@ function dashboard() {
                 $sads[$index] = $sads_val; 
             }
         }
+        
+        // If there is no filter, remove 1:1s with a count of 1
+        if ($filter == 'empty') {
+            if ($vals[$index] == 1 && $sads[$index] == 0 && $src_c[$src] == 1) {
+                unset($srcs[$index]);
+                unset($tgts[$index]);
+                unset($vals[$index]);
+                unset($sads[$index]);
+            }
+        } 
     }       
 
     // We have probably truncated these so realign the indexes

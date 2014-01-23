@@ -104,7 +104,8 @@ function mkSankey(callerID,data,w,h) {
   var link = svg.append("g").selectAll(".link")
       .data(data.links)
       .enter().append("path")
-      .attr("class", function(d) { var cl = "link"; if (d.sad > 1) cl = "link1"; return cl })
+      // If a src -> dst pair also exist as a dst -> src pair then flag it
+      .attr("class", function(d) { var cl = "link"; if (d.sad >= 1) cl = "link1"; return cl })
       .attr("d", path)
       .style("stroke-width", function(d) { return Math.max(1, d.dy); })
       .sort(function(a, b) { return b.dy - a.dy; });
@@ -134,6 +135,9 @@ function mkSankey(callerID,data,w,h) {
       .attr("x", -6)
       .attr("y", function(d) { return d.dy / 2; })
       .attr("dy", ".35em")
+      .attr("data-type", "ip")
+      .on('click', function(d) { $('#search').val('ip ' + d.name); $('#search').focus(); })
+      .attr("class", "nodetext")
       .attr("text-anchor", "end")
       .attr("transform", null)
       .text(function(d) { return d.name; })
