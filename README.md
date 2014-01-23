@@ -11,7 +11,7 @@ Intro: [http://www.youtube.com/watch?v=ZOsVw96XM8E](http://www.youtube.com/watch
 
 Changes v1.1.6: [http://www.youtube.com/watch?v=_eheJv0MJDY](http://www.youtube.com/watch?v=_eheJv0MJDY)
 
-Changes v1.1.9:
+Changes v1.1.9: [http://www.youtube.com/watch?v=QkgrigopfQA](http://www.youtube.com/watch?v=QkgrigopfQA)
 
 ## Description
 
