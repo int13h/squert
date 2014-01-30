@@ -64,9 +64,8 @@ $(document).ready(function(){
     html += " - <input class=dt_input id=ts_etime type=text maxlength=8>";
     html += "&nbsp;&nbsp;UTC:&nbsp;<input class=dt_utc id=ts_utc type=checkbox" + checkUTC + ">";
     html += "&nbsp;&nbsp;TZ offset:&nbsp;<input class=dt_input id=ts_offset";
-    html += " type=text" + inputUTC + "><span id=savetz class=links>Save</span></td>";
-    html += "<td width=165px class=dt_content><div class=dt_reset>reset values</div>";
-    html += "<div class=dt_update>update</div></td>";
+    html += " type=text" + inputUTC + "></td>";
+    html += "<td width=175 class=dt_content><div id=dt_reset class=dt_b>reset values</div><div id=dt_savetz class=dt_b>save TZ</div></td>";
     html += "<td class=cog><img class=lr src=.css/lr.png></td><tr></table>";
     $('#cal').before(html);
   }
@@ -282,13 +281,8 @@ $(document).ready(function(){
 
   });
 
-  // Update button
-  $(document).on('click', '.dt_update', function(event) {
-    $('.b_update').click();
-  }); 
-
   // Reset button
-  $(document).on('click', '.dt_reset', function(event) {
+  $(document).on('click', '#dt_reset', function(event) {
     $('#ts_sdate').val(yy + "-" + today + "-" + dd);
     $('#ts_edate').val(yy + "-" + today + "-" + dd);
     $('#ts_stime').val('00:00:00');

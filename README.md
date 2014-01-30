@@ -13,6 +13,8 @@ Changes v1.1.6: [http://www.youtube.com/watch?v=_eheJv0MJDY](http://www.youtube.
 
 Changes v1.1.9: [http://www.youtube.com/watch?v=QkgrigopfQA](http://www.youtube.com/watch?v=QkgrigopfQA)
 
+Changes v1.2.0: Cleanup. Removed fixed credentials in sguil helpers.
+
 ## Description
 
 SQueRT is a tool that is used to query event data

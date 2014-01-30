@@ -594,28 +594,19 @@ cursor:pointer;
 background-color:lightyellow;
 }
 td.txtext {
-width:930px;
 color:#000;
 font-size:11px;
-border-bottom:1pt solid #c9c9c9;
 background-color:transparent; 
 word-wrap:break-word;
 word-break:break-all;
 display:inline-block;
-padding:20px 10px;
-}
-div.txtext_head {
-background-color:#fff;
-color:#545454;
-font-weight:400;
-font-size:12px;
-padding:25px 10px 10px;
+padding-left:10px;
+padding-bottom:10px;
+padding-right:10px;
 }
 .txtext_hdr {
-width:inherit;
-background:#0ff;
-float:left;
-padding:none;
+color:#000;
+font-weight:bold;
 }
 .txtext_src {
 color:#00f;
@@ -624,10 +615,8 @@ color:#00f;
 color:red;
 }
 .txtext_dbg {
-width:inherit;
-background:#add8e6;
-float:left;
-padding:none;
+color:#666;
+font-style:italic;
 }
 td.sub,td.sub_active,td.sub1_active,td.sub_filter {
 background:transparent;

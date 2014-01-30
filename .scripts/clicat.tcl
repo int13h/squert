@@ -30,17 +30,16 @@ if {[file exists $CONFIG]} {
     set VERSION  $configArray(sgVer)
     set SERVER   $configArray(sgHost)
     set PORT     $configArray(sgPort)
-    set USERNAME $configArray(sgUser)
-    set PASSWD   $configArray(sgPass)
 } else {
     puts "ERROR: No configuration file found"
     exit 1
 }
 
-if { $argc == 3 } {
-    set CAT [lindex $argv 0]
-    set MSG [lindex $argv 1]
-    set LST [lindex $argv 2]
+if { $argc == 4 } {
+    set USR [lindex $argv 0]
+    set CAT [lindex $argv 1]
+    set MSG [lindex $argv 2]
+    set LST [lindex $argv 3]
 } else {
     puts "ERROR: Not enough arguments"
     exit 1
@@ -179,8 +178,15 @@ SendToSguild $socketID "PING"
 # Get the PONG
 set INIT [gets $socketID]
 
+#
+# Auth starts here
+#
+
+# Get users password
+set PWD [gets stdin]
+
 # Authenticate with sguild
-SendToSguild $socketID [list ValidateUser $USERNAME $PASSWD]
+SendToSguild $socketID [list ValidateUser $USR $PWD]
 
 # Get the response. Success will return the users ID and failure will send INVALID.
 if { [catch {gets $socketID} authMsg] } { 
@@ -202,5 +208,5 @@ if { $authResults == "INVALID" } {
 SendToSguild $socketID [list DeleteEventIDList $CAT $MSG $SCIDLIST]
 
 catch {close $socketID} 
-puts "0"
+puts -nonewline "0"
 exit 0

@@ -507,7 +507,9 @@ function tb() {
 function tx() {
 
     global $offset;
-    $txdata = hextostr($_REQUEST['txdata']);
+    $txdata  = hextostr($_REQUEST['txdata']);
+    $usr     = $_SESSION['sUser'];
+    $pwd     = $_SESSION['sPass'];
     list($sid, $timestamp, $sip, $spt, $dip, $dpt) = explode("|", $txdata);
 
     // Lookup sensorname
@@ -522,12 +524,27 @@ function tx() {
         $timestamp = gmdate("Y-m-d H:i:s", strtotime($timestamp));
     }
 
-    $cmd = "cliscript.tcl -sensor \"$sensorName\" -timestamp \"$timestamp\" -sid $sid -sip $sip -spt $spt -dip $dip -dpt $dpt";
+    $cmd = "../.scripts/cliscript.tcl \"$usr\" \"$sensorName\" \"$timestamp\" $sid $sip $dip $spt $dpt";
 
-    exec("../.scripts/$cmd",$raw);
+    $descspec = array(
+                 0 => array("pipe", "r"),
+                 1 => array("pipe", "w"),
+                 2 => array("pipe", "w")
+    );
 
-    $fmtd = $debug = '';
+    $proc = proc_open($cmd, $descspec, $pipes);
+    $debug = "Process execution failed";
+    $_raw = $fmtd = "";
+    if (is_resource($proc)) {
+        fwrite($pipes[0], $pwd);
+        fclose($pipes[0]);
+        $_raw = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        $debug = fgets($pipes[2]);
+        fclose($pipes[2]);
+    }
 
+    $raw = explode("\n", $_raw);
     foreach ($raw as $line) {
 
         $line = htmlspecialchars($line);
@@ -546,6 +563,7 @@ function tx() {
     }
 
     $fmtd  .= "<br>" . $debug;
+
     $result = array("tx"  => "$fmtd",
                     "dbg" => "$debug",
                     "cmd" => "$cmd");
@@ -617,17 +635,27 @@ function fi() {
 
 function cat() {
     $catdata = $_REQUEST['catdata'];
+    $usr     = $_SESSION['sUser'];
+    $pwd     = $_SESSION['sPass'];
+    
     list($cat, $msg, $lst) = explode("|||", $catdata);
     $msg = htmlentities($msg);
-    $cmd = "clicat.tcl \"$cat\" \"$msg\" \"$lst\"";
+    
+    $cmd = "../.scripts/clicat.tcl \"$usr\" \"$cat\" \"$msg\" \"$lst\"";
+    $descspec = array(
+                 0 => array("pipe", "r"),
+                 1 => array("pipe", "w")
+    );
 
-    exec("../.scripts/$cmd",$raw);
-    $fmtd = "";
-    foreach ($raw as $line) {
-        $fmtd .= htmlspecialchars($line);
+    $proc = proc_open($cmd, $descspec, $pipes);
+    $debug = "Process execution failed";
+    if (is_resource($proc)) {
+        fwrite($pipes[0], $pwd);
+        fclose($pipes[0]);
+        $debug = fgets($pipes[1]);
+        fclose($pipes[1]);
     }
-
-    $result = array("dbg"  => "$fmtd");
+    $result = array("dbg"  => htmlspecialchars($debug));
 
     $theJSON = json_encode($result);
     echo $theJSON;

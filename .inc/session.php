@@ -40,6 +40,7 @@ if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
 
 // Session variables
 if (!isset($_SESSION['sUser']))    { sInt();  } else { $sUser    = $_SESSION['sUser'];}
+if (!isset($_SESSION['sPass']))    { sInt();  } else { $sPass    = $_SESSION['sPass'];}
 if (!isset($_SESSION['sEmail']))   { sInt();  } else { $sEmail   = $_SESSION['sEmail'];}
 if (!isset($_SESSION['sType']))    { sInt();  } else { $sType    = $_SESSION['sType'];}
 if (!isset($_SESSION['sTab']))     { sInt();  } else { $sTab     = $_SESSION['sTab'];}

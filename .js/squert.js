@@ -102,9 +102,6 @@ $(document).ready(function(){
   var rtbit = 0;
   loadFilters(0);
   eventList("0-aaa-00");
-  loadSummary();
-  //loadViews();
-  
   $("#loader").show();
 
   var lastclasscount = 0;
@@ -137,7 +134,7 @@ $(document).ready(function(){
     }
   }
 
-  $(document).on("click", "#savetz", function(event) {
+  $(document).on("click", "#dt_savetz", function(event) {
     if ($('.dt_error').data('err') == 0) {
       var newOffset = $('#ts_offset').val();
       profileUpdate("tz", s2h(newOffset));
@@ -515,6 +512,10 @@ $(document).ready(function(){
       $('.content-right').show();
       $('.content-left').show();
     break;
+    case "t_ovr":
+      $('.content-right').hide();
+      $('.content-left').hide();
+      if ($('.ovstat').text().length == 0) loadSummary();
     default:
       $('.content-right').hide();
       $('.content-left').hide();
@@ -555,6 +556,11 @@ $(document).ready(function(){
         case "t_sum": 
           $('.content-right').show();
           $('.content-left').show();
+        break;
+        case "t_ovr":
+          $('.content-right').hide();
+          $('.content-left').hide();
+          if ($('.ovstat').text().length == 0) loadSummary();
         break;
         default:
           $('.content-right').hide();
@@ -961,7 +967,7 @@ $(document).ready(function(){
     if ($('#search').val().length > 0) {
       var fParts = $('#search').val().split(" ");
       if (fParts[0] == 'cmt') {
-        theFilter = s2h($('#search').val());
+        var theFilter = s2h($('#search').val());
       } else {
         // Now see if the requested filter exists
         if ($("#tr_" + fParts[0]).length > 0) {
