@@ -571,7 +571,7 @@ $(document).ready(function(){
       $('#sel_tab').val(activeTab);
       var ctab = $('#sel_tab').val();
       var urArgs = "type=" + 5 + "&tab=" + ctab;
-      $.get(".inc/callback.php?" + urArgs, function(){Null});
+      $.get(".inc/callback.php?" + urArgs);
     }
   });
 
@@ -968,6 +968,7 @@ $(document).ready(function(){
       var fParts = $('#search').val().split(" ");
       if (fParts[0] == 'cmt') {
         var theFilter = s2h($('#search').val());
+        rtbit = 0;
       } else {
         // Now see if the requested filter exists
         if ($("#tr_" + fParts[0]).length > 0) {
@@ -2198,7 +2199,7 @@ $(document).ready(function(){
         $(".chk_event").prop("checked",false);
         $("#ca2").prop("checked",false);
         $(".d_row_sub1").css("background-color", "#fafafa");
-        $(".d_row_sub1").hover(function(){$(this).css("background-color", "#f4f4f4")},
+        $(".d_row_sub1").hover(function(){$(this).css("background-color", "#c9c9c9")},
           function(){$(this).css("background-color", "#fafafa")});
         break;
       default:
@@ -3063,7 +3064,7 @@ $(document).ready(function(){
       if ($("#top" + cbArgs)[0]) $("#top" + cbArgs).remove();
       $("#ov_" + cbArgs + "_sl").after(tbl);
       $("#ov_" + cbArgs + "_msg").html("viewing <b><span id=ov_" + cbArgs + "_sl_lbl>" + i + "</b> of <b>" + records + " </b>results"); 
-      if (records > 1) mkSlider("ov_" + cbArgs + "_sl", i, records);
+      mkSlider("ov_" + cbArgs + "_sl", i, records);
       $("#top" + cbArgs).tablesorter({
           cancelSelection:true
       });
@@ -3111,7 +3112,7 @@ $(document).ready(function(){
       if ($("#top" + cbArgs)[0]) $("#top" + cbArgs).remove();
       $("#ov_" + cbArgs + "_sl").after(tbl);
       $("#ov_" + cbArgs + "_msg").html("viewing <b><span id=ov_" + cbArgs + "_sl_lbl>" + i + "</b> of <b>" + records + " </b>results"); 
-      if (records > 1) mkSlider("ov_" + cbArgs + "_sl", i, records);
+      mkSlider("ov_" + cbArgs + "_sl", i, records);
       $("#top" + cbArgs).tablesorter({
           cancelSelection:true
       });
@@ -3164,7 +3165,7 @@ $(document).ready(function(){
       if ($('#topsignature')[0]) $('#topsignature').remove(); 
       $("#ov_signature_sl").after(tbl);
       $("#ov_signature_msg").html("viewing <b><span id=ov_signature_sl_lbl>" + i + "</span></b> of <b>" + records + " </b>results");
-      if (records > 1) mkSlider("ov_signature_sl", i, records);
+      mkSlider("ov_signature_sl", i, records);
       $("#topsigs").tablesorter({
           cancelSelection:true
       });

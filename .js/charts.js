@@ -4,6 +4,12 @@ function mkSlider(callerID,low,high) {
       width = 100,
       height = 10;
 
+  // Only produce a slider if we need to
+  if (high <= 1) { 
+    d3.select("#" + callerID).text(""); 
+    return;
+  }
+
   if (high > 1000) high = 1000;
 
   var x = d3.scale.linear()
