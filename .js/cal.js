@@ -66,7 +66,7 @@ $(document).ready(function(){
     html += "&nbsp;&nbsp;TZ offset:&nbsp;<input class=dt_input id=ts_offset";
     html += " type=text" + inputUTC + "></td>";
     html += "<td width=175 class=dt_content><div id=dt_reset class=dt_b>reset values</div><div id=dt_savetz class=dt_b>save TZ</div></td>";
-    html += "<td class=cog><img class=lr src=.css/lr.png></td><tr></table>";
+    html += "<td class=cog><img class=il src=.css/lr.png></td><tr></table>";
     $('#cal').before(html);
   }
 
@@ -364,7 +364,7 @@ $(document).ready(function(){
       mC = "dmonth";
       if (yy > baseYear) mC = "month";
       html += "<td id=ny class=\"" + mC + "\" data-type=ny data-link=\"" + nyL + "\">" + nyL + " &gt;</td>";
-      html += "<td class=cog><img class=lr src=.css/lr.png></td>"
+      html += "<td class=cog><img class=il src=.css/lr.png></td>"
     }
   }
 

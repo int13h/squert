@@ -80,8 +80,7 @@ $(document).ready(function(){
       fval = 'YES';
       fval_c = 'fl_val_on';
     }
-    var tl = "<div class=b_update>Update</div>";
-    tl += "<span class=fl>Timeline: </span>";
+    var tl = "<span class=fl>Timeline: </span>";
     tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
     tl += "<span class=fl>Filtered by Object: </span><span class=" + fval_c + ">" + fval + "</span>";
  
@@ -90,9 +89,84 @@ $(document).ready(function(){
       fbs_c = 'fl_val_on';
     } 
     tl += "<span class=fl>Filtered by Sensor: </span><span class=" + fbs_c + ">" + fbs + "</span>";
-    $('.timeline').html(tl);
+    tl += "<span class=fl>Priorities: </span>";
+    $('.t_stats').html(tl);
     return theWhen;
   }
+  
+  // Event priority bar and counts
+  function mkPribar(v) {
+    var sum = v.reduce(function(a,b) { return a + b; }, 0);
+    var v0 = 0, v1 = 0, v2 = 0, v3 = 0; 
+    var w = [];
+    if( sum > 0) {
+      w = [Number(v[0]/sum*100).toFixed(1),Number(v[1]/sum*100).toFixed(1),
+           Number(v[2]/sum*100).toFixed(1),Number(v[3]/sum*100).toFixed(1)];
+    }
+    var bar = "<table class=pribar><tr>";
+    var t = ['High Priority','Medium Priority','Low Priority','Other'];
+    for (var i=1; i<5;i++) {
+      var j = Number(i - 1);
+
+      if (w[j] > 0) { 
+        bar += "<td data-pr=" + i + " class=bpr" + i + " width=" + w[j] + "% title=\""; 
+        bar += t[j] + ": " + v[j] + "\">" + w[j] + "%</td>";
+        $('#pr_' + i).html(v[j] + "<span class=per>(" + w[j] + "%)</span>");
+      }  
+    }
+
+    bar += "</tr></table>";
+    $('.t_pbar').html(bar);
+  }
+
+  $(document).on('click', '[class*="bpr"]', function() {
+    // We disallow filtering if any events have already been selected
+    if ($('.d_row_active')[0] || $(".chk_event:checked").length > 0) return;
+    
+    var prClass = $(this).attr('class').split('b')[1];
+    var prOld = $(this).data('pr');
+
+    function flipIt(pattern) {
+      $(pattern).closest('tr').hide();
+      $(pattern).closest('tr').attr('class','hidden');
+      if ($('#gr').text('on')) $(pattern).closest('tr').find('.chk_event').prop("disabled",true);
+    }
+
+    if ($('.b' + prClass).attr('class') == 'bprA') {
+      $('.b' + prClass).attr('class', 'bpr' + prOld);
+      $('.hidden').attr('class','d_row');
+      $('.d_row').show();
+      if ($('#gr').text('on')) {
+        $('.chk_event').prop("disabled",false);
+        $('.chk_all').prop("checked",false);
+        $('.chk_event').css("background-color", "#fafafa");
+      } 
+    } else {
+      // See if we are already filtered
+      if ($('.bprA')[0]) {
+        $('.hidden').attr('class','d_row');
+        $('.d_row').show();
+        if ($('#gr').text('on')) {
+          $('.chk_event').prop("disabled",false);
+          $('.chk_all').prop("checked",false);
+          $('.chk_event').css("background-color", "#fafafa");
+        }
+        var prPrev = $('.bprA').data('pr');
+        $('.bprA').attr('class', 'bpr' + prPrev);
+      }  
+
+      $('.b' + prClass).attr('class','bprA');
+ 
+      switch (prClass) {
+        case "pr1": ptrn = ".pr2,.pr3,.pr4"; break;
+        case "pr2": ptrn = ".pr1,.pr3,.pr4"; break;
+        case "pr3": ptrn = ".pr1,.pr2,.pr4"; break;
+        case "pr4": ptrn = ".pr1,.pr2,.pr3"; break;
+      }
+
+      flipIt(ptrn);
+    }
+  });
   
   //
   // Load main content
@@ -174,114 +248,6 @@ $(document).ready(function(){
     });
   }
  
-  // Make a map
-  function doMap(req) {
-    theWhen = getTimestamp();
-    var filter = 0;
-    var urArgs = "type=" + 10 + "&filter=" + filter + "&ts=" + theWhen;
-    $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb10(data)});
-    });
-
-    var working = "Working<br><img src=.css/load.gif>";
-
-    switch (req) {
-      case "draw": 
-        var tbl = "";
-        tbl += "<table class=mb_table id=map_box cellpadding=0 cellspacing=0 align=center>";
-        tbl += "<tr><td class=mb_header align=right></td></tr>"; 
-        tbl += "<tr><td class=mb_box>" + working + "</td></tr>";
-        tbl += "</table>";
-        $("#aaa-00").append(tbl);
-        break;
-      case "redraw":
-        $('.mb_box').html(working);
-        break;
-    }
-
-    function cb10(data){
-      eval("mapRaw=" + data);
-      try {
-        var mapDetail = $.parseJSON("{" + mapRaw.all + "}");
-        var srcc    = mapRaw.srcc;
-        var srce    = mapRaw.srce;
-        var dstc    = mapRaw.dstc;
-        var dste    = mapRaw.dste;
-        var allc    = mapRaw.allc;
-        var alle    = mapRaw.alle;
-      } 
-      catch(e) {
-        var mapDetail = "{\"\"}";
-      }
-            
-      // What is our current event total?
-      var esum = $('#event_sum').val();
-      $(".mb_box").html("<div id=wm0 style=\"width:951px;height:500px;\"></div>");
-      $('#wm0').vectorMap({
-        map: 'world_mill_en',
-        color: '#f4f3f0',
-        backgroundColor: '#a5bfdd',
-        onRegionClick: function(event, code){
-        hItemAdd(code);
-        $('#search').val("cc" + " " + code);
-        $('#search').focus();
-        },
-        series: {
-          regions: [{
-            values: mapDetail,
-            scale: ['#f4f4f4', '#545454'],
-            normalizeFunction: 'polynomial'
-          }]
-        },
-        onRegionLabelShow: function(e, el, code){
-          if (mapDetail[code]) {
-            var eper = parseFloat(mapDetail[code]/esum*100).toFixed(3);
-            el.html(el.html() + ' (' + mapDetail[code] + ' Events ' + eper + '% of Total)');
-          } else {
-            el.html(el.html());
-          }
-        }
-      });
-
-      header = "";
-      header += "<span class=mb_links>Countries as sources:</span> ";
-      header += srcc + " with " + srce + " events";
-      header += "<span class=mb_links>Countries as destinations:</span> " 
-      header += dstc + " with " + dste + " events";
-      header += "<span class=mb_links>Total countries:</span> ";
-      header += allc;
-      header += "&nbsp;&nbsp;<div id=map_redraw class=mb_refresh>update</div>";  
-
-      $(".mb_header").html(header);
-    }
-  }
-
-  // Draw map
-  $("#menu2").click(function(event) {
-    var cv = $("#menu2").text();
-      switch (cv) {
-        case "off":
-          $("#menu2").text("on");
-          $("#menu2").attr('class','tvalue_on');
-          if (!$("#wm0")[0]) {
-            doMap("draw");
-          } else {
-            $("#map_box").show();
-          }
-          break;
-        case "on":
-          $("#menu2").text("off");
-          $("#menu2").attr('class','tvalue_off');
-          $("#map_box").hide();
-          break;
-      }
-  });
-    
-  // Redraw map
-  $(document).on("click", "#map_redraw", function(event) {
-    doMap("redraw");
-  });
-
   // Get event statuses
   var eTotal = 0, qTotal = 0;
   function statusPoll(caller) {
@@ -363,81 +329,7 @@ $(document).ready(function(){
     }
   }, emTimeout);
 
-  // Event priority bar and counts
-  function mkPribar(v) {
-    var sum = v.reduce(function(a,b) { return a + b; }, 0);
-    var v0 = 0, v1 = 0, v2 = 0, v3 = 0; 
-    var w = [];
-    if( sum > 0) {
-      w = [Number(v[0]/sum*100).toFixed(1),Number(v[1]/sum*100).toFixed(1),
-           Number(v[2]/sum*100).toFixed(1),Number(v[3]/sum*100).toFixed(1)];
-    }
-    var bar = "<table class=pribar><tr>";
-    var t = ['High Priority','Medium Priority','Low Priority','Other'];
-    for (var i=1; i<5;i++) {
-      var j = Number(i - 1);
-
-      if (w[j] > 0) { 
-        bar += "<td data-pr=" + i + " class=bpr" + i + " width=" + w[j] + "% title=\""; 
-        bar += t[j] + ": " + v[j] + "\">" + w[j] + "%</td>";
-        $('#pr_' + i).html(v[j] + "<span class=per>(" + w[j] + "%)</span>");
-      }  
-    }
-
-    bar += "</tr></table>";
-
-    return bar;  
-  }
-
-  $(document).on('click', '[class*="bpr"]', function() {
-    // We disallow filtering if any events have already been selected
-    if ($('.d_row_active')[0] || $(".chk_event:checked").length > 0) return;
-    
-    var prClass = $(this).attr('class').split('b')[1];
-    var prOld = $(this).data('pr');
-
-    function flipIt(pattern) {
-      $(pattern).closest('tr').hide();
-      $(pattern).closest('tr').attr('class','hidden');
-      if ($('#gr').text('on')) $(pattern).closest('tr').find('.chk_event').prop("disabled",true);
-    }
-
-    if ($('.b' + prClass).attr('class') == 'bprA') {
-      $('.b' + prClass).attr('class', 'bpr' + prOld);
-      $('.hidden').attr('class','d_row');
-      $('.d_row').show();
-      if ($('#gr').text('on')) {
-        $('.chk_event').prop("disabled",false);
-        $('.chk_all').prop("checked",false);
-        $('.chk_event').css("background-color", "#fafafa");
-      } 
-    } else {
-      // See if we are already filtered
-      if ($('.bprA')[0]) {
-        $('.hidden').attr('class','d_row');
-        $('.d_row').show();
-        if ($('#gr').text('on')) {
-          $('.chk_event').prop("disabled",false);
-          $('.chk_all').prop("checked",false);
-          $('.chk_event').css("background-color", "#fafafa");
-        }
-        var prPrev = $('.bprA').data('pr');
-        $('.bprA').attr('class', 'bpr' + prPrev);
-      }  
-
-      $('.b' + prClass).attr('class','bprA');
  
-      switch (prClass) {
-        case "pr1": ptrn = ".pr2,.pr3,.pr4"; break;
-        case "pr2": ptrn = ".pr1,.pr3,.pr4"; break;
-        case "pr3": ptrn = ".pr1,.pr2,.pr4"; break;
-        case "pr4": ptrn = ".pr1,.pr2,.pr3"; break;
-      }
-
-      flipIt(ptrn);
-    }
-  });
-  
   // 24 Grid
   function mkGrid(values) {
     var cells = "<table class=grid cellspacing=none><tr>";
@@ -713,12 +605,12 @@ $(document).ready(function(){
     var lastSection = "h";
     switch (thisSecVis) {
       case "none":
-        $(this).html("<img src=.css/uarr.png>");
+        $(this).html("<img title=collapse class=il src=.css/uarr.png>");
         if (thisSec != lastSection) $(this).parent().css("border-bottom","1pt solid #c9c9c9");
         $(thisSecID).slideDown();
       break;
       default:
-        $(this).html("<img src=.css/darr.png>");
+        $(this).html("<img title=expand class=il src=.css/darr.png>");
         if (thisSec != lastSection) $(this).parent().css("border-bottom","none");
         $(thisSecID).slideUp();
       break;
@@ -836,7 +728,7 @@ $(document).ready(function(){
       var cols = $('th.sort').length;
       var tbl = '';
       tbl += "<tr class=eview id=active_eview><td colspan=" + cols + "><div id=eview class=eview>";
-      tbl += "<div id=ev_close class=close><div class=b_close title='Close'><img src=.css/close.png></div></div>";
+      tbl += "<div id=ev_close class=close><div class=b_close title='Close'><img title=close class=il src=.css/close.png></div></div>";
       tbl += "<div class=sigtxt></div>";
       tbl += "<div class=chrt_ts></div>";
       tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
@@ -938,7 +830,7 @@ $(document).ready(function(){
 
         tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=" + nCols + ">";
         tbl += "<div id=ev_close_sub2 class=close_sub1>";
-        tbl += "<div class=b_close title='Close'><img src=.css/close.png></div></div>";
+        tbl += "<div class=b_close title='Close'><img title=close class=il src=.css/close.png></div></div>";
         tbl += row;
         tbl += "</td></tr>";
         $("#" + rowLoke).after(tbl);
@@ -1182,7 +1074,6 @@ $(document).ready(function(){
         if (d0.length > 0) {
           var prVals = [spr1,spr2,spr3,spr4];
           var pryBar =  mkPribar(prVals);
-          $('#priority_bar').append(pryBar);
         } else {
           $('#priority_bar').hide();        
         }
@@ -1428,7 +1319,7 @@ $(document).ready(function(){
         var cols = $('th.sort').length;
 
         tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=" + cols + "><div id=ev_close_sub ";
-        tbl += "class=close_sub><div class=b_close title='Close'><img src=.css/close.png></div></div>";
+        tbl += "class=close_sub><div class=b_close title='Close'><img title=close class=il src=.css/close.png></div></div>";
         tbl += "<div class=notes></div>";
         tbl += "<table id=tl3 class=table align=center width=100% cellpadding=0 cellspacing=0>";
         tbl += head;
@@ -1465,7 +1356,6 @@ $(document).ready(function(){
         head = '';
         row = '';
         head += "<thead>";
-        head += "<tr><th id=priority_bar colspan=13></th></tr>";
         head += "<tr>";
         head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox></th>";
         head += "<th class=sub width=20>ST</th>";
@@ -1836,7 +1726,7 @@ $(document).ready(function(){
            
         }
                     
-        tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'><img src=.css/close.png></div></div>";
+        tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'><img title=close class=il src=.css/close.png></div></div>";
 
         if ( sg != 0 ) {
           tbl += "<div class=sigtxt></div>";
@@ -2929,6 +2819,11 @@ $(document).ready(function(){
   // Load summary tab
   function loadSummary() {
     var limit = 10;
+    if ($('#wm0')[0]) {
+      doMap("redraw");
+    } else {
+      doMap("draw");
+    }
     mkSummary("signature",limit);
     mkSummary("srcip",limit);
     mkSummary("dstip",limit);
@@ -3229,6 +3124,92 @@ $(document).ready(function(){
       } 
     }
   }
+
+  // Make a map
+  function doMap(req) {
+    theWhen = getTimestamp();
+    var filter = 0;
+    var urArgs = "type=" + 10 + "&filter=" + filter + "&ts=" + theWhen;
+    $(function(){
+      $.get(".inc/callback.php?" + urArgs, function(data){cb10(data)});
+    });
+
+    var working = "Working<br><img src=.css/load.gif>";
+
+    switch (req) {
+      case "draw": 
+        var tbl = "";
+        tbl += "<div id=mb_box class=onepane></div>";
+        $("#t_ovr_content").prepend(tbl);
+        break;
+      case "redraw":
+        $('.mb_box').html(working);
+        break;
+    }
+
+    function cb10(data){
+      eval("mapRaw=" + data);
+      try {
+        var mapDetail = $.parseJSON("{" + mapRaw.all + "}");
+        var srcc    = mapRaw.srcc;
+        var srce    = mapRaw.srce;
+        var dstc    = mapRaw.dstc;
+        var dste    = mapRaw.dste;
+        var allc    = mapRaw.allc;
+        var alle    = mapRaw.alle;
+      } 
+      catch(e) {
+        var mapDetail = "{\"\"}";
+      }
+            
+      // What is our current event total?
+      var esum = $('#event_sum').val();
+      var w = $(window).width() - 60;
+      var h = w / 2.2;
+      $("#mb_box").html("<div id=wm0 style=\"width:" + w + "px; height:" + h + "px;\"></div>");
+      $('#wm0').vectorMap({
+        map: 'world_mill_en',
+        color: '#f4f3f0',
+        backgroundColor: '#f4f4f4',
+        zoomOnScroll: false,
+        onRegionClick: function(event, code){
+        hItemAdd(code);
+        $('#search').val("cc" + " " + code);
+        $('#search').focus();
+        },
+        series: {
+          regions: [{
+            values: mapDetail,
+            scale: ['#d4d4d4', '#8c0000'],
+            normalizeFunction: 'polynomial'
+          }]
+        },
+        onRegionLabelShow: function(e, el, code){
+          if (mapDetail[code]) {
+            var eper = parseFloat(mapDetail[code]/esum*100).toFixed(3);
+            el.html(el.html() + ' (' + mapDetail[code] + ' Events ' + eper + '% of Total)');
+          } else {
+            el.html(el.html());
+          }
+        }
+      });
+
+      header = "";
+      header += "<span class=mb_links>Countries as sources:</span> ";
+      header += srcc + " with " + srce + " events";
+      header += "<span class=mb_links>Countries as destinations:</span> " 
+      header += dstc + " with " + dste + " events";
+      header += "<span class=mb_links>Total countries:</span> ";
+      header += allc;
+      header += "&nbsp;&nbsp;<div id=map_redraw class=mb_refresh>update</div>";  
+
+    }
+  }
+    
+  // Redraw map
+  $(document).on("click", "#map_redraw", function(event) {
+    doMap("redraw");
+  });
 
 // The End.
 });

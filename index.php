@@ -58,29 +58,28 @@ dbC();
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
   </div>
   <div id=t_search class=search>
-    <div id=comments class=button>comments</div>
-    <div id=sensors class=button>sensors</div>
-    <div id=filters class=button>filters</div>
-    <input class=search id=search type=text size=60 maxlength=1000><span id=clear_search class=clear>&#x21BA;</span>
+    <div id=comments class=icon><img title=comments class=il src=.css/comment.png></div>
+    <div id=sensors class=icon><img title=sensors class=il src=.css/sensor.png></div>
+    <div id=filters class=icon><img title=filters class=il src=.css/filter.png></div>
+    <input class=search id=search type=text size=60 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
   </div>
   <div id=cal></div>
-  <div class=timeline></div>
+  <div class=timeline><div class=b_update>Update</div><div class=t_pbar></div><div class=t_stats></div></div>
 </div>
 
 <div class=lr>
   <div class=content-left>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Toggle</span><div class=label_m data-sec=t><img src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>Toggle</span><div class=label_m data-sec=t><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_t>
         <div class=label>Event Grouping:</div><div id=gr class=tvalue_on>on</div>
         <div class=label>Event Queue Only:</div><div id=rt class=tvalue_on>on</div>
-        <div class=label>Map:</div><div id=menu2 class=tvalue_off>off</div>
       </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Summary</span><div class=label_m data-sec=s><img src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>Event Summary</span><div class=label_m data-sec=s><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_s>  
         <div class=label>Queued Events:</div><div id=qtotal class=value>-</div>
         <div class=label>Total Events:</div><div id=etotal class=value>-</div>
@@ -91,7 +90,7 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Count by Priority</span><div class=label_m data-sec=p><img src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>Event Count by Priority</span><div class=label_m data-sec=p><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_p>
         <div class=label>High:</div><div id=pr_1 class=value>-</div>
         <div class=label>Medium:</div><div id=pr_2 class=value>-</div>
@@ -101,7 +100,7 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Count by Classification</span><div class=label_m data-sec=c><img src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>Event Count by Classification</span><div class=label_m data-sec=c><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_c>  
 
         <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Compromised L1 (F1)'>
@@ -137,7 +136,7 @@ dbC();
     <div class=event_cont>
       <div class=label_l><span class=ec_label>History</span>
         <img title="Click to expand" id=pi class=pop src=.css/po.png>
-        <div class=label_m data-sec=h><img src=.css/uarr.png></div>  
+        <div class=label_m data-sec=h><img title=collapse class=il src=.css/uarr.png></div>  
       </div>
       <div class=secl id=sec_h>
         <div id=h_box class=h_box></div>
@@ -213,7 +212,7 @@ dbC();
 </div>
 
 <div class=fltr_box>
-  <div class=fltr_top>
+  <div class=fltr_top>Filters
     <div title=close class=filter_close>x</div>
     <div title=add class=filter_new>+</div>
     <div title=refresh class=filter_refresh>&#x21BA;</div>
