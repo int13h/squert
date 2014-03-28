@@ -59,12 +59,17 @@ dbC();
   </div>
   <div id=t_search class=search>
     <div id=comments class=icon><img title=comments class=il src=.css/comment.png></div>
+    <div id=autocat class=icon><img title=autocat class=il src=.css/autocat.png></div>
     <div id=sensors class=icon><img title=sensors class=il src=.css/sensor.png></div>
     <div id=filters class=icon><img title=filters class=il src=.css/filter.png></div>
     <input class=search id=search type=text size=60 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
   </div>
   <div id=cal></div>
-  <div class=timeline><div class=b_update>Update</div><div class=t_pbar></div><div class=t_stats></div></div>
+  <div class=timeline>
+    <div class=b_update>Update</div>
+    <div class=t_pbar></div>
+    <div class=t_stats></div>
+  </div>
 </div>
 
 <div class=lr>
@@ -159,8 +164,13 @@ dbC();
     </div>
     <div id=t_inc_content class=content>&nbsp;Not broken, just not done.</div>
     <div id=t_ovr_content class=content>
+      <br>     
       <div class=onepane>
-        <div class=ovbl>Top Signatures</div><div class=ovstat></div><div class=ovbi id=ov_signature_msg></div><div class=ovsl id=ov_signature_sl></div>
+        <div class=ovbl>Geographic Distribution</div><div id=ovmapstat class=ovstat></div><div class=ovbi id=ov_map_msg></div><div class=ovsl id=ov_map_sl></div>
+        <div id=ov_map></div>
+      </div>
+      <div class=onepane>
+        <div class=ovbl>Top Signatures</div><div id=ovestat class=ovstat></div><div class=ovbi id=ov_signature_msg></div><div class=ovsl id=ov_signature_sl></div>
         <div id=ov_signature></div>
       </div>
       <div class=twopane>
@@ -198,25 +208,46 @@ dbC();
 </div>
 
 <div class=cat_box>
-  <div class=cat_top>Add a comment to the selected events: <input class=cat_msg_txt type=text maxlength=255>
-    <div title="close" class="cat_close">x</div>
+  <div class=cat_top>
+    <div class=box_label>Add comments to event(s)</div>
+    <div title="close" class="cat_close"><img class=il src=.css/close.png></div>
+    <div title=help class=cat_help><img class=il src=.css/help.png></div>
   </div>
-  <div class=cm_tbl></div>
+  <div class=cm_tbl>
+    <div class=cat_l1>Comment:</div>
+    <div class=cat_r1><input class=cat_msg_txt type=text maxlength=255></div>
+    <div class=cat_l1>Classification:</div>
+    <div class=cat_r1 id=cw_buttons>
+      <div class=b_C1 data-n=11>C1</div>
+      <div class=b_C2 data-n=12>C2</div>
+      <div class=b_C3 data-n=13>C3</div>
+      <div class=b_C4 data-n=14>C4</div>
+      <div class=b_C5 data-n=15>C5</div>
+      <div class=b_C6 data-n=16>C6</div>
+      <div class=b_C7 data-n=17>C7</div>
+      <div class=b_NA data-n=1>NA</div>
+      <div class=b_ES data-n=2>ES</div>
+      &nbsp;&nbsp;<span class=links data-n=0>apply comment only</span>
+    </div>
+    <div class=cat_note>&nbsp;&nbsp;<b>Note:</b> you can click a comment below to reuse it (followed by a classification action) <b>or</b> click on the "F" icon followed by "enter" to use as a filter<br></div>
+  </div>
 </div>
 
 <div class=sen_box>
   <div class=sen_top>
-    <div title=close class=sen_close>x</div>
+    <div class=box_label>Sensor Selection</div>
+    <div title="close" class="sen_close"><img class=il src=.css/close.png></div> 
   </div>
   <div class=sen_tbl></div>
 </div>
 
 <div class=fltr_box>
-  <div class=fltr_top>Filters
-    <div title=close class=filter_close>x</div>
-    <div title=add class=filter_new>+</div>
-    <div title=refresh class=filter_refresh>&#x21BA;</div>
-    <div title=help class=filter_help>?</div>
+  <div class=fltr_top>
+    <div class=box_label>Filter Editor</div>
+    <div title="close" class="filter_close"><img class=il src=.css/close.png></div>
+    <div title=add class=filter_new><img class=il src=.css/add.png></div>
+    <div title=refresh class=filter_refresh><img class=il src=.css/reload.png></div>
+    <div title=help class=filter_help><img class=il src=.css/help.png></div>
   </div>
   <div class=fltr_tbl></div>
 </div>

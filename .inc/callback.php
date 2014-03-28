@@ -704,26 +704,28 @@ function map() {
     $filter = $_REQUEST['filter'];
 
     $srcq = "SELECT COUNT(src_ip) AS c, m1.cc 
-            FROM event 
-            LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
-            LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
-            WHERE $when
-            AND src_ip NOT BETWEEN 167772160 AND 184549375
-            AND src_ip NOT BETWEEN 2886729728 AND 2886795263
-            AND src_ip NOT BETWEEN 3232235520 AND 3232301055
-            AND m1.cc IS NOT NULL
-            GROUP BY m1.cc";
+             FROM event 
+             LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
+             LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
+             WHERE $when
+             AND src_ip NOT BETWEEN 167772160 AND 184549375
+             AND src_ip NOT BETWEEN 2886729728 AND 2886795263
+             AND src_ip NOT BETWEEN 3232235520 AND 3232301055
+             AND m1.cc IS NOT NULL
+             GROUP BY m1.cc
+             ORDER BY c DESC";
 
     $dstq = "SELECT COUNT(dst_ip) AS c, m2.cc 
-            FROM event 
-            LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
-            LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
-            WHERE $when
-            AND dst_ip NOT BETWEEN 167772160 AND 184549375
-            AND dst_ip NOT BETWEEN 2886729728 AND 2886795263
-            AND dst_ip NOT BETWEEN 3232235520 AND 3232301055
-            AND m2.cc IS NOT NULL
-            GROUP BY m2.cc";
+             FROM event 
+             LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
+             LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
+             WHERE $when
+             AND dst_ip NOT BETWEEN 167772160 AND 184549375
+             AND dst_ip NOT BETWEEN 2886729728 AND 2886795263
+             AND dst_ip NOT BETWEEN 3232235520 AND 3232301055
+             AND m2.cc IS NOT NULL
+             GROUP BY m2.cc
+             ORDER BY c DESC";
 
     $srcr = mysql_query($srcq);
     $dstr = mysql_query($dstq);

@@ -67,7 +67,7 @@ $(document).ready(function(){
     html += " type=text" + inputUTC + "></td>";
     html += "<td width=175 class=dt_content><div id=dt_reset class=dt_b>reset values</div><div id=dt_savetz class=dt_b>save TZ</div></td>";
     html += "<td class=cog><img class=il src=.css/lr.png></td><tr></table>";
-    $('#cal').before(html);
+    $('#cal').prepend(html);
   }
 
   // Click events
@@ -372,7 +372,7 @@ $(document).ready(function(){
   html += "<table cellpadding=0 cellspacing=0 class=calendar><tr class=days></tr></table>";
   html += "<table cellpadding=0 cellspacing=0 class=calendar><tr class=hours></tr></table>"; 
 
-  $('#cal').append(html);
+  $('#cal').prepend(html);
   // Create day links
   if (dd < 10) dd = "0" + dd;
   createDays(yy,baseMonthN + 1,dd);

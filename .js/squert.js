@@ -40,8 +40,8 @@ $(document).ready(function(){
 
   $.ctrl = function(key, callback, args) {
     $(document).keydown(function(e) {
-      if(!args) {args=[];}
-      if(e.keyCode == key.charCodeAt(0) && e.ctrlKey) {
+      if (!args) {args=[];}
+      if (e.keyCode == key.charCodeAt(0) && e.ctrlKey) {
         callback.apply(this, args);
         return false;
       }
@@ -50,8 +50,8 @@ $(document).ready(function(){
 
   $.alt = function(key, callback, args) {
     $(document).keydown(function(e) {
-      if(!args) {args=[];}
-      if(e.keyCode == key.charCodeAt(0) && e.altKey) {
+      if (!args) {args=[];}
+      if (e.keyCode == key.charCodeAt(0) && e.altKey) {
         callback.apply(this, args);
         return false;
       }
@@ -89,7 +89,7 @@ $(document).ready(function(){
       fbs_c = 'fl_val_on';
     } 
     tl += "<span class=fl>Filtered by Sensor: </span><span class=" + fbs_c + ">" + fbs + "</span>";
-    tl += "<span class=fl>Priorities: </span>";
+    tl += "<span class=fl>Priority: </span>";
     $('.t_stats').html(tl);
     return theWhen;
   }
@@ -99,29 +99,33 @@ $(document).ready(function(){
     var sum = v.reduce(function(a,b) { return a + b; }, 0);
     var v0 = 0, v1 = 0, v2 = 0, v3 = 0; 
     var w = [];
-    if( sum > 0) {
+    if ( sum > 0) {
       w = [Number(v[0]/sum*100).toFixed(1),Number(v[1]/sum*100).toFixed(1),
            Number(v[2]/sum*100).toFixed(1),Number(v[3]/sum*100).toFixed(1)];
+      var bar = "<table class=pribar><tr>";
+      var t = ['High Priority','Medium Priority','Low Priority','Other'];
+      for (var i=1; i<5;i++) {
+        var j = Number(i - 1);
+        if (w[j] > 0) { 
+          bar += "<td data-pr=" + i + " class=bpr" + i + " width=" + w[j] + "% title=\""; 
+          bar += t[j] + ": " + v[j] + "\">" + w[j] + "%</td>";
+          $('#pr_' + i).html(v[j] + "<span class=per>(" + w[j] + "%)</span>");
+        }  
+      } 
+    } else {
+      bar += "<td>-</td>";
     }
-    var bar = "<table class=pribar><tr>";
-    var t = ['High Priority','Medium Priority','Low Priority','Other'];
-    for (var i=1; i<5;i++) {
-      var j = Number(i - 1);
-
-      if (w[j] > 0) { 
-        bar += "<td data-pr=" + i + " class=bpr" + i + " width=" + w[j] + "% title=\""; 
-        bar += t[j] + ": " + v[j] + "\">" + w[j] + "%</td>";
-        $('#pr_' + i).html(v[j] + "<span class=per>(" + w[j] + "%)</span>");
-      }  
-    }
-
     bar += "</tr></table>";
     $('.t_pbar').html(bar);
+    if ($(".tab_active").attr('id') != 't_sum') $('.t_pbar').css('opacity',.4);
   }
 
   $(document).on('click', '[class*="bpr"]', function() {
     // We disallow filtering if any events have already been selected
-    if ($('.d_row_active')[0] || $(".chk_event:checked").length > 0) return;
+    // or if we stray from the event tab
+    if ($('.d_row_active')[0]) return;
+    if ($(".chk_event:checked").length > 0) return;
+    if ($(".tab_active").attr('id') != 't_sum') return;
     
     var prClass = $(this).attr('class').split('b')[1];
     var prOld = $(this).data('pr');
@@ -129,14 +133,14 @@ $(document).ready(function(){
     function flipIt(pattern) {
       $(pattern).closest('tr').hide();
       $(pattern).closest('tr').attr('class','hidden');
-      if ($('#gr').text('on')) $(pattern).closest('tr').find('.chk_event').prop("disabled",true);
+      if ($('#gr').text() == 'on') $(pattern).closest('tr').find('.chk_event').prop("disabled",true);
     }
 
     if ($('.b' + prClass).attr('class') == 'bprA') {
       $('.b' + prClass).attr('class', 'bpr' + prOld);
       $('.hidden').attr('class','d_row');
       $('.d_row').show();
-      if ($('#gr').text('on')) {
+      if ($('#gr').text() == 'on') {
         $('.chk_event').prop("disabled",false);
         $('.chk_all').prop("checked",false);
         $('.chk_event').css("background-color", "#fafafa");
@@ -146,7 +150,7 @@ $(document).ready(function(){
       if ($('.bprA')[0]) {
         $('.hidden').attr('class','d_row');
         $('.d_row').show();
-        if ($('#gr').text('on')) {
+        if ($('#gr').text() == 'on') {
           $('.chk_event').prop("disabled",false);
           $('.chk_all').prop("checked",false);
           $('.chk_event').css("background-color", "#fafafa");
@@ -407,7 +411,7 @@ $(document).ready(function(){
     case "t_ovr":
       $('.content-right').hide();
       $('.content-left').hide();
-      if ($('.ovstat').text().length == 0) loadSummary();
+      if ($('#ovestat').text().length == 0) loadSummary();
     default:
       $('.content-right').hide();
       $('.content-left').hide();
@@ -448,15 +452,18 @@ $(document).ready(function(){
         case "t_sum": 
           $('.content-right').show();
           $('.content-left').show();
+          $('.t_pbar').css('opacity',1);
         break;
         case "t_ovr":
           $('.content-right').hide();
           $('.content-left').hide();
-          if ($('.ovstat').text().length == 0) loadSummary();
+          if ($('#ovestat').text().length == 0) loadSummary();
+          $('.t_pbar').css('opacity',.4);
         break;
         default:
           $('.content-right').hide();
           $('.content-left').hide();
+          $('.t_pbar').css('opacity',.4);
         break;
       }
 
@@ -529,9 +536,9 @@ $(document).ready(function(){
   
   // If search is in focus, update on enter
   $('#search').keypress(function(e) {
-    if(!e) e=window.event;
+    if (!e) e=window.event;
       key = e.keyCode ? e.keyCode : e.which;
-      if(key == 13) {
+      if (key == 13) {
         // Close comment box if it is open
         if ($('#tlcom').length > 0) {
           cmtbRemove(); 
@@ -587,7 +594,10 @@ $(document).ready(function(){
   $('#clear_search').click(function() {
     if ($('#search').val() != '') {
       $('#search').val('');
-      $("#search").focus();           
+      $("#search").focus();
+      if ($(".fl_val_on")[0]) {          
+        $('.b_update').click();
+      }
     }
   });
 
@@ -733,7 +743,8 @@ $(document).ready(function(){
       tbl += "<div class=chrt_ts></div>";
       tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox>";
       tbl += "categorize <span class=bold id=class_count>";
-      tbl += curclasscount + "</span> event(s)</div>";
+      tbl += curclasscount + "</span> event(s)&nbsp;&nbsp;";
+      tbl += "<img id=cmnt title=comments class=il src=\".css/comment_small.png\"></div>";
       tbl += "</td></tr>";
       $("#" + curID).after(tbl);
       eventList("1-" + rowValue);
@@ -866,7 +877,7 @@ $(document).ready(function(){
         if ($("#tr_" + fParts[0]).length > 0) {
           tmpFilter = $("#tr_" + fParts[0]).data('filter');
           // Now see if we need to modify the query
-          if(fParts[1]) {
+          if (fParts[1]) {
             // This is the base filter
             preFilter = h2s(tmpFilter);
             // This is the user supplied text.
@@ -1049,7 +1060,7 @@ $(document).ready(function(){
           row += "<td class=row>" + d0[i].f3 + "</td>";
           row += "<td class=row>" + d0[i].f8 + "</td>";
                   
-          if( sumEC > 0) {
+          if ( sumEC > 0) {
             rowPer = Number(d0[i].f1/sumEC*100).toFixed(3);
           } else {
             rowPer = "0.000%";
@@ -1075,7 +1086,7 @@ $(document).ready(function(){
           var prVals = [spr1,spr2,spr3,spr4];
           var pryBar =  mkPribar(prVals);
         } else {
-          $('#priority_bar').hide();        
+          var pryBar =  mkPribar([0]);        
         }
         $('#tl0,#tl1').fadeIn('slow');
         $("#tl1").tablesorter({
@@ -1494,11 +1505,9 @@ $(document).ready(function(){
         if (d2a.length > 0) {
           var prVals = [spr1,spr2,spr3,spr4];
           var pryBar =  mkPribar(prVals);
-          $('#priority_bar').append(pryBar);
         } else {
-          $('#priority_bar').hide();        
+          var pryBar =  mkPribar([0]);
         }
-
         $("#tl3a,#tl3b").fadeIn('slow');
         $("#tl3b").tablesorter({
         headers: {
@@ -1786,6 +1795,8 @@ $(document).ready(function(){
                     $("#rt").attr('class','tvalue_off');
                     $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
+                    cmtbRemove();
+                    $('.b_update').click();
       break;
       case 'cmt_c': $('.cat_msg_txt').val(suffix);
                     hItemAdd(suffix);
@@ -1870,112 +1881,16 @@ $(document).ready(function(){
     $('#h_box').append('<span id=h_empty>History is empty</span>');
   }
 
-  // 
-  // Comment box
-  //
+  // Alt mappings for icons
 
-  function cmtbRemove() {
-    $(".cat_box").fadeOut();
-    $(".cat_msg_txt").val("");
-    $(".pcomm").remove();
-    $(".content_active").fadeTo('fast',1);
-  }
-
-  $(document).on("click", ".cat_close", function(event) {
-    cmtbRemove();
-  });
-
-  $(document).on("click", "#comments", function(event) {
-    if ($('#tlcom').length > 0) {
-      cmtbRemove();
-    } else {
-      var urArgs = "type=11";
-
-      $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb11(data)});
-      });
-
-      function cb11(data){
-        eval("comraw=" + data);
-        var tbl = '', head = '', row = ''; 
-
-        head += "<thead><tr>";
-        head += "<th class=sub width=20>ST</th>";
-        head += "<th class=sub width=50>COUNT</th>";
-        head += "<th class=sub>COMMENT</th>";
-        head += "<th class=sub width=70>FILTER</th>";
-        head += "<th class=sub width=100>USERNAME</th>";
-        head += "<th class=sub width=75>EPOCH</th>";
-        head += "<th class=sub width=75>LAST</th>";
-        head += "<th class=sub width=70>REMOVE</th>";
-        head += "</tr></thead>";         
- 
-        for (var i=0; i<comraw.length; i++) {
-          var comment = comraw[i].f2 || "-";
-          var count   = comraw[i].f1 || "-";
-          var user    = comraw[i].f3 || "-";  
-          var epoch   = comraw[i].f4 || "-";
-          var last    = comraw[i].f5 || "-";
-          var eclass  = comraw[i].f6 || "-";
-          var rowid   = "comrow" + i;
-          var cgrid = catGrid(eclass,comment,1);
-          row += "<tr id=" + rowid + " class=pcomm>";
-          row += "<td class=sub>" + cgrid + "</td>"; 
-          row += "<td class=sub>" + count + "</td>";
-          row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
-          row += "<td class=sub>";
-          row += "<div class=tof title=\"Add as filter\" data-type=cmt data-comment=\"" + comment + "\">F</div></td>";
-          row += "<td class=sub>" + user + "</td>";
-          row += "<td class=sub>" + epoch + "</td>";
-          row += "<td class=sub>" + last + "</td>";
-          row += "<td class=sub>";
-          row += "<div class=tod title=\"Delete Entry\" data-rn=\"" + rowid + "\" data-comment=\"" + comment + "\">X</div></td>";
-          row += "<row>"; 
-        }
-
-        tbl += "<div class=pcomm>";
-        tbl += "<b>Note:</b> you can click a comment below to reuse it (followed by a classification action) <b>or</b> ";
-        tbl += "click on the \"F\" icon followed by \"enter\" to use as a filter<br>";
-        tbl += "<table id=tlcom width=930 class=table cellpadding=0 cellspacing=0>";
-        tbl += head;
-        tbl += row;
-        tbl += "</table></div>";
-        $(".cm_tbl").append(tbl);
-        $("#tlcom").tablesorter();
-      }
-
-      $(".content_active").fadeTo('fast',0.2);
-      $(".cat_box").fadeIn();
-      $(".cat_msg_txt").focus();   
-    }
-  });
-
-  // Remove a comment
-  $(document).on("click", ".tod", function(event) {
-    var oktoRM = confirm("Are you sure you want to remove this comment?");
-    if (oktoRM) {
-      var theComment = s2h($(this).data('comment'));
-      var rowNumber = $(this).data('rn');
-      var urArgs = "type=12&comment=" + theComment;
-      $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb12(data)});
-      }); 
-
-      function cb12(data){
-        eval("theData=" + data);
-        if (theData.msg != '') {
-          alert(theData.msg);
-        } else {
-          $("#" + rowNumber).fadeOut('slow', function() {
-            $("#" + rowNumber).remove();
-          });
-        }
-      }
-    }
-  });
-
-  $.alt('2', function() {
+  $.alt('1', function() {
     $("#comments").click();
+  });
+  $.alt('2', function() {
+    $("#sensors").click();
+  });
+  $.alt('3', function() {
+    $("#filters").click();
   });
 
   //
@@ -1999,8 +1914,16 @@ $(document).ready(function(){
       case 116: stopOthers(); $('#b_class-15').click(); break;
       case 117: stopOthers(); $('#b_class-16').click(); break;
       case 118: stopOthers(); $('#b_class-17').click(); break;
-      case 119: stopOthers(); $('#b_class-1').click(); break;
-      case 120: stopOthers(); $('#b_class-2').click(); break;
+      case 119: stopOthers(); $('#b_class-1').click();  break;
+      case 120: stopOthers(); $('#b_class-2').click();  break;
+    }
+  });
+
+  // Comment window status buttons
+  $(document).on("click", "#cw_buttons", function(event) {
+    var newclass = $(event.target).data('n');
+    if (newclass != 0) {
+      $('#b_class-' + newclass).click();
     }
   });
 
@@ -2136,7 +2059,7 @@ $(document).ready(function(){
     
     // Was there a message?
     var msg = "none";
-    if($(".cat_msg_txt").val().length != 0) {
+    if ($(".cat_msg_txt").val().length != 0) {
       msg = $(".cat_msg_txt").val();
       $("#comments").click();
     }        
@@ -2326,6 +2249,112 @@ $(document).ready(function(){
   // Cleanup: comments, sensors and filters need to be refined. 
 
   // 
+  // Comment box
+  //
+
+  function cmtbRemove() {
+    $(".cat_box").fadeOut();
+    $(".cat_msg_txt").val("");
+    $("#tlcom").remove();
+    $(".content_active").fadeTo('fast',1);
+  }
+
+  $(document).on("click", ".cat_close", function(event) {
+    cmtbRemove();
+  });
+
+  $(document).on("click", "#comments,#cmnt", function(event) {
+    if ($('#tlcom').length > 0) {
+      cmtbRemove();
+    } else {
+      var urArgs = "type=11";
+
+      $(function(){
+        $.get(".inc/callback.php?" + urArgs, function(data){cb11(data)});
+      });
+
+      function cb11(data){
+        eval("comraw=" + data);
+        var tbl = '', head = '', row = ''; 
+
+        head += "<thead><tr>";
+        head += "<th class=sub width=20>ST</th>";
+        head += "<th class=sub width=50>COUNT</th>";
+        head += "<th class=sub>COMMENT</th>";
+        head += "<th class=sub width=50>FILTER</th>";
+        head += "<th class=sub width=75>EPOCH</th>";
+        head += "<th class=sub width=100>USER</th>";
+        head += "<th class=sub width=75>LAST</th>";
+        head += "<th class=sub width=100>USER</th>";
+        head += "<th class=sub width=50>REMOVE</th>";
+        head += "</tr></thead>";         
+ 
+        for (var i=0; i<comraw.length; i++) {
+          var comment = comraw[i].f2 || "-";
+          var count   = comraw[i].f1 || "-";
+          var user    = comraw[i].f3 || "-";  
+          var epoch   = comraw[i].f4 || "-";
+          var last    = comraw[i].f5 || "-";
+          var eclass  = comraw[i].f6 || "-";
+          var rowid   = "comrow" + i;
+          var cgrid = catGrid(eclass,comment,1);
+          row += "<tr id=" + rowid + " class=pcomm>";
+          row += "<td class=sub>" + cgrid + "</td>"; 
+          row += "<td class=sub>" + count + "</td>";
+          row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
+          row += "<td class=sub>";
+          row += "<div class=tof title=\"Add as filter\" data-type=cmt data-comment=\"" + comment + "\">";
+          row += "<img class=il src=.css/tofilter.png></div></td>";
+          row += "<td class=sub>" + epoch + "</td>";
+          row += "<td class=sub>" + user + "</td>";
+          row += "<td class=sub>" + last + "</td>";
+          row += "<td class=sub>" + user + "</td>";
+          row += "<td class=sub>";
+          row += "<div class=tod title=\"Delete Entry\" data-rn=\"" + rowid + "\" data-comment=\"" + comment + "\">";
+          row += "<img class=il src=.css/close.png></div></td>";
+          row += "<row>"; 
+        }
+
+        tbl += "<table id=tlcom width=100% class=box_table cellpadding=0 cellspacing=0>";
+        tbl += head;
+        tbl += row;
+        tbl += "</table>";
+        $(".cm_tbl").append(tbl);
+        $("#tlcom").tablesorter();
+      }
+
+      $(".content_active").fadeTo('fast',0.2);
+      $(".cat_box").fadeIn();
+      $(".cat_msg_txt").focus();   
+    }
+  });
+
+  // Remove a comment
+  $(document).on("click", ".tod", function(event) {
+    var oktoRM = confirm("Are you sure you want to remove this comment?");
+    if (oktoRM) {
+      var theComment = s2h($(this).data('comment'));
+      var rowNumber = $(this).data('rn');
+      var urArgs = "type=12&comment=" + theComment;
+      $(function(){
+        $.get(".inc/callback.php?" + urArgs, function(data){cb12(data)});
+      }); 
+
+      function cb12(data){
+        eval("theData=" + data);
+        if (theData.msg != '') {
+          alert(theData.msg);
+        } else {
+          $("#" + rowNumber).fadeOut('slow', function() {
+            $("#" + rowNumber).remove();
+          });
+        }
+      }
+    }
+  });
+
+
+  // 
   // Sensor box 
   //
 
@@ -2446,7 +2475,7 @@ $(document).ready(function(){
       quick += "<span class=qlink data-en=43>Clear All</span>";
       quick += "</div>";
       
-      tbl += "<table id=tlsen width=930 class=table cellpadding=0 cellspacing=0>";
+      tbl += "<table id=tlsen class=box_table width=100% cellpadding=0 cellspacing=0>";
       tbl += head;
       tbl += row;
       tbl += "</table>";
@@ -2492,7 +2521,7 @@ $(document).ready(function(){
   function mkEntry(entry) {
 
     cls = 'f_row';
-    if(!entry) {
+    if (!entry) {
       cls = 'h_row';
       filter = "";
       entry = {"alias": "New", "name": "", "notes": "None.", "filter": filter, "age": "1970-01-01 00:00:00"};
@@ -2549,7 +2578,7 @@ $(document).ready(function(){
         row += "<td class=row><div id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</div></td>";
         row += "</tr>";
       }
-      tbl += "<table id=tl4 width=930 class=table cellpadding=0 cellspacing=0>";
+      tbl += "<table id=tl4 class=box_table width=100% cellpadding=0 cellspacing=0>";
       tbl += head;
       tbl += row;
       tbl += "</table>";
@@ -2651,10 +2680,8 @@ $(document).ready(function(){
       tbl += "<div class=boldf>event.status</div> - Analyst Classification</div></div>";
       tbl += "</td></tr></table>"; 
       $('#tl4').before(tbl);
-      $('.filter_help').text('-');
     } else {
       $('#tbl_help').remove();
-      $('.filter_help').text('?');
     }
   });
 
@@ -2686,7 +2713,7 @@ $(document).ready(function(){
       $('#' + currentCL).text('close');
       $('td:first', $(this).parents('tr')).css('background-color','#c4c4c4');
     } else {
-      if($('#' + currentCL).text() == 'close') {
+      if ($('#' + currentCL).text() == 'close') {
         $("#filter_content").remove();       
         $('#' + currentCL).text('edit');
         $('td:first', $(this).parents('tr')).css('background-color','#e9e9e9');
@@ -2832,6 +2859,12 @@ $(document).ready(function(){
     mkSummary("srccc",limit);
     mkSummary("dstcc",limit);
   }
+ 
+  // Toggle summary section
+  $(document).on("click", ".hidepane", function(e) {
+    $('#topsignature').toggle();
+  });
+
 
   // Summary tab 
   function mkSummary(box,limit) {
@@ -3030,9 +3063,9 @@ $(document).ready(function(){
       if (records == 0) {
         row = "<tr><td class=row colspan=6>No result.</td></tr>";
         $("#ov_signature_sl").text("");
-        $(".ovstat").html("(No events)");
+        $("#ovestat").html("(No events)");
       } else {
-        $(".ovstat").html("(" + eventsum + " events)"); 
+        $("#ovestat").html("(" + eventsum + " events)"); 
       }
       for (var i=0; i<raw.length - 1; i++) {
         var cnt = raw[i].f1 || "-";
@@ -3128,24 +3161,23 @@ $(document).ready(function(){
   // Make a map
   function doMap(req) {
     theWhen = getTimestamp();
-    var filter = 0;
+    var theFilter = mkFilter();
+    var working = "Working<br><img src=.css/load.gif>";
+    switch (req) {
+      case "src":
+        filter = "src"; break;
+      case "dst":
+        filter = "dst"; break;
+      default:
+        filter = 0; break;
+    }
+
+    $('#wm0').html(working);
+
     var urArgs = "type=" + 10 + "&filter=" + filter + "&ts=" + theWhen;
     $(function(){
       $.get(".inc/callback.php?" + urArgs, function(data){cb10(data)});
     });
-
-    var working = "Working<br><img src=.css/load.gif>";
-
-    switch (req) {
-      case "draw": 
-        var tbl = "";
-        tbl += "<div id=mb_box class=onepane></div>";
-        $("#t_ovr_content").prepend(tbl);
-        break;
-      case "redraw":
-        $('.mb_box').html(working);
-        break;
-    }
 
     function cb10(data){
       eval("mapRaw=" + data);
@@ -3164,9 +3196,9 @@ $(document).ready(function(){
             
       // What is our current event total?
       var esum = $('#event_sum').val();
-      var w = $(window).width() - 60;
+      var w = $(window).width() - 160;
       var h = w / 2.2;
-      $("#mb_box").html("<div id=wm0 style=\"width:" + w + "px; height:" + h + "px;\"></div>");
+      $("#ov_map").html("<div id=wm0 style=\"width:" + w + "px; height:" + h + "px;\"></div>");
       $('#wm0').vectorMap({
         map: 'world_mill_en',
         color: '#f4f3f0',
@@ -3180,7 +3212,7 @@ $(document).ready(function(){
         series: {
           regions: [{
             values: mapDetail,
-            scale: ['#d4d4d4', '#8c0000'],
+            scale: ['#d4d4d4', '#000F30'],
             normalizeFunction: 'polynomial'
           }]
         },
@@ -3194,21 +3226,17 @@ $(document).ready(function(){
         }
       });
 
-      header = "";
-      header += "<span class=mb_links>Countries as sources:</span> ";
-      header += srcc + " with " + srce + " events";
-      header += "<span class=mb_links>Countries as destinations:</span> " 
-      header += dstc + " with " + dste + " events";
-      header += "<span class=mb_links>Total countries:</span> ";
-      header += allc;
-      header += "&nbsp;&nbsp;<div id=map_redraw class=mb_refresh>update</div>";  
-
+      var stats = "(<b>";
+      stats += allc + "</b> distinct countries <b>|</b> <b>";
+      stats += srcc + "</b> <span id=map_src class=link>sources</span> with <b>" + srce + "</b> events <b>|</b> <b>";
+      stats += dstc + "</b> <span id=map_dst class=link>destinations</span> with <b>" + dste + "</b> events)";
+      $("#ovmapstat").html(stats);
     }
   }
     
   // Redraw map
-  $(document).on("click", "#map_redraw", function(event) {
-    doMap("redraw");
+  $(document).on("click", "#map_src, #map_dst", function() {
+    doMap($(this).attr('id').split("_")[1]);
   });
 
 // The End.
