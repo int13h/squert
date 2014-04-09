@@ -203,6 +203,8 @@ $(document).ready(function(){
   // User Profile Changes
   //
 
+  var thisUser = $('#t_usr').data('c_usr');
+
   function profileUpdate(r, v) {
     switch(r) {
       case "tz":  
@@ -255,7 +257,6 @@ $(document).ready(function(){
   // Get event statuses
   var eTotal = 0, qTotal = 0;
   function statusPoll(caller) {
-
     // See if we are filtering by sensor
     var theSensors = s2h('empty');
     if ($('.chk_sen:checked').length > 0) {
@@ -316,6 +317,7 @@ $(document).ready(function(){
         $("#qtotal").html(qTotal);
       }
     }
+    $("#title").html("squert (" + qTotal + ") - " + thisUser);
   }
 
   if ($("#cat_sum").val() == 0) {
@@ -631,6 +633,8 @@ $(document).ready(function(){
   // Rows
   //
 
+  // Clean these up (effect)
+
   function closeRow() {
     $("#active_eview").remove();
     $("#" + this.id).attr('class','d_row');
@@ -872,6 +876,12 @@ $(document).ready(function(){
       if (fParts[0] == 'cmt') {
         var theFilter = s2h($('#search').val());
         rtbit = 0;
+      // Let's guess the term
+      } else if (fParts.length == 1) {
+//         var re = /^[a-zA-Z][\w-]*$/;
+//       var OK = re.exec(filterTxt.alias);
+//       if (!OK) throw 1;
+ 
       } else {
         // Now see if the requested filter exists
         if ($("#tr_" + fParts[0]).length > 0) {
@@ -901,6 +911,8 @@ $(document).ready(function(){
           } else {
             theFilter = tmpFilter;
           }
+        } else {
+          theFilter = s2h('empty');
         }
       }
     } else {
@@ -1922,7 +1934,9 @@ $(document).ready(function(){
   // Comment window status buttons
   $(document).on("click", "#cw_buttons", function(event) {
     var newclass = $(event.target).data('n');
-    if (newclass != 0) {
+    if (newclass == 0) {
+      $('#b_class-' + newclass).click();
+    } else {
       $('#b_class-' + newclass).click();
     }
   });
@@ -2264,6 +2278,7 @@ $(document).ready(function(){
   });
 
   $(document).on("click", "#comments,#cmnt", function(event) {
+    if ($('#t_sum').attr('class') != "tab_active") return;
     if ($('#tlcom').length > 0) {
       cmtbRemove();
     } else {
@@ -2281,7 +2296,7 @@ $(document).ready(function(){
         head += "<th class=sub width=20>ST</th>";
         head += "<th class=sub width=50>COUNT</th>";
         head += "<th class=sub>COMMENT</th>";
-        head += "<th class=sub width=50>FILTER</th>";
+        head += "<th class=sub width=50>SEARCH</th>";
         head += "<th class=sub width=75>EPOCH</th>";
         head += "<th class=sub width=100>USER</th>";
         head += "<th class=sub width=75>LAST</th>";
@@ -2303,8 +2318,8 @@ $(document).ready(function(){
           row += "<td class=sub>" + count + "</td>";
           row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
           row += "<td class=sub>";
-          row += "<div class=tof title=\"Add as filter\" data-type=cmt data-comment=\"" + comment + "\">";
-          row += "<img class=il src=.css/tofilter.png></div></td>";
+          row += "<div class=tof title=\"Show these events\" data-type=cmt data-comment=\"" + comment + "\">";
+          row += "<img class=il src=.css/search.png></div></td>";
           row += "<td class=sub>" + epoch + "</td>";
           row += "<td class=sub>" + user + "</td>";
           row += "<td class=sub>" + last + "</td>";
@@ -2322,6 +2337,12 @@ $(document).ready(function(){
         $(".cm_tbl").append(tbl);
         $("#tlcom").tablesorter();
       }
+
+      // Display the current event selection in the header
+      var toclass = '<b>Note:</b> no';
+      if ($(".chk_event:checked").length > 0 || $('.chk_all').prop("checked")) toclass = $('#class_count').text(); 
+
+      $('#ovcstat').html(toclass + " events selected");
 
       $(".content_active").fadeTo('fast',0.2);
       $(".cat_box").fadeIn();

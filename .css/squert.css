@@ -419,6 +419,17 @@ margin:10px;
 color:#000;
 font-size:13px;
 }
+div.box_stat {
+float:left;
+margin:10px;
+margin-left:30px;
+font-weight:normal;
+border:1pt solid #f0c36d;
+background:#f9edbe;
+border-radius:3px;
+padding:0px 15px 0px 15px;
+color:#666;
+}
 div.cat_box,div.fltr_box,div.sen_box {
 position:fixed;
 height:510px;
@@ -877,6 +888,18 @@ div.b_class {
 text-align:center;
 float:left;
 margin-top:4px;
+}
+div.b_clock{
+float:right;
+text-align:center;
+width:120px;
+margin-top:4px;
+font-weight:normal;
+color:#fff;
+}
+span.clock_lbl{
+color:#1a8cff;
+font-weight:bold;
 }
 span.class_msg {
 color:#000;

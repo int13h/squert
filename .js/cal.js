@@ -44,12 +44,36 @@ $(document).ready(function(){
     $('.hours').show();
   }
 
+  // Clocks
+  function createClocks() {
+    function pad(i) {
+      if (i < 10) return "0" + i;
+      return i;
+    }
+    var today=new Date();
+    var lh=pad(today.getHours());
+    var uh=pad(today.getUTCHours());
+    var lm=pad(today.getMinutes());
+    var um=pad(today.getUTCMinutes());
+    var ss=pad(today.getSeconds());
+    if (isUTC == 1) {
+      $('#b_local').hide();
+    } else {
+      $('#b_local').show();
+      $('#clock_local').text(lh + ":" + lm + ":" + ss); 
+    }  
+    $('#clock_utc').text(uh + ":" + um + ":" + ss);
+    t=setTimeout(function(){createClocks()},500);
+  }
+
   // Create controls
+  var isUTC = 0;
   function createControls() {
     // Users timezone offset
     var dOffset = $('#user_tz').val();
     var checkUTC = '', inputUTC = '';
     if (dOffset == "+00:00") {
+      isUTC = 1;
       checkUTC = " checked";
       inputUTC = " disabled";
     } else {
@@ -278,7 +302,6 @@ $(document).ready(function(){
 
     // Then logic
 
-
   });
 
   // Reset button
@@ -378,6 +401,7 @@ $(document).ready(function(){
   createDays(yy,baseMonthN + 1,dd);
   createHours();
   createControls();
+  createClocks();
   $('#ts_sdate').val(yy + "-" + today + "-" + dd);
   $('#ts_sdate').data('today',yy + "-" + today + "-" + dd);
   $('#ts_edate').val(yy + "-" + today + "-" + dd);

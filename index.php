@@ -46,7 +46,7 @@ dbC();
 <script type="text/javascript" src=".js/d3/d3.v3.min.js"></script>
 <script type="text/javascript" src=".js/d3/sankey.js"></script>
 
-<title>squert</title>
+<title id=title>squert</title>
 </head>
 <body>
 <div id=tab_group class=tab_group>
@@ -209,9 +209,9 @@ dbC();
 
 <div class=cat_box>
   <div class=cat_top>
-    <div class=box_label>Add comments to event(s)</div>
+    <div class=box_label id=cat_box_label>Comment Management</div>
+    <div id=ovcstat class="box_stat"></div>
     <div title="close" class="cat_close"><img class=il src=.css/close.png></div>
-    <div title=help class=cat_help><img class=il src=.css/help.png></div>
   </div>
   <div class=cm_tbl>
     <div class=cat_l1>Comment:</div>
@@ -255,6 +255,8 @@ dbC();
 <div class=bottom>
   <div class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
   <div class=b_class><span class=class_msg></span>&nbsp;</div>
+  <div class=b_clock id=b_utc><span class=clock_lbl>UTC</span> <span id=clock_utc>00:00:00</span></div>
+  <div class=b_clock id=b_local><span class=clock_lbl>LOCAL</span> <span id=clock_local>00:00:00</span></div>
 </div>
 
 <input id=event_sort type=hidden value="DESC">
