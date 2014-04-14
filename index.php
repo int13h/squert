@@ -38,9 +38,11 @@ dbC();
 <link rel="stylesheet" type="text/css" href=".css/charts.css" />
 <script type="text/javascript" src=".js/jq.js"></script>
 <script type="text/javascript" src=".js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src=".js/cal.js"></script>
-<script type="text/javascript" src=".js/squert.js"></script>
-<script type="text/javascript" src=".js/charts.js"></script>
+<script type="text/javascript" src=".js/squertFunctions.js"></script>
+<script type="text/javascript" src=".js/squertCal.js"></script>
+<script type="text/javascript" src=".js/squertMain.js"></script>
+<script type="text/javascript" src=".js/squertBoxes.js"></script>
+<script type="text/javascript" src=".js/squertCharts.js"></script>
 <script type="text/javascript" src=".js/jquery-jvectormap-1.2.2.min.js"></script>
 <script type="text/javascript" src=".js/jquery-jvectormap-world-mill-en.js"></script>
 <script type="text/javascript" src=".js/d3/d3.v3.min.js"></script>
@@ -57,11 +59,11 @@ dbC();
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>
     Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
   </div>
-  <div id=t_search class=search>
-    <div id=comments class=icon><img title=comments class=il src=.css/comment.png></div>
-    <div id=autocat class=icon><img title=autocat class=il src=.css/autocat.png></div>
-    <div id=sensors class=icon><img title=sensors class=il src=.css/sensor.png></div>
-    <div id=filters class=icon><img title=filters class=il src=.css/filter.png></div>
+  <div id=t_search class=search data-state=0>
+    <div data-box=cat  class=icon id=ico01><img title=comments class=il src=.css/comment.png></div>
+    <div data-box=ac   class=icon id=ico02><img title=autocat class=il src=.css/autocat.png></div>
+    <div data-box=sen  class=icon id=ico03><img title=sensors class=il src=.css/sensor.png></div>
+    <div data-box=fltr class=icon id=ico04><img title=filters class=il src=.css/filter.png></div>
     <input class=search id=search type=text size=60 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
   </div>
   <div id=cal></div>
@@ -207,11 +209,11 @@ dbC();
   </div>
 </div>
 
-<div class=cat_box>
+<div class=box id=cat_box>
   <div class=cat_top>
     <div class=box_label id=cat_box_label>Comment Management</div>
     <div id=ovcstat class="box_stat"></div>
-    <div title="close" class="cat_close"><img class=il src=.css/close.png></div>
+    <div title="close" class="box_close" data-box=cat><img class=il src=.css/close.png></div>
   </div>
   <div class=cm_tbl>
     <div class=cat_l1>Comment:</div>
@@ -233,23 +235,34 @@ dbC();
   </div>
 </div>
 
-<div class=sen_box>
+<div class=box id=sen_box>
   <div class=sen_top>
     <div class=box_label>Sensor Selection</div>
-    <div title="close" class="sen_close"><img class=il src=.css/close.png></div> 
+    <div title="close" class="box_close" data-box=sen><img class=il src=.css/close.png></div> 
   </div>
   <div class=sen_tbl></div>
 </div>
 
-<div class=fltr_box>
+<div class=box id=fltr_box>
   <div class=fltr_top>
     <div class=box_label>Filter Editor</div>
-    <div title="close" class="filter_close"><img class=il src=.css/close.png></div>
+    <div title="close" class="box_close" data-box=fltr><img class=il src=.css/close.png></div>
     <div title=add class=filter_new><img class=il src=.css/add.png></div>
     <div title=refresh class=filter_refresh><img class=il src=.css/reload.png></div>
     <div title=help class=filter_help><img class=il src=.css/help.png></div>
   </div>
   <div class=fltr_tbl></div>
+</div>
+
+<div class=box id=ac_box>
+  <div class=ac_top>
+    <div class=box_label>AutoCat Editor</div>
+    <div title="close" class="box_close" data-box=ac><img class=il src=.css/close.png></div>
+    <div title=add class=ac_new><img class=il src=.css/add.png></div>
+    <div title=refresh class=ac_refresh><img class=il src=.css/reload.png></div>
+    <div title=help class=ac_help><img class=il src=.css/help.png></div>
+  </div>
+  <div class=ac_tbl></div>
 </div>
 
 <div class=bottom>

@@ -35,30 +35,73 @@ if {[file exists $CONFIG]} {
     exit 1
 }
 
-if { $argc == 4 } {
-    set USR [lindex $argv 0]
-    set CAT [lindex $argv 1]
-    set MSG [lindex $argv 2]
-    set LST [lindex $argv 3]
-} else {
-    puts "ERROR: Not enough arguments"
-    exit 1
+### Types:
+# 0 = categorize            DeleteEventIDList status comment sid.cid list
+# 1 = new autocat rule      AutoCatRequest erase sensor sip sport dip dport proto sig status comment
+# 2 = enable autocat rule   EnableAutoCatRule id
+# 3 = disable autocat rule  DisableAutoCatRule id
+
+set TYPE [lindex $argv 0]
+
+switch $TYPE {
+    0 {
+        if { $argc == 5 } {
+            set USR [lindex $argv 1]
+            set CAT [lindex $argv 2]
+            set MSG [lindex $argv 3]
+            set LST [lindex $argv 4]
+        } else {
+            puts "ERROR: Not enough arguments"
+            exit 1
+        } 
+ 
+        # Verify event category
+        set validCats {1 2 11 12 13 14 15 16 17}
+        if { [lsearch -exact $validCats $CAT] == -1 } {
+            puts "ERROR: Invalid event category"
+            exit 1
+        }
+
+        # Verify event list
+        if { ![regexp -expanded {^(\d+\.\d+,){0,}(\d+\.\d+$){1}} $LST match] } {
+            puts "ERROR: List format error"
+            exit 1
+        } else {
+            set SCIDLIST [split $LST ,] 
+        }
+        set COMMAND [list DeleteEventIDList $CAT $MSG $SCIDLIST]
+    }
+    1 {
+        if { $argc == 12 } {
+            set USR [lindex $argv 1]
+            set EXP [lindex $argv 2]
+            set SEN [lindex $argv 3]
+            set SIP [lindex $argv 4]
+            set SPT [lindex $argv 5]
+            set DIP [lindex $argv 6]
+            set DPT [lindex $argv 7]
+            set PRT [lindex $argv 8]
+            set SIG [lindex $argv 9]
+            set STA [lindex $argv 10]
+            set CMT [lindex $argv 11] 
+        } else {
+            puts "ERROR: Not enough arguments"
+            exit 1
+        }
+        set COMMAND [list AutoCatRequest $EXP $SEN $SIP $SPT $DIP $DPT $PRT $SIG $STA $CMT]
+    }
+    2 {
+    
+    }
+    3 {
+     
+    }
+    default { 
+        puts "ERROR: No type match was found"
+        exit 1 
+    }
 }
 
-# Verify event category
-set validCats {1 2 11 12 13 14 15 16 17}
-if { [lsearch -exact $validCats $CAT] == -1 } {
-    puts "ERROR: Invalid event category"
-    exit 1
-}
-
-# Verify event list
-if { ![regexp -expanded {^(\d+\.\d+,){0,}(\d+\.\d+$){1}} $LST match] } {
-    puts "ERROR: List format error"
-    exit 1
-} else {
-    set SCIDLIST [split $LST ,] 
-}
 
 #########################################################################
 # Package/Extension Requirements
@@ -203,8 +246,8 @@ if { $authResults == "INVALID" } {
 
 }
 
-# Send SCID list to Sguild (this needs some debug :/)
-SendToSguild $socketID [list DeleteEventIDList $CAT $MSG $SCIDLIST]
+# Send command to sguild
+SendToSguild $socketID $COMMAND
 
 catch {close $socketID} 
 puts -nonewline "0"
