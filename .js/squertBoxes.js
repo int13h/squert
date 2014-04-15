@@ -239,7 +239,7 @@ $(document).ready(function(){
       tbl += head;
       tbl += row;
       tbl += "</table>";
-      $(".sen_tbl").append(quick);
+      $(".sen_controls").append(quick);
       $(".sen_tbl").append(tbl);
 
       $("#tlsen").tablesorter({
@@ -601,15 +601,15 @@ $(document).ready(function(){
     row += "<td class=row><div class=a_NA>NA</div></td>";
     row += "<td class=row>-</td>";
     row += "<td class=row><span id=ac_new class=ac_edit_on>New Rule</span></td>";
-    row += "<td class=row>any</td>";
-    row += "<td class=row>any</td>";
-    row += "<td class=row>any</td>";
-    row += "<td class=row>any</td>";
-    row += "<td class=row>any</td>";
-    row += "<td class=row>any</td>";
-    row += "<td class=row>any</td>";
-    row += "<td class=row>You</td>";
-    row += "<td class=row>Now</td>";
+    row += "<td class=row>-</td>";
+    row += "<td class=row>-</td>";
+    row += "<td class=row>-</td>";
+    row += "<td class=row>-</td>";
+    row += "<td class=row>-</td>";
+    row += "<td class=row>-</td>";
+    row += "<td class=row>-</td>";
+    row += "<td class=row>-</td>";
+    row += "<td class=row>-</td>";
     row += "</tr>";
     return row;
   }
@@ -640,6 +640,7 @@ $(document).ready(function(){
       head += "<th class=sub width=70>USER</th>";
       head += "<th class=sub width=100>CREATED</th>";
       head += "</tr></thead>";
+      var rOFF = 0; 
 
       for (var i=0; i<theData.length; i++) {
         var autoid    = theData[i].autoid    || '-';
@@ -660,9 +661,10 @@ $(document).ready(function(){
         var tclass = "c" + status;
         var cv = classifications.class[tclass][0].short;
         var isoff = "ac_edit_on";
+        var rc = "ac_row";
         var rid = "ac_" + autoid;
-        if (active == "N") isoff = "ac_edit_off";
-        row += "<tr id=tr_" + rid;
+        if (active == "N") isoff = "ac_edit_off", rc = rc + " hide", rOFF++;
+        row += "<tr class=\"" + rc + "\" id=tr_" + rid;
         row += " data-status=\"" + status + "\"";
         row += " data-comment=\"" + comment + "\"";
         row += " data-src_ip=\"" + src_ip + "\"";
@@ -692,10 +694,16 @@ $(document).ready(function(){
       tbl += head;
       tbl += row;
       tbl += "</table>";
+
+      $('#ovacstat').html("<b>" + (i - rOFF) + "</b> active <b>" + rOFF + "</b> inactive");
       if ($('#tlac')[0]) {
         $('#tlac').remove();
       }
       $('.ac_tbl').append(tbl);
+
+      $("#tlac").tablesorter({
+        cancelSelection:false
+      });
     }      
   }
 
@@ -729,7 +737,7 @@ $(document).ready(function(){
     var id = '#tr_' + cl;
     row = '';
     row += "<tr id=ac_content>";
-    row += "<td class=ac_row colspan=12><textarea id=txt_" + cl + " rows=13>";
+    row += "<td class=ac_row colspan=12><textarea id=txt_" + cl + " rows=12>";
     row += "{\n";
     row += "\"status\": \"" + $(id).data('status') + "\",\n";
     row += "\"comment\": \"" + $(id).data('comment') + "\",\n";
@@ -740,15 +748,18 @@ $(document).ready(function(){
     row += "\"dst_port\": \"" + $(id).data('dst_port') + "\",\n";
     row += "\"proto\": \"" + $(id).data('proto') + "\",\n";
     row += "\"signature\": \"" + $(id).data('signature') + "\",\n";
-    row += "\"active\": \"" + $(id).data('active') + "\",\n";
     row += "\"expires\": \"" + $(id).data('expires') + "\"\n";
     row += "}";
     row += "</textarea>";
     var dBut = '';
     var isOn = 'disable';
     if ($(id).data('active') == "N") isOn = "enable";
-    if (cl != "ac_new") dBut = "'<div class=ac_disable>" + isOn + "</div></div>";
-    row += "<div class=ac_bees><div class=ac_create>create</div>" + dBut;
+    if (cl != "ac_new") {
+      dBut = "<div class=ac_disable>" + isOn + "</div>";
+    } else {
+      dBut = "<div class=ac_create>create</div>";
+    }
+    row += "<div class=ac_bees>" + dBut + "</div>";
     row += "<div class=ac_error></div>";
     row += "</td></tr>";
 
@@ -860,22 +871,36 @@ $(document).ready(function(){
     }
   });
 
-  // Disable rule
+  // Enable/Disable rule
   $(document).on("click", ".ac_disable", function(event) {
-    var oktoRM = confirm("Are you sure you want to disable this rule?");
-    if (oktoRM) {
-      var urArgs = "type=17&mode=disable&data=" + currentCL;
+    var action = $('.ac_disable').text();
+    var oktoM = confirm("Are you sure you want to " + action + " this rule?");
+    if (oktoM) {
+      var type = 0;
+      switch (action) {
+        case "disable": type = 3; break;
+        case  "enable": type = 2; break;
+      }
+      if (type == 0) return;
+      var toM = type + "-" + currentCL.split("_")[1];
+      var urArgs = "type=17&mode=toggle&obj=" + toM;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb20(data)});
       }); 
       function cb20(data){
         eval("theData=" + data);
-        if (theData.msg != '') {
-          alert(theData.msg);
-        } else {
-          mkAutocatBox();
-        }
+        mkAutocatBox();
       }
     }
+  });
+
+  // Show/hide disabled rules
+  $(document).on("click", ".ac_view", function(event) {
+    if ($('#ac_new').length == 0 && $('#ac_content').length == 0) { 
+      $('.ac_row').each(function() {
+        var co = this;
+        if ($(co).data('active') == "N") $(co).fadeToggle('slow','linear');
+      });
+    } 
   });
 });

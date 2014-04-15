@@ -1086,16 +1086,8 @@ function autocat() {
         case "update" :
             $data = hextostr($_REQUEST['data']);
             $v = json_decode($data, true);
-            $timestamp = gmdate("Y-m-d H:i:s");
-            $query = "SELECT uid FROM user_info
-                      WHERE username = '$usr'";
-            $result = mysql_query($query);
-            $uid = mysql_result($result, 0);
-
             $cmd = "../.scripts/clicat.tcl 1 \"$usr\" \"$v[expires]\" \"$v[sensor]\" \"$v[src_ip]\" \"$v[src_port]\" \"$v[dst_ip]\" \"$v[dst_port]\" \"$v[proto]\" \"$v[signature]\" \"$v[status]\" \"$v[comment]\"";
-
             $descspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"));
-
             $proc = proc_open($cmd, $descspec, $pipes);
             $debug = "Process execution failed";
             if (is_resource($proc)) {
@@ -1106,21 +1098,26 @@ function autocat() {
             }
 
             $result = array("dbg"  => htmlspecialchars($debug)); 
-
-            // AutoCatRequest $erase $sensor $sip $sport $dip $dport $proto $sig $status $comment
-
             $theJSON = json_encode($result);
             break;
 
-        case "disable" : 
-            $id = $_REQUEST['data'];
-            //EnableAutoCatRule $id
-            //DisableAutoCatRule $id
-            $result = '';
-            $return = array("msg" => $result);
-            $theJSON = json_encode($return); 
-            break;
+        case "toggle" : 
+            $obj = $_REQUEST['obj'];
+            list($type, $id) = explode("-", $obj);
+            $cmd = "../.scripts/clicat.tcl $type \"$usr\" $id";
+            $descspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"));
+            $proc = proc_open($cmd, $descspec, $pipes);
+            $debug = "Process execution failed";
+            if (is_resource($proc)) {
+              fwrite($pipes[0], $pwd);
+              fclose($pipes[0]);
+              $debug = fgets($pipes[1]);
+              fclose($pipes[1]);
+            }
 
+            $result = array("dbg"  => htmlspecialchars($debug));
+            $theJSON = json_encode($result);            
+            break;
     }
 
     echo $theJSON;

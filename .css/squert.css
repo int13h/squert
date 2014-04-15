@@ -206,7 +206,7 @@ border-bottom-right-radius:10px
 }
 div.content-left {
 position:fixed;
-top:125px;
+top:120px;
 bottom:0px;
 left:0px;
 width:18%;
@@ -409,7 +409,7 @@ font-size:8pt;
 width:100%;
 display:none;
 }
-.box_close,.filter_new,.ac_new,.filter_refresh,.ac_refresh,.filter_help,.cat_help,.ac_help {
+.box_close,.filter_new,.ac_new,.filter_refresh,.ac_refresh,.filter_help,.cat_help,.ac_help,.ac_view {
 float:right;
 margin:10px;
 }
@@ -420,12 +420,12 @@ color:#000;
 font-size:13px;
 }
 div.box_stat {
-float:left;
+float:right;
 margin:10px;
 margin-left:30px;
 font-weight:normal;
-border:1pt solid #f0c36d;
-background:#f9edbe;
+border:1pt solid #8FA686;
+background:#E4F7DC;
 border-radius:3px;
 padding:0px 15px 0px 15px;
 color:#666;
@@ -447,6 +447,12 @@ div.cm_tbl,div.fltr_tbl,div.sen_tbl,div.ac_tbl {
 width:100%;
 overflow:auto;
 height:430px;
+float:left;
+}
+div.cm_controls,div.sen_controls {
+padding-top:20px;
+padding-bottom:10px;
+width:100%;
 float:left;
 }
 div.tof {
@@ -1323,8 +1329,8 @@ cursor:pointer;
 padding:5px 0;
 }
 .ac_disable {
-background-color:#e9e9e9;
-color:#000;
+background-color:#1a8cff;
+color:#fff;
 }
 .filter_edit {
 background-color:#e9e9e9;
@@ -1598,8 +1604,8 @@ cursor:pointer;
 color:#000;
 }
 img.il {
-opacity:.8;
 cursor:pointer;
+text-decoration:underline;
 }
 span.ac_edit_on {
 color:#185FAB;
@@ -1610,4 +1616,7 @@ span.ac_edit_off {
 color:#666;
 text-decoration:line-through;
 cursor:pointer;
+}
+.hide {
+display:none;
 }

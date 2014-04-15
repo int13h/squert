@@ -91,9 +91,24 @@ switch $TYPE {
         set COMMAND [list AutoCatRequest $EXP $SEN $SIP $SPT $DIP $DPT $PRT $SIG $STA $CMT]
     }
     2 {
-    
+        if { $argc == 3 } {
+            set USR [lindex $argv 1]
+            set AID [lindex $argv 2]
+        } else {
+            puts "ERROR: Not enough arguments"
+            exit 1
+        }
+        set COMMAND [list EnableAutoCatRule $AID]
     }
     3 {
+        if { $argc == 3 } {
+            set USR [lindex $argv 1]
+            set AID [lindex $argv 2]
+        } else {
+            puts "ERROR: Not enough arguments"
+            exit 1
+        }
+        set COMMAND [list DisableAutoCatRule $AID]
      
     }
     default { 

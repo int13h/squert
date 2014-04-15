@@ -1839,16 +1839,12 @@ $(document).ready(function(){
       $('#ico01').click();
     }   
  
+    // We are now ready to class
     var catdata = intclass + "|||" + msg + "|||" + scidlist;
-    if (catdata.length <= 8000) {
-      // We are now ready to class
-      var urArgs = "type=" + 9 + "&catdata=" + catdata;
-      $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb9(data)});
-      });
-    } else {
-      catMsg("e1");
-    }
+    var urArgs = "type=" + 9 + "&catdata=" + catdata;
+    $(function(){
+      $.post(".inc/callback.php?" + urArgs, function(data){cb9(data)});
+    });
         
     function cb9(data){
       eval("catRaw=" + data);
@@ -1988,9 +1984,6 @@ $(document).ready(function(){
   
   function catMsg(count, rtcount) {
     switch (count) {
-      case "e1":
-        var msg = "Error: Too many events in current selection"; 
-        break;
       default:
         var ess = '';
         if ( count > 1 ) ess = 's';
@@ -2010,7 +2003,7 @@ $(document).ready(function(){
         }
         
         var msg = count + " event" + ess + " categorized";
-        break;
+      break;
     }
 
     $("span.class_msg").text(msg);

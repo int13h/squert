@@ -212,10 +212,10 @@ dbC();
 <div class=box id=cat_box>
   <div class=cat_top>
     <div class=box_label id=cat_box_label>Comment Management</div>
-    <div id=ovcstat class="box_stat"></div>
     <div title="close" class="box_close" data-box=cat><img class=il src=.css/close.png></div>
+    <div id=ovcstat class="box_stat"></div>
   </div>
-  <div class=cm_tbl>
+  <div class=cm_controls>
     <div class=cat_l1>Comment:</div>
     <div class=cat_r1><input class=cat_msg_txt type=text maxlength=255></div>
     <div class=cat_l1>Classification:</div>
@@ -232,7 +232,9 @@ dbC();
       &nbsp;&nbsp;<span class=links data-n=0>apply comment only</span>
     </div>
     <div class=cat_note>&nbsp;&nbsp;<b>Note:</b> you can click a comment below to reuse it (followed by a classification action) <b>or</b> click on the "F" icon followed by "enter" to use as a filter<br></div>
+ 
   </div>
+  <div class=cm_tbl></div>
 </div>
 
 <div class=box id=sen_box>
@@ -240,6 +242,7 @@ dbC();
     <div class=box_label>Sensor Selection</div>
     <div title="close" class="box_close" data-box=sen><img class=il src=.css/close.png></div> 
   </div>
+  <div class=sen_controls></div>
   <div class=sen_tbl></div>
 </div>
 
@@ -261,6 +264,8 @@ dbC();
     <div title=add class=ac_new><img class=il src=.css/add.png></div>
     <div title=refresh class=ac_refresh><img class=il src=.css/reload.png></div>
     <div title=help class=ac_help><img class=il src=.css/help.png></div>
+    <div title="show/hide disabled rules" class="ac_view"><img class=il src=.css/eyeo.png></div>
+    <div id=ovacstat class="box_stat"></div>
   </div>
   <div class=ac_tbl></div>
 </div>
