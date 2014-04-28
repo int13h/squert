@@ -33,7 +33,7 @@ $types = array(
                 '13' => 'sensors',
                 '14' => 'user_profile',
                 '15' => 'summary',
-                '16' => 'dashboard',
+                '16' => 'view',
                 '17' => 'autocat',
 );
 
@@ -369,8 +369,8 @@ function ee() {
             $filter = "AND " . $filter;
             $qp2 = "WHERE $when
                     $sensors
-                    $rt
-                    $filter";
+                    $filter
+                    $rt";
         }
     } else {
         $qp2 = "WHERE $when
@@ -403,7 +403,6 @@ function ee() {
 
     $result = mysql_query($query);
     $rows = array();
-
     while ($row = mysql_fetch_assoc($result)) {
         $rows[] = $row;
     }
@@ -579,9 +578,8 @@ function fi() {
 
     switch ($mode) {
         case "query"  : 
-            $query = "SELECT UNHEX(name) AS name, alias, filter, UNHEX(notes) as notes, age, global
+            $query = "SELECT UNHEX(name) AS name, alias, filter, UNHEX(notes) as notes, age, global, username
                       FROM filters
-                      WHERE username = '$user' OR global = 1
                       ORDER BY global,name ASC";
 
             $result = mysql_query($query);
@@ -932,9 +930,8 @@ function summary() {
     echo $theJSON;     
 }
 
-function dashboard() {
+function view() {
     global $when, $sensors;
-    $limit   = $_REQUEST['limit'];
     $qargs   = $_REQUEST['qargs'];
     $filter  = hextostr($_REQUEST['filter']);
     list($type,$subtype) = explode("-", $qargs);
@@ -959,8 +956,8 @@ function dashboard() {
 
     switch ($type) {
         case "ip":
-            $query = "SELECT INET_NTOA(event.src_ip) AS source,
-                      INET_NTOA(event.dst_ip) AS target,
+            $query = "SELECT CONCAT_WS('|', INET_NTOA(event.src_ip), msrc.cc, msrc.c_long) AS source,
+                      CONCAT_WS('|', INET_NTOA(event.dst_ip), mdst.cc, mdst.c_long) AS target,
                       COUNT(event.src_ip) AS value
                       FROM event
                       LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
@@ -969,15 +966,71 @@ function dashboard() {
                       AND (INET_NTOA(event.src_ip) != '0.0.0.0' AND INET_NTOA(event.dst_ip) != '0.0.0.0')
                       GROUP BY source,target";
         break;
+        case "ips":
+            $query = "SELECT CONCAT_WS('|', INET_NTOA(event.src_ip), msrc.cc, msrc.c_long) AS source,
+                      event.signature AS sig,
+                      CONCAT_WS('|', INET_NTOA(event.dst_ip), mdst.cc, mdst.c_long) AS target,
+                      COUNT(event.src_ip) AS value
+                      FROM event
+                      LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+                      LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip 
+                      $qp2 
+                      AND (INET_NTOA(event.src_ip) != '0.0.0.0' AND INET_NTOA(event.dst_ip) != '0.0.0.0')
+                      GROUP BY source,target";
+        break;
+        case "sc":
+            $query = "SELECT CONCAT_WS('|' ,msrc.c_long, msrc.cc) AS source,
+                      CONCAT_WS('|',INET_NTOA(event.dst_ip), mdst.cc) AS target,
+                      COUNT(event.src_ip) AS value
+                      FROM event
+                      LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+                      LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
+                      $qp2
+                      AND (INET_NTOA(event.src_ip) != '0.0.0.0' AND INET_NTOA(event.dst_ip) != '0.0.0.0')
+                      AND event.src_ip NOT BETWEEN 167772160 AND 184549375
+                      AND event.src_ip NOT BETWEEN 2886729728 AND 2886795263
+                      AND event.src_ip NOT BETWEEN 3232235520 AND 3232301055
+                      GROUP BY source,target";
+        break;   
+        case "dc":
+            $query = "SELECT CONCAT_WS('|', INET_NTOA(event.src_ip), msrc.cc) AS source,
+                      CONCAT_WS('|', mdst.c_long, mdst.cc) AS target,
+                      COUNT(event.dst_ip) AS value
+                      FROM event
+                      LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+                      LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
+                      $qp2
+                      AND (INET_NTOA(event.src_ip) != '0.0.0.0' AND INET_NTOA(event.dst_ip) != '0.0.0.0')
+                      AND event.dst_ip NOT BETWEEN 167772160 AND 184549375
+                      AND event.dst_ip NOT BETWEEN 2886729728 AND 2886795263
+                      AND event.dst_ip NOT BETWEEN 3232235520 AND 3232301055
+                      GROUP BY source,target";
+        break;    
     }
     $result = mysql_query($query);
+    $rc = mysql_num_rows($result);
     $records = 0;
-    $rows = $srcs = $dsts = $vals = $names = $_names = array();
-    
+    $rows = $srcs = $tgts = $vals = $skip = $names = $_names = array();
+
+    if ($rc == 0) { 
+        $theJSON = json_encode(array("nodes" => $names, "links" => $rows, "records" => $records));
+        echo $theJSON;
+        exit();
+    }  
+  
     while ($row = mysql_fetch_assoc($result)) {
-        $srcs[] = $row["source"];
-        $tgts[] = $row["target"];
-        $vals[] = $row["value"];
+        if ($type == "ips") {
+            $srcs[] = $row["source"]; 
+            $tgts[] = $row["sig"];
+            $vals[] = $row["value"];
+            $srcs[] = $row["sig"];
+            $tgts[] = $row["target"];
+            $vals[] = $row["value"];
+        } else {
+            $srcs[] = $row["source"];
+            $tgts[] = $row["target"];
+            $vals[] = $row["value"];
+        }
         $sads[] = 0;
         $records++; 
     }
@@ -989,6 +1042,7 @@ function dashboard() {
     // current target as a source (not allowed)
     foreach ($srcs as $index => $src) {
         // Find the target
+        if (in_array($index, $skip)) { continue; }
         $tgt = $tgts[$index];
         // Find the keys for all instances of the target as a source
         $tgt_keys = array_keys($srcs,$tgt);
@@ -996,11 +1050,12 @@ function dashboard() {
         foreach ($tgt_keys as $pos) {
             if ($tgts[$pos] == $src) {
                 $sads_val = $vals[$pos];
-                unset($srcs[$pos]); 
+                unset($srcs[$pos]);
                 unset($tgts[$pos]);
                 unset($vals[$pos]);
                 unset($sads[$pos]);
-                $records--;
+                // Add offset to be skipped
+                $skip[] = $pos;
                 // By setting this we flag that this source is also a target
                 $sads[$index] = $sads_val; 
             }
@@ -1032,6 +1087,7 @@ function dashboard() {
         if (!in_array($tgts[$i], $_names)) {
             $_names[] = $tgts[$i]; 
         }
+        
     }
 
     // Now go through the results and map the
@@ -1045,7 +1101,6 @@ function dashboard() {
         $sad = (int)$sads[$i];
         $rows[] = array("source" => $skey, "target" => $dkey, "value" => $val, "sad" => $sad);
         //echo "$skey,$dkey,$val,$sad<br>";
-        
     }
 
     // Lastly, we reformat names
@@ -1066,7 +1121,8 @@ function autocat() {
 
     switch ($mode) {
         case "query"  : 
-            $query = "SELECT autoid, erase, sensorname, src_ip, src_port, dst_ip, dst_port, ip_proto,
+            $query = "SELECT autoid, CONVERT_TZ(erase,'+00:00','$offset') AS erase, sensorname, 
+                      src_ip, src_port, dst_ip, dst_port, ip_proto,
                       signature, status, active, CONVERT_TZ(timestamp,'+00:00','$offset') AS ts,
                       u.username AS user, comment
                       FROM autocat
@@ -1086,7 +1142,14 @@ function autocat() {
         case "update" :
             $data = hextostr($_REQUEST['data']);
             $v = json_decode($data, true);
-            $cmd = "../.scripts/clicat.tcl 1 \"$usr\" \"$v[expires]\" \"$v[sensor]\" \"$v[src_ip]\" \"$v[src_port]\" \"$v[dst_ip]\" \"$v[dst_port]\" \"$v[proto]\" \"$v[signature]\" \"$v[status]\" \"$v[comment]\"";
+            // Is the timestamp freeform?
+            $pattern = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/';
+            $expires = $v[expires];  
+            if (!preg_match($pattern, $expires)) {
+                $expires = gmdate("Y-m-d H:i:s", strtotime("+ $expires"));
+            }
+            
+            $cmd = "../.scripts/clicat.tcl 1 \"$usr\" \"$expires\" \"$v[sensor]\" \"$v[src_ip]\" \"$v[src_port]\" \"$v[dst_ip]\" \"$v[dst_port]\" \"$v[proto]\" \"$v[signature]\" \"$v[status]\" \"$v[comment]\"";
             $descspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"));
             $proc = proc_open($cmd, $descspec, $pipes);
             $debug = "Process execution failed";

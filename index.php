@@ -56,9 +56,6 @@ dbC();
   <div id=t_inc class=tab>Incidents</div>
   <div id=t_ovr class=tab>Summary</div>
   <div id=t_view class=tab>Views</div> 
-  <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>
-    Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=links>Logout</span>
-  </div>
   <div id=t_search class=search data-state=0>
     <div data-box=cat  class=icon id=ico01><img title=comments class=il src=.css/comment.png></div>
     <div data-box=ac   class=icon id=ico02><img title=autocat class=il src=.css/autocat.png></div>
@@ -71,6 +68,16 @@ dbC();
     <div class=b_update>Update</div>
     <div class=t_pbar></div>
     <div class=t_stats></div>
+  </div>
+  <div class=sk_links>
+    <div class=sk_linkt>View:</div>
+    <div class=sk_link data-val=ip data-state=1>IP</div>
+    <div class=sk_link data-val=ips>IP+signature</div>
+    <div class=sk_link data-val=sc>Source Country</div>
+    <div class=sk_link data-val=dc>Destination Country</div>
+    <div class=sk_linkt>Type:</div>
+    <div class=sk_type data-type=sk data-state=1>Sankey</div>
+    <div class=sk_type data-type=fd>Force-directed</div>
   </div>
 </div>
 
@@ -161,8 +168,8 @@ dbC();
 
   <div class=rl>
     <div id=t_view_content class=content>
-      <div id=sk_help class=label100>This view shows source and destination connections. The width of each ribbon indicates the volume of events. If a source and destination are linked with a red line then an event has occured in both directions (A -> B, B -> A). When no filters are present and only a single event exists, lone hosts that are associated with other lone hosts are not shown. Nodes can be repositioned by clicking on the desired node and then dragging it to a new position. IPs can be added as filters by double clicking their label. When you are on this page and a filter is in place the 'enter' key will take you to the events. To recreate the view (with the filter) click the update link.</div>
-      <div id=db_sankey></div>
+      <div id=sk_help class="hide label100">This view shows source and destination connections. The width of each ribbon indicates the volume of events. If a source and destination are linked with a red line then an event has occured in both directions (A -> B, B -> A). When no filters are present and only a single event exists, lone hosts that are associated with other lone hosts are not shown. Nodes can be repositioned by clicking on the desired node and then dragging it to a new position. IPs can be added as filters by double clicking their label. When you are on this page and a filter is in place the 'enter' key will take you to the events. To recreate the view (with the filter) click the update link.</div>
+      <div class=db_sankey></div> 
     </div>
     <div id=t_inc_content class=content>&nbsp;Not broken, just not done.</div>
     <div id=t_ovr_content class=content>
@@ -248,7 +255,7 @@ dbC();
 
 <div class=box id=fltr_box>
   <div class=fltr_top>
-    <div class=box_label>Filter Editor</div>
+    <div class=box_label>Filters</div>
     <div title="close" class="box_close" data-box=fltr><img class=il src=.css/close.png></div>
     <div title=add class=filter_new><img class=il src=.css/add.png></div>
     <div title=refresh class=filter_refresh><img class=il src=.css/reload.png></div>
@@ -264,17 +271,19 @@ dbC();
     <div title=add class=ac_new><img class=il src=.css/add.png></div>
     <div title=refresh class=ac_refresh><img class=il src=.css/reload.png></div>
     <div title=help class=ac_help><img class=il src=.css/help.png></div>
-    <div title="show/hide disabled rules" class="ac_view"><img class=il src=.css/eyeo.png></div>
     <div id=ovacstat class="box_stat"></div>
   </div>
   <div class=ac_tbl></div>
 </div>
 
 <div class=bottom>
+  <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=logout>Logout</span></div>
   <div class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
   <div class=b_class><span class=class_msg></span>&nbsp;</div>
   <div class=b_clock id=b_utc><span class=clock_lbl>UTC</span> <span id=clock_utc>00:00:00</span></div>
   <div class=b_clock id=b_local><span class=clock_lbl>LOCAL</span> <span id=clock_local>00:00:00</span></div>
+  </div>  
+
 </div>
 
 <input id=event_sort type=hidden value="DESC">

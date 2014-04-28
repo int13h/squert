@@ -29,20 +29,19 @@ shape-rendering: crispEdges;
 cursor:pointer;
 font-size:11px;
 font-family:tahoma,sans-serif,arial;
-/*text-shadow: 0 1px 0 #f4f4f4;*/
 }
 .nodetext:hover {
-text-decoration:underline;
+font-weight:bold;
 }
 .link {
 fill: none;
-stroke: #000;
+stroke: #666;
 stroke-opacity: .2;
 }
 .link1 {
 fill: none;
 stroke: #cc0000;
-stroke-opacity: .3;
+stroke-opacity: .4;
 }
 .link:hover, .link1:hover {
 stroke-opacity: .5;

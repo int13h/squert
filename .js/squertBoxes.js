@@ -8,7 +8,7 @@ $(document).ready(function(){
     var cID = "#" + caller + "_box";
     var isOpen = $('#t_search').data('state');
     // Make sure we are on the right page
-    if ($('#t_sum').attr('class') != "tab_active") return;
+    if ($('#t_sum').attr('class') != "tab_active" && caller != 'fltr' && caller != 'sen')  return;
     // Are we the only one open?
     if (isOpen == 0) {
       $('#t_search').data('state',1);     
@@ -73,17 +73,17 @@ $(document).ready(function(){
         var rowid   = "comrow" + i;
         var cgrid = catGrid(eclass,comment,1);
         row += "<tr id=" + rowid + " class=pcomm>";
-        row += "<td class=sub>" + cgrid + "</td>"; 
-        row += "<td class=sub>" + count + "</td>";
-        row += "<td class=row_filter data-type=cmt_c>" + comment + "</td>";
-        row += "<td class=sub>";
+        row += "<td class=nr>" + cgrid + "</td>"; 
+        row += "<td class=nr>" + count + "</td>";
+        row += "<td class=nr_f data-type=cmt_c>" + comment + "</td>";
+        row += "<td class=nr>";
         row += "<div class=tof title=\"Show these events\" data-type=cmt data-comment=\"" + comment + "\">";
         row += "<img class=il src=.css/search.png></div></td>";
-        row += "<td class=sub>" + epoch + "</td>";
-        row += "<td class=sub>" + user + "</td>";
-        row += "<td class=sub>" + last + "</td>";
-        row += "<td class=sub>" + user + "</td>";
-        row += "<td class=sub>";
+        row += "<td class=nr>" + epoch + "</td>";
+        row += "<td class=nr>" + user + "</td>";
+        row += "<td class=nr>" + last + "</td>";
+        row += "<td class=nr>" + user + "</td>";
+        row += "<td class=nr>";
         row += "<div class=tod title=\"Delete Entry\" data-rn=\"" + rowid + "\" data-comment=\"" + comment + "\">";
         row += "<img class=il src=.css/close.png></div></td>";
         row += "<row>"; 
@@ -210,12 +210,12 @@ $(document).ready(function(){
           networks.push(network);
         }
         row += "<tr class=s_row data-cbn=" + i + " data-en=0>";
-        row += "<td class=row width=20><input id=cb_sen_" + i + " class=chk_sen "; 
+        row += "<td class=nr width=20><input id=cb_sen_" + i + " class=chk_sen "; 
         row += "type=checkbox value=\"" + sid + "\"></td>";
-        row += "<td class=row><b>" + network + "</b></td>";
-        row += "<td class=row>" + hostname + "</td>";
-        row += "<td class=row>" + agent + "</td>";
-        row += "<td class=row>" + sid + "</td>";
+        row += "<td class=nr><b>" + network + "</b></td>";
+        row += "<td class=nr>" + hostname + "</td>";
+        row += "<td class=nr>" + agent + "</td>";
+        row += "<td class=nr>" + sid + "</td>";
         row += "</tr>";
       }
       networks.sort();
@@ -265,6 +265,11 @@ $(document).ready(function(){
       entry = {"alias": "New", "name": "", "notes": "None.", "filter": filter, "age": "1970-01-01 00:00:00"};
     }
 
+    var search = "<div class=center>-</div>";
+    var re = /^Shell -/;
+    var OK = re.exec(entry.name);
+    if (!OK) search = "<div class=tof title=\"Show these events\" data-type=fil data-value=\"" + alias + "\"><img class=il src=.css/search.png></div>";
+
     encFilter = s2h(entry.filter);        
     row = '';
     row += "<tr class=" + cls + " id=\"tr_" + entry.alias + "\" ";
@@ -273,11 +278,11 @@ $(document).ready(function(){
     row += "data-notes=\"" + entry.notes + "\" ";
     row += "data-filter=\"" + encFilter + "\" ";
     row += "data-global=0>";
-    row += "<td class=f_row_active>" + entry.alias + "</td>";
-    row += "<td class=row>" + entry.name + "</td>";
-    row += "<td class=row>" + entry.notes + "</td>";
-    row += "<td class=row>now</td>";
-    row += "<td class=row><span id=\"" + entry.alias + "\" class=\"filter_edit\">edit</span></td>";
+    row += "<td class=nr><div id=\"" + entry.alias + "\" class=\"filter_edit\">" + entry.alias + "</div></td>";
+    row += "<td class=nr>" + entry.name + "</td>";
+    row += "<td class=nr>" + search + "</div></td>";
+    row += "<td class=nr>" + entry.notes + "</td>";
+    row += "<td class=nr>now</td>";
     row += "</tr>";
     return row;
   }
@@ -297,23 +302,39 @@ $(document).ready(function(){
       head += "<thead><tr>";
       head += "<th class=sub width=70>ALIAS</th>";
       head += "<th class=sub width=200>NAME</th>";
+      head += "<th class=sub width=50>SEARCH</th>"; 
       head += "<th class=sub>NOTES</th>";
+      head += "<th class=sub width=100>USER</th>";
       head += "<th class=sub width=120>LAST MODIFIED</th>";
-      head += "<th class=sub width=60>MODIFY</th>";
       head += "</tr></thead>";
 
       for (var i=0; i<theData.length; i++) {
-        row += "<tr class=f_row id=\"tr_" + theData[i].alias + "\" ";
-        row += "data-alias=\"" + theData[i].alias + "\" ";
-        row += "data-name=\"" + theData[i].name + "\" ";
-        row += "data-notes=\"" + theData[i].notes + "\" ";
-        row += "data-filter=\"" + theData[i].filter + "\" ";
-        row += "data-global=\"" + theData[i].global + "\">";
-        row += "<td class=f_row_active>" + theData[i].alias + "</td>";
-        row += "<td class=row>" + theData[i].name + "</td>";
-        row += "<td class=row>" + theData[i].notes + "</td>";
-        row += "<td class=row>" + theData[i].age + "</td>";
-        row += "<td class=row><div id=\"" + theData[i].alias + "\" class=\"filter_edit\">edit</div></td>";
+        var alias  = theData[i].alias;
+        var name   = theData[i].name;
+        var notes  = theData[i].notes;
+        var filter = theData[i].filter; 
+        var global = theData[i].global;
+        var age    = theData[i].age;
+        var user   = theData[i].username || "built-in";
+
+        // Exclude search for shells
+        var search = "<div class=center>-</div>";
+        var re = /^Shell -/;
+        var OK = re.exec(name);
+        if (!OK) search = "<div class=tof title=\"Show these events\" data-type=fil data-value=\"" + alias + "\"><img class=il src=.css/search.png></div>";
+
+        row += "<tr class=f_row id=\"tr_" + alias + "\" ";
+        row += "data-alias=\"" + alias + "\" ";
+        row += "data-name=\"" + name + "\" ";
+        row += "data-notes=\"" + notes + "\" ";
+        row += "data-filter=\"" + filter + "\" ";
+        row += "data-global=\"" + global + "\">";
+        row += "<td class=nr><div id=\"" + alias + "\" class=\"filter_edit\">" + alias + "</div></td>";
+        row += "<td class=nr>" + name + "</td>";
+        row += "<td class=nr>" + search + "</td>";
+        row += "<td class=nr>" + notes + "</td>";
+        row += "<td class=nr>" + user + "</td>";
+        row += "<td class=nr>" + age + "</td>";
         row += "</tr>";
       }
       tbl += "<table id=tl4 class=box_table width=100% cellpadding=0 cellspacing=0>";
@@ -335,7 +356,7 @@ $(document).ready(function(){
     filter = h2s($('#tr_' + cl).data('filter'));
     row = '';
     row += "<tr id=filter_content>";
-    row += "<td class=f_row colspan=5><textarea id=\"txt_" + alias +"\" cols=110 rows=6>";
+    row += "<td class=f_row colspan=5><textarea id=\"txt_" + alias +"\" rows=10>";
     row += "{\n";
     row += "\"alias\": \"" + alias + "\",\n";
     row += "\"name\": \"" + name + "\",\n";
@@ -446,16 +467,22 @@ $(document).ready(function(){
     currentCL = $(this).attr('id');
     if (!$("#filter_content")[0]) {
       openEdit(currentCL);
-      $('#' + currentCL).text('close');
+      $('#' + currentCL).data('edit','yes');
       $('td:first', $(this).parents('tr')).css('background-color','#c4c4c4');
     } else {
-      if ($('#' + currentCL).text() == 'close') {
-        $("#filter_content").remove();       
-        $('#' + currentCL).text('edit');
-        $('td:first', $(this).parents('tr')).css('background-color','#e9e9e9');
-      }    
+      if ($('#' + currentCL).data('edit') == 'yes') {
+        $("#filter_content").remove();
+        if (currentCL == "ac_new") {
+          $("#tr_" + currentCL).fadeOut('slow', function() {
+            $("#tr_" + currentCL).remove();
+          });
+        } else {
+          $('td:first', $(this).parents('tr')).css('background-color','transparent');
+          $('#' + currentCL).data('edit','no');
+        }
+      }
     }
-  });
+  });        
 
   // Update (or create new) filter
   $(document).on("click", ".filter_update", function(event) {
@@ -470,6 +497,8 @@ $(document).ready(function(){
       rawTxt = rawTxt.replace(/[>]/g, "&gt;");
       rawTxt = rawTxt.replace(/[<]/g, "&lt;");
       filterTxt = $.parseJSON(rawTxt);
+
+      if (filterTxt.notes.length == 0) filterTxt.notes = "None.";
 
       // Check for empty objects
       emptyVal = 0;
@@ -507,13 +536,11 @@ $(document).ready(function(){
         if (theData.msg) {
           alert(theData.msg);
         } else {
-          $('#' + currentCL).text('edit');
           $("#filter_content").remove();
         }         
       }
 
       newEntry = mkEntry(filterTxt);
-      $('#' + oldCL).text('edit');
             
       // If we edited an existing entry update it.
       if (filterTxt.alias == currentCL) {
@@ -586,7 +613,7 @@ $(document).ready(function(){
   // Create entries
   function mkAcEntry() {
     row = '';
-    row += "<tr id=tr_ac_new";
+    row += "<tr class=h_row id=tr_ac_new";
     row += " data-status=1";
     row += " data-comment=\"New Rule\"";
     row += " data-src_ip=any";
@@ -598,18 +625,19 @@ $(document).ready(function(){
     row += " data-sensor=any";
     row += " data-active=Y";
     row += " data-expires=none>";
-    row += "<td class=row><div class=a_NA>NA</div></td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row><span id=ac_new class=ac_edit_on>New Rule</span></td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row>-</td>";
-    row += "<td class=row>-</td>";
+    row += "<td class=nr><div class=a_NA>NA</div></td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr><span id=ac_new class=ac_edit_on>New Rule</span></td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
+    row += "<td class=nr>-</td>";
     row += "</tr>";
     return row;
   }
@@ -639,6 +667,7 @@ $(document).ready(function(){
       head += "<th class=sub>SIGNATURE</th>";
       head += "<th class=sub width=70>USER</th>";
       head += "<th class=sub width=100>CREATED</th>";
+      head += "<th class=sub width=100>EXPIRES</th>"; 
       head += "</tr></thead>";
       var rOFF = 0; 
 
@@ -656,7 +685,7 @@ $(document).ready(function(){
         var user      = theData[i].user      || 'any';
         var active    = theData[i].active    || 'no';
         var timestamp = theData[i].ts        || '-';
-        var expires   = theData[i].expires   || 'no';
+        var expires   = theData[i].erase     || 'no';
 
         var tclass = "c" + status;
         var cv = classifications.class[tclass][0].short;
@@ -676,26 +705,28 @@ $(document).ready(function(){
         row += " data-sensor=\"" + sensor + "\""; 
         row += " data-active=\"" + active + "\"";
         row += " data-expires=\"" + expires + "\">";
-        row += "<td class=row><div class=a_" + cv + ">" + cv + "</div></td>";
-        row += "<td class=row>" + autoid + "</td>";
-        row += "<td class=row><span id=" + rid + " class=" + isoff + ">" + comment + "</span></td>";
-        row += "<td class=row>" + sensor + "</td>";
-        row += "<td class=row>" + src_ip + "</td>";
-        row += "<td class=row>" + src_port + "</td>";
-        row += "<td class=row>" + dst_ip + "</td>";
-        row += "<td class=row>" + dst_port + "</td>";
-        row += "<td class=row>" + proto + "</td>";
-        row += "<td class=row>" + signature + "</td>";
-        row += "<td class=row>" + user + "</td>";
-        row += "<td class=row>" + timestamp + "</td>";
+        row += "<td class=nr><div class=a_" + cv + ">" + cv + "</div></td>";
+        row += "<td class=nr>" + autoid + "</td>";
+        row += "<td class=nr><span id=" + rid + " class=" + isoff + ">" + comment + "</span></td>";
+        row += "<td class=nr>" + sensor + "</td>";
+        row += "<td class=nr>" + src_ip + "</td>";
+        row += "<td class=nr>" + src_port + "</td>";
+        row += "<td class=nr>" + dst_ip + "</td>";
+        row += "<td class=nr>" + dst_port + "</td>";
+        row += "<td class=nr>" + proto + "</td>";
+        row += "<td class=nr>" + signature + "</td>";
+        row += "<td class=nr>" + user + "</td>";
+        row += "<td class=nr>" + timestamp + "</td>";
+        row += "<td class=nr>" + expires + "</td>"; 
         row += "</tr>";
       }
       tbl += "<table id=tlac class=box_table width=100% cellpadding=0 cellspacing=0>";
       tbl += head;
       tbl += row;
       tbl += "</table>";
-
-      $('#ovacstat').html("<b>" + (i - rOFF) + "</b> active <b>" + rOFF + "</b> inactive");
+      var eyecon = 'inactive';
+      if (rOFF > 0) eyecon = "<span title=\"show/hide inactive rules\" class=ac_view >inactive</span>";
+      $('#ovacstat').html("<b>" + (i - rOFF) + "</b> active <b>" + rOFF + "</b> " + eyecon);
       if ($('#tlac')[0]) {
         $('#tlac').remove();
       }
@@ -715,7 +746,7 @@ $(document).ready(function(){
       $('#' + currentCL).data('edit','yes');
       $('td:first-child', $(this).parents('tr')).css('background-color','#c4c4c4');
       $('td:nth-child(2)', $(this).parents('tr')).css('background-color','#c4c4c4');
-      $('td:nth-child(3)', $(this).parents('tr')).css('background-color','#c4c4c4');
+      $('td:nth-child(3)', $(this).parents('tr')).css('background-color','#c4c4c4');    
     } else {
       if ($('#' + currentCL).data('edit') == 'yes') {
         $("#ac_content").remove();
@@ -737,7 +768,7 @@ $(document).ready(function(){
     var id = '#tr_' + cl;
     row = '';
     row += "<tr id=ac_content>";
-    row += "<td class=ac_row colspan=12><textarea id=txt_" + cl + " rows=12>";
+    row += "<td class=ac_row colspan=13><textarea id=txt_" + cl + " rows=12>";
     row += "{\n";
     row += "\"status\": \"" + $(id).data('status') + "\",\n";
     row += "\"comment\": \"" + $(id).data('comment') + "\",\n";
@@ -787,7 +818,6 @@ $(document).ready(function(){
   $(document).on("click", ".ac_create", function(event) {
     // Hide any previous errors
     $('.ac_error').empty();
-    eMsg = '';
     try {
       var rawTxt = $('#txt_' + currentCL).val();
 
@@ -819,9 +849,33 @@ $(document).ready(function(){
       var sl = [1,2,11,12,13,14,15,16,17];
       if (sl.indexOf(Number(ruleTxt.status)) == -1) throw 2;
 
-      // Validate IP and ports
-      
+      // Validate IPs
+      var OK = chkIP(ruleTxt.src_ip);
+      if (!OK) throw 3;     
+      var OK = chkIP(ruleTxt.dst_ip);
+      if (!OK) throw 3;
 
+      // Validate ports
+      var OK = chkPort(ruleTxt.src_port);
+      if (!OK) throw 4;
+      var OK = chkPort(ruleTxt.dst_port);
+      if (!OK) throw 4;
+
+      // Validate protocol
+      var re = /^\d{1,3}$|^any$/;
+      var OK = re.exec(ruleTxt.proto);
+      if (!OK || ruleTxt.proto > 255) throw 5; 
+
+      // Validate sensor
+      if (ruleTxt.sensor.length > 255) throw 6;
+
+      // Validate signature
+      if (ruleTxt.signature.length > 255) throw 7;
+
+      // Validate expiration
+      var re = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$|^\d{1,4}\ (minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)$/;
+      var OK = re.exec(ruleTxt.expires);
+      if (!OK) throw 8;
 
       // Continue..
       oldCL = currentCL;
@@ -842,22 +896,39 @@ $(document).ready(function(){
       }
 
     } catch (err) {
-
+      
+      var eMsg = "<span class=warn>Input Error!</span> ";
+   
       switch (err) {
         case 0:
-          eMsg += "<span class=warn>Error!</span> ";
           eMsg += "Please supply a value for each object.";
-          break;
+        break;
         case 1:
-          eMsg += "<span class=warn>Error!</span> "
-          eMsg += "Valid characters are: ";
+          eMsg += "Invalid Comment. Valid characters are: ";
           eMsg += "Aa-Zz, 0-9, dashes and underscores.";
           eMsg += "The word \"New Rule\" is reserved and may not be used.";
-          break;
+        break;
         case 2:
-          eMsg += "<span class=warn>Error!</span> "
           eMsg += "Invalid status. Possible values are: 1,2,11,12,13,14,15,16 or 17";
-          break;
+        break;
+        case 3:
+          eMsg += "IP values must be valid IPv4 addresses or \"any\"";
+        break;
+        case 4:
+          eMsg += "Ports values must an integer between 1 and 65535 or \"any\"";
+        break;
+        case 5:
+          eMsg += "Protocol value must be between 0 and 255";
+        break;
+        case 6:
+          eMsg += "Sensor name can not exceed 255 characters";
+        break;
+        case 7:
+          eMsg += "Signature can not exceed 255 characters";
+        break;
+        case 8:
+          eMsg += "Expiry must be of the form \"YYYY-MM-DD HH:MM:SS\" or \"2 hours | 1 day | 6 weeks | 9 months\"";
+        break;
         default:
           eMsg += "<span class=warn>Format error!</span> ";
           eMsg += "Please ensure the format above is valid JSON. ";

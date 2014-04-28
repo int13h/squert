@@ -17,11 +17,11 @@ function d2h(d) {
   return d.toString(16);
 }
 
-function h2d (h) {
+function h2d(h) {
   return parseInt(h, 16);
 }
 
-function s2h (tmp) {
+function s2h(tmp) {
   var str = '', i = 0, tmp_len = tmp.length, c;
   for (; i < tmp_len; i += 1) {
     c = tmp.charCodeAt(i);
@@ -36,6 +36,25 @@ function h2s(hex) {
     str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
   }    
   return str;
+}
+
+function chkIP(ip) {
+  var re = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$|^any$/;
+  var OK = re.exec(ip);
+  return OK;
+}
+
+function chkPort(port) {
+  if (port == "any") {
+    var OK = 1;
+    return OK;
+  }
+  var re = /^\d{1,5}$/;
+  var OK = re.exec(port);
+  if (port <= 65535) {
+    return OK;
+  }
+  
 }
 
 function sort_unique(arr) {
@@ -93,6 +112,7 @@ function getTimestamp() {
   }
   var tl = "<span class=fl>Timeline: </span>";
   tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
+  tl += "<img class=ct src=\".css/ct.png\">";
   tl += "<span class=fl>Filtered by Object: </span><span class=" + fval_c + ">" + fval + "</span>";
  
   if ($('.chk_sen:checked').length > 0) {

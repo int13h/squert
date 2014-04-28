@@ -315,6 +315,27 @@ $(document).ready(function(){
     $('.dt_error').hide();
   });
 
+  // Space hog. Hide by default.
+  $('.content-right,.rl').css('margin-top','20px');
+  $('.content-left').css('top','58px'); 
+
+  // Show/Hide calendar
+  $(document).on('click', '.ct', function(event) {
+    var state = $('#cal').css('display');
+    switch (state) {
+      case 'block':
+        $('#cal').hide();
+        $('.content-right,.rl').css('margin-top','20px');
+        $('.content-left').css('top','58px');
+      break;
+      default:
+        $('#cal').show();
+        $('.content-right,.rl').css('margin-top','80px');
+        $('.content-left').css('top','120px');
+      break;
+    }
+  });
+
   //   
   // Begin
   //
@@ -356,7 +377,7 @@ $(document).ready(function(){
   var baseMonthN  = baseDate.getMonth(); 
   var baseMonthS  = strMonths[baseDate.getMonth()];
 
-  html = "<table cellpadding=0 cellspacing=0 class=calendar><tr class=months>";
+  html = "<table class=calendar cellpadding=0 cellspacing=0><tr class=months>";
 
   // Create month and year links
   for (var n = 0; n <= 11; n++) {
@@ -392,8 +413,8 @@ $(document).ready(function(){
   }
 
   html += "</tr></table>";
-  html += "<table cellpadding=0 cellspacing=0 class=calendar><tr class=days></tr></table>";
-  html += "<table cellpadding=0 cellspacing=0 class=calendar><tr class=hours></tr></table>"; 
+  html += "<table class=calendar cellpadding=0 cellspacing=0><tr class=days></tr></table>";
+  html += "<table class=calendar cellpadding=0 cellspacing=0><tr class=hours></tr></table>"; 
 
   $('#cal').prepend(html);
   // Create day links
