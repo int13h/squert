@@ -356,7 +356,7 @@ $(document).ready(function(){
     filter = h2s($('#tr_' + cl).data('filter'));
     row = '';
     row += "<tr id=filter_content>";
-    row += "<td class=f_row colspan=5><textarea id=\"txt_" + alias +"\" rows=10>";
+    row += "<td class=f_row colspan=6><textarea id=\"txt_" + alias +"\" rows=10>";
     row += "{\n";
     row += "\"alias\": \"" + alias + "\",\n";
     row += "\"name\": \"" + name + "\",\n";

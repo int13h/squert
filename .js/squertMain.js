@@ -2412,13 +2412,13 @@ $(document).ready(function(){
             
       // What is our current event total?
       var esum = $('#event_sum').val();
-      var w = $(window).width() - 160;
+      var w = $(window).width() - 72;
       var h = w / 2.2;
       $("#ov_map").html("<div id=wm0 style=\"width:" + w + "px; height:" + h + "px;\"></div>");
       $('#wm0').vectorMap({
         map: 'world_mill_en',
         color: '#f4f3f0',
-        backgroundColor: '#f4f4f4',
+        backgroundColor: '#CFE1FC',
         zoomOnScroll: false,
         onRegionClick: function(event, code){
         hItemAdd(code);

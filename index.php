@@ -57,10 +57,10 @@ dbC();
   <div id=t_ovr class=tab>Summary</div>
   <div id=t_view class=tab>Views</div> 
   <div id=t_search class=search data-state=0>
-    <div data-box=cat  class=icon id=ico01><img title=comments class=il src=.css/comment.png></div>
-    <div data-box=ac   class=icon id=ico02><img title=autocat class=il src=.css/autocat.png></div>
-    <div data-box=sen  class=icon id=ico03><img title=sensors class=il src=.css/sensor.png></div>
-    <div data-box=fltr class=icon id=ico04><img title=filters class=il src=.css/filter.png></div>
+    <div data-box=cat  class=icon id=ico01><img title=comments class="il ilb" src=.css/comment.png></div>
+    <div data-box=ac   class=icon id=ico02><img title=autocat class="il ilb" src=.css/autocat.png></div>
+    <div data-box=sen  class=icon id=ico03><img title=sensors class="il ilb" src=.css/sensor.png></div>
+    <div data-box=fltr class=icon id=ico04><img title=filters class="il ilb" src=.css/filter.png></div>
     <input class=search id=search type=text size=60 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
   </div>
   <div id=cal></div>
@@ -72,7 +72,6 @@ dbC();
   <div class=sk_links>
     <div class=sk_linkt>View:</div>
     <div class=sk_link data-val=ip data-state=1>IP</div>
-    <div class=sk_link data-val=ips>IP+signature</div>
     <div class=sk_link data-val=sc>Source Country</div>
     <div class=sk_link data-val=dc>Destination Country</div>
     <div class=sk_linkt>Type:</div>

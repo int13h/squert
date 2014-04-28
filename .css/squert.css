@@ -15,13 +15,7 @@ user-select: none;
 tr.none {
 border:none;
 }
-#wm0 {
-margin-right:auto;
-margin-left:auto;
-float:left;
-clear:right;
-text-align:center;
-}
+
 div.body {
 width:100%;
 }
@@ -196,6 +190,7 @@ width:96%;
 padding-right:2%;
 padding-left:2%;
 clear:both;
+margin-top:50px;
 }
 div.twopane {
 width:100%;
@@ -247,6 +242,17 @@ border-bottom-left-radius:10px;
 }
 table.dash tr:last-child td:last-child {
 border-bottom-right-radius:10px;
+}
+#wm0 {
+margin-right:auto;
+margin-left:auto;
+text-align:center;
+clear:both;
+}
+div.jvectormap-container {
+border-radius:5px;
+border:1pt solid #c9c9c9;
+padding:10px 0px 10px 0px;
 }
 div.content-left {
 position:fixed;
@@ -1659,9 +1665,14 @@ img.il {
 cursor:pointer;
 text-decoration:underline;
 }
+img.ilb {
+width:17px;
+height:17px;
+} 
 img.ct {
 cursor:pointer;
 margin-left:10px;
+margin-bottom:-2px;
 }
 .ac_view {
 cursor:pointer;
