@@ -316,17 +316,17 @@ $(document).ready(function(){
   });
 
   // Space hog. Hide by default.
-  $('.content-right,.rl').css('margin-top','20px');
-  $('.content-left').css('top','58px'); 
+  $('.content-right,.rl').css('margin-top','15px');
+  $('.content-left').css('top','54px'); 
 
   // Show/Hide calendar
-  $(document).on('click', '.ct', function(event) {
+  $(document).on('click', '.ctt', function(event) {
     var state = $('#cal').css('display');
     switch (state) {
       case 'block':
         $('#cal').hide();
-        $('.content-right,.rl').css('margin-top','20px');
-        $('.content-left').css('top','58px');
+        $('.content-right,.rl').css('margin-top','15px');
+        $('.content-left').css('top','54px');
       break;
       default:
         $('#cal').show();

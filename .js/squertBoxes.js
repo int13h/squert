@@ -8,7 +8,7 @@ $(document).ready(function(){
     var cID = "#" + caller + "_box";
     var isOpen = $('#t_search').data('state');
     // Make sure we are on the right page
-    if ($('#t_sum').attr('class') != "tab_active" && caller != 'fltr' && caller != 'sen')  return;
+    //if ($('#t_sum').attr('class') != "tab_active" && caller != 'fltr' && caller != 'sen')  return;
     // Are we the only one open?
     if (isOpen == 0) {
       $('#t_search').data('state',1);     

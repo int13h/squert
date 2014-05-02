@@ -858,12 +858,32 @@ function user_profile() {
 }
 
 function summary() {
-    global $when;
+    global $when, $sensors;
     $limit = $_REQUEST['limit'];
     $qargs = $_REQUEST['qargs'];
+    $filter  = hextostr($_REQUEST['filter']);
     list($type,$subtype) = explode("-", $qargs); 
     $oppip = "src";
     if ($subtype == "src") { $oppip = "dst"; }
+
+    if ($filter != 'empty') {
+        if (substr($filter, 0,4) == 'cmt ') {
+            $comment = explode('cmt ', $filter);
+            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid
+                    WHERE history.comment = '$comment[1]'";
+        } else {
+            $filter = str_replace('&lt;','<', $filter);
+            $filter = str_replace('&gt;','>', $filter);
+            $filter = "AND " . $filter;
+            $qp2 = "WHERE $when
+                    $sensors
+                    $filter";
+        }
+    } else {
+        $qp2 = "WHERE $when
+                $sensors";
+    }
+
     switch ($type) {
         case "ip":
             $query = "SELECT COUNT(event.{$subtype}_ip) AS f1,
@@ -874,7 +894,7 @@ function summary() {
                       INET_NTOA(event.{$subtype}_ip) AS f6
                       FROM event
                       LEFT JOIN mappings AS m{$subtype} ON event.{$subtype}_ip = m{$subtype}.ip  
-                      WHERE $when
+                      $qp2
                       GROUP BY f6
                       ORDER BY f1 DESC";
         break;
@@ -885,7 +905,7 @@ function summary() {
                       COUNT(DISTINCT(event.dst_ip)) AS f4,
                       event.{$subtype}_port AS f5
                       FROM event
-                      WHERE $when
+                      $qp2
                       GROUP BY f5
                       ORDER BY f1 DESC";
         break;
@@ -896,7 +916,7 @@ function summary() {
                       event.signature_id AS f4,
                       event.signature AS f5
                       FROM event
-                      WHERE $when
+                      $qp2
                       GROUP BY f4
                       ORDER BY f1 DESC";
         break;
@@ -908,7 +928,7 @@ function summary() {
                       m.c_long AS f5,
                       COUNT(DISTINCT(event.{$subtype}_ip)) AS f6
                       FROM event LEFT JOIN mappings AS m ON event.{$subtype}_ip = m.ip
-                      WHERE $when
+                      $qp2
                       AND event.{$subtype}_ip NOT BETWEEN 167772160 AND 184549375
                       AND event.{$subtype}_ip NOT BETWEEN 2886729728 AND 2886795263 
                       AND event.{$subtype}_ip NOT BETWEEN 3232235520 AND 3232301055

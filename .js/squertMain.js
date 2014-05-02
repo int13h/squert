@@ -127,7 +127,7 @@ $(document).ready(function(){
       }
       if (lastcount < newcount) {
         if (caller != 0) {
-          $(".b_update").css('border-left','4pt solid lime');
+          $(".b_update").css('border-left','4pt solid #cc0000');
         }
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
@@ -174,7 +174,7 @@ $(document).ready(function(){
     case "t_view":
       $('.content-right').hide();
       $('.content-left').hide();
-      if (!$("#db_sankey_ldr")[0]) loadViews();
+      loadViews();
     default:
       $('.content-right').hide();
       $('.content-left').hide();
@@ -184,28 +184,16 @@ $(document).ready(function(){
   $('#' + tab_cached).attr('class','tab_active');
   $("#" + tab_cached + "_content").attr('class','content_active');
 
-  $(".tab,.tab_active").mouseover(function(event) {
-    $(this).css('color','#ffffff');
-    $(this).css('background-color','#000000');
-  });
-
-  $(".tab,.tab_active").mouseout(function(event) {
-    var curClass = $(this).attr('class');
-    if ( curClass != "tab_active" ) {
-      $(this).css('color','#adadad');
-      $(this).css('background-color','#333333');
-    }
-  });
-
   $(".tab,.tab_active").click(function(event) {
     var active = $(".tab_active").attr('id');
     var content = $(".content_active").attr('id');
+    if ($(".fl_val_on")[0]) {
+      $('.b_update').click();
+    }
 
     if ( this.id != active ) {
       $("#" + active).removeClass('tab_active');
       $("#" + active).addClass('tab');
-      $("#" + active).css('color','#adadad');
-      $("#" + active).css('background-color','#333333');
       $(this).attr('class','tab_active');
       $("#" + content).attr('class','content');
       $("#" + this.id + "_content").attr('class','content_active');
@@ -216,26 +204,26 @@ $(document).ready(function(){
           $('.content-right').show();
           $('.content-left').show();
           $('.t_pbar').css('opacity',1);
-          $('.sk_links').hide();
+          $('.db_links').hide();
         break;
         case "t_ovr":
           $('.content-right').hide();
           $('.content-left').hide();
           if ($('#ovestat').text().length == 0) loadSummary();
-          $('.t_pbar').css('opacity',.4);
-          $('.sk_links').hide();
+          $('.t_pbar').css('opacity',.2);
+          $('.db_links').hide();
         break;
         case "t_view":
           $('.content-right').hide();
           $('.content-left').hide();
-          $('.t_pbar').css('opacity',.4);
-          if (!$("#db_sankey_ldr")[0]) loadViews();
+          $('.t_pbar').css('opacity',.2);
+          loadViews();
         break;
         default:
           $('.content-right').hide();
           $('.content-left').hide();
-          $('.t_pbar').css('opacity',.4);
-          $('.sk_links').hide();
+          $('.t_pbar').css('opacity',.2);
+          $('.db_links').hide();
         break;
       }
 
@@ -353,7 +341,7 @@ $(document).ready(function(){
         loadSummary();
       break;
       case 't_view':
-        loadViews();
+        mkView();
       break;
       default:
         $(".b_update").css('border-left','4pt solid #666');
@@ -376,6 +364,25 @@ $(document).ready(function(){
   // Logout
   $("#logout").click(function(event) {
     $.get("index.php?id=0", function(){location.reload()});
+  });
+
+  // Toggle filters
+  $(document).on('click', '.fl_val_on', function(event) {
+    var wF = $(this).data("ft");
+    switch (wF) {
+      case "tl":
+      
+      break;
+      case "ob":
+        $('#clear_search').click();
+      break;
+      case "sn":
+        $(".chk_sen").each(function() {
+          $(this).prop("checked",false);
+        });
+        $('.b_update').click();
+      break;
+    }
   });
 
   // Section show and hide
@@ -402,15 +409,10 @@ $(document).ready(function(){
   // Rows
   //
 
-  // Clean these up (effect)
-
   function closeRow() {
     $("#active_eview").remove();
     $("#" + this.id).attr('class','d_row');
     $(".d_row").css('opacity','1');
-    $(".d_row_active").find('[class*="row"]').css('color', 'gray');
-    $(".d_row_active").find('[class*="row"]').css('background', 'transparent');
-    $(".d_row_active").find('td').css('border-top', 'none')
     ltCol = $(".d_row_active").find('td.lt').html();
     $(".d_row_active").find('td.lt').css('background', ltCol);
     $(".d_row_active").attr('class','d_row');
@@ -425,9 +427,6 @@ $(document).ready(function(){
     $("#eview_sub1").remove();
     $("#" + this.id).attr('class','d_row_sub');
     $(".d_row_sub").css('opacity','1');
-    $(".d_row_sub_active").find('[class*="sub"]').css('color', 'gray');
-    $(".d_row_sub_active").find('[class*="sub"]').css('border-top', 'none');
-    $(".d_row_sub_active").find('[class*="sub"]').css('background', 'transparent');
     $(".d_row_sub_active").attr('class','d_row_sub');
     // Update class_count
     $("#class_count").text(lastclasscount);
@@ -442,8 +441,7 @@ $(document).ready(function(){
     $("#" + this.id).attr('class','d_row_sub1');
     if (!$("#eview_sub3")[0]) {
       $(".d_row_sub1").css('opacity','1');
-      $(".d_row_sub1_active").find('td').css('border-top', 'none');
-      $(".d_row_sub1_active").attr('class','d_row_sub1');
+      $(".d_row_sub_active1").attr('class','d_row_sub1');
     }
     $("#loader").hide();
     // Reset checkbox
@@ -455,29 +453,28 @@ $(document).ready(function(){
 
     if (!$("#eview_sub2")[0]) {
       $(".d_row_sub1").css('opacity','1');
-      $(".d_row_sub1_active").find('td').css('border-top', 'none');
       $(".d_row_sub1_active").attr('class','d_row_sub1');
     }
     $("#loader").hide();
   }
 
   // Reset if headings are clicked
-  $(document).on("click", "#ev_close", function(event) {
+  $(document).on("click", ".d_row_active", function(event) {
     closeRow();
   });
 
   // Close open sub views
-  $(document).on("click", "#ev_close_sub", function(event) {
+  $(document).on("click", ".d_row_sub_active", function(event) {
     closeSubRow();
   });
 
   // Close open packet data
-  $(document).on("click", "#ev_close_sub1", function(event) {
+  $(document).on("click", ".d_row_sub_active1", function(event) {
     closeSubRow1();
   });
 
   // Close open TX
-  $(document).on("click", "#ev_close_sub2", function(event) {
+  $(document).on("click", "", function(event) {
     closeSubRow2();
   });
 
@@ -485,8 +482,8 @@ $(document).ready(function(){
   //  Level 1
   //
 
-  $(document).on("click", ".row_active", function(event) {
-    var curID = $(this).parent().attr('id');        
+  $(document).on("click", ".d_row", function(event) {
+    var curID = $(this).attr('id');        
     // What type of row are we?
     rowType = curID.substr(0,3);
 
@@ -501,7 +498,6 @@ $(document).ready(function(){
             
       // This is now the active row
       $("#" + curID).attr('class','d_row_active');
-      $("#" + curID).find('[class*="row"]').css('border-top', '1pt solid #c9c9c9');
       $("html, body").animate({ scrollTop: $('.d_row_active').offset().top - 140 }, 20);
       // History
       var itemToAdd = $("#" + curID).find('[class*="row_filter"]').text();
@@ -511,7 +507,6 @@ $(document).ready(function(){
       var cols = $('th.sort').length;
       var tbl = '';
       tbl += "<tr class=eview id=active_eview><td colspan=" + cols + "><div id=eview class=eview>";
-      tbl += "<div id=ev_close class=close><div class=b_close title='Close'><img title=close class=il src=.css/close.png></div></div>";
       tbl += "<div class=sigtxt></div>";
       tbl += "<div class=chrt_ts></div>";
       tbl += "<div class=event_class><input id=ca0 class=chk_all type=checkbox checked>";
@@ -531,23 +526,21 @@ $(document).ready(function(){
   //  Level 2
   //
 
-  $(document).on("click", ".sub_active", function() {
+  $(document).on("click", ".d_row_sub", function() {
     if (!$(".d_row_sub_active")[0]) {
-      baseID = $(this).parent().attr('id');
-      columnType = this.id[2];
+      var callerID = $(this).attr('id');
 
       // Reset checkbox
       $(".chk_all").prop("checked",false);
 
-      // Did they click RT or ALL?
-      switch (columnType) {
-        case "l": adqp = s2h("AND event.status = 0"); break;
-        case "r": adqp = s2h("empty"); break;
+      // RT or ALL?
+      switch (rtbit) {
+        case 1: adqp = s2h("AND event.status = 0"); break;
+        case 0: adqp = s2h("empty"); break;
       }
-
-      rowcall = baseID.split("-");
-      callerID = rowcall[0];
+      // We are now the active row
       $("#" + callerID).attr('class','d_row_sub_active');
+
       // History
       $("#" + callerID).find('[class*="sub_filter"]').each(function() {
         if ($(this).data('type') == 'cc') {
@@ -557,9 +550,9 @@ $(document).ready(function(){
         } 
         hItemAdd(itemToAdd);
       });
-      $("#" + callerID).find('[class*="sub"]').css('border-top', '1pt solid #c9c9c9');
+
       $("#loader").show();
-      eventList("2-" + baseID + "-" + adqp);
+      eventList("2-" + callerID + "-" + adqp);
     }  
   });
 
@@ -567,15 +560,12 @@ $(document).ready(function(){
   //  Level 3 (a or b) request payload
   //
     
-  $(document).on("click", ".b_PL", function() {
-    if (!$("#eview_sub2")[0] && !$("#eview_sub3")[0]) {
-      baseID = $(this).data('eidl');
-      rowcall = baseID.split("-");
-      callerID = rowcall[0];
-      $("#" + callerID).attr('class','d_row_sub1_active');
-      $("#" + callerID).find('td').css('border-top', '1pt solid #c9c9c9');
+  $(document).on("click", ".d_row_sub1", function() {
+    if (!$(".d_row_sub_active1")[0])  {
+      var callerID = $(this).attr('id');
+      $("#" + callerID).attr('class','d_row_sub_active1');
       $("#loader").show();           
-      eventList("3-" + baseID);
+      eventList("3-" + callerID);
     }
   });
 
@@ -589,7 +579,6 @@ $(document).ready(function(){
       composite = $(this).data('tx').split("-");
       rowLoke = composite[0];
       $("#" + rowLoke).attr('class','d_row_sub1_active');
-      $("#" + rowLoke).find('td').css('border-top', '1pt solid #c9c9c9');
       nCols = $("#" + rowLoke).find('td').length;
       cid = composite[1];
       txdata = composite[2];
@@ -746,7 +735,6 @@ $(document).ready(function(){
         
         if (rt == 0) cols = 12;
         head += "<thead>";
-        head += "<tr><th id=priority_bar colspan=" + cols + "></th></tr>";
         head += "<tr>";
         head += "<th class=sort width=45>QUEUE</th>";
         if (rt == 0) head += "<th class=sort width=45>ALL</th>";
@@ -791,17 +779,9 @@ $(document).ready(function(){
           // Colour based on event presence
           if ( unClass > 0 ) {
             rtClass = "b_ec_hot";
-            isActive = "row_active";
             sumRT += parseInt(unClass);
           } else {
             rtClass = "b_ec_cold";
-            isActive = "row";
-          }
-
-          // Disable ec_total if we are RT
-          ttlActive = "row_active";
-          if (rt == 1) {
-            ttlActive = "row";
           }
 
           // Sum priorities
@@ -818,8 +798,8 @@ $(document).ready(function(){
           if (rt == 0) var catCells = catGrid(d0[i].f11,0,0);
           row += "<tr class=d_row id=sid-" + d0[i].f3 + "-" + d0[i].f4;
           row += " data-event_count=" + d0[i].f1 + ">";
-          row += "<td class=" + isActive + "><div class=" + rtClass + ">" + unClass + "</div></td>";
-          if (rt == 0) row += "<td class=" + ttlActive + "><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
+          row += "<td class=row><div class=" + rtClass + ">" + unClass + "</div></td>";
+          if (rt == 0) row += "<td class=row><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
           row += "<td class=row><div class=pr" + d0[i].f13 + ">" + d0[i].f13 + "</div></td>";
           row += "<td class=row><span class=blue>" +d0[i].f6+ "</span></td>";
           row += "<td class=row><span class=red>" +d0[i].f7+ "</span></td>";
@@ -830,7 +810,7 @@ $(document).ready(function(){
 
           row += "<td class=row>" + cells + "</td>";
           row += "<td class=row>" + timeStamp + "</td>";
-          row += "<td class=row_filter data-type=sid data-value=";
+          row += "<td class=\"row row_filter\" data-type=sid data-value=";
           row += d0[i].f3 + ">" + d0[i].f2 + "</td>";
           row += "<td class=row>" + d0[i].f3 + "</td>";
           row += "<td class=row>" + d0[i].f8 + "</td>";
@@ -863,12 +843,8 @@ $(document).ready(function(){
         } else {
           var pryBar =  mkPribar([0]);        
         }
-        $('#tl0,#tl1').fadeIn('slow');
-        $("#tl1").tablesorter({
-          headers: {
-            0:{sorter:false}
-          }
-        });
+        $('#tl1').fadeIn('slow');
+        $("#tl1").tablesorter();
         $("#loader").hide();
       }
       break;
@@ -940,12 +916,6 @@ $(document).ready(function(){
             isActive = "sub";
           }
 
-          // Disable ec_total if we are RT
-          ttlActive = "sub_active";
-          if (rt == 1) {
-            ttlActive = "sub";
-          }
-                  
           // Aggregate time values
           timeValues += theData[i].c_ts + ",";
           var cells = mkGrid(theData[i].f12);
@@ -957,16 +927,16 @@ $(document).ready(function(){
 
           rid = "r" + i + "-" + parts[1] + "-" + src_ip + "-" + dst_ip;
           row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
-          row += "<td class=" + isActive + " id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
-          if (rt == 0) row += "<td class=" + ttlActive + " id=l2r" + i + "><div class=b_ec_total>" + count + "</div></td>";
+          row += "<td class=sub id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
+          if (rt == 0) row += "<td class=sub id=l2r" + i + "><div class=b_ec_total>" + count + "</div></td>";
           if (rt == 0) row += "<td class=sub>" + catCells + "</td>";
           row += "<td class=sub>" + cells + "</td>";
           row += "<td class=sub>" + max_time + "</td>";
-          row += "<td class=sub_filter data-type=ip>" + src_ip + "</td>";
-          row += "<td class=" + cs[0] + " data-type=cc data-value=" + src_cc + ">";
+          row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub " + cs[0] + "\" data-type=cc data-value=" + src_cc + ">";
           row += cs[1] + src_clong + " (." + src_cc.toLowerCase() + ")" + "</td>";
-          row += "<td class=sub_filter data-type=ip>" + dst_ip + "</td>";
-          row += "<td class=" + cd[0] + " data-type=cc data-value=" + dst_cc + ">";
+          row += "<td class=\"sub sub_filter\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub " + cd[0] + "\" data-type=cc data-value=" + dst_cc + ">";
           row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
           row += "</tr>";
         }
@@ -1075,23 +1045,22 @@ $(document).ready(function(){
 
           txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
 
-          txBit = "<div class=n_TX>TX</div>";   
+          txBit = "<div class=n_TX>" + sid + "." + cid + "</div>";   
           if (src_port != "-" && dst_port != "-") {
-            txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
+            txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</div>";
           }
 
-          row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
+          row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + ">";
-          row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
+          row += "<td class=sub><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
           row += "<td class=sub title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
-          row += "<td class=sub><div class=b_PL data-eidl=s" + i + " title=\"View Payload\">";
-          row += sid + "." + cid + "</div>" + txBit + "</td>";
-          row += "<td class=sub_filter data-type=ip>" + src_ip + "</td>";
-          row += "<td class=sub_filter data-type=spt>" + src_port + "</td>";
-          row += "<td class=sub_filter data-type=ip>" + dst_ip + "</td>";
-          row += "<td class=sub_filter data-type=dpt>" + dst_port + "</td>";
-          row += "<td class=sub_filter data-type=sid data-value= ";
+          row += "<td class=sub>" + txBit + "</td>";
+          row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
+          row += "<td class=\"sub sub_filter\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter\" data-type=dpt>" + dst_port + "</td>";
+          row += "<td class=\"sub sub_filter\" data-type=sid data-value= ";
           row += sig_id + ">" + signature + "</td>";
           row += "</td></tr>";
         }
@@ -1104,8 +1073,7 @@ $(document).ready(function(){
 
         var cols = $('th.sort').length;
 
-        tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=" + cols + "><div id=ev_close_sub ";
-        tbl += "class=close_sub><div class=b_close title='Close'><img title=close class=il src=.css/close.png></div></div>";
+        tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=" + cols + ">";
         tbl += "<div class=notes></div>";
         tbl += "<table id=tl3 class=table align=center width=100% cellpadding=0 cellspacing=0>";
         tbl += head;
@@ -1319,7 +1287,7 @@ $(document).ready(function(){
    
           head += "<table class=tlip align=center width=100% cellpadding=0 cellspacing=0>";
           head += "<tr>";
-          head += "<th class=sub2 width=40 rowspan=2>IP</th>";
+          head += "<th class=sub4 rowspan=2>IP</th>";
           head += "<th class=sub2>VER</th>";
           head += "<th class=sub2>IHL</th>";
           head += "<th class=sub2>TOS</th>";
@@ -1332,7 +1300,7 @@ $(document).ready(function(){
           head += "<th class=sub2>PROTO</th>";
           head += "</tr>";
 
-          row += "<tr class=d_row_sub2>";
+          row += "<tr>";
           row += "<td class=sub3>" + theData[0].ip_ver + "</td>";
           row += "<td class=sub3>" + theData[0].ip_hlen + "</td>";
           row += "<td class=sub3>" + theData[0].ip_tos + "</td>";
@@ -1349,7 +1317,7 @@ $(document).ready(function(){
             case "1": 
               row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
               row += "<tr>";
-              row += "<th class=sub2 width=40 rowspan=2>ICMP</th>";
+              row += "<th class=sub4 rowspan=2>ICMP</th>";
               row += "<th class=sub2 width=184>TYPE</th>";
               row += "<th class=sub2 width=184>CODE</th>";
               row += "<th class=sub2 width=184>CHECKSUM</th>";
@@ -1385,7 +1353,7 @@ $(document).ready(function(){
               var tcp_csum = theData[1].tcp_csum || '-';
               row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
               row += "<tr>";
-              row += "<th class=sub2 width=40 rowspan=2>TCP</th>";
+              row += "<th class=sub4 rowspan=2>TCP</th>";
               row += "<th class=sub2 width=30>R1</th>";
               row += "<th class=sub2 width=30>R0</th>";
               row += "<th class=sub2 width=30>URG</th>";
@@ -1424,9 +1392,9 @@ $(document).ready(function(){
             case "17":
               row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
               row += "<tr>";
-              row += "<th class=sub2 width=40 rowspan=2>UDP</th>";
+              row += "<th class=sub4 rowspan=2>UDP</th>";
               row += "<th class=sub2 width=460>LENGTH</th>";
-              row += "<th class=sub2 width=460>CHECKSUM</th>";
+              row += "<th class=sub2>CHECKSUM</th>";
               row += "</tr>";
               row += "<tr class=d_row_sub2>";
               row += "<td class=sub3>" + theData[1].udp_len + "</td>";
@@ -1479,9 +1447,9 @@ $(document).ready(function(){
 
           row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
           row += "<tr>";
-          row += "<th class=sub2 width=40 rowspan=2>DATA</th>";
+          row += "<th class=sub4 rowspan=2>DATA</th>";
           row += "<th class=sub2 width=460>HEX</th>";
-          row += "<th class=sub2 width=460>ASCII</th>";
+          row += "<th class=sub2 >ASCII</th>";
           row += "</tr>";
           row += "<tr class=d_row_sub2>";
           row += "<td class=sub3><samp>" + p_hex + "</samp></td>";
@@ -1510,14 +1478,14 @@ $(document).ready(function(){
            
         }
                     
-        tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + "><div id=ev_close_sub1 class=close_sub1><div class=b_close title='Close'><img title=close class=il src=.css/close.png></div></div>";
+        tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + ">";
 
         if ( sg != 0 ) {
           tbl += "<div class=sigtxt></div>";
           sigLookup(sg);
         }
         var eventComment = theData[0].comment || 'None.';
-        tbl += "<div class=comments><b>Comments:</b> " + eventComment + "</div>";
+        tbl += "<div class=comments>comments: " + eventComment + "</div>";
         tbl += head;
         tbl += row;
         tbl += "</td></tr>";
@@ -1528,8 +1496,7 @@ $(document).ready(function(){
         var rC = $(".d_row_sub1").length;
         if ( rC <= 499 ) {
           $(".d_row_sub1").fadeTo('fast','0.2');
-        }
-        $("#" + rowLoke).find('.getpl').html(theData[0].sid + "." + theData[0].cid);
+        } 
       }
       break;
     }
@@ -1540,6 +1507,7 @@ $(document).ready(function(){
   //
 
  $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link,.nr_f", function(event) {
+    if (!event.ctrlKey) return;
     var prefix = $(this).data('type');
     var suffix = $(this).text();
     var tfocus = "#search";
@@ -2058,6 +2026,20 @@ $(document).ready(function(){
   // Summary tab 
   function mkSummary(box,limit) {
     var theWhen = getTimestamp();
+    var theSensors = s2h('empty');
+    var theFilter = mkFilter();
+    // See if we are filtering by sensor
+    if ($('.chk_sen:checked').length > 0) {
+      var active_sensors = "AND event.sid IN(";
+      var iter  = $('.chk_sen:checked').length;
+      $('.chk_sen:checked').each(function() {
+        active_sensors += "'" + $(this).val() + "',";
+      });
+      active_sensors = active_sensors.replace(/,+$/,'');
+      active_sensors += ")";
+      theSensors = s2h(active_sensors);
+    }
+     
     var ldr = "<div class=ldr><img src=.css/load.gif></div>";
     $('#ov_' + box + '_sl').prepend(ldr);
     $('#top' + box).fadeTo('fast', 0.2);
@@ -2065,7 +2047,7 @@ $(document).ready(function(){
       case "srcip":
         var cbArgs = "srcip";
         var qargs = "ip-src";
-        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        var urArgs = "type=15&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
         });
@@ -2073,7 +2055,7 @@ $(document).ready(function(){
       case "dstip":
         var cbArgs = "dstip";
         var qargs = "ip-dst";
-        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        var urArgs = "type=15&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
         });
@@ -2081,7 +2063,7 @@ $(document).ready(function(){
       case "srcpt":
         var cbArgs = "srcpt";
         var qargs = "pt-src";
-        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        var urArgs = "type=15&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb17(data,cbArgs)});
         });
@@ -2089,14 +2071,14 @@ $(document).ready(function(){
       case "dstpt":
         var cbArgs = "dstpt";
         var qargs = "pt-dst";
-        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        var urArgs = "type=15&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb17(data,cbArgs)});
         });
       break;
       case "signature":
         var qargs = "sig-sig";
-        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        var urArgs = "type=15&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb16(data)});
         });    
@@ -2104,7 +2086,7 @@ $(document).ready(function(){
       case "srccc":
         var cbArgs = "srccc";
         var qargs = "cc-src";
-        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        var urArgs = "type=15&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
         });
@@ -2112,7 +2094,7 @@ $(document).ready(function(){
       case "dstcc":
         var cbArgs = "dstcc";
         var qargs = "cc-dst";
-        var urArgs = "type=15&qargs=" + qargs + "&limit=" + limit + "&ts=" + theWhen;
+        var urArgs = "type=15&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&limit=" + limit + "&ts=" + theWhen;
         $(function(){
           $.get(".inc/callback.php?" + urArgs, function(data){cb15(data,cbArgs)});
         });
@@ -2283,7 +2265,7 @@ $(document).ready(function(){
       $("#ov_signature_sl").after(tbl);
       $("#ov_signature_msg").html("viewing <b><span id=ov_signature_sl_lbl>" + i + "</span></b> of <b>" + records + " </b>results");
       mkSlider("ov_signature_sl", i, records);
-      $("#topsigs").tablesorter({
+      $("#topsignature").tablesorter({
           cancelSelection:true
       });
     }
@@ -2298,41 +2280,53 @@ $(document).ready(function(){
 
   // Views tab
   function loadViews() {
-    chartSankey();
+    $('.db_links').show();
+    if (!$("#db_view_cont")[0]) mkView();
   }
 
-  $(document).on('click', '.sk_link', function() {
-    $('.sk_link').each(function() {
+  // Link handlers
+  $(document).on('click', '.db_link', function() {
+    $('.db_link').each(function() {
       if ($(this).data('state') == '1') {
-        $(this).removeClass('sk_link_active');
+        $(this).removeClass('db_link_active');
         $(this).data('state', '0');
       }  
     });
     $(this).data('state', '1');
-    chartSankey();
+    mkView();
   });
 
-  // Charts
-  function chartSankey() {
-    $('#sankey_all').remove();
-    if (!$("#db_sankey_ldr")[0]) {
+  $(document).on('click', '.db_type', function() {
+    $('.db_type').each(function() {
+      if ($(this).data('state') == '1') {
+        $(this).removeClass('db_type_active');
+        $(this).data('state', '0');
+      }  
+    });
+    $(this).data('state', '1');
+    mkView();
+  });
+
+  // Create the view
+  function mkView() {
+    $('#db_view_cont,#hp_info').remove();
+    if (!$("#db_view_ldr")[0]) {
       var view = 'ip';
-      $('.sk_link').each(function() {
+      $('.db_link').each(function() {
         if ($(this).data('state') == '1') {
-          $(this).addClass('sk_link_active');
+          $(this).addClass('db_link_active');
           view = $(this).data('val');
         } 
       });
       
       var type = 'sk';
-      $('.sk_type').each(function() {
+      $('.db_type').each(function() {
         if ($(this).data('state') == '1') {
-          $(this).addClass('sk_link_active');
+          $(this).addClass('db_type_active');
           type = $(this).data('type');
         } 
       });
 
-      $('.sk_links').show();
       var theWhen = getTimestamp();
       var theSensors = s2h('empty');
       var theFilter = mkFilter();
@@ -2348,28 +2342,43 @@ $(document).ready(function(){
         theSensors = s2h(active_sensors);
       }
 
-      var ldr = "<div id=db_sankey_ldr class=ldr100><img src=.css/load.gif></div>";
-      $('.db_sankey').after(ldr);
+      var ldr = "<div id=db_view_ldr class=ldr100><img src=.css/load.gif></div>";
+      $('.db_view').after(ldr);
       var qargs = view + "-" + type;
       var urArgs = "type=16&qargs=" + qargs + "&filter=" + theFilter + "&sensors=" + theSensors + "&ts=" + theWhen;
       $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb17(data)});
+        $.get(".inc/callback.php?" + urArgs, function(data){cb17(data,type)});
       });
     
-      function cb17(data) {
-        eval("sankeyData=" + data);
-        var records = sankeyData.records;
-        if ($('#sankey_all')[0]) $('#sankey_all').remove();
+      function cb17(data,type) {
+        eval("viewData=" + data);
+        var records = viewData.records;
+        if ($('#db_view_cont')[0]) $('#db_view_cont').remove();
         if (records > 0) {
-          var w = $(window).width();
-          var h = sankeyData.links.length * 12;
-          if (h < 100) h = 100;
-          $('.db_sankey').after("<div id=sankey_all></div>");
-          mkSankey("sankey_all", sankeyData, w, h);
+          $('.db_view').after("<div id=db_view_cont></div>");
+          switch (type) {
+            case 'sk':
+              var w = $(window).width();
+              var h = viewData.links.length * 12;
+              if (h < 100) h = 100;
+              mkSankey("db_view_cont", viewData, w, h);
+            break;
+            case 'hv':
+              var w = $(window).width();
+              var h = $(window).height();
+              $('.db_view').after("<div class=label100 id=hp_info></div>");
+              mkHive("db_view_cont", viewData, w, h);
+            break;
+            case 'fd':
+              var w = $(window).width();
+              var h = $(window).height();
+              mkForceDirected("db_view_cont", viewData, w, h);
+            break;
+          }
         } else {
-          $('.db_sankey').after("<div class=label100 id=sankey_all><b>The query returned no results.</b></div>");
+          $('.db_view').after("<div class=label100 id=db_view_cont><b>The query returned no results.</b></div>");
         }
-        $('#db_sankey_ldr').remove();
+        $('#db_view_ldr').remove();
       } 
     }
   }
@@ -2390,7 +2399,7 @@ $(document).ready(function(){
 
     $('#wm0').html(working);
 
-    var urArgs = "type=" + 10 + "&filter=" + filter + "&ts=" + theWhen;
+    var urArgs = "type=" + 10 + "&filter=" + theFilter + "&ts=" + theWhen;
     $(function(){
       $.get(".inc/callback.php?" + urArgs, function(data){cb10(data)});
     });
@@ -2412,8 +2421,8 @@ $(document).ready(function(){
             
       // What is our current event total?
       var esum = $('#event_sum').val();
-      var w = $(window).width() - 72;
-      var h = w / 2.2;
+      var w = $(window).width()/2 - 72;
+      var h = w / 1.6 ;
       $("#ov_map").html("<div id=wm0 style=\"width:" + w + "px; height:" + h + "px;\"></div>");
       $('#wm0').vectorMap({
         map: 'world_mill_en',
@@ -2428,7 +2437,7 @@ $(document).ready(function(){
         series: {
           regions: [{
             values: mapDetail,
-            scale: ['#d4d4d4', '#000F30'],
+            scale: ['#ffffff', '#000000'],
             normalizeFunction: 'polynomial'
           }]
         },

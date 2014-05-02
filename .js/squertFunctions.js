@@ -105,22 +105,25 @@ function getTimestamp() {
   var fval_c = 'fl_val_off';
   var fbs = 'NO';
   var fbs_c = 'fl_val_off';
+  var fbt_c = 'fl_val_off';
+  if (ts_sd != ts_ed) fbt_c = 'fl_val_on';
+  if (ts_st !=  "00:00:00" || ts_et != "23:59:59") fbt_c = 'fl_val_on'; 
 
   if ($('#search').val().length > 0) {
     fval = 'YES';
     fval_c = 'fl_val_on';
   }
-  var tl = "<span class=fl>Timeline: </span>";
-  tl += ts_sd + " " + ts_st + " <span class=tl>until</span> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
-  tl += "<img class=ct src=\".css/ct.png\">";
-  tl += "<span class=fl>Filtered by Object: </span><span class=" + fval_c + ">" + fval + "</span>";
+  var tl = "<span class=\"hvr ctt\"><img title=\"toggle date controls\" class=ct src=.css/ct.png><span class=fl>interval: </span></span><span class=" + fbt_c + " data-ft=tl>";
+  tl += ts_sd + " " + ts_st + " -> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
+  tl += "</span>";
+  tl += "<span class=fl>filtered by object: </span><span class=" + fval_c + " data-ft=ob>" + fval + "</span>";
  
   if ($('.chk_sen:checked').length > 0) {
     fbs = 'YES';
     fbs_c = 'fl_val_on';
   } 
-  tl += "<span class=fl>Filtered by Sensor: </span><span class=" + fbs_c + ">" + fbs + "</span>";
-  tl += "<span class=fl>Priority: </span>";
+  tl += "<span class=fl>filtered by sensor: </span><span class=" + fbs_c + " data-ft=sn>" + fbs + "</span>";
+  tl += "<span class=fl>priority: </span>";
   $('.t_stats').html(tl);
   return theWhen;
 }
@@ -198,7 +201,12 @@ function mkGrid(values) {
       if (composite[c] == n) o++;
     }
     if (o > 0) {
-      cells += "<td class=c_on title=\"" + n + ":00 &#61;&gt; " + o + " events\">1</td>";
+      colours = d3.scale.linear()
+        .domain([0,10])
+        .range(["#e9e9e9","#5d5d5d"]);
+      var color = colours(o);
+      
+      cells += "<td class=c_on style=\"background-color:" + color + "\"; title=\"" + n + ":00 &#61;&gt; " + o + " events\">1</td>";
     } else {
       cells += "<td class=c_off>0</td>"; 
     }

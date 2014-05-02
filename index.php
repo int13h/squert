@@ -45,17 +45,19 @@ dbC();
 <script type="text/javascript" src=".js/squertCharts.js"></script>
 <script type="text/javascript" src=".js/jquery-jvectormap-1.2.2.min.js"></script>
 <script type="text/javascript" src=".js/jquery-jvectormap-world-mill-en.js"></script>
-<script type="text/javascript" src=".js/d3/d3.v3.min.js"></script>
+<script type="text/javascript" src=".js/d3/d3.min.js"></script>
+<script type="text/javascript" src=".js/d3/d3.layout.js"></script> 
+<script type="text/javascript" src=".js/d3/packages.js"></script>
 <script type="text/javascript" src=".js/d3/sankey.js"></script>
 
 <title id=title>squert</title>
 </head>
 <body>
 <div id=tab_group class=tab_group>
-  <div id=t_sum class=tab>Events</div>
-  <div id=t_inc class=tab>Incidents</div>
-  <div id=t_ovr class=tab>Summary</div>
-  <div id=t_view class=tab>Views</div> 
+  <div id=t_sum class=tab>EVENTS</div>
+  <!--div id=t_inc class=tab>Incidents</div-->
+  <div id=t_ovr class=tab>SUMMARY</div>
+  <div id=t_view class=tab>VIEWS</div> 
   <div id=t_search class=search data-state=0>
     <div data-box=cat  class=icon id=ico01><img title=comments class="il ilb" src=.css/comment.png></div>
     <div data-box=ac   class=icon id=ico02><img title=autocat class="il ilb" src=.css/autocat.png></div>
@@ -65,18 +67,19 @@ dbC();
   </div>
   <div id=cal></div>
   <div class=timeline>
-    <div class=b_update>Update</div>
+    <div class=b_update>update</div>
     <div class=t_pbar></div>
     <div class=t_stats></div>
   </div>
-  <div class=sk_links>
-    <div class=sk_linkt>View:</div>
-    <div class=sk_link data-val=ip data-state=1>IP</div>
-    <div class=sk_link data-val=sc>Source Country</div>
-    <div class=sk_link data-val=dc>Destination Country</div>
-    <div class=sk_linkt>Type:</div>
-    <div class=sk_type data-type=sk data-state=1>Sankey</div>
-    <div class=sk_type data-type=fd>Force-directed</div>
+  <div class=db_links>
+    <div class=db_linkt>view:</div>
+    <div class=db_link data-val=ip data-state=1>IP</div>
+    <div class=db_link data-val=sc>Source Country</div>
+    <div class=db_link data-val=dc>Destination Country</div>
+    <div class=db_linkt>type:</div>
+    <div class=db_type data-type=sk data-state=1>Sankey Diagram</div>
+    <div class=db_type data-type=hv>Hive Plot</div>
+    <div class=db_type data-type=fd>Force-directed</div>
   </div>
 </div>
 
@@ -84,70 +87,70 @@ dbC();
   <div class=content-left>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Toggle</span><div class=label_m data-sec=t><img title=collapse class=il src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>TOGGLE</span><div class=label_m data-sec=t><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_t>
-        <div class=label>Event Grouping:</div><div id=gr class=tvalue_on>on</div>
-        <div class=label>Event Queue Only:</div><div id=rt class=tvalue_on>on</div>
+        <div class=label>event grouping:</div><div id=gr class=tvalue_on>on</div>
+        <div class=label>event queue only:</div><div id=rt class=tvalue_on>on</div>
       </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Summary</span><div class=label_m data-sec=s><img title=collapse class=il src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>SUMMARY</span><div class=label_m data-sec=s><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_s>  
-        <div class=label>Queued Events:</div><div id=qtotal class=value>-</div>
-        <div class=label>Total Events:</div><div id=etotal class=value>-</div>
-        <div class=label>Total Signatures:</div><div id=esignature class=value>-</div>
-        <div class=label>Total Sources:</div><div id=esrc class=value>-</div>
-        <div class=label>Total Destinations:</div><div id=edst class=value>-</div>
+        <div class=label>queued events:</div><div id=qtotal class=value>-</div>
+        <div class=label>total events:</div><div id=etotal class=value>-</div>
+        <div class=label>total signatures:</div><div id=esignature class=value>-</div>
+        <div class=label>total sources:</div><div id=esrc class=value>-</div>
+        <div class=label>total destinations:</div><div id=edst class=value>-</div>
       </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Count by Priority</span><div class=label_m data-sec=p><img title=collapse class=il src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>COUNT BY PRIORITY</span><div class=label_m data-sec=p><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_p>
-        <div class=label>High:</div><div id=pr_1 class=value>-</div>
-        <div class=label>Medium:</div><div id=pr_2 class=value>-</div>
-        <div class=label>Low:</div><div id=pr_3 class=value>-</div>
-        <div class=label>Other:</div><div id=pr_4 class=value>-</div>
+        <div class=label>high:</div><div id=pr_1 class=value>-</div>
+        <div class=label>medium:</div><div id=pr_2 class=value>-</div>
+        <div class=label>low:</div><div id=pr_3 class=value>-</div>
+        <div class=label>other:</div><div id=pr_4 class=value>-</div>
       </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>Event Count by Classification</span><div class=label_m data-sec=c><img title=collapse class=il src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>COUNT BY CLASSIFICATION</span><div class=label_m data-sec=c><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_c>  
 
-        <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='Compromised L1 (F1)'>
-        <div class=b_C1></div>Compromised L1:</div><div data-type=st id=c-11 class=value_link>-</div>
+        <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='compromised L1 (F1)'>
+        <div class=b_C1></div>compromised L1:</div><div data-type=st id=c-11 class=value_link>-</div>
 
-        <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='Compromised L2 (F2)'>
-        <div class=b_C2></div>Compromised L2:</div><div data-type=st id=c-12 class=value_link>-</div>
+        <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='compromised L2 (F2)'>
+        <div class=b_C2></div>compromised L2:</div><div data-type=st id=c-12 class=value_link>-</div>
       
-        <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='Attempted Unauthorized Access (F3)'>
-        <div class=b_C3></div>Attempted Access:</div><div data-type=st id=c-13 class=value_link>-</div>
+        <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='attempted unauthorized access (F3)'>
+        <div class=b_C3></div>attempted access:</div><div data-type=st id=c-13 class=value_link>-</div>
 
-        <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='Denial of Service Attack (F4)'>
-        <div class=b_C4></div>Denial of Service:</div><div data-type=st id=c-14 class=value_link>-</div>
+        <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='denial of service attack (F4)'>
+        <div class=b_C4></div>denial of service:</div><div data-type=st id=c-14 class=value_link>-</div>
       
-        <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='Policy Violation (F5)'>
-        <div class=b_C5></div>Policy Violation:</div><div data-type=st id=c-15 class=value_link>-</div>
+        <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='policy violation (F5)'>
+        <div class=b_C5></div>policy violation:</div><div data-type=st id=c-15 class=value_link>-</div>
 
-        <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='Reconnaissance (F6)'>
-        <div class=b_C6></div>Reconnaissance:</div><div data-type=st id=c-16 class=value_link>-</div>
+        <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='reconnaissance (F6)'>
+        <div class=b_C6></div>reconnaissance:</div><div data-type=st id=c-16 class=value_link>-</div>
       
-        <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='Malware (F7)'>
-        <div class=b_C7></div>Malware:</div><div data-type=st id=c-17 class=value_link>-</div>
+        <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='malware (F7)'>
+        <div class=b_C7></div>malware:</div><div data-type=st id=c-17 class=value_link>-</div>
 
-        <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='No Further Action Required (F8)'>
-        <div class=b_NA></div>No Action Req&#x2019;d.:</div><div data-type=st id=c-1 class=value_link>-</div>
+        <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='no further action required (F8)'>
+        <div class=b_NA></div>no action req&#x2019;d.:</div><div data-type=st id=c-1 class=value_link>-</div>
       
-        <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='Escalate Event (F9)'>
-        <div class=b_ES></div>Escalated Event:</div><div data-type=st id=c-2 class=value_link>-</div>
+        <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='escalate event (F9)'>
+        <div class=b_ES></div>escalated event:</div><div data-type=st id=c-2 class=value_link>-</div>
 
       </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>History</span>
+      <div class=label_l><span class=ec_label>HISTORY</span>
         <img title="Click to expand" id=pi class=pop src=.css/po.png>
         <div class=label_m data-sec=h><img title=collapse class=il src=.css/uarr.png></div>  
       </div>
@@ -167,8 +170,8 @@ dbC();
 
   <div class=rl>
     <div id=t_view_content class=content>
-      <div id=sk_help class="hide label100">This view shows source and destination connections. The width of each ribbon indicates the volume of events. If a source and destination are linked with a red line then an event has occured in both directions (A -> B, B -> A). When no filters are present and only a single event exists, lone hosts that are associated with other lone hosts are not shown. Nodes can be repositioned by clicking on the desired node and then dragging it to a new position. IPs can be added as filters by double clicking their label. When you are on this page and a filter is in place the 'enter' key will take you to the events. To recreate the view (with the filter) click the update link.</div>
-      <div class=db_sankey></div> 
+      <div id=db_help class="hide label100">This view shows source and destination connections. The width of each ribbon indicates the volume of events. If a source and destination are linked with a red line then an event has occured in both directions (A -> B, B -> A). When no filters are present and only a single event exists, lone hosts that are associated with other lone hosts are not shown. Nodes can be repositioned by clicking on the desired node and then dragging it to a new position. IPs can be added as filters by double clicking their label. When you are on this page and a filter is in place the 'enter' key will take you to the events. To recreate the view (with the filter) click the update link.</div>
+      <div class=db_view></div> 
     </div>
     <div id=t_inc_content class=content>&nbsp;Not broken, just not done.</div>
     <div id=t_ovr_content class=content>
