@@ -36,12 +36,17 @@ function cleanUp($string) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $username = $_REQUEST['username'];
     $password = $_REQUEST['password'];
-    $ua = $_SERVER['HTTP_USER_AGENT'];
-    $ua .= rand(0,4200);
-    $id = md5($ua);
+    $ua       = $_SERVER['HTTP_USER_AGENT'];
+    $rqt      = $_SERVER['REQUEST_TIME'];
+    $rqaddr   = $_SERVER['REMOTE_ADDR'];
+    $max      = mt_getrandmax();
+    $rqt     .= mt_rand(0,$max);
+    $rqaddr  .= mt_rand(0,$max);
+    $ua      .= mt_rand(0,$max);
+    $cmpid    = $rqt . $rqaddr . $ua;
+    $id       = md5($cmpid);
     $db = mysql_connect($dbHost,$dbUser,$dbPass);
     $link = mysql_select_db($dbName, $db);
-
     if ($link) {
         $user = cleanUp($username);
         $query = "SELECT * FROM user_info WHERE username = '$user'";

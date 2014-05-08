@@ -16,7 +16,7 @@ $(document).ready(function(){
       $(cID).fadeIn();
 
       switch (caller) {
-        case 'cat': 
+        case 'cat':
           mkCatBox();
         break;
         case 'ac':
@@ -41,6 +41,7 @@ $(document).ready(function(){
   //
 
   function mkCatBox() {
+    $('#cat_box_label').after('<img class=cm_tbl_ldr src=\".css/load.gif\">'); 
     var urArgs = "type=11";
 
     $(function(){
@@ -97,6 +98,7 @@ $(document).ready(function(){
         $('#tlcom').remove();
       }    
       $(".cm_tbl").append(tbl);
+      $(".cm_tbl_ldr").remove();
       $("#tlcom").tablesorter();
     }
 
@@ -727,6 +729,7 @@ $(document).ready(function(){
       var eyecon = 'inactive';
       if (rOFF > 0) eyecon = "<span title=\"show/hide inactive rules\" class=ac_view >inactive</span>";
       $('#ovacstat').html("<b>" + (i - rOFF) + "</b> active <b>" + rOFF + "</b> " + eyecon);
+      $('#ovacstat').show();  
       if ($('#tlac')[0]) {
         $('#tlac').remove();
       }

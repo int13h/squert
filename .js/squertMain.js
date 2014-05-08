@@ -127,7 +127,7 @@ $(document).ready(function(){
       }
       if (lastcount < newcount) {
         if (caller != 0) {
-          $(".b_update").css('border-left','4pt solid #cc0000');
+          $(".b_update_note").show();
         }
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
@@ -312,7 +312,6 @@ $(document).ready(function(){
           $('#rt').text('off');
           rtbit = 0;        
           $('#t_sum').click();
-          $('#t_sum').css('background-color','#000');
         }
         newView("u");
       }
@@ -344,7 +343,7 @@ $(document).ready(function(){
         mkView();
       break;
       default:
-        $(".b_update").css('border-left','4pt solid #666');
+        $(".b_update_note").hide();
         newView("u");
       break;
     }
@@ -450,7 +449,6 @@ $(document).ready(function(){
   function closeSubRow2() {
     $("#eview_sub3").remove();
     $("#" + this.id).attr('class','d_row_sub1');
-
     if (!$("#eview_sub2")[0]) {
       $(".d_row_sub1").css('opacity','1');
       $(".d_row_sub1_active").attr('class','d_row_sub1');
@@ -458,32 +456,12 @@ $(document).ready(function(){
     $("#loader").hide();
   }
 
-  // Reset if headings are clicked
-  $(document).on("click", ".d_row_active", function(event) {
-    closeRow();
-  });
-
-  // Close open sub views
-  $(document).on("click", ".d_row_sub_active", function(event) {
-    closeSubRow();
-  });
-
-  // Close open packet data
-  $(document).on("click", ".d_row_sub_active1", function(event) {
-    closeSubRow1();
-  });
-
-  // Close open TX
-  $(document).on("click", "", function(event) {
-    closeSubRow2();
-  });
-
   //
   //  Level 1
   //
 
-  $(document).on("click", ".d_row", function(event) {
-    var curID = $(this).attr('id');        
+  $(document).on("click", ".row_active", function(event) {
+    var curID = $(this).parent('tr').attr('id');  
     // What type of row are we?
     rowType = curID.substr(0,3);
 
@@ -519,6 +497,8 @@ $(document).ready(function(){
       sigLookup(rowValue);
       $("#eview").show();
       $(".d_row").fadeTo('0','0.2');
+    } else {
+      closeRow();
     }
   });
  
@@ -526,9 +506,9 @@ $(document).ready(function(){
   //  Level 2
   //
 
-  $(document).on("click", ".d_row_sub", function() {
+  $(document).on("click", ".sub_active", function() {
     if (!$(".d_row_sub_active")[0]) {
-      var callerID = $(this).attr('id');
+      var callerID = $(this).parent('tr').attr('id');
 
       // Reset checkbox
       $(".chk_all").prop("checked",false);
@@ -553,6 +533,8 @@ $(document).ready(function(){
 
       $("#loader").show();
       eventList("2-" + callerID + "-" + adqp);
+    } else {
+      closeSubRow();
     }  
   });
 
@@ -560,12 +542,16 @@ $(document).ready(function(){
   //  Level 3 (a or b) request payload
   //
     
-  $(document).on("click", ".d_row_sub1", function() {
+  $(document).on("click", ".sub1_active", function() {
+    // Close transcript if it is open
+    if ($(".eview_sub3")[0]) closeSubRow2();
     if (!$(".d_row_sub_active1")[0])  {
-      var callerID = $(this).attr('id');
+      var callerID = $(this).parent('tr').attr('id');
       $("#" + callerID).attr('class','d_row_sub_active1');
       $("#loader").show();           
       eventList("3-" + callerID);
+    } else {
+      closeSubRow1()
     }
   });
 
@@ -573,8 +559,10 @@ $(document).ready(function(){
   // Level 3 (a or b) request transcript
   //
 
-  $(document).on("click", ".b_TX", function(event) {
-    if (!$(".eview_sub3")[0] && !$(".eview_sub2")[0]) {
+  $(document).on("click", ".sub2_active", function(event) {
+    // Close payload if it is open
+    if ($(".eview_sub2")[0]) closeSubRow1();
+    if (!$(".eview_sub3")[0]) {
       $("#loader").show();
       composite = $(this).data('tx').split("-");
       rowLoke = composite[0];
@@ -593,17 +581,16 @@ $(document).ready(function(){
         eval("txRaw=" + data);
         txCMD    = txRaw.cmd;
         txResult = txRaw.tx;
+        if (txResult == "DEBUG:") txResult += " No data was returned.";
 
         var row = '',tbl = '';
-        row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+        row += "<table class=txtable align=center width=100% cellpadding=0 cellspacing=0>";
         row += "<tr>";
         row += "<td class=txtext>";
         row += txResult;
         row += "</td></tr></table>";
 
-        tbl += "<tr class=eview_sub3 id=eview_sub3><td class=sub2 colspan=" + nCols + ">";
-        tbl += "<div id=ev_close_sub2 class=close_sub1>";
-        tbl += "<div class=b_close title='Close'><img title=close class=il src=.css/close.png></div></div>";
+        tbl += "<tr class=eview_sub3 id=eview_sub3><td colspan=" + nCols + ">";
         tbl += row;
         tbl += "</td></tr>";
         $("#" + rowLoke).after(tbl);
@@ -616,6 +603,8 @@ $(document).ready(function(){
 
         $("#loader").hide();
       }
+    } else {
+      closeSubRow2();
     }
   });
 
@@ -798,8 +787,8 @@ $(document).ready(function(){
           if (rt == 0) var catCells = catGrid(d0[i].f11,0,0);
           row += "<tr class=d_row id=sid-" + d0[i].f3 + "-" + d0[i].f4;
           row += " data-event_count=" + d0[i].f1 + ">";
-          row += "<td class=row><div class=" + rtClass + ">" + unClass + "</div></td>";
-          if (rt == 0) row += "<td class=row><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
+          row += "<td class=\"row row_active\"><div class=" + rtClass + ">" + unClass + "</div></td>";
+          if (rt == 0) row += "<td class=\"row row_active\"><div class=b_ec_total>" + d0[i].f1 + "</div></td>";
           row += "<td class=row><div class=pr" + d0[i].f13 + ">" + d0[i].f13 + "</div></td>";
           row += "<td class=row><span class=blue>" +d0[i].f6+ "</span></td>";
           row += "<td class=row><span class=red>" +d0[i].f7+ "</span></td>";
@@ -927,8 +916,8 @@ $(document).ready(function(){
 
           rid = "r" + i + "-" + parts[1] + "-" + src_ip + "-" + dst_ip;
           row += "<tr class=d_row_sub id=r" + i + " data-filter=\"" + rid + "\">";
-          row += "<td class=sub id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
-          if (rt == 0) row += "<td class=sub id=l2r" + i + "><div class=b_ec_total>" + count + "</div></td>";
+          row += "<td class=\"sub sub_active\" id=l2l" + i + "><div class=" + rtClass + ">" + unclass + "</div></td>";
+          if (rt == 0) row += "<td class=\"sub sub_active\" id=l2r" + i + "><div class=b_ec_total>" + count + "</div></td>";
           if (rt == 0) row += "<td class=sub>" + catCells + "</td>";
           row += "<td class=sub>" + cells + "</td>";
           row += "<td class=sub>" + max_time + "</td>";
@@ -1043,19 +1032,20 @@ $(document).ready(function(){
             rtCount += parseInt(1,10);
           }
 
+          // Transcript link
           txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
 
-          txBit = "<div class=n_TX>" + sid + "." + cid + "</div>";   
+          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
           if (src_port != "-" && dst_port != "-") {
-            txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</div>";
+            txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
           }
 
           row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + ">";
-          row += "<td class=sub><div class=a_" + cv + " id=class_box_" + i + ">";
+          row += "<td class=\"sub1_active sub\"><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
           row += "<td class=sub title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
-          row += "<td class=sub>" + txBit + "</td>";
+          row += txBit;
           row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=ip>" + dst_ip + "</td>";
@@ -1074,7 +1064,6 @@ $(document).ready(function(){
         var cols = $('th.sort').length;
 
         tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=" + cols + ">";
-        tbl += "<div class=notes></div>";
         tbl += "<table id=tl3 class=table align=center width=100% cellpadding=0 cellspacing=0>";
         tbl += head;
         tbl += row;
@@ -1190,31 +1179,31 @@ $(document).ready(function(){
           var tclass = "c" + eclass;
           var cv = classifications.class[tclass][0].short;
 
+          // Transcript link
           txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
 
-          txBit = "<div class=n_TX>TX</div>";   
+          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
           if (src_port != "-" && dst_port != "-") {
-            txBit = "<div class=b_TX data-tx=" + txdata + " title='Generate Transcript'>TX</div>";
+            txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
           }
    
           row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=12 data-filter=\"" + eid + "\">";
-          row += "<td class=row><input id=cb_" + i + " class=chk_event "; 
+          row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + "></td>";
-          row += "<td class=row><div class=a_" + cv + " id=class_box_" + i + ">";
+          row += "<td class=\"sub sub1_active\"><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
-          row += "<td class=row><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
-          row += "<td class=row title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
-          row += "<td class=sub><div class=b_PL data-eidl=s" + i + " title=\"View Payload\">";
-          row += sid + "." + cid + "</div>" + txBit + "</td>";
-          row += "<td class=sub_filter data-type=ip>" + src_ip + "</td>";
-          row += "<td class=sub_filter data-type=spt>" + src_port + "</td>";
-          row += "<td class=" + cs[0] + " title=\"" + src_clong + "\" data-type=cc data-value=";
+          row += "<td class=sub><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
+          row += "<td class=sub title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
+          row += txBit;
+          row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
+          row += "<td class=\"sub " + cs[0] + "\" title=\"" + src_clong + "\" data-type=cc data-value=";
           row += src_cc +">" + cs[1] + "</td>";
-          row += "<td class=sub_filter data-type=ip>" + dst_ip + "</td>";
-          row += "<td class=sub_filter data-type=dpt>" + dst_port + "</td>";
-          row += "<td class=" + cd[0] + " title=\"" + dst_clong + "\" data-type=cc data-value=";
+          row += "<td class=\"sub sub_filter\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter\" data-type=dpt>" + dst_port + "</td>";
+          row += "<td class=\"sub " + cd[0] + "\" title=\"" + dst_clong + "\" data-type=cc data-value=";
           row += dst_cc +">" + cd[1] + "</td>";
-          row += "<td class=sub_filter data-type=sid data-value=" + sig_id + ">" + signature + "</td></tr>";
+          row += "<td class=\"sub sub_filter\" data-type=sid data-value=" + sig_id + ">" + signature + "</td></tr>";
         }
         
         var sumED = 0, sumEC = 0, cmsg = "";
@@ -1500,6 +1489,9 @@ $(document).ready(function(){
       }
       break;
     }
+    // If event queue is off we need to reset this after load if b_ec_hot was 
+    // the entry point
+    if ($('#rt').text() == 'off') rtbit = 0;
   } 
 
   //
@@ -1507,7 +1499,6 @@ $(document).ready(function(){
   //
 
  $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link,.nr_f", function(event) {
-    if (!event.ctrlKey) return;
     var prefix = $(this).data('type');
     var suffix = $(this).text();
     var tfocus = "#search";
@@ -2022,7 +2013,6 @@ $(document).ready(function(){
     $('#topsignature').toggle();
   });
 
-
   // Summary tab 
   function mkSummary(box,limit) {
     var theWhen = getTimestamp();
@@ -2122,7 +2112,7 @@ $(document).ready(function(){
       }
       head += "</tr></thead>";         
      
-      var eventsum = raw[raw.length - 1].n  || 0;
+      var eventsum = raw[raw.length - 1].n || 0;
       var records  = raw[raw.length - 1].r || 0;
       if (records == 0) {
         row = "<tr><td class=row colspan=6>No result.</td></tr>";
@@ -2155,6 +2145,7 @@ $(document).ready(function(){
           row += cs[1] + clong + " (." + cc.toLowerCase() + ")" + "</td>";
         }
         row += "</tr>";
+        row += "<tr><td colspan=6><div class=bars style=\"width:" + per + "%;\"></div></td></tr>";
       }
       tbl += "<table id=top" + cbArgs + " class=dash cellpadding=0 cellspacing=0>";
       tbl += head;
@@ -2182,7 +2173,7 @@ $(document).ready(function(){
       head += "<th width=50 class=sub>PORT</th>";
       head += "</tr></thead>";         
      
-      var eventsum = raw[raw.length - 1].n  || 0;
+      var eventsum = raw[raw.length - 1].n || 0;
       var records  = raw[raw.length - 1].r || 0;
       if (records == 0) {
         row = "<tr><td class=row colspan=6>No result.</td></tr>";
@@ -2203,6 +2194,7 @@ $(document).ready(function(){
         row += "<td class=row><b>" + dst + "</b></td>";
         row += "<td class=sub_filter data-type=" + cbArgs[0] + "pt>" + port + "</td>";
         row += "</tr>";
+        row += "<tr><td colspan=6><div class=bars style=\"width:" + per + "%;\"></div></td></tr>";
       }
       tbl += "<table id=top" + cbArgs + " class=dash cellpadding=0 cellspacing=0>";
       tbl += head;
@@ -2229,8 +2221,8 @@ $(document).ready(function(){
       head += "<th width=100 class=sub>ID</th>";
       head += "</tr></thead>";         
      
-      var eventsum = raw[raw.length - 1].n;
-      var records  = raw[raw.length - 1].r;
+      var eventsum = raw[raw.length - 1].n || 0;
+      var records  = raw[raw.length - 1].r || 0; 
       if (records == 0) {
         row = "<tr><td class=row colspan=6>No result.</td></tr>";
         $("#ov_signature_sl").text("");
@@ -2253,8 +2245,9 @@ $(document).ready(function(){
         row += "<td class=row><b>" + dst + "</b></td>";
         row += "<td class=row_filter data-type=sid data-value=";
         row += sid + ">" + sig + "</td>";
-        row += "<td class=row>" + sid + "</td>";   
+        row += "<td class=row>" + sid + "</td>";
         row += "</tr>";
+        row += "<tr><td colspan=6><div class=bars style=\"width:" + per + "%;\"></div></td></tr>"; 
       }
       
       tbl += "<table id=topsignature class=dash cellpadding=0 cellspacing=0>";
@@ -2421,8 +2414,8 @@ $(document).ready(function(){
             
       // What is our current event total?
       var esum = $('#event_sum').val();
-      var w = $(window).width()/2 - 72;
-      var h = w / 1.6 ;
+      var w = $(window).width() - 72;
+      var h = w / 2 ;
       $("#ov_map").html("<div id=wm0 style=\"width:" + w + "px; height:" + h + "px;\"></div>");
       $('#wm0').vectorMap({
         map: 'world_mill_en',
@@ -2452,9 +2445,7 @@ $(document).ready(function(){
       });
 
       var stats = "(<b>";
-      stats += allc + "</b> distinct countries <b>|</b> <b>";
-      stats += srcc + "</b> <span id=map_src class=link>sources</span> with <b>" + srce + "</b> events <b>|</b> <b>";
-      stats += dstc + "</b> <span id=map_dst class=link>destinations</span> with <b>" + dste + "</b> events)";
+      stats += allc + "</b> distinct countries)";
       $("#ovmapstat").html(stats);
     }
   }

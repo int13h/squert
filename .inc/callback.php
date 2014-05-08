@@ -520,10 +520,6 @@ function tx() {
     
     $sensorName = mysql_result($qResult, 0);
  
-    if ($offset != "+00:00") {
-        $timestamp = gmdate("Y-m-d H:i:s", strtotime($timestamp));
-    }
-
     $cmd = "../.scripts/cliscript.tcl \"$usr\" \"$sensorName\" \"$timestamp\" $sid $sip $dip $spt $dpt";
 
     $descspec = array(

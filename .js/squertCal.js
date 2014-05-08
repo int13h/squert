@@ -82,12 +82,12 @@ $(document).ready(function(){
    
     var html = '';
     html += "<table class=dt_table><tr><td class=dt_content><span class=dt_error data-err=0>Format Error!</span>";
-    html += "Date:&nbsp;<input class=dt_input id=ts_sdate type=text maxlength=10>"; 
+    html += "date:&nbsp;<input class=dt_input id=ts_sdate type=text maxlength=10>"; 
     html += " - <input class=dt_input id=ts_edate type=text maxlength=10>";
-    html += "&nbsp;&nbsp;Time:&nbsp;<input class=dt_input id=ts_stime type=text maxlength=8>";
+    html += "&nbsp;&nbsp;time:&nbsp;<input class=dt_input id=ts_stime type=text maxlength=8>";
     html += " - <input class=dt_input id=ts_etime type=text maxlength=8>";
-    html += "&nbsp;&nbsp;UTC:&nbsp;<input class=dt_utc id=ts_utc type=checkbox" + checkUTC + ">";
-    html += "&nbsp;&nbsp;TZ offset:&nbsp;<input class=dt_input id=ts_offset";
+    html += "&nbsp;&nbsp;utc:&nbsp;<input class=dt_utc id=ts_utc type=checkbox" + checkUTC + ">";
+    html += "&nbsp;&nbsp;tz offset:&nbsp;<input class=dt_input id=ts_offset";
     html += " type=text" + inputUTC + "></td>";
     html += "<td width=175 class=dt_content><div id=dt_reset class=dt_b>reset values</div><div id=dt_savetz class=dt_b>save TZ</div></td>";
     html += "<td class=cog><img class=il src=.css/lr.png></td><tr></table>";
@@ -330,8 +330,8 @@ $(document).ready(function(){
       break;
       default:
         $('#cal').show();
-        $('.content-right,.rl').css('margin-top','80px');
-        $('.content-left').css('top','120px');
+        $('.content-right,.rl').css('margin-top','71px');
+        $('.content-left').css('top','110px');
       break;
     }
   });

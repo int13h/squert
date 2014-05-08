@@ -46,8 +46,6 @@ dbC();
 <script type="text/javascript" src=".js/jquery-jvectormap-1.2.2.min.js"></script>
 <script type="text/javascript" src=".js/jquery-jvectormap-world-mill-en.js"></script>
 <script type="text/javascript" src=".js/d3/d3.min.js"></script>
-<script type="text/javascript" src=".js/d3/d3.layout.js"></script> 
-<script type="text/javascript" src=".js/d3/packages.js"></script>
 <script type="text/javascript" src=".js/d3/sankey.js"></script>
 
 <title id=title>squert</title>
@@ -67,7 +65,7 @@ dbC();
   </div>
   <div id=cal></div>
   <div class=timeline>
-    <div class=b_update>update</div>
+    <div class=b_update><img src=.css/update.png></div><div class=b_update_note>!</div>
     <div class=t_pbar></div>
     <div class=t_stats></div>
   </div>
@@ -137,8 +135,8 @@ dbC();
         <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='reconnaissance (F6)'>
         <div class=b_C6></div>reconnaissance:</div><div data-type=st id=c-16 class=value_link>-</div>
       
-        <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='malware (F7)'>
-        <div class=b_C7></div>malware:</div><div data-type=st id=c-17 class=value_link>-</div>
+        <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='malicious (F7)'>
+        <div class=b_C7></div>malicious:</div><div data-type=st id=c-17 class=value_link>-</div>
 
         <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='no further action required (F8)'>
         <div class=b_NA></div>no action req&#x2019;d.:</div><div data-type=st id=c-1 class=value_link>-</div>
@@ -177,40 +175,40 @@ dbC();
     <div id=t_ovr_content class=content>
       <br>     
       <div class=onepane>
-        <div class=ovbl>Geographic Distribution</div><div id=ovmapstat class=ovstat></div><div class=ovbi id=ov_map_msg></div><div class=ovsl id=ov_map_sl></div>
+        <div class=ovbl>GEOGRAPHIC DISTRIBUTION</div><div id=ovmapstat class=ovstat></div><div class=ovbi id=ov_map_msg></div><div class=ovsl id=ov_map_sl></div>
         <div id=ov_map></div>
       </div>
       <div class=onepane>
-        <div class=ovbl>Top Signatures</div><div id=ovestat class=ovstat></div><div class=ovbi id=ov_signature_msg></div><div class=ovsl id=ov_signature_sl></div>
+        <div class=ovbl>TOP SIGNATURES</div><div id=ovestat class=ovstat></div><div class=ovbi id=ov_signature_msg></div><div class=ovsl id=ov_signature_sl></div>
         <div id=ov_signature></div>
       </div>
       <div class=twopane>
         <div class=leftpane>
-          <div class=ovbl>Top Source IPs</div><div class=ovbi id=ov_srcip_msg></div><div class=ovsl id=ov_srcip_sl></div>
+          <div class=ovbl>TOP SOURCE IPS</div><div class=ovbi id=ov_srcip_msg></div><div class=ovsl id=ov_srcip_sl></div>
           <div id=ov_srcip></div>
         </div>
         <div class=rightpane> 
-          <div class=ovbl>Top Destination IPs</div><div class=ovbi id=ov_dstip_msg></div><div class=ovsl id=ov_dstip_sl></div>
+          <div class=ovbl>TOP DESTINATION IPS</div><div class=ovbi id=ov_dstip_msg></div><div class=ovsl id=ov_dstip_sl></div>
           <div id=ov_dstip></div>
         </div>
       </div>
       <div class=twopane>
         <div class=leftpane>
-          <div class=ovbl>Top Source Countries</div><div class=ovbi id=ov_srccc_msg></div><div class=ovsl id=ov_srccc_sl></div>
+          <div class=ovbl>TOP SOURCE COUNTRIES</div><div class=ovbi id=ov_srccc_msg></div><div class=ovsl id=ov_srccc_sl></div>
           <div id=ov_srccc></div>
         </div>
         <div class=rightpane> 
-          <div class=ovbl>Top Destination Countries</div><div class=ovbi id=ov_dstcc_msg></div><div class=ovsl id=ov_dstcc_sl></div>
+          <div class=ovbl>TOP DESTINATION COUNTRIES</div><div class=ovbi id=ov_dstcc_msg></div><div class=ovsl id=ov_dstcc_sl></div>
           <div id=ov_dstcc></div>
         </div>
       </div>
       <div class=twopane>
         <div class=leftpane>
-          <div class=ovbl>Top Source Ports</div><div class=ovbi id=ov_srcpt_msg></div><div class=ovsl id=ov_srcpt_sl></div>
+          <div class=ovbl>TOP SOURCE PORTS</div><div class=ovbi id=ov_srcpt_msg></div><div class=ovsl id=ov_srcpt_sl></div>
           <div id=ov_srcpt></div>
         </div>
         <div class=rightpane> 
-          <div class=ovbl>Top Destination Ports</div><div class=ovbi id=ov_dstpt_msg></div><div class=ovsl id=ov_dstpt_sl></div>
+          <div class=ovbl>TOP DESTINATION PORTS</div><div class=ovbi id=ov_dstpt_msg></div><div class=ovsl id=ov_dstpt_sl></div>
           <div id=ov_dstpt></div>
         </div>
       </div>
@@ -220,7 +218,7 @@ dbC();
 
 <div class=box id=cat_box>
   <div class=cat_top>
-    <div class=box_label id=cat_box_label>Comment Management</div>
+    <div class=box_label id=cat_box_label>COMMENTS</div>
     <div title="close" class="box_close" data-box=cat><img class=il src=.css/close.png></div>
     <div id=ovcstat class="box_stat"></div>
   </div>
@@ -248,7 +246,7 @@ dbC();
 
 <div class=box id=sen_box>
   <div class=sen_top>
-    <div class=box_label>Sensor Selection</div>
+    <div class=box_label>SENSORS</div>
     <div title="close" class="box_close" data-box=sen><img class=il src=.css/close.png></div> 
   </div>
   <div class=sen_controls></div>
@@ -257,7 +255,7 @@ dbC();
 
 <div class=box id=fltr_box>
   <div class=fltr_top>
-    <div class=box_label>Filters</div>
+    <div class=box_label>FILTERS</div>
     <div title="close" class="box_close" data-box=fltr><img class=il src=.css/close.png></div>
     <div title=add class=filter_new><img class=il src=.css/add.png></div>
     <div title=refresh class=filter_refresh><img class=il src=.css/reload.png></div>
@@ -268,18 +266,18 @@ dbC();
 
 <div class=box id=ac_box>
   <div class=ac_top>
-    <div class=box_label>AutoCat Editor</div>
+    <div class=box_label>AUTOCAT</div>
     <div title="close" class="box_close" data-box=ac><img class=il src=.css/close.png></div>
     <div title=add class=ac_new><img class=il src=.css/add.png></div>
     <div title=refresh class=ac_refresh><img class=il src=.css/reload.png></div>
     <div title=help class=ac_help><img class=il src=.css/help.png></div>
-    <div id=ovacstat class="box_stat"></div>
+    <div id=ovacstat class="box_stat hide"></div>
   </div>
   <div class=ac_tbl></div>
 </div>
 
 <div class=bottom>
-  <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>Welcome&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=logout>Logout</span></div>
+  <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>WELCOME&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=logout>LOGOUT</span></div>
   <div class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
   <div class=b_class><span class=class_msg></span>&nbsp;</div>
   <div class=b_clock id=b_utc><span class=clock_lbl>UTC</span> <span id=clock_utc>00:00:00</span></div>
