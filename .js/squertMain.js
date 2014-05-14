@@ -49,7 +49,7 @@ $(document).ready(function(){
       flipIt(ptrn);
     }
   });
-  
+ 
   //
   // Load main content
   //
@@ -70,6 +70,15 @@ $(document).ready(function(){
     }
   });  
 
+  // Depending on context a 'No result' may be confusing
+  // so we turn off active queue and show everything
+  $(document).on('click', '#retry', function() {
+    $('#rt').attr('class','tvalue_off');
+    $('#rt').text('off');
+    rtbit = 0;
+    $('.b_update').click();
+  });
+ 
   // Get event statuses
   var eTotal = 0, qTotal = 0;
   function statusPoll(caller) {
@@ -586,7 +595,7 @@ $(document).ready(function(){
         var row = '',tbl = '';
         row += "<table class=txtable align=center width=100% cellpadding=0 cellspacing=0>";
         row += "<tr>";
-        row += "<td class=txtext>";
+        row += "<td class=\"txtext select\">";
         row += txResult;
         row += "</td></tr></table>";
 
@@ -751,7 +760,7 @@ $(document).ready(function(){
           sumSI = d0.length || "-";
         } else {
           row += "<tr class=d_row><td class=row colspan=" + cols + ">";
-          row += "No result.</td></tr>";
+          row += "No result. If this is unexpected try <span class=link id=retry>this</span></td></tr>";
         }
   
         if (rt == 1) {
@@ -1094,13 +1103,19 @@ $(document).ready(function(){
 
       function cb3a(data){
         eval("d2a=" + data);
+        var tbl = '';
+        var head = '';
+        var row = '';
+        var disabled = ''; 
+        if (d2a.length == 0) {
+          disabled = "disabled";
+          row += "<tr class=d_row_sub1><td class=row colspan=122>";
+          row += "No result. If this is unexpected try <span class=link id=retry>this</span></td></tr>";
+        }        
 
-        tbl = '';
-        head = '';
-        row = '';
         head += "<thead>";
         head += "<tr>";
-        head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox></th>";
+        head += "<th class=sub width=10><input id=ca2 class=chk_all type=checkbox " + disabled + "></th>";
         head += "<th class=sub width=20>ST</th>";
         head += "<th class=sub width=2></th>";
         head += "<th class=sub width=120>TIMESTAMP</th>";
@@ -1114,11 +1129,6 @@ $(document).ready(function(){
         head += "<th class=sub>SIGNATURE</th>";
         head += "</tr></thead>";
      
-        if (d2a.length == 0) {
-          row += "<tr class=d_row_sub1><td class=row colspan=122>";
-          row += "No result.</td></tr>";
-        }
- 
         // Aggregate time values
         var timeValues = "";
         for (var ts=0; ts<d2a.length; ts++) {
@@ -1462,7 +1472,7 @@ $(document).ready(function(){
             p_ascii = h2s(theData[2].data_payload).replace(re, "<br>");
           }
           row += "<tr class=d_row_sub2>";
-          row += "<td class=sub3_d>" + p_ascii + "</td>";
+          row += "<td class=\"sub3_d select\">" + p_ascii + "</td>";
           row += "</tr></table>";
            
         }
@@ -1965,6 +1975,7 @@ $(document).ready(function(){
         var ess = '';
         if ( count > 1 ) ess = 's';
 
+        var numrows = Number($('.d_row').length + $('.d_row_sub1').length);
         var newboxtotal = 0, newcatcount = 0; 
         newboxtotal = parseInt($("#qtotal").text() - rtcount);
         $("#qtotal").text(newboxtotal);
@@ -1978,6 +1989,10 @@ $(document).ready(function(){
             $("#cat_count").text(newcatcount);
           }
         }
+       
+        if (numrows == 0) {
+          newView("u");
+        }  
         
         var msg = count + " event" + ess + " categorized";
       break;
@@ -2271,7 +2286,10 @@ $(document).ready(function(){
     if (limit > 0) mkSummary(base, limit);
   });
 
+  //
   // Views tab
+  //
+
   function loadViews() {
     $('.db_links').show();
     if (!$("#db_view_cont")[0]) mkView();
@@ -2298,6 +2316,10 @@ $(document).ready(function(){
     });
     $(this).data('state', '1');
     mkView();
+  });
+
+  $(document).on('click','.db_save', function() {
+    
   });
 
   // Create the view
@@ -2415,7 +2437,7 @@ $(document).ready(function(){
       // What is our current event total?
       var esum = $('#event_sum').val();
       var w = $(window).width() - 72;
-      var h = w / 2 ;
+      var h = w / 2.7 ;
       $("#ov_map").html("<div id=wm0 style=\"width:" + w + "px; height:" + h + "px;\"></div>");
       $('#wm0').vectorMap({
         map: 'world_mill_en',

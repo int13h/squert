@@ -818,7 +818,7 @@ function sensors() {
     $query = "SELECT net_name AS f1, 
                      hostname AS f2,
                      agent_type AS f3,
-                     sid AS f4
+                     sensor.sid AS f4
                      FROM sensor
                      WHERE agent_type != 'pcap' 
                      AND active = 'Y'

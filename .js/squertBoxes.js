@@ -2,6 +2,7 @@ $(document).ready(function(){
 
   mkFilterBox();
   mkSensorBox();
+  mkCatBox();
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');
@@ -16,9 +17,6 @@ $(document).ready(function(){
       $(cID).fadeIn();
 
       switch (caller) {
-        case 'cat':
-          mkCatBox();
-        break;
         case 'ac':
           mkAutocatBox();
         break;
@@ -133,6 +131,11 @@ $(document).ready(function(){
     }
   });
 
+  // Refresh categories listing
+  $(document).on("click", ".cat_refresh", function(event) {
+    mkCatBox();
+  });
+
   // 
   // Sensor box 
   //
@@ -178,7 +181,7 @@ $(document).ready(function(){
   });  
 
   function mkSensorBox() {
-    var urArgs = "type=13";
+    var urArgs = "type=13&ts=" + theWhen;
 
     $(function(){
       $.get(".inc/callback.php?" + urArgs, function(data){cb13(data)});
@@ -259,18 +262,17 @@ $(document).ready(function(){
 
   // Create entries
   function mkEntry(entry) {
-
-    cls = 'f_row';
+    var cls = 'f_row';
     if (!entry) {
       cls = 'h_row';
-      filter = "";
-      entry = {"alias": "New", "name": "", "notes": "None.", "filter": filter, "age": "1970-01-01 00:00:00"};
+      var filter = "";
+      var user = $("#t_usr").data("c_usr") || "-";
+      entry = {"alias": "New", "name": "", "notes": "None.", "filter": filter, "user": user, "age": "1970-01-01 00:00:00"};
     }
-
     var search = "<div class=center>-</div>";
     var re = /^Shell -/;
     var OK = re.exec(entry.name);
-    if (!OK) search = "<div class=tof title=\"Show these events\" data-type=fil data-value=\"" + alias + "\"><img class=il src=.css/search.png></div>";
+    if (!OK) search = "<div class=tof title=\"Show these events\" data-type=fil data-value=\"" + entry.alias + "\"><img class=il src=.css/search.png></div>";
 
     encFilter = s2h(entry.filter);        
     row = '';
@@ -284,6 +286,7 @@ $(document).ready(function(){
     row += "<td class=nr>" + entry.name + "</td>";
     row += "<td class=nr>" + search + "</div></td>";
     row += "<td class=nr>" + entry.notes + "</td>";
+    row += "<td class=nr>" + entry.user + "</td>"; 
     row += "<td class=nr>now</td>";
     row += "</tr>";
     return row;
@@ -351,12 +354,14 @@ $(document).ready(function(){
   }
 
   function openEdit (cl) {
-    alias = $('#tr_' + cl).data('alias');
-    name = $('#tr_' + cl).data('name');
-    notes = $('#tr_' + cl).data('notes');
-    global = $('#tr_' + cl).data('global');
-    filter = h2s($('#tr_' + cl).data('filter'));
-    row = '';
+    var rid = '#tr_' + cl;
+    var alias = $(rid).data('alias');
+    var name = $(rid).data('name');
+    var notes = $(rid).data('notes');
+    var global = $(rid).data('global');
+    var filter = h2s($(rid).data('filter'));
+    var type = alias[0];
+    var row = '';
     row += "<tr id=filter_content>";
     row += "<td class=f_row colspan=6><textarea id=\"txt_" + alias +"\" rows=10>";
     row += "{\n";
@@ -472,16 +477,14 @@ $(document).ready(function(){
       $('#' + currentCL).data('edit','yes');
       $('td:first', $(this).parents('tr')).css('background-color','#c4c4c4');
     } else {
-      if ($('#' + currentCL).data('edit') == 'yes') {
-        $("#filter_content").remove();
-        if (currentCL == "ac_new") {
-          $("#tr_" + currentCL).fadeOut('slow', function() {
-            $("#tr_" + currentCL).remove();
-          });
-        } else {
-          $('td:first', $(this).parents('tr')).css('background-color','transparent');
-          $('#' + currentCL).data('edit','no');
-        }
+      $("#filter_content").remove();
+      if (currentCL == "New") {
+        $("#tr_" + currentCL).fadeOut('slow', function() {
+          $("#tr_" + currentCL).remove();
+        });
+      } else {
+        $('td:first', $(this).parents('tr')).css('background-color','transparent');
+        $('#' + currentCL).data('edit','no');
       }
     }
   });        
@@ -515,7 +518,7 @@ $(document).ready(function(){
       if (emptyVal > 0) throw 0; 
             
       // Sanitize alias
-      var re = /^[a-zA-Z][\w-]*$/;
+      var re = /^[?a-zA-Z][\w-]*$/;
       var OK = re.exec(filterTxt.alias);
       if (!OK) throw 1;
       if (filterTxt.alias == "New") throw 1;
@@ -568,8 +571,8 @@ $(document).ready(function(){
           break;
         case 1:
           eMsg += "<span class=warn><br>Error!</span> "
-          eMsg += "Filter aliases MUST be unique and start with a letter . Valid characters are: ";
-          eMsg += "Aa-Zz, 0-9, dashes and underscores.";
+          eMsg += "Filter aliases MUST be unique. Valid characters are: ";
+          eMsg += "Aa-Zz, 0-9, - and _ . ";
           eMsg += "The word \"New\" is reserved and may not be used.";
           break;
         default:

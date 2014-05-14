@@ -38,11 +38,16 @@ clear:both;
 div.db_view {
 margin-top:80px;
 }
+div.db_save {
+float:right;
+margin-top:8px;
+margin-right:10px;
+}
 div.db_links {
 border-top:1pt dotted #c9c9c9;
 border-bottom:1pt dotted #c9c9c9;
 background-color:#f4f4f4;
-font-size:12px;
+font-size:11px;
 float:left;
 clear:both;
 display:none;
@@ -203,18 +208,19 @@ clear:both;
 }
 div.twopane {
 width:100%;
-padding-right:2%;
-padding-left:2%;
+float:left;
 clear:both;
 }
 div.leftpane {
 float:left;
 width:47%;
 margin-right:2%;
+margin-left:2%;
 }
 div.rightpane {
 float:left;
 width:47%;
+margin-right:2%;
 }
 div.hidepane {
 width:9px;
@@ -232,7 +238,7 @@ width:30px;
 table.dash {
 width:100%;
 margin-bottom:30px;
-border:1pt solid #c9c9c9;
+border:1pt dotted #e9e9e9;
 border-bottom:none;
 }
 div.bars {
@@ -247,29 +253,14 @@ border-bottom-right-radius:3px;
 tr.t_row:hover {
 background-color:#fff;
 }
-/*
-table.dash tr:last-child th:first-child {
-border-top-left-radius:10px;
-}
-table.dash tr:last-child th:last-child {
-border-top-right-radius:10px;
-}
-table.dash tr:last-child td:first-child {
-border-bottom-left-radius:5px;
-}
-table.dash tr:last-child td:last-child {
-border-bottom-right-radius:5px;
-}
-*/
 #wm0 {
-width:100%;
 text-align:center;
 clear:both;
 float:left;
 }
 div.jvectormap-container {
 border-radius:5px;
-border:1pt solid #c9c9c9;
+border:1pt dotted #e9e9e9;
 padding:10px 0px 10px 0px;
 }
 div.content-left {
@@ -368,8 +359,7 @@ cursor:pointer;
 color:#000;;
 }
 div.tvalue_on, div.tvalue_off{
-font-size:11px;
-font-weight:bold;
+font-size:12px;
 float:left;
 text-align:center;
 margin-right:5px;
@@ -449,7 +439,7 @@ font-weight:normal;
 font-size:9px;
 margin-left:5px;
 }
-div.cat_top,div.fltr_top,div.sen_top,div.ac_top {
+div.cat_top,div.fltr_top,div.sen_top,div.ac_top,div.lup_top {
 float:left;
 background-color:#c9c9c9;
 width:100%;
@@ -479,7 +469,7 @@ font-size:8pt;
 width:100%;
 display:none;
 }
-.box_close,.filter_new,.ac_new,.filter_refresh,.ac_refresh,.filter_help,.cat_help,.ac_help {
+.box_close,.filter_new,.ac_new,.filter_refresh,.cat_refresh,.ac_refresh,.filter_help,.cat_help,.ac_help {
 float:right;
 margin:10px;
 }
@@ -514,11 +504,17 @@ border:1pt solid #9c9c9c;
 display:none;
 z-index:30;
 }
-div.cm_tbl,div.fltr_tbl,div.sen_tbl,div.ac_tbl {
+div.fltr_tbl,div.ac_tbl {
 width:100%;
 overflow:auto;
-height:430px;
+height:450px;
 float:left;
+}
+div.cm_tbl,div.sen_tbl,div.lup_tbl {
+width:100%;
+height:350px;
+float:left;
+overflow:auto;
 }
 img.cm_tbl_ldr {
 margin-top:11px;
@@ -540,6 +536,7 @@ text-align:center;
 padding:2px 0;
 }
 input.cat_msg_txt {
+padding-left:5px;
 border:none;
 border:1pt solid #a4a4a4;
 width:700px;
@@ -580,13 +577,9 @@ color:#c00;
 }
 
 /* Table Headers trbl */
-
-
-
 th.header {
 color:#333366;
 padding:12px 0px 12px 5px;
-border-bottom:1pt solid #c9c9c9;
 font-weight:normal;
 }
 th.sort {
@@ -596,7 +589,6 @@ cursor:pointer;
 font-size:10px;
 font-weight:normal;
 padding:12px 0px 12px 5px;
-border-bottom:1pt solid #c9c9c9;
 }
 th.sub {
 background:#e9e9e9;
@@ -606,7 +598,6 @@ text-align:left;
 border:none;
 cursor:pointer;
 padding:12px 0px 12px 5px;
-border-bottom:1pt solid #c9c9c9;
 font-weight:normal;
 }
 th.sub1 {
@@ -617,7 +608,6 @@ text-align:left;
 border:none;
 cursor:pointer;
 padding:12px 0px 12px 5px;
-border-bottom:1pt solid #c9c9c9;
 font-weight:normal;
 }
 /*Payload*/
@@ -627,6 +617,7 @@ color:#333366;
 font-size:10px;
 font-weight:normal;
 text-align:left;
+border-bottom:1pt dotted #dbdbdb;
 padding:12px 0px 12px 5px;
 }
 th.sub3 {
@@ -759,10 +750,6 @@ word-wrap:break-word;
 word-break:break-all;
 display:inline-block;
 margin:15px;
--o-user-select: text;
--moz-user-select: text;
--webkit-user-select: text;
-user-select: text;
 font-family:courier, serif;
 }
 .txtext_hdr {
@@ -1426,7 +1413,7 @@ background-color:#1a8cff;
 color:#fff;
 }
 .filter_update,.ac_create {
-background-color:green;
+background-color:#1a8cff;
 color:#fff;
 margin-left:10px;
 }
@@ -1641,4 +1628,10 @@ display:none;
 .hvr:hover {
 text-decoration:underline;
 cursor:pointer;
+}
+.select {
+-o-user-select: text;
+-moz-user-select: text;
+-webkit-user-select: text;
+user-select: text;
 }

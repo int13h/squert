@@ -72,12 +72,11 @@ dbC();
   <div class=db_links>
     <div class=db_linkt>view:</div>
     <div class=db_link data-val=ip data-state=1>IP</div>
-    <div class=db_link data-val=sc>Source Country</div>
-    <div class=db_link data-val=dc>Destination Country</div>
+    <div class=db_link data-val=sc>SOURCE COUNTRY</div>
+    <div class=db_link data-val=dc>DESTINATION COUNTRY</div>
     <div class=db_linkt>type:</div>
-    <div class=db_type data-type=sk data-state=1>Sankey Diagram</div>
-    <div class=db_type data-type=hv>Hive Plot</div>
-    <div class=db_type data-type=fd>Force-directed</div>
+    <div class=db_type data-type=sk data-state=1>SANKEY DIAGRAM</div>
+    <div class=db_save><span class=links>save as svg</span></div>
   </div>
 </div>
 
@@ -87,8 +86,8 @@ dbC();
     <div class=event_cont>
       <div class=label_l><span class=ec_label>TOGGLE</span><div class=label_m data-sec=t><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_t>
-        <div class=label>event grouping:</div><div id=gr class=tvalue_on>on</div>
-        <div class=label>event queue only:</div><div id=rt class=tvalue_on>on</div>
+        <div class=label>queue only:</div><div id=rt class=tvalue_on>on</div>
+        <div class=label>grouping:</div><div id=gr class=tvalue_on>on</div>
       </div>
     </div>
 
@@ -220,6 +219,7 @@ dbC();
   <div class=cat_top>
     <div class=box_label id=cat_box_label>COMMENTS</div>
     <div title="close" class="box_close" data-box=cat><img class=il src=.css/close.png></div>
+    <div title=refresh class=cat_refresh><img class=il src=.css/reload.png></div>
     <div id=ovcstat class="box_stat"></div>
   </div>
   <div class=cm_controls>
@@ -236,7 +236,8 @@ dbC();
       <div class=b_C7 data-n=17>C7</div>
       <div class=b_NA data-n=1>NA</div>
       <div class=b_ES data-n=2>ES</div>
-      &nbsp;&nbsp;<span class=links data-n=0>apply comment only</span>
+      <!-- Will require a mod to sguil (DeleteEventIDList) -->
+      <!--&nbsp;&nbsp;<span class=links data-n=0>apply comment only</span>-->
     </div>
     <div class=cat_note>&nbsp;&nbsp;<b>Note:</b> you can click a comment below to reuse it (followed by a classification action) <b>or</b> click on the "F" icon followed by "enter" to use as a filter<br></div>
  
@@ -255,7 +256,7 @@ dbC();
 
 <div class=box id=fltr_box>
   <div class=fltr_top>
-    <div class=box_label>FILTERS</div>
+    <div class=box_label>FILTERS AND LOOKUPS</div>
     <div title="close" class="box_close" data-box=fltr><img class=il src=.css/close.png></div>
     <div title=add class=filter_new><img class=il src=.css/add.png></div>
     <div title=refresh class=filter_refresh><img class=il src=.css/reload.png></div>
@@ -274,6 +275,15 @@ dbC();
     <div id=ovacstat class="box_stat hide"></div>
   </div>
   <div class=ac_tbl></div>
+</div>
+
+<div class=box id=lup_box>
+  <div class=lup_top>
+    <div class=box_label>LOOKUPS</div>
+    <div title="close" class="box_close" data-box=lup><img class=il src=.css/close.png></div> 
+  </div>
+  <div class=lup_controls></div>
+  <div class=lup_tbl></div>
 </div>
 
 <div class=bottom>
