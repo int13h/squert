@@ -12,13 +12,10 @@ $dbPass = "readonly";
 
 // Sguild Info
 
-$sgVer  = "SGUIL-0.8.0 OPENSSL ENABLED";
+$sgVer  = "SGUIL-0.9.0 OPENSSL ENABLED";
 $sgHost = "10.0.0.2";
 $sgPort = "7734";
 
 // Where are the rules? If you have multiple dirs, separate each with: ||
 $rulePath = "../.rules";
-
-// DNS server to query
-$dns = "8.8.8.8";
 ?>
