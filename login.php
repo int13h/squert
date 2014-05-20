@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     $_SESSION['initiated'] = true;
                 }
 
-                $_SESSION['sLogin']	= '1';
+                $_SESSION['sLogin']	= 1;
                 $_SESSION['sUser']	= $userName;
                 $_SESSION['sPass']	= $password;        
                 $_SESSION['sEmail']	= $userEmail;

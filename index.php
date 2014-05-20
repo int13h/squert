@@ -60,6 +60,7 @@ dbC();
     <div data-box=cat  class=icon id=ico01><img title=comments class="il ilb" src=.css/comment.png></div>
     <div data-box=ac   class=icon id=ico02><img title=autocat class="il ilb" src=.css/autocat.png></div>
     <div data-box=sen  class=icon id=ico03><img title=sensors class="il ilb" src=.css/sensor.png></div>
+    <div data-box=srch class=icon id=ico05><img title=lookup class="il ilb" src=.css/ext.png></div>
     <div data-box=fltr class=icon id=ico04><img title=filters class="il ilb" src=.css/filter.png></div>
     <input class=search id=search type=text size=60 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
   </div>
@@ -160,8 +161,7 @@ dbC();
   
   <div class=content-right>
     <div id=t_sum_content class=content>
-      <div id=aaa-00 class=aaa></div></div>
-      <br><br><br>
+      <div id=aaa-00 class=aaa></div>
     </div>
   </div>
 
@@ -223,9 +223,9 @@ dbC();
     <div id=ovcstat class="box_stat"></div>
   </div>
   <div class=cm_controls>
-    <div class=cat_l1>Comment:</div>
+    <div class=cat_l1>COMMENT:</div>
     <div class=cat_r1><input class=cat_msg_txt type=text maxlength=255></div>
-    <div class=cat_l1>Classification:</div>
+    <div class=cat_l1>CLASSIFICATION:</div>
     <div class=cat_r1 id=cw_buttons>
       <div class=b_C1 data-n=11>C1</div>
       <div class=b_C2 data-n=12>C2</div>
@@ -256,7 +256,7 @@ dbC();
 
 <div class=box id=fltr_box>
   <div class=fltr_top>
-    <div class=box_label>FILTERS AND LOOKUPS</div>
+    <div class=box_label>FILTERS</div>
     <div title="close" class="box_close" data-box=fltr><img class=il src=.css/close.png></div>
     <div title=add class=filter_new><img class=il src=.css/add.png></div>
     <div title=refresh class=filter_refresh><img class=il src=.css/reload.png></div>
@@ -277,13 +277,31 @@ dbC();
   <div class=ac_tbl></div>
 </div>
 
-<div class=box id=lup_box>
-  <div class=lup_top>
-    <div class=box_label>LOOKUPS</div>
-    <div title="close" class="box_close" data-box=lup><img class=il src=.css/close.png></div> 
+<div class=box id=srch_box>
+  <div class=srch_top>
+    <div class=box_label>EXTERNAL LOOKUP</div>
+    <div title="close" class="box_close" data-box=srch><img class=il src=.css/close.png></div> 
   </div>
-  <div class=lup_controls></div>
-  <div class=lup_tbl></div>
+  <div class=srch_controls>
+    <div class=cat_l1>QUERY:</div>
+    <div class=cat_r1><input class=srch_txt type=text maxlength=255></div>
+    <div class=clear_srch><img title=clear class=il src=.css/delete.png></div>
+    <div class=cat_l1>TERMS:</div>
+    <div class=cat_r1 id=srchterms></div>
+    <div class=cat_l1>INTERVAL:</div>
+    <div class=cat_r1 id=srchint>
+      <input id=el_start class=el_ts type=text maxlength=19>
+      &nbsp;&nbsp;-> &nbsp;&nbsp;
+      <input id=el_end class=el_ts type=text maxlength=19>
+    </div>
+    <div class=cat_l1>
+      <div class=srch_do data-searchtype=es><img title=search class="il ilb" src=.css/search.png></div>
+    </div>
+    <div class=cat_r1>
+      <span id=srch_ldr></span>
+    </div>
+  </div>
+  <div class=srch_tbl></div>
 </div>
 
 <div class=bottom>

@@ -9,6 +9,7 @@ if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
 $base = dirname(__FILE__);
 include_once "$base/config.php";
 include_once "$base/functions.php";
+include_once "../vendor/autoload.php";
 
 $link = mysql_connect($dbHost,$dbUser,$dbPass);
 $db = mysql_select_db($dbName,$link);
@@ -35,6 +36,7 @@ $types = array(
                 '15' => 'summary',
                 '16' => 'view',
                 '17' => 'autocat',
+                '18' => 'esquery',
 );
 
 $type = $types[$type];
@@ -47,6 +49,7 @@ if (isset($_REQUEST['ts'])) {
     $stime  = $tsParts[2];
     $etime  = $tsParts[3];
     $offset = $tsParts[4];
+
     $when = "event.timestamp BETWEEN 
              CONVERT_TZ('$sdate $stime','$offset','+00:00') AND
              CONVERT_TZ('$edate $etime','$offset','+00:00')";
@@ -252,7 +255,7 @@ function eg() {
     }
 
     $query = "SELECT COUNT(event.signature) AS count,
-              MAX(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS maxTime, 
+              MAX(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS maxTime,
               INET_NTOA(event.src_ip) AS src_ip,
               msrc.c_long AS src_cc,
               INET_NTOA(event.dst_ip) AS dst_ip,
@@ -1199,6 +1202,60 @@ function autocat() {
             break;
     }
 
+    echo $theJSON;
+}
+
+function esquery() {
+    global $esHosts;
+    $filter    = hextostr($_REQUEST['filter']);
+    $logtype   = hextostr($_REQUEST['logtype']);
+    $timestamp = hextostr($_REQUEST['se']);
+    $pattern = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\|\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/';
+    if (!preg_match($pattern, $timestamp)) {
+        $result = array("dbg"  => "0");
+        $theJSON = json_encode($result);
+        echo $theJSON;
+        exit;
+    }
+    $timestamp = str_replace(" ","T",$timestamp);
+    list($start,$end) = explode("|", $timestamp);
+    
+    $client = new Elasticsearch\Client($esHosts);
+    $params = array();
+    $params['size'] = '500';
+    $params['ignore'] = '400,404';
+
+    $json = "{
+        \"query\": {
+            \"filtered\": {
+                \"query\": {
+                    \"query_string\": {
+                        \"query\": \"_type:$logtype AND ($filter)\"
+                    }
+                },
+                \"filter\": {
+                    \"range\": {
+                        \"@timestamp\": {
+                            \"from\": \"$start\",
+                            \"to\": \"$end\"
+                        }
+                    }
+                }
+            },
+            \"size\": 500,
+            \"sort\": [
+                {
+                    \"@timestamp\": {
+                        \"order\": \"desc\"
+                    }
+                }
+            ]
+        }
+    }";
+
+    $params['body']  = $json;
+    $result = $client->search($params);
+    $theJSON = json_encode($result);
     echo $theJSON;
 }
 

@@ -16,6 +16,11 @@ $sgVer  = "SGUIL-0.9.0 OPENSSL ENABLED";
 $sgHost = "10.0.0.2";
 $sgPort = "7734";
 
+// Elasticsearch
+$esHosts['hosts'] = array(
+    '127.0.0.1:9200'
+);
+
 // Where are the rules? If you have multiple dirs, separate each with: ||
 $rulePath = "../.rules";
 ?>

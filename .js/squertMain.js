@@ -443,6 +443,8 @@ $(document).ready(function(){
     // Reset and show checkbox
     $(".chk_all").prop("checked",false);
     $("#ca0").show();
+    // Remove any open externals
+    if ($("#extresult")[0]) $("#extresult").remove();
   }
   function closeSubRow1() {
     $("#eview_sub2").remove();
@@ -530,12 +532,18 @@ $(document).ready(function(){
       // We are now the active row
       $("#" + callerID).attr('class','d_row_sub_active');
 
+      // Clear search terms
+      $("#srchterms").html('');
+      $(".srch_txt").val(''); 
+
       // History
       $("#" + callerID).find('[class*="sub_filter"]').each(function() {
         if ($(this).data('type') == 'cc') {
           var itemToAdd = $(this).data('value');
         } else {
           var itemToAdd = $(this).text();
+          // Add search terms
+          $("#srchterms").append("<span class=\"link srchterm\">" + itemToAdd + "</span>&nbsp;&nbsp");
         } 
         hItemAdd(itemToAdd);
       });
@@ -557,6 +565,24 @@ $(document).ready(function(){
     if (!$(".d_row_sub_active1")[0])  {
       var callerID = $(this).parent('tr').attr('id');
       $("#" + callerID).attr('class','d_row_sub_active1');
+
+      // Clear search terms
+      $("#srchterms").html('');
+      $(".srch_txt").val(''); 
+
+      // History
+      $("#" + callerID).find('[class*="sub_filter"]').each(function() {
+        if ($(this).data('type') == 'cc') {
+          var itemToAdd = $(this).data('value');
+        } else {
+          var itemToAdd = $(this).text();
+        }
+        if ($(this).data('type') == 'ip') {
+          // Add search terms
+          $("#srchterms").append("<span class=\"link srchterm\">" + itemToAdd + "</span>&nbsp;&nbsp");
+        } 
+        hItemAdd(itemToAdd);
+      });
       $("#loader").show();           
       eventList("3-" + callerID);
     } else {
@@ -833,7 +859,7 @@ $(document).ready(function(){
         tbl += row;
         tbl += "</table>";
         
-        $('#' + parts[1] + '-' + parts[2]).after(tbl);
+        $('#' + parts[1] + '-' + parts[2]).append(tbl);
         
         if (d0.length > 0) {
           var prVals = [spr1,spr2,spr3,spr4];
@@ -1050,7 +1076,7 @@ $(document).ready(function(){
           }
 
           row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
-          row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + ">";
+          row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + "></td>";
           row += "<td class=\"sub1_active sub\"><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
           row += "<td class=sub title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
@@ -2170,9 +2196,9 @@ $(document).ready(function(){
       $("#ov_" + cbArgs + "_sl").after(tbl);
       $("#ov_" + cbArgs + "_msg").html("viewing <b><span id=ov_" + cbArgs + "_sl_lbl>" + i + "</b> of <b>" + records + " </b>results"); 
       mkSlider("ov_" + cbArgs + "_sl", i, records);
-      $("#top" + cbArgs).tablesorter({
-          cancelSelection:true
-      });
+      //$("#top" + cbArgs).tablesorter({
+      //    cancelSelection:true
+      //});
     }
 
     // Ports
@@ -2219,9 +2245,9 @@ $(document).ready(function(){
       $("#ov_" + cbArgs + "_sl").after(tbl);
       $("#ov_" + cbArgs + "_msg").html("viewing <b><span id=ov_" + cbArgs + "_sl_lbl>" + i + "</b> of <b>" + records + " </b>results"); 
       mkSlider("ov_" + cbArgs + "_sl", i, records);
-      $("#top" + cbArgs).tablesorter({
-          cancelSelection:true
-      });
+      //$("#top" + cbArgs).tablesorter({
+      //    cancelSelection:true
+      //});
     }
     // Signature
     function cb16(data){
@@ -2273,9 +2299,9 @@ $(document).ready(function(){
       $("#ov_signature_sl").after(tbl);
       $("#ov_signature_msg").html("viewing <b><span id=ov_signature_sl_lbl>" + i + "</span></b> of <b>" + records + " </b>results");
       mkSlider("ov_signature_sl", i, records);
-      $("#topsignature").tablesorter({
-          cancelSelection:true
-      });
+      //$("#topsignature").tablesorter({
+      //    cancelSelection:true
+      //});
     }
   }
 

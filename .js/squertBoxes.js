@@ -2,14 +2,18 @@ $(document).ready(function(){
 
   mkFilterBox();
   mkSensorBox();
+  mkSrchBox();
   mkCatBox();
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');
+    if (caller == "extresult") {
+        $("#extresult").remove();
+        $("#tl1").show();
+        return;
+    }
     var cID = "#" + caller + "_box";
     var isOpen = $('#t_search').data('state');
-    // Make sure we are on the right page
-    //if ($('#t_sum').attr('class') != "tab_active" && caller != 'fltr' && caller != 'sen')  return;
     // Are we the only one open?
     if (isOpen == 0) {
       $('#t_search').data('state',1);     
@@ -20,6 +24,9 @@ $(document).ready(function(){
         case 'ac':
           mkAutocatBox();
         break;
+        case 'srch':
+          mkSrchBox();
+        break; 
         default:
           return;
         break;
@@ -43,7 +50,7 @@ $(document).ready(function(){
     var urArgs = "type=11";
 
     $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb11(data)});
+      $.post(".inc/callback.php?" + urArgs, function(data){cb11(data)});
     });
 
     function cb11(data){
@@ -115,7 +122,7 @@ $(document).ready(function(){
       var rowNumber = $(this).data('rn');
       var urArgs = "type=12&comment=" + theComment;
       $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb12(data)});
+        $.post(".inc/callback.php?" + urArgs, function(data){cb12(data)});
       }); 
 
       function cb12(data){
@@ -184,7 +191,7 @@ $(document).ready(function(){
     var urArgs = "type=13&ts=" + theWhen;
 
     $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb13(data)});
+      $.post(".inc/callback.php?" + urArgs, function(data){cb13(data)});
     });
 
     function cb13(data){
@@ -296,7 +303,7 @@ $(document).ready(function(){
             
     var urArgs = "type=8" + "&mode=query&data=0";
     $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb6(data)}); 
+      $.post(".inc/callback.php?" + urArgs, function(data){cb6(data)}); 
     });
 
     function cb6(data){
@@ -533,7 +540,7 @@ $(document).ready(function(){
       var urArgs = "type=8&mode=update&data=" + fd;
 
       $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb7(data)}); 
+        $.post(".inc/callback.php?" + urArgs, function(data){cb7(data)}); 
       });
 
       function cb7(data){
@@ -594,7 +601,7 @@ $(document).ready(function(){
     if (oktoRM) {
       var urArgs = "type=8&mode=remove&data=" + currentCL;
       $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb8(data)});
+        $.post(".inc/callback.php?" + urArgs, function(data){cb8(data)});
       }); 
 
       function cb8(data){
@@ -651,14 +658,12 @@ $(document).ready(function(){
             
     var urArgs = "type=17" + "&mode=query";
     $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb18(data)}); 
+      $.post(".inc/callback.php?" + urArgs, function(data){cb18(data)}); 
     });
 
     function cb18(data){
       eval("theData=" + data);
-      tbl = '';
-      head = '';
-      row = '';
+      var tbl = '', head = '', row = '';
       head += "<thead><tr>";
       head += "<th class=sub width=20>ST</th>";
       head += "<th class=sub width=20>ID</th>";
@@ -889,7 +894,7 @@ $(document).ready(function(){
       var urArgs = "type=17&mode=update&data=" + fd;
 
       $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb19(data)}); 
+        $.post(".inc/callback.php?" + urArgs, function(data){cb19(data)}); 
       });
 
       function cb19(data){
@@ -962,7 +967,7 @@ $(document).ready(function(){
       var toM = type + "-" + currentCL.split("_")[1];
       var urArgs = "type=17&mode=toggle&obj=" + toM;
       $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb20(data)});
+        $.post(".inc/callback.php?" + urArgs, function(data){cb20(data)});
       }); 
       function cb20(data){
         eval("theData=" + data);
@@ -980,4 +985,184 @@ $(document).ready(function(){
       });
     } 
   });
+
+  // 
+  // Search box
+  //
+
+  $(document).on('click','.srchterm', function() {
+    var il = $(".srch_txt").val().length;
+    var term = $(this).text();
+    if (il != 0) {
+      // Does this value already exist?
+      var ex = $(".srch_txt").val().indexOf(term);
+      if (ex == -1) $(".srch_txt").val($(".srch_txt").val() + " AND " + term); 
+    } else {
+      $(".srch_txt").val(term);
+    }   
+  });
+
+  $(document).on('click','.srch_do', function() {
+    if ($(".srch_txt").val().length == 0) {
+      $('#srch_ldr').html("What are you looking for?");    
+      return;
+    }
+    var ldr = "<img class=ldimg src=\".css/load.gif\">";
+    var searchtype = $(this).data("searchtype");
+    var logtype = "(";
+    var items = $('.chk_es:checked').length;
+    var i = 0;
+    $('.chk_es:checked').each(function() {
+      logtype += $(this).data("logtype");
+      i++;
+      if ((i >= 1) && (i != items)) logtype += " OR "; 
+    });
+    logtype += ")";
+    switch (searchtype) {
+      case "es":
+        $('#srch_ldr').html(ldr);
+        esSearch(logtype);
+      break;
+      default:
+        return;
+      break;
+    }
+  });
+
+  $(document).on('click','.clear_srch', function() {
+    $('.srch_txt').val('');
+  });
+
+  // Checkboxes
+  $(document).on("click", "#ca_es", function(event) {
+    var state = ($(this).prop('checked'));
+    switch(state) {
+      case false:
+        $(".chk_es").prop("checked",false);
+      break;
+      case true:
+        $(".chk_es").prop("checked",true);
+      break;
+    }
+  });
+  
+  $(document).on('click','.chk_es,.srch_edit', function() {
+    var state = ($(this).prop('checked'));
+    if (state == false) $("#ca_es").prop("checked",false);
+  });
+
+  $(document).on('click', '.srch_edit', function() {
+    $(this).prev('input').click();
+  }); 
+
+  function mkSrchBox() {
+    if ($('#tlsrch')[0]) return;
+ 
+    var tbl = '', head = '', row = '', input = ''; 
+
+    head += "<thead><tr>";
+    head += "<th class=sub width=20><input id=ca_es type=checkbox></th>";
+    head += "<th class=sub width=200>SOURCE</th>";
+    head += "<th class=sub>DESCRIPTION</th>";
+    head += "</tr></thead>";
+    
+    var srccount = esSources.length;
+    
+    for (var i=0; i < srccount; i++) {
+      if (esSources[i].state == "off") continue;
+
+      var name = esSources[i].name;
+      var type = esSources[i].type;
+      var desc = esSources[i].desc;
+      var loke = esSources[i].loke;
+      
+      row += "<tr class=f_row>"
+      row += "<td class=sub><input id=cb_" + name + " class=chk_es ";
+      row += "type=checkbox data-searchtype=es data-logtype=" + type + "></td>";
+      row += "<td class=nr><div class=srch_edit>" + name + "</div></td>";
+      row += "<td class=nr>" + desc + "</td>";
+      row += "</tr>";
+    }
+
+    tbl += "<table id=tlsrch class=box_table width=100% cellpadding=0 cellspacing=0>";
+    tbl += head;
+    tbl += row;
+    tbl += "</table>";
+    $(".srch_tbl").append(tbl);
+
+    $("#tlsrch").tablesorter({
+      headers: {
+        0:{sorter:false},
+      },
+        cancelSelection:false
+    });
+  }
+
+  function esSearch(log) {
+    var logtype = s2h(log);
+    var filter = s2h($(".srch_txt").val());
+    var start = $('#el_start').val();
+    var end = $('#el_end').val();
+    var when = s2h(start + "|" + end);
+    var urArgs = "type=18&se=" + when + "&logtype=" + logtype + "&filter=" + filter;
+
+    $(function(){
+      $.post(".inc/callback.php?" + urArgs, function(data){cb21(data)});
+    });
+
+    function cb21(data){
+      eval("d=" + data);
+      if (d.dbg == 0) {
+        $('#srch_ldr').html("Error: Query failed");
+        return;
+      }
+      var etime = d.took/1000;
+      var records = d.hits.hits.length || 0;
+      var hits = d.hits.hits._source;
+      var tbl = '', head = '', row = ''; 
+      head += "<thead><tr><th class=ext>";
+      head += "<div class=box_label>EXTERNAL LOOKUP (" + etime + " seconds " + records + " results)</div>";
+      head += "<div title=close class=box_close data-box=extresult><img class=il src=.css/close.png></div>"
+      head += "</th></tr></thead>";
+      row += "<tr>";
+
+      if (records == 0) {
+        row += "<tr class=pcomm><td class=\"raw\">The query returned no results.</td></tr>";
+      }
+
+      for (var i=0; i < records; i++) {
+        var message = d.hits.hits[i]._source.message;
+        row += "<tr class=pcomm><td class=\"raw select\">" + message + "</td></tr>";
+      }
+
+      row += "</tr>";
+
+      var colspan = $(".d_row_sub_active td").length;
+      tbl += "<tr id=extresult><td colspan=" + colspan + ">";
+      tbl += "<table id=tlsrch width=100% class=box_table cellpadding=0 cellspacing=0>";
+      tbl += head;
+      tbl += row;
+      tbl += "</table></td></tr>";
+
+      // Close our box
+      $("#ico05").click();
+
+      // Remove any existing results
+      if ($("#extresult")[0]) $("#extresult").remove(); 
+
+      if ($(".tab_active").attr('id') == 't_sum' && !$(".d_row_sub_active")[0]) {
+        $("#tl1").hide();
+        $("#aaa-00").append(tbl);
+      } else {
+        if ($("#gr").text() == "off") {
+          $(".d_row_sub_active1").after(tbl);
+        } else {
+          $(".d_row_sub_active").after(tbl);
+        }
+      }
+      // Remove loader
+      $('#srch_ldr').html('');
+    }
+  }
+
 });

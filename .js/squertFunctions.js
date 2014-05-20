@@ -1,3 +1,62 @@
+// Elasticsearch Sources
+// This is temporary I will put in the DB later.
+var esSources = [{
+  "name":"BRO_CONN",
+  "type":"bro_conn",
+  "desc":"Bro connection log",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"BRO_DNS",
+  "type":"bro_dns",
+  "desc":"Bro DNS log",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"BRO_FTP",
+  "type":"bro_ftp",
+  "desc":"Bro ftp log",
+  "loke":"",
+  "state":"off"
+},
+{
+  "name":"BRO_HTTP",
+  "type":"bro_http",
+  "desc":"Bro HTTP log",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"BRO_SOFTWARE",
+  "type":"bro_software",
+  "desc":"Bro software log",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"BRO_SSL",
+  "type":"bro_ssl",
+  "desc":"Bro SSL log",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"EventLog",
+  "type":"windows",
+  "desc":"Windows event log",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"Barracuda",
+  "type":"barracuda",
+  "desc":"Barracuda spam firewall",
+  "loke":"",
+  "state":"on"
+}];
+
 // Classifications
 var classifications = {"class":{
   "c11":[{"colour": "#c00", "short": "C1", "long": "Unauthorized Admin Access"}],
@@ -108,6 +167,10 @@ function getTimestamp() {
   var fbt_c = 'fl_val_off';
   if (ts_sd != ts_ed) fbt_c = 'fl_val_on';
   if (ts_st !=  "00:00:00" || ts_et != "23:59:59") fbt_c = 'fl_val_on'; 
+
+  // Add base times for es queries
+  $('#el_start').val(ts_sd + " " + ts_st);
+  $('#el_end').val(ts_ed + " " + ts_et);
 
   if ($('#search').val().length > 0) {
     fval = 'YES';
