@@ -1,5 +1,7 @@
 // Elasticsearch Sources
-// This is temporary I will put in the DB later.
+// This is temporary, I will put in the DB later.
+// For now, add your sources here. The only field that
+// is important is "type" which must match what you have in ES
 var esSources = [{
   "name":"BRO_CONN",
   "type":"bro_conn",
@@ -15,11 +17,18 @@ var esSources = [{
   "state":"on"
 },
 {
+  "name":"BRO_FILES",
+  "type":"bro_files",
+  "desc":"Bro files log",
+  "loke":"",
+  "state":"on"
+},
+{
   "name":"BRO_FTP",
   "type":"bro_ftp",
   "desc":"Bro ftp log",
   "loke":"",
-  "state":"off"
+  "state":"on"
 },
 {
   "name":"BRO_HTTP",
@@ -29,9 +38,30 @@ var esSources = [{
   "state":"on"
 },
 {
+  "name":"BRO_NOTICE",
+  "type":"bro_notice",
+  "desc":"Bro noitce log",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"BRO_SMTP",
+  "type":"bro_smtp",
+  "desc":"Bro smtp log",
+  "loke":"",
+  "state":"on"
+},
+{
   "name":"BRO_SOFTWARE",
   "type":"bro_software",
   "desc":"Bro software log",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"BRO_SSH",
+  "type":"bro_ssh",
+  "desc":"Bro ssh log",
   "loke":"",
   "state":"on"
 },
@@ -147,6 +177,31 @@ $.alt = function(key, callback, args) {
   });        
 }
 
+function mkStamp(datetime,op,offset) {
+
+  var ms = Date.parse(datetime);
+  
+  function pad(i) {
+    if (i < 10) return "0" + i;
+      return i;
+  }
+
+  switch (op) {
+    case "+": var dt = new Date(ms + offset); break;
+    case "-": var dt = new Date(ms - offset); break;
+  }
+
+  var y = dt.getFullYear();
+  var m = pad(dt.getMonth() + 1);
+  var d = dt.getDate();
+  var hh =pad(dt.getHours());
+  var mm =pad(dt.getMinutes());
+  var ss =pad(dt.getSeconds());
+  
+  return y + "-" + m + "-" + d + " " + hh + ":" + mm + ":" + ss;
+
+}
+
 function getTimestamp() {
   // If we have an error in the input fields we clear and fire.
   if ($('.dt_error').data('err') == 1) {
@@ -168,9 +223,9 @@ function getTimestamp() {
   if (ts_sd != ts_ed) fbt_c = 'fl_val_on';
   if (ts_st !=  "00:00:00" || ts_et != "23:59:59") fbt_c = 'fl_val_on'; 
 
-  // Add base times for es queries
-  $('#el_start').val(ts_sd + " " + ts_st);
-  $('#el_end').val(ts_ed + " " + ts_et);
+  // Add base times for es queries if they are empty
+  if ($('#el_start').val().length != 19) $('#el_start').val(ts_sd + " " + ts_st);
+  if ($('#el_end').val().length != 19) $('#el_end').val(ts_ed + " " + ts_et);
 
   if ($('#search').val().length > 0) {
     fval = 'YES';

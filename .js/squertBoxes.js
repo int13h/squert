@@ -3,7 +3,7 @@ $(document).ready(function(){
   mkFilterBox();
   mkSensorBox();
   mkSrchBox();
-  mkCatBox();
+  //mkCatBox();
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');
@@ -1003,14 +1003,15 @@ $(document).ready(function(){
   });
 
   $(document).on('click','.srch_do', function() {
-    if ($(".srch_txt").val().length == 0) {
+    var items = $('.chk_es:checked').length;
+
+    if ($(".srch_txt").val().length == 0 || items == 0) {
       $('#srch_ldr').html("What are you looking for?");    
       return;
     }
     var ldr = "<img class=ldimg src=\".css/load.gif\">";
     var searchtype = $(this).data("searchtype");
     var logtype = "(";
-    var items = $('.chk_es:checked').length;
     var i = 0;
     $('.chk_es:checked').each(function() {
       logtype += $(this).data("logtype");
@@ -1056,7 +1057,7 @@ $(document).ready(function(){
   }); 
 
   function mkSrchBox() {
-    if ($('#tlsrch')[0]) return;
+    if ($('#tlsrchbox')[0]) return;
  
     var tbl = '', head = '', row = '', input = ''; 
 
@@ -1084,13 +1085,13 @@ $(document).ready(function(){
       row += "</tr>";
     }
 
-    tbl += "<table id=tlsrch class=box_table width=100% cellpadding=0 cellspacing=0>";
+    tbl += "<table id=tlsrchbox class=box_table width=100% cellpadding=0 cellspacing=0>";
     tbl += head;
     tbl += row;
     tbl += "</table>";
     $(".srch_tbl").append(tbl);
 
-    $("#tlsrch").tablesorter({
+    $("#tlsrchbox").tablesorter({
       headers: {
         0:{sorter:false},
       },
@@ -1112,14 +1113,17 @@ $(document).ready(function(){
 
     function cb21(data){
       eval("d=" + data);
-      if (d.dbg == 0) {
-        $('#srch_ldr').html("Error: Query failed");
+      if (d.dbg) {
+        $('#srch_ldr').html("Error: " + d.dbg);
         return;
       }
-      var etime = d.took/1000;
+      var etime = d.took/1000 || 0;
       var records = d.hits.hits.length || 0;
-      var hits = d.hits.hits._source;
+      var hits = d.hits.hits._source || 0;
       var tbl = '', head = '', row = ''; 
+      var colspan = 7;
+      if ($(".d_row_sub_active1")[0]) colspan = $(".d_row_sub_active1").data("cols");
+
       head += "<thead><tr><th class=ext>";
       head += "<div class=box_label>EXTERNAL LOOKUP (" + etime + " seconds " + records + " results)</div>";
       head += "<div title=close class=box_close data-box=extresult><img class=il src=.css/close.png></div>"
@@ -1127,17 +1131,17 @@ $(document).ready(function(){
       row += "<tr>";
 
       if (records == 0) {
-        row += "<tr class=pcomm><td class=\"raw\">The query returned no results.</td></tr>";
+        row += "<tr class=pcomm><td colspan=" + colspan + " class=\"raw\">The query returned no results.</td></tr>";
       }
 
       for (var i=0; i < records; i++) {
         var message = d.hits.hits[i]._source.message;
-        row += "<tr class=pcomm><td class=\"raw select\">" + message + "</td></tr>";
+        var re = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g;
+        var m1 = message.replace(re, "<span class=link>$1</span>");
+        row += "<tr class=pcomm><td class=\"raw select\">" + m1 + "</td></tr>";
       }
 
       row += "</tr>";
-
-      var colspan = $(".d_row_sub_active td").length;
       tbl += "<tr id=extresult><td colspan=" + colspan + ">";
       tbl += "<table id=tlsrch width=100% class=box_table cellpadding=0 cellspacing=0>";
       tbl += head;
@@ -1150,14 +1154,19 @@ $(document).ready(function(){
       // Remove any existing results
       if ($("#extresult")[0]) $("#extresult").remove(); 
 
-      if ($(".tab_active").attr('id') == 't_sum' && !$(".d_row_sub_active")[0]) {
-        $("#tl1").hide();
-        $("#aaa-00").append(tbl);
-      } else {
-        if ($("#gr").text() == "off") {
-          $(".d_row_sub_active1").after(tbl);
-        } else {
-          $(".d_row_sub_active").after(tbl);
+      // Make sure we are on the right tab
+      if ($(".tab_active").attr('id') == 't_sum') {
+        var l = 0;
+        // Now see what state we are in
+        if ($(".d_row_sub_active")[0]) l++;
+        if ($(".d_row_sub_active1")[0]) l++;
+        if ($("#gr").text() == "off") l = 3; 
+
+        switch (l) {
+          case 0: $("#tl1").hide(); $("#aaa-00").after(tbl); break;
+          case 1: $(".d_row_sub_active").after(tbl); break;
+          case 2: $(".d_row_sub_active1").after(tbl); break;
+          case 3: $(".d_row_sub_active1").after(tbl); break;
         }
       }
       // Remove loader

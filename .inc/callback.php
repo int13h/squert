@@ -1210,13 +1210,34 @@ function esquery() {
     $filter    = hextostr($_REQUEST['filter']);
     $logtype   = hextostr($_REQUEST['logtype']);
     $timestamp = hextostr($_REQUEST['se']);
+    $tests = 0;
+    $msg = "";
+
+    // Check timestamps
     $pattern = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\|\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/';
     if (!preg_match($pattern, $timestamp)) {
-        $result = array("dbg"  => "0");
+        $tests = 1;
+        $msg = "Bad time format!";
+    }
+
+    list($start,$end) = explode("|", $timestamp);
+    $start = strtotime($start);
+    $end = strtotime($end);
+    $now = strtotime("now");
+ 
+    if ($start > $end || $start == $end || $start > $now) {
+      $tests = 1;
+      $msg = "Time logic failure!";
+    }    
+
+    // Bail if ts logic isn't sound
+    if ($tests == 1) {
+        $result = array("dbg"  => "$msg");
         $theJSON = json_encode($result);
         echo $theJSON;
         exit;
     }
+
     $timestamp = str_replace(" ","T",$timestamp);
     list($start,$end) = explode("|", $timestamp);
     

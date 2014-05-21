@@ -342,6 +342,8 @@ $(document).ready(function(){
 
   // Update page
   $(document).on("click", ".b_update", function(event) {
+    // Remove any supplementary results
+    if ($("#extresult")[0]) $("#extresult").remove(); 
     // Where are we?
     var curTab = $('.tab_active').attr('id');
     switch (curTab) {
@@ -532,11 +534,19 @@ $(document).ready(function(){
       // We are now the active row
       $("#" + callerID).attr('class','d_row_sub_active');
 
+      // Populate search times 
+      var bt = $("#" + callerID).find('[class*="timestamp"]').html();
+      var est = mkStamp(bt,"-",1800000);
+      var eet = mkStamp(bt,"+",1800000);
+       
+      $('#el_start').val(est);
+      $('#el_end').val(eet);
+ 
       // Clear search terms
       $("#srchterms").html('');
       $(".srch_txt").val(''); 
 
-      // History
+      // History and search
       $("#" + callerID).find('[class*="sub_filter"]').each(function() {
         if ($(this).data('type') == 'cc') {
           var itemToAdd = $(this).data('value');
@@ -566,6 +576,14 @@ $(document).ready(function(){
       var callerID = $(this).parent('tr').attr('id');
       $("#" + callerID).attr('class','d_row_sub_active1');
 
+      // Populate search times 
+      var bt = $("#" + callerID).find('[class*="timestamp"]').html();
+      var est = mkStamp(bt,"-",3600000);
+      var eet = mkStamp(bt,"+",3600000);
+       
+      $('#el_start').val(est);
+      $('#el_end').val(eet);
+ 
       // Clear search terms
       $("#srchterms").html('');
       $(".srch_txt").val(''); 
@@ -955,7 +973,7 @@ $(document).ready(function(){
           if (rt == 0) row += "<td class=\"sub sub_active\" id=l2r" + i + "><div class=b_ec_total>" + count + "</div></td>";
           if (rt == 0) row += "<td class=sub>" + catCells + "</td>";
           row += "<td class=sub>" + cells + "</td>";
-          row += "<td class=sub>" + max_time + "</td>";
+          row += "<td class=\"sub timestamp\">" + max_time + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" data-type=cc data-value=" + src_cc + ">";
           row += cs[1] + src_clong + " (." + src_cc.toLowerCase() + ")" + "</td>";
@@ -1079,7 +1097,7 @@ $(document).ready(function(){
           row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + "></td>";
           row += "<td class=\"sub1_active sub\"><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
-          row += "<td class=sub title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
+          row += "<td class=\"sub timestamp\" title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += txBit;
           row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
@@ -1229,7 +1247,7 @@ $(document).ready(function(){
           row += "<td class=\"sub sub1_active\"><div class=a_" + cv + " id=class_box_" + i + ">";
           row += cv + "</div></td>";
           row += "<td class=sub><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
-          row += "<td class=sub title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
+          row += "<td class=\"sub timestamp\" title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += txBit;
           row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
