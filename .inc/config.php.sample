@@ -17,9 +17,18 @@ $sgHost = "10.0.0.2";
 $sgPort = "7734";
 
 // Elasticsearch
-$esHosts['hosts'] = array(
+$clientparams = array();
+
+$clientparams['hosts'] = array(
     '127.0.0.1:9200'
 );
+
+//$clientparams['connectionParams']['auth'] = array(
+//    'username',  // Username
+//    'password',  // Password
+//    'Basic'      // Auth: Basic, Digest, NTLM, Any
+//);
+
 
 // Where are the rules? If you have multiple dirs, separate each with: ||
 $rulePath = "../.rules";

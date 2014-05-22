@@ -77,7 +77,7 @@ dbC();
     <div class=db_link data-val=dc>DESTINATION COUNTRY</div>
     <div class=db_linkt>type:</div>
     <div class=db_type data-type=sk data-state=1>SANKEY DIAGRAM</div>
-    <div class=db_save><span class=links>save as svg</span></div>
+    <!--div class=db_save><span class=links>save as svg</span></div-->
   </div>
 </div>
 
@@ -279,12 +279,13 @@ dbC();
 
 <div class=box id=srch_box>
   <div class=srch_top>
-    <div class=box_label>EXTERNAL LOOKUP</div>
-    <div title="close" class="box_close" data-box=srch><img class=il src=.css/close.png></div> 
+    <div class=box_label id=srch_box_label>EXTERNAL LOOKUP</div>
+    <div title="close" class="box_close" data-box=srch><img class=il src=.css/close.png></div>
+    <div id=srch_stat_msg class="box_stat hide"></div> 
   </div>
   <div class=srch_controls>
     <div class=cat_l1>QUERY:</div>
-    <div class=cat_r1><input class=srch_txt type=text maxlength=255></div>
+    <div class=cat_r1><input class=srch_txt type=text maxlength=255 value="*"></div>
     <div class=clear_srch><img title=clear class=il src=.css/delete.png></div>
     <div class=cat_l1>TERMS:</div>
     <div class=cat_r1 id=srchterms></div>
@@ -295,10 +296,7 @@ dbC();
       <input id=el_end class=el_ts type=text maxlength=19>
     </div>
     <div class=cat_l1>
-      <div class=srch_do data-searchtype=es><img title=search class="il ilb" src=.css/search.png></div>
-    </div>
-    <div class=cat_r1>
-      <span id=srch_ldr></span>
+      <div class=srch_do><img title=search class=il src=.css/search.png></div>
     </div>
   </div>
   <div class=srch_tbl></div>

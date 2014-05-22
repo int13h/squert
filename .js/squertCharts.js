@@ -145,10 +145,15 @@ function mkSankey(callerID,data,w,h) {
       .attr("x", -26)
       .attr("y", function(d) { return d.dy / 2; })
       .attr("dy", ".35em")
-      .attr("data-type", "ip")
       .on('click', 
-        function(d) { 
-          $('#search').val('ip ' + d.name.split("|")[0]);
+        function(d) {
+          var re = /^\d{1,3}\./;
+          var m = re.exec(d.name.split("|")[0]);
+          if (m) {
+            $('#search').val('ip ' + d.name.split("|")[0]);
+          } else {
+            $('#search').val('cc ' + d.name.split("|")[1]);
+          }
           $('#search').focus(); 
         })
       .attr("class", "nodetext")
@@ -167,7 +172,7 @@ function mkSankey(callerID,data,w,h) {
       .attr("xlink:href", 
         function(d) { 
           var cc = d.name.split("|")[1] || 0;
-          if (cc != 'LO' && cc != 0) {
+          if (cc != 0) {
             return ".flags/" + cc + ".png";    
           }
         })

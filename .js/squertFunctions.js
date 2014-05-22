@@ -26,7 +26,7 @@ var esSources = [{
 {
   "name":"BRO_FTP",
   "type":"bro_ftp",
-  "desc":"Bro ftp log",
+  "desc":"Bro FTP log",
   "loke":"",
   "state":"on"
 },
@@ -47,7 +47,7 @@ var esSources = [{
 {
   "name":"BRO_SMTP",
   "type":"bro_smtp",
-  "desc":"Bro smtp log",
+  "desc":"Bro SMTP log",
   "loke":"",
   "state":"on"
 },
@@ -61,7 +61,7 @@ var esSources = [{
 {
   "name":"BRO_SSH",
   "type":"bro_ssh",
-  "desc":"Bro ssh log",
+  "desc":"Bro SSH log",
   "loke":"",
   "state":"on"
 },
@@ -223,9 +223,11 @@ function getTimestamp() {
   if (ts_sd != ts_ed) fbt_c = 'fl_val_on';
   if (ts_st !=  "00:00:00" || ts_et != "23:59:59") fbt_c = 'fl_val_on'; 
 
-  // Add base times for es queries if they are empty
-  if ($('#el_start').val().length != 19) $('#el_start').val(ts_sd + " " + ts_st);
-  if ($('#el_end').val().length != 19) $('#el_end').val(ts_ed + " " + ts_et);
+  // Add base times to external searches
+  if (!$('.d_row_active')[0] && !$('.d_row_active1')[0]) { 
+    $('#el_start').val(ts_sd + " " + ts_st);
+    $('#el_end').val(ts_ed + " " + ts_et);
+  }
 
   if ($('#search').val().length > 0) {
     fval = 'YES';

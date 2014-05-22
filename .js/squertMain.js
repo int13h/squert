@@ -219,19 +219,19 @@ $(document).ready(function(){
           $('.content-right').hide();
           $('.content-left').hide();
           if ($('#ovestat').text().length == 0) loadSummary();
-          $('.t_pbar').css('opacity',.2);
+          $('.t_pbar').css('opacity',.1);
           $('.db_links').hide();
         break;
         case "t_view":
           $('.content-right').hide();
           $('.content-left').hide();
-          $('.t_pbar').css('opacity',.2);
+          $('.t_pbar').css('opacity',.1);
           loadViews();
         break;
         default:
           $('.content-right').hide();
           $('.content-left').hide();
-          $('.t_pbar').css('opacity',.2);
+          $('.t_pbar').css('opacity',.1);
           $('.db_links').hide();
         break;
       }
@@ -536,8 +536,8 @@ $(document).ready(function(){
 
       // Populate search times 
       var bt = $("#" + callerID).find('[class*="timestamp"]').html();
-      var est = mkStamp(bt,"-",1800000);
-      var eet = mkStamp(bt,"+",1800000);
+      var est = mkStamp(bt,"-",3600000);
+      var eet = mkStamp(bt,"+",3600000);
        
       $('#el_start').val(est);
       $('#el_end').val(eet);
@@ -578,8 +578,8 @@ $(document).ready(function(){
 
       // Populate search times 
       var bt = $("#" + callerID).find('[class*="timestamp"]').html();
-      var est = mkStamp(bt,"-",3600000);
-      var eet = mkStamp(bt,"+",3600000);
+      var est = mkStamp(bt,"-",1800000);
+      var eet = mkStamp(bt,"+",1800000);
        
       $('#el_start').val(est);
       $('#el_end').val(eet);
@@ -2420,18 +2420,7 @@ $(document).ready(function(){
               var w = $(window).width();
               var h = viewData.links.length * 12;
               if (h < 100) h = 100;
-              mkSankey("db_view_cont", viewData, w, h);
-            break;
-            case 'hv':
-              var w = $(window).width();
-              var h = $(window).height();
-              $('.db_view').after("<div class=label100 id=hp_info></div>");
-              mkHive("db_view_cont", viewData, w, h);
-            break;
-            case 'fd':
-              var w = $(window).width();
-              var h = $(window).height();
-              mkForceDirected("db_view_cont", viewData, w, h);
+              mkSankey("db_view_cont",viewData,w,h);
             break;
           }
         } else {

@@ -3,7 +3,7 @@ $(document).ready(function(){
   mkFilterBox();
   mkSensorBox();
   mkSrchBox();
-  //mkCatBox();
+  mkCatBox();
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');
@@ -999,18 +999,35 @@ $(document).ready(function(){
       if (ex == -1) $(".srch_txt").val($(".srch_txt").val() + " AND " + term); 
     } else {
       $(".srch_txt").val(term);
-    }   
+    }
+    $('.srch_txt').focus();   
+  });
+
+  // If search is in focus, update on enter
+  $('.srch_txt').keypress(function(e) {
+    if (!e) e=window.event;
+    key = e.keyCode ? e.keyCode : e.which;
+    if (key == 13) doSrch();
   });
 
   $(document).on('click','.srch_do', function() {
+    doSrch();
+  });    
+
+  function doSrch() { 
     var items = $('.chk_es:checked').length;
 
-    if ($(".srch_txt").val().length == 0 || items == 0) {
-      $('#srch_ldr').html("What are you looking for?");    
+    if (items == 0) {
+      $('#srch_stat_msg').html("Please choose a log");
+      $('#srch_stat_msg').fadeIn();   
       return;
     }
-    var ldr = "<img class=ldimg src=\".css/load.gif\">";
-    var searchtype = $(this).data("searchtype");
+    if ($(".srch_txt").val().length == 0) {
+      $('#srch_stat_msg').html("Please provide a search term");
+      $('#srch_stat_msg').fadeIn();
+      return;
+    }
+    var searchtype = "es";
     var logtype = "(";
     var i = 0;
     $('.chk_es:checked').each(function() {
@@ -1021,14 +1038,13 @@ $(document).ready(function(){
     logtype += ")";
     switch (searchtype) {
       case "es":
-        $('#srch_ldr').html(ldr);
         esSearch(logtype);
       break;
       default:
         return;
       break;
     }
-  });
+  }
 
   $(document).on('click','.clear_srch', function() {
     $('.srch_txt').val('');
@@ -1045,19 +1061,18 @@ $(document).ready(function(){
         $(".chk_es").prop("checked",true);
       break;
     }
+    $('.srch_txt').focus();
   });
   
   $(document).on('click','.chk_es,.srch_edit', function() {
     var state = ($(this).prop('checked'));
     if (state == false) $("#ca_es").prop("checked",false);
+    $('.srch_txt').focus();
   });
-
-  $(document).on('click', '.srch_edit', function() {
-    $(this).prev('input').click();
-  }); 
 
   function mkSrchBox() {
     if ($('#tlsrchbox')[0]) return;
+    $('#srch_stat_msg').hide();
  
     var tbl = '', head = '', row = '', input = ''; 
 
@@ -1100,6 +1115,7 @@ $(document).ready(function(){
   }
 
   function esSearch(log) {
+    $('#srch_box_label').after('<img id=srch_ldr class=cm_tbl_ldr src=\".css/load.gif\">');
     var logtype = s2h(log);
     var filter = s2h($(".srch_txt").val());
     var start = $('#el_start').val();
@@ -1114,9 +1130,12 @@ $(document).ready(function(){
     function cb21(data){
       eval("d=" + data);
       if (d.dbg) {
-        $('#srch_ldr').html("Error: " + d.dbg);
+        $('#srch_stat_msg').html("Error: " + d.dbg);
+        $('#srch_stat_msg').fadeIn();
+        $('#srch_ldr').remove();
         return;
       }
+ 
       var etime = d.took/1000 || 0;
       var records = d.hits.hits.length || 0;
       var hits = d.hits.hits._source || 0;
@@ -1136,8 +1155,11 @@ $(document).ready(function(){
 
       for (var i=0; i < records; i++) {
         var message = d.hits.hits[i]._source.message;
-        var re = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g;
-        var m1 = message.replace(re, "<span class=link>$1</span>");
+        var re1 = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g;
+        var re2 = /\s([0-9a-zA-Z]{16,18})\s/g;
+        var m1 = message.replace(re1, "<span class=link>$1</span>")
+                        .replace(re2, " <span class=link>$1</span> ");
+
         row += "<tr class=pcomm><td class=\"raw select\">" + m1 + "</td></tr>";
       }
 
@@ -1149,6 +1171,7 @@ $(document).ready(function(){
       tbl += "</table></td></tr>";
 
       // Close our box
+      $('#srch_stat_msg').hide(); 
       $("#ico05").click();
 
       // Remove any existing results
@@ -1170,7 +1193,7 @@ $(document).ready(function(){
         }
       }
       // Remove loader
-      $('#srch_ldr').html('');
+      $('#srch_ldr').remove();
     }
   }
 

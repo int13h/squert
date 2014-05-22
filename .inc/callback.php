@@ -1206,7 +1206,7 @@ function autocat() {
 }
 
 function esquery() {
-    global $esHosts;
+    global $clientparams;
     $filter    = hextostr($_REQUEST['filter']);
     $logtype   = hextostr($_REQUEST['logtype']);
     $timestamp = hextostr($_REQUEST['se']);
@@ -1221,13 +1221,13 @@ function esquery() {
     }
 
     list($start,$end) = explode("|", $timestamp);
-    $start = strtotime($start);
-    $end = strtotime($end);
-    $now = strtotime("now");
+    $start = strtotime($start) . "000";
+    $end = strtotime($end) . "000";
+    $now = strtotime("now") . "000";
  
     if ($start > $end || $start == $end || $start > $now) {
       $tests = 1;
-      $msg = "Time logic failure!";
+      $msg = "Bad time logic!";
     }    
 
     // Bail if ts logic isn't sound
@@ -1238,10 +1238,7 @@ function esquery() {
         exit;
     }
 
-    $timestamp = str_replace(" ","T",$timestamp);
-    list($start,$end) = explode("|", $timestamp);
-    
-    $client = new Elasticsearch\Client($esHosts);
+    $client = new Elasticsearch\Client($clientparams);
     $params = array();
     $params['size'] = '500';
     $params['ignore'] = '400,404';
@@ -1257,8 +1254,8 @@ function esquery() {
                 \"filter\": {
                     \"range\": {
                         \"@timestamp\": {
-                            \"from\": \"$start\",
-                            \"to\": \"$end\"
+                            \"from\": $start,
+                            \"to\": $end
                         }
                     }
                 }
@@ -1276,6 +1273,11 @@ function esquery() {
 
     $params['body']  = $json;
     $result = $client->search($params);
+
+    if ($result[2] == "e") {
+        $result = array("dbg"  => "Invalid query!");   
+    }
+
     $theJSON = json_encode($result);
     echo $theJSON;
 }
