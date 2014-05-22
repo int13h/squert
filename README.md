@@ -21,19 +21,15 @@ Changes v1.3.0:
 * Autocat editor 
 * Significant interface changes
 
-See: [http://www.squertproject.org/summaryofchangesforsquertversion130](Changes v1.3.0)
+See: [Changes v1.3.0](http://www.squertproject.org/summaryofchangesforsquertversion130)
 
 ## Description
 
 SQueRT is a tool that is used to query event data
 
-## Updating
-
-2) mysql> GRANT UPDATE ON sguildb.user_info TO 'your_squert_user';
-
 ## Requirements
 
-* A working Sguil installation [http://sguil.net](http://sguil.net). If you use Security Onion [http://securityonion.blogspot.ca](http://securityonion.blogspot.ca) you can get everything setup rather quickly.
+* Sguil 0.9.0 [http://sguil.net](http://sguil.net). If you use Security Onion [http://securityonion.blogspot.ca](http://securityonion.blogspot.ca) you can get everything setup rather quickly.
   
 
 * PHP55 with CLI
