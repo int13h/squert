@@ -458,6 +458,8 @@ $(document).ready(function(){
     $("#loader").hide();
     // Reset checkbox
     $(".chk_all").prop("checked",false);
+    // Remove any open externals
+    if ($("#extresult")[0]) $("#extresult").remove();
   }
   function closeSubRow2() {
     $("#eview_sub3").remove();

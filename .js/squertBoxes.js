@@ -1154,8 +1154,6 @@ $(document).ready(function(){
       var records = d.hits.hits.length || 0;
       var hits = d.hits.hits._source || 0;
       var tbl = '', head = '', row = ''; 
-      var colspan = 7;
-      if ($(".d_row_sub_active1")[0]) colspan = $(".d_row_sub_active1").data("cols");
 
       head += "<thead><tr><th class=ext>";
       head += "<div class=box_label>EXTERNAL LOOKUP (" + etime + " seconds " + records + " results)</div>";
@@ -1164,7 +1162,7 @@ $(document).ready(function(){
       row += "<tr>";
 
       if (records == 0) {
-        row += "<tr class=pcomm><td colspan=" + colspan + " class=\"raw\">The query returned no results.</td></tr>";
+        row += "<tr class=pcomm><td id=extdata class=\"raw\">The query returned no results.</td></tr>";
       }
 
       for (var i=0; i < records; i++) {
@@ -1178,7 +1176,7 @@ $(document).ready(function(){
       }
 
       row += "</tr>";
-      tbl += "<tr id=extresult><td colspan=" + colspan + ">";
+      tbl += "<tr id=extresult><td id=extdata>";
       tbl += "<table id=tlsrch width=100% class=box_table cellpadding=0 cellspacing=0>";
       tbl += head;
       tbl += row;
@@ -1193,19 +1191,35 @@ $(document).ready(function(){
 
       // Make sure we are on the right tab
       if ($(".tab_active").attr('id') == 't_sum') {
-        var l = 0;
+        var l = 0, cols = 1;
         // Now see what state we are in
         if ($(".d_row_sub_active")[0]) l++;
         if ($(".d_row_sub_active1")[0]) l++;
         if ($("#gr").text() == "off") l = 3; 
 
         switch (l) {
-          case 0: $("#tl1").hide(); $("#aaa-00").append(tbl); break;
-          case 1: $(".d_row_sub_active").after(tbl); break;
-          case 2: $(".d_row_sub_active1").after(tbl); break;
-          case 3: $(".d_row_sub_active1").after(tbl); break;
+          case 0:
+            $("#tl1").hide();
+            $("#aaa-00").append("<table width=100% id=tl1-a cellpadding=0 cellspacing=0 align=center></table>");
+            $("#tl1-a").append(tbl);
+          break;
+          case 1:
+            var cols = $(".d_row_sub_active td.sub").length;
+            $(".d_row_sub_active").after(tbl);
+          break;
+          case 2:
+            cols = $(".d_row_sub_active1 td.sub").length;
+            $(".d_row_sub_active1").after(tbl);
+          break;
+          case 3: 
+            cols = $(".d_row_sub_active1 td.sub").length;
+            $(".d_row_sub_active1").after(tbl);
+          break;
         }
       }
+
+      // Set span
+      $("#extdata").attr('colspan', cols);
       // Remove loader
       $('#srch_ldr').remove();
     }
