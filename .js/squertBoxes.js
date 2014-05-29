@@ -1018,7 +1018,7 @@ $(document).ready(function(){
     var items = $('.chk_es:checked').length;
 
     if (items == 0) {
-      $('#srch_stat_msg').html("Please choose a log");
+      $('#srch_stat_msg').html("Please choose a source");
       $('#srch_stat_msg').fadeIn();   
       return;
     }
@@ -1051,6 +1051,20 @@ $(document).ready(function(){
   });
 
   // Checkboxes
+  
+  function srchSrcLabel() {
+    var n = $('.chk_es:checked').length || 'no';
+    switch (n) {
+      case 1:
+        $('#srchsrc').html('<b>' + n + '</b> source is selected');
+      break;
+      default: 
+        $('#srchsrc').html('<b>' + n + '</b> sources are selected');
+      break;
+    }  
+    $('.srch_txt').focus();
+  }
+
   $(document).on("click", "#ca_es", function(event) {
     var state = ($(this).prop('checked'));
     switch(state) {
@@ -1061,13 +1075,13 @@ $(document).ready(function(){
         $(".chk_es").prop("checked",true);
       break;
     }
-    $('.srch_txt').focus();
+    srchSrcLabel();
   });
   
   $(document).on('click','.chk_es,.srch_edit', function() {
     var state = ($(this).prop('checked'));
     if (state == false) $("#ca_es").prop("checked",false);
-    $('.srch_txt').focus();
+    srchSrcLabel();
   });
 
   function mkSrchBox() {
@@ -1186,7 +1200,7 @@ $(document).ready(function(){
         if ($("#gr").text() == "off") l = 3; 
 
         switch (l) {
-          case 0: $("#tl1").hide(); $("#aaa-00").after(tbl); break;
+          case 0: $("#tl1").hide(); $("#aaa-00").append(tbl); break;
           case 1: $(".d_row_sub_active").after(tbl); break;
           case 2: $(".d_row_sub_active1").after(tbl); break;
           case 3: $(".d_row_sub_active1").after(tbl); break;

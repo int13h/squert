@@ -298,6 +298,9 @@ dbC();
     <div class=cat_l1>
       <div class=srch_do><img title=search class=il src=.css/search.png></div>
     </div>
+    <div class=cat_r1 id=srchsrc>
+       <b>no</b> sources are selected
+    </div>
   </div>
   <div class=srch_tbl></div>
 </div>

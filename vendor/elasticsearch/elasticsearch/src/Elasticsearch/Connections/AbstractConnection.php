@@ -331,8 +331,9 @@ abstract class AbstractConnection implements ConnectionInterface
             str_replace('?', '?pretty=true', $uri);
         }
 
-        $curlCommand = 'curl -X' . strtoupper($method);
+        $curlCommand = 'curl -X ' . strtoupper($method);
         $curlCommand .= " '" . $uri . "'";
+        $curlCommand .= " -k";
 
         if (isset($body) === true && $body !== '') {
             $curlCommand .= " -d '" . $body . "'";
