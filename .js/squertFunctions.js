@@ -193,7 +193,7 @@ function mkStamp(datetime,op,offset) {
 
   var y = dt.getFullYear();
   var m = pad(dt.getMonth() + 1);
-  var d = dt.getDate();
+  var d = pad(dt.getDate());
   var hh =pad(dt.getHours());
   var mm =pad(dt.getMinutes());
   var ss =pad(dt.getSeconds());
