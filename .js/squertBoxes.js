@@ -884,7 +884,7 @@ $(document).ready(function(){
       if (ruleTxt.signature.length > 255) throw 7;
 
       // Validate expiration
-      var re = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$|^\d{1,4}\ (minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)$|^none/;
+      var re = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$|^\d{1,4}\ (minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)$|^none$/;
       var OK = re.exec(ruleTxt.expires);
       if (!OK) throw 8;
 

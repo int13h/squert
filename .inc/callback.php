@@ -1162,7 +1162,7 @@ function autocat() {
             $data = hextostr($_REQUEST['data']);
             $v = json_decode($data, true);
             // Is the timestamp freeform?
-            $pattern = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/';
+            $pattern = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$|^none$/';
             $expires = $v[expires];  
             if (!preg_match($pattern, $expires)) {
                 $expires = gmdate("Y-m-d H:i:s", strtotime("+ $expires"));
