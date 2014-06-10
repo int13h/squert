@@ -1874,9 +1874,9 @@ $(document).ready(function(){
  
     // We are now ready to class
     var catdata = intclass + "|||" + msg + "|||" + scidlist;
-    var urArgs = "type=" + 9 + "&catdata=" + catdata;
+    var urArgs = "type=" + 9;
     $(function(){
-      $.post(".inc/callback.php?" + urArgs, function(data){cb9(data)});
+      $.post(".inc/callback.php?" + urArgs, { catdata: catdata } ,function(data){cb9(data)});
     });
         
     function cb9(data){
