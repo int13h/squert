@@ -2,7 +2,9 @@
 
 Home: [http://www.squertproject.org](http://www.squertproject.org)
 
-Demo: [https://demo.sguil.net](https://demo.sguil.net)
+Demo: [https://demo.sguil.net](https://demo.sguil.net) currently offline
+
+Talks: [Version 1.3 @CANHEIT 2014](http://www.pintumbler.org/squert-canheit2014.pdf)
 
 * Login: sguil
 * Password: demo
@@ -22,6 +24,7 @@ Changes v1.3.0:
 * Significant interface changes
 
 See: [Changes v1.3.0](http://www.squertproject.org/summaryofchangesforsquertversion130)
+
 
 ## Description
 
