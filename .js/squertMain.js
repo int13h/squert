@@ -97,10 +97,22 @@ $(document).ready(function(){
 
     var urArgs = "type=" + 6 + "&ts=" + theWhen + "&sensors=" + theSensors;
     $(function(){
-      $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
+      $.post(".inc/callback.php?" + urArgs, function(data){cb(data)});
     });
 
     function cb(data){
+      // Check to make sure we still have a valid session. If we don't
+      // let the user know and return them to the login page.
+      if (data[0] == "<") {
+        $("span.class_msg").text("Your session has expired!");
+        $("span.class_msg").css("background-color", "#cc0000");
+        $("span.class_msg").css("color", "#fff");
+        $("span.class_msg").show(); 
+        var sessionDead = confirm("Your session has expired. Press \"OK\" to return to the login page. If you aren't finished with what you were looking at click 'Cancel'. Note: you won't be able to perform any actions.");
+        if (sessionDead) {
+          $("#logout").click();
+        }
+      }
       eval("ec=" + data);
       var esum = 0;
             
@@ -723,7 +735,6 @@ $(document).ready(function(){
 
   function eventList (type) {
     theWhen = getTimestamp();
-    statusPoll(0);
     var parts = type.split("-");
     var filterMsg = '';
     var rt = 0;
