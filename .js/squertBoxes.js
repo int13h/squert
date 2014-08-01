@@ -3,7 +3,7 @@ $(document).ready(function(){
   mkFilterBox();
   mkSensorBox();
   mkSrchBox();
-  mkCatBox();
+//  mkCatBox();
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');
@@ -1091,8 +1091,9 @@ $(document).ready(function(){
     var tbl = '', head = '', row = '', input = ''; 
 
     head += "<thead><tr>";
-    head += "<th class=sub width=20><input id=ca_es type=checkbox></th>";
-    head += "<th class=sub width=200>SOURCE</th>";
+    head += "<th class=sub width=20px><input id=ca_es type=checkbox></th>";
+    head += "<th class=sub width=200px>SOURCE</th>";
+    head += "<th class=sub witdh=100px>COLOUR</th>";
     head += "<th class=sub>DESCRIPTION</th>";
     head += "</tr></thead>";
     
@@ -1105,11 +1106,13 @@ $(document).ready(function(){
       var type = esSources[i].type;
       var desc = esSources[i].desc;
       var loke = esSources[i].loke;
+      var clid = type.replace(/(\s+)/, "");
       
-      row += "<tr class=f_row>"
+      row += "<tr id=class=f_row>";
       row += "<td class=sub><input id=cb_" + name + " class=chk_es ";
       row += "type=checkbox data-searchtype=es data-logtype=" + type + "></td>";
       row += "<td class=nr><div class=srch_edit>" + name + "</div></td>";
+      row += "<td class=nr><input id=\"clid_" + clid + "\" class=color></div></td>";
       row += "<td class=nr>" + desc + "</td>";
       row += "</tr>";
     }
@@ -1138,7 +1141,12 @@ $(document).ready(function(){
     var urArgs = "type=18&se=" + when + "&logtype=" + logtype + "&filter=" + filter;
 
     $(function(){
-      $.post(".inc/callback.php?" + urArgs, function(data){cb21(data)});
+      $.post(".inc/callback.php?" + urArgs, function(data){cb21(data)})
+       .fail(function() {
+         $('#srch_ldr').remove();  
+         $('#srch_stat_msg').html("The query failed!");
+         $('#srch_stat_msg').fadeIn();
+       }); 
     });
 
     function cb21(data){
@@ -1165,14 +1173,43 @@ $(document).ready(function(){
         row += "<tr class=pcomm><td id=extdata class=\"raw\">The query returned no results.</td></tr>";
       }
 
-      for (var i=0; i < records; i++) {
-        var message = d.hits.hits[i]._source.message;
-        var re1 = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g;
-        var re2 = /\s([0-9a-zA-Z]{16,18})\s/g;
-        var m1 = message.replace(re1, "<span class=link>$1</span>")
-                        .replace(re2, " <span class=link>$1</span> ");
+      /*Figure out time domain
+      var colours = d3.scale.linear()
+          .domain([0,10])
+          .range(["#e9e9e9","#5d5d5d"]);
 
-        row += "<tr class=pcomm><td class=\"raw select\">" + m1 + "</td></tr>";
+      var color = colours(o);*/
+
+      for (var i=0; i < records; i++) {
+        row += "<tr class=pcomm><td class=\"raw select\">";
+        for (key in d.hits.hits[i]._source) {
+          if (key == "@timestamp") continue;
+          var value = d.hits.hits[i]._source[key];        
+
+          // Format timestamps if utime 
+          if (key == 'timestamp') {
+            var re = /^\d{10}\.\d{6}$/;
+            var OK = re.exec(value);
+            if (OK) {
+              var tv = Number(d.hits.hits[i]._source[key].split(".")[0] * 1000);
+              value = mkStamp(tv,0,0);
+            }
+          }
+
+          // Decorate the type
+          var exstyle = "";
+          var vclass = "ex_val";
+          if (key == "type") {
+            vclass = "ex_type";
+            var clid = value.replace(/(\s+)/, "");
+            var bg = $('#clid_' + clid).css('background-color');
+            var fg = $('#clid_' + clid).css('color');
+            exstyle = " style=\"background-color:" + bg + "; color:" + fg + ";\""; 
+          }
+          row += "<div class=ex_key>" + key + "=</div>";
+          row += "<div class=\"" + vclass + "\"" + exstyle + ">" + value + "</div>";
+        }
+        row += "</td></tr>";
       }
 
       row += "</tr>";

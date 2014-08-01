@@ -4,10 +4,10 @@ Home: [http://www.squertproject.org](http://www.squertproject.org)
 
 Demo: [https://demo.sguil.net](https://demo.sguil.net) currently offline
 
-Talks: [Version 1.3 @CANHEIT 2014](http://www.pintumbler.org/squert-canheit2014.pdf)
-
 * Login: sguil
 * Password: demo
+
+Talk: [Version 1.3 @CANHEIT 2014](http://www.pintumbler.org/squert-canheit2014.pdf)
 
 Intro: [http://www.youtube.com/watch?v=ZOsVw96XM8E](http://www.youtube.com/watch?v=ZOsVw96XM8E)
 

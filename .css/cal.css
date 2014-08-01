@@ -137,3 +137,7 @@ display:none;
 color:#cc0000;
 padding-right:20px;
 }
+div.ctt {
+float:left;
+cursor:pointer;
+}

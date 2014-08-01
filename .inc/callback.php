@@ -1163,7 +1163,7 @@ function autocat() {
             $v = json_decode($data, true);
             // Is the timestamp freeform?
             $pattern = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$|^none$/';
-            $expires = $v[expires];  
+            $expires = $v['expires'];  
             if (!preg_match($pattern, $expires)) {
                 $expires = gmdate("Y-m-d H:i:s", strtotime("+ $expires"));
             }
@@ -1273,11 +1273,11 @@ function esquery() {
 
     $params['body']  = $json;
     $result = $client->search($params);
-
+/*
     if ($result[2] == "e") {
-        $result = array("dbg"  => "Invalid query!");   
-    }
-
+        $result = array("dbg"  => "Invalid query!");
+    } 
+*/
     $theJSON = json_encode($result);
     echo $theJSON;
 }

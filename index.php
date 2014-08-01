@@ -47,13 +47,15 @@ dbC();
 <script type="text/javascript" src=".js/jquery-jvectormap-world-mill-en.js"></script>
 <script type="text/javascript" src=".js/d3/d3.min.js"></script>
 <script type="text/javascript" src=".js/d3/sankey.js"></script>
+<script type="text/javascript" src=".js/d3/packages.js"></script>
+<script type="text/javascript" src=".js/jscolor/jscolor.js"></script>
 
 <title id=title>squert</title>
 </head>
 <body>
 <div id=tab_group class=tab_group>
   <div id=t_sum class=tab>EVENTS</div>
-  <!--div id=t_inc class=tab>Incidents</div-->
+  <div id=t_inc class=tab>INCIDENTS</div>
   <div id=t_ovr class=tab>SUMMARY</div>
   <div id=t_view class=tab>VIEWS</div> 
   <div id=t_search class=search data-state=0>
@@ -76,8 +78,11 @@ dbC();
     <div class=db_link data-val=sc>SOURCE COUNTRY</div>
     <div class=db_link data-val=dc>DESTINATION COUNTRY</div>
     <div class=db_linkt>type:</div>
+    <div class=db_type data-type=cl>CLUSTER LAYOUT</div>
+    <div class=db_type data-type=eb>EDGE BUNDLING</div>
+    <div class=db_type data-type=hp>HIVE PLOT</div>
     <div class=db_type data-type=sk data-state=1>SANKEY DIAGRAM</div>
-    <!--div class=db_save><span class=links>save as svg</span></div-->
+    <div class=db_save><span class=links>save as svg</span></div>
   </div>
 </div>
 
@@ -305,6 +310,7 @@ dbC();
   <div class=srch_tbl></div>
 </div>
 
+<div class="snh visible"><img class=il src=".css/darr.png"></div>
 <div class=bottom>
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>WELCOME&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=logout>LOGOUT</span></div>
   <div class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
@@ -312,7 +318,6 @@ dbC();
   <div class=b_clock id=b_utc><span class=clock_lbl>UTC</span> <span id=clock_utc>00:00:00</span></div>
   <div class=b_clock id=b_local><span class=clock_lbl>LOCAL</span> <span id=clock_local>00:00:00</span></div>
   </div>  
-
 </div>
 
 <input id=event_sort type=hidden value="DESC">

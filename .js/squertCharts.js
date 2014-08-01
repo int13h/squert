@@ -102,7 +102,6 @@ function mkSankey(callerID,data,w,h) {
 
   var sankey = d3.sankey()
       .nodeWidth(5)
-      .nodePadding(10)
       .size([width, height])
       .nodes(data.nodes)
       .links(data.links)

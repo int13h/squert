@@ -63,6 +63,19 @@ INSERT IGNORE INTO stat_types (type,description) VALUES ('2','Sensor ID');
 INSERT IGNORE INTO stat_types (type,description) VALUES ('3','Source IP');
 INSERT IGNORE INTO stat_types (type,description) VALUES ('4','Destination IP');
 INSERT IGNORE INTO stat_types (type,description) VALUES ('5','Signature ID'); 
+
+CREATE TABLE IF NOT EXISTS objects
+(
+  uid   	INT(10) UNSIGNED,
+  type		TINYINY, 
+  ipv4		INT UNSIGNED NOT NULL DEFAULT 0,
+  object        VARCHAR(255),
+  colour	VARCHAR(8), 
+  age		TIMESTAMP,
+  INDEX uid (uid),
+  INDEX ipv4 (ipv4),
+  INDEX object (object)
+);
  
 ALTER TABLE user_info
 ADD email VARCHAR(320) NOT NULL DEFAULT 'none',

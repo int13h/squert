@@ -189,8 +189,8 @@ function mkStamp(datetime,op,offset) {
   switch (op) {
     case "+": var dt = new Date(ms + offset); break;
     case "-": var dt = new Date(ms - offset); break;
+    case   0: var dt = new Date(datetime); break;
   }
-
   var y = dt.getFullYear();
   var m = pad(dt.getMonth() + 1);
   var d = pad(dt.getDate());
@@ -233,17 +233,17 @@ function getTimestamp() {
     fval = 'YES';
     fval_c = 'fl_val_on';
   }
-  var tl = "<span class=\"hvr ctt\"><img title=\"toggle date controls\" class=ct src=.css/ct.png><span class=fl>interval: </span></span><span class=" + fbt_c + " data-ft=tl>";
+  var tl = "<div class=ctt><img title=\"toggle date controls\" class=ct src=.css/ct.png><span class=fl>INTERVAL: </span><span class=" + fbt_c + " data-ft=tl>";
   tl += ts_sd + " " + ts_st + " -> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
-  tl += "</span>";
-  tl += "<span class=fl>filtered by object: </span><span class=" + fval_c + " data-ft=ob>" + fval + "</span>";
+  tl += "</span></div>";
+  tl += "<span class=fl>FILTERED BY OBJECT: </span><span class=" + fval_c + " data-ft=ob>" + fval + "</span>";
  
   if ($('.chk_sen:checked').length > 0) {
     fbs = 'YES';
     fbs_c = 'fl_val_on';
   } 
-  tl += "<span class=fl>filtered by sensor: </span><span class=" + fbs_c + " data-ft=sn>" + fbs + "</span>";
-  tl += "<span class=fl>priority: </span>";
+  tl += "<span class=fl>FILTERED BY SENSOR: </span><span class=" + fbs_c + " data-ft=sn>" + fbs + "</span>";
+  tl += "<span class=fl>PRIORITY: </span>";
   $('.t_stats').html(tl);
   return theWhen;
 }
