@@ -670,7 +670,7 @@ function comments() {
               LEFT JOIN user_info AS u ON history.uid = u.uid 
               WHERE timestamp BETWEEN 
               UTC_DATE() - INTERVAL 365 DAY AND UTC_TIMESTAMP()
-              AND comment NOT IN('NULL','Auto Update','')
+              AND (comment NOT IN('NULL','Auto Update','') AND comment NOT LIKE ('autoid %'))
               GROUP BY comment
               ORDER BY f5 DESC";
 

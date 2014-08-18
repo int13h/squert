@@ -3,7 +3,7 @@ $(document).ready(function(){
   mkFilterBox();
   mkSensorBox();
   mkSrchBox();
-//  mkCatBox();
+  mkCatBox();
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');

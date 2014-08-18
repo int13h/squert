@@ -49,7 +49,7 @@ $(document).ready(function(){
       flipIt(ptrn);
     }
   });
- 
+
   //
   // Load main content
   //
@@ -313,6 +313,22 @@ $(document).ready(function(){
         rtbit = 1;
       break;
     }
+  });
+
+  // Toggle bottom bar (accommodate full window screenshots)
+  $(document).on("click", "#botog", function(event) {
+    var cv = $('#botog').text();
+    switch (cv) {
+      case  'on':
+        $('#botog').attr('class','tvalue_off');
+        $('#botog').text('off');
+      break;
+      case 'off':
+        $('#botog').attr('class','tvalue_on');
+        $('#botog').text('on');
+      break;
+    }    
+    $('.bottom').animate({width: 'toggle'});
   });
   
   // If search is in focus, update on enter

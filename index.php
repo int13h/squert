@@ -92,29 +92,30 @@ dbC();
     <div class=event_cont>
       <div class=label_l><span class=ec_label>TOGGLE</span><div class=label_m data-sec=t><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_t>
-        <div class=label>queue only:</div><div id=rt class=tvalue_on>on</div>
-        <div class=label>grouping:</div><div id=gr class=tvalue_on>on</div>
+        <div class=label>queue only</div><div id=rt class=tvalue_on>on</div>
+        <div class=label>grouping</div><div id=gr class=tvalue_on>on</div>
+        <div class=label>bottom bar</div><div id=botog class=tvalue_on>on</div>
       </div>
     </div>
 
     <div class=event_cont>
       <div class=label_l><span class=ec_label>SUMMARY</span><div class=label_m data-sec=s><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_s>  
-        <div class=label>queued events:</div><div id=qtotal class=value>-</div>
-        <div class=label>total events:</div><div id=etotal class=value>-</div>
-        <div class=label>total signatures:</div><div id=esignature class=value>-</div>
-        <div class=label>total sources:</div><div id=esrc class=value>-</div>
-        <div class=label>total destinations:</div><div id=edst class=value>-</div>
+        <div class=label>queued events</div><div id=qtotal class=value>-</div>
+        <div class=label>total events</div><div id=etotal class=value>-</div>
+        <div class=label>total signatures</div><div id=esignature class=value>-</div>
+        <div class=label>total sources</div><div id=esrc class=value>-</div>
+        <div class=label>total destinations</div><div id=edst class=value>-</div>
       </div>
     </div>
 
     <div class=event_cont>
       <div class=label_l><span class=ec_label>COUNT BY PRIORITY</span><div class=label_m data-sec=p><img title=collapse class=il src=.css/uarr.png></div></div>
       <div class=secl id=sec_p>
-        <div class=label>high:</div><div id=pr_1 class=value>-</div>
-        <div class=label>medium:</div><div id=pr_2 class=value>-</div>
-        <div class=label>low:</div><div id=pr_3 class=value>-</div>
-        <div class=label>other:</div><div id=pr_4 class=value>-</div>
+        <div class=label>high</div><div id=pr_1 class=value>-</div>
+        <div class=label>medium</div><div id=pr_2 class=value>-</div>
+        <div class=label>low</div><div id=pr_3 class=value>-</div>
+        <div class=label>other</div><div id=pr_4 class=value>-</div>
       </div>
     </div>
 
@@ -123,31 +124,31 @@ dbC();
       <div class=secl id=sec_c>  
 
         <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='compromised L1 (F1)'>
-        <div class=b_C1></div>compromised L1:</div><div data-type=st id=c-11 class=value_link>-</div>
+        <div class=b_C1></div>compromised L1</div><div data-type=st id=c-11 class=value_link>-</div>
 
         <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='compromised L2 (F2)'>
-        <div class=b_C2></div>compromised L2:</div><div data-type=st id=c-12 class=value_link>-</div>
+        <div class=b_C2></div>compromised L2</div><div data-type=st id=c-12 class=value_link>-</div>
       
         <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='attempted unauthorized access (F3)'>
-        <div class=b_C3></div>attempted access:</div><div data-type=st id=c-13 class=value_link>-</div>
+        <div class=b_C3></div>attempted access</div><div data-type=st id=c-13 class=value_link>-</div>
 
         <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='denial of service attack (F4)'>
-        <div class=b_C4></div>denial of service:</div><div data-type=st id=c-14 class=value_link>-</div>
+        <div class=b_C4></div>denial of service</div><div data-type=st id=c-14 class=value_link>-</div>
       
         <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='policy violation (F5)'>
-        <div class=b_C5></div>policy violation:</div><div data-type=st id=c-15 class=value_link>-</div>
+        <div class=b_C5></div>policy violation</div><div data-type=st id=c-15 class=value_link>-</div>
 
         <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='reconnaissance (F6)'>
-        <div class=b_C6></div>reconnaissance:</div><div data-type=st id=c-16 class=value_link>-</div>
+        <div class=b_C6></div>reconnaissance</div><div data-type=st id=c-16 class=value_link>-</div>
       
         <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='malicious (F7)'>
-        <div class=b_C7></div>malicious:</div><div data-type=st id=c-17 class=value_link>-</div>
+        <div class=b_C7></div>malicious</div><div data-type=st id=c-17 class=value_link>-</div>
 
         <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='no further action required (F8)'>
-        <div class=b_NA></div>no action req&#x2019;d.:</div><div data-type=st id=c-1 class=value_link>-</div>
+        <div class=b_NA></div>no action req&#x2019;d.</div><div data-type=st id=c-1 class=value_link>-</div>
       
         <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='escalate event (F9)'>
-        <div class=b_ES></div>escalated event:</div><div data-type=st id=c-2 class=value_link>-</div>
+        <div class=b_ES></div>escalated event</div><div data-type=st id=c-2 class=value_link>-</div>
 
       </div>
     </div>
@@ -310,7 +311,6 @@ dbC();
   <div class=srch_tbl></div>
 </div>
 
-<div class="snh visible"><img class=il src=".css/darr.png"></div>
 <div class=bottom>
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>WELCOME&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=logout>LOGOUT</span></div>
   <div class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>

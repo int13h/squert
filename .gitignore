@@ -7,7 +7,8 @@
 .rules
 .images
 .js/config.js
-*.sw
+*.swp
+*.swo
 tests
 *.old
 play

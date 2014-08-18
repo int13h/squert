@@ -994,21 +994,6 @@ background-color:#c9c9c9;
 height:25px;
 z-index:1;
 }
-div.snh {
-width:25px;
-height:25px;
-bottom:0;
-left:0;
-position:fixed;
-text-align:center;
-background:#e9e9e9;
-float:left;
-z-index:2;
-transform:rotate(90deg);
--ms-transform:rotate(90deg);
--webkit-transform:rotate(90deg);
-cursor:pointer;
-}
 div.b_tray {
 text-align:left;
 float:left;
@@ -1038,7 +1023,7 @@ color:#595959;
 font-size:11px;
 }
 div.user {
-margin-left:30px;
+margin-left:10px;
 width:200px;
 margin-top:5px;
 float:left;
@@ -1736,4 +1721,8 @@ cursor:pointer;
 -moz-user-select: text;
 -webkit-user-select: text;
 user-select: text;
+}
+div.event_class {
+margin-top:10px;
+margin-left:10px;
 }
