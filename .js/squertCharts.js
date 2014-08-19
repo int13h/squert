@@ -98,6 +98,7 @@ function mkSankey(callerID,data,w,h) {
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
+        //.call(d3.behavior.zoom().scaleExtent([-8, 8]).on("zoom", zoom))
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var sankey = d3.sankey()
@@ -181,6 +182,10 @@ function mkSankey(callerID,data,w,h) {
       .attr("y", function(d) { return d.dy / 2 - 5; })
       .filter(function(d) { return d.x < width / 2; })
       .attr("x", 6 + sankey.nodeWidth());
+
+  function zoom() {
+    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  }
 
   function dragmove(d) {
     d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");

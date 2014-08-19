@@ -289,6 +289,10 @@ dbC();
     <div title="close" class="box_close" data-box=srch><img class=il src=.css/close.png></div>
     <div id=srch_stat_msg class="box_stat hide"></div> 
   </div>
+  <div class=tab_subgroup>
+    <div data-tab="tab_es"  class="tsg tsg_active">ELASTICSEARCH</div>
+    <div data-tab="tab_url" class="tsg">URL</div>
+  </div>
   <div class=srch_controls>
     <div class=cat_l1>QUERY:</div>
     <div class=cat_r1><input class=srch_txt type=text maxlength=255 value="*"></div>

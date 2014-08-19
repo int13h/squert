@@ -157,10 +157,6 @@ $(document).ready(function(){
     $("#title").html("squert (" + qTotal + ") - " + thisUser);
   }
 
-  if ($("#cat_sum").val() == 0) {
-    statusPoll(0);
-  }
-
   //
   // Event monitor (how often we poll for new events)
   //
@@ -201,7 +197,7 @@ $(document).ready(function(){
       $('.content-left').hide();
     break;
   }
-
+  
   $('#' + tab_cached).attr('class','tab_active');
   $("#" + tab_cached + "_content").attr('class','content_active');
 
@@ -253,6 +249,14 @@ $(document).ready(function(){
       var urArgs = "type=" + 5 + "&tab=" + ctab;
       $.get(".inc/callback.php?" + urArgs);
     }
+  });
+
+  // Sub tab groups
+  $(".tsg").click(function(event) {
+    var nc = Number($(this).attr('class').split(/\s/).length);
+    var ct = $(this).data('tab');
+    $('.tsg_active').attr('class','tsg');
+    $(this).attr('class','tsg tsg_active');
   });
 
   // Toggle and update views
@@ -756,6 +760,7 @@ $(document).ready(function(){
 
   function eventList (type) {
     theWhen = getTimestamp();
+    statusPoll(0);
     var parts = type.split("-");
     var filterMsg = '';
     var rt = 0;
