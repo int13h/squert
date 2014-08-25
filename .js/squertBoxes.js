@@ -3,6 +3,7 @@ $(document).ready(function(){
   mkFilterBox();
   mkSensorBox();
   mkSrchBox();
+  mkUrlBox();
   mkCatBox();
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
@@ -12,6 +13,7 @@ $(document).ready(function(){
         $("#tl1").show();
         return;
     }
+    if ($('.pickbox').is(":visible")) return;
     var cID = "#" + caller + "_box";
     var isOpen = $('#t_search').data('state');
     // Are we the only one open?
@@ -264,26 +266,37 @@ $(document).ready(function(){
   }
 
   //
-  // Filters
+  // Filters and URLs
   //
 
   // Create entries
   function mkEntry(entry) {
+    var user = $("#t_usr").data("c_usr");
+    var ftype = $(".hp_type_active").data("val");
     var cls = 'f_row';
+
     if (!entry) {
       cls = 'h_row';
       var filter = "";
-      var user = $("#t_usr").data("c_usr") || "-";
-      entry = {"alias": "New", "name": "", "notes": "None.", "filter": filter, "user": user, "age": "1970-01-01 00:00:00"};
+      switch (ftype) {
+        case "filter":
+          entry = {"alias": "New", "name": "", "notes": "None.", "filter": filter, "user": user, "age": "1970-01-01 00:00:00"};
+        break;
+        case "url":
+          entry = {"alias": "New", "name": "", "notes": "None.", "url": filter, "user": user, "age": "1970-01-01 00:00:00"};
+        break;
+      }
     }
+
     var search = "<div class=center>-</div>";
     var re = /^Shell -/;
     var OK = re.exec(entry.name);
     if (!OK) search = "<div class=tof title=\"Show these events\" data-type=fil data-value=\"" + entry.alias + "\"><img class=il src=.css/search.png></div>";
 
-    encFilter = s2h(entry.filter);        
+    encFilter = s2h(entry[ftype]);        
     row = '';
     row += "<tr class=" + cls + " id=\"tr_" + entry.alias + "\" ";
+    row += "data-type=\"" + ftype + "\" ";
     row += "data-alias=\"" + entry.alias + "\" ";
     row += "data-name=\"" + entry.name + "\" ";
     row += "data-notes=\"" + entry.notes + "\" ";
@@ -293,7 +306,7 @@ $(document).ready(function(){
     row += "<td class=nr>" + entry.name + "</td>";
     row += "<td class=nr>" + search + "</div></td>";
     row += "<td class=nr>" + entry.notes + "</td>";
-    row += "<td class=nr>" + entry.user + "</td>"; 
+    row += "<td class=nr>" + user + "</td>"; 
     row += "<td class=nr>now</td>";
     row += "</tr>";
     return row;
@@ -308,6 +321,9 @@ $(document).ready(function(){
 
     function cb6(data){
       eval("theData=" + data);
+
+      var active_type = $(".hp_type_active").data('val');
+
       tbl = '';
       head = '';
       row = '';
@@ -321,6 +337,7 @@ $(document).ready(function(){
       head += "</tr></thead>";
 
       for (var i=0; i<theData.length; i++) {
+        var type   = theData[i].type;
         var alias  = theData[i].alias;
         var name   = theData[i].name;
         var notes  = theData[i].notes;
@@ -334,8 +351,13 @@ $(document).ready(function(){
         var re = /^Shell -/;
         var OK = re.exec(name);
         if (!OK) search = "<div class=tof title=\"Show these events\" data-type=fil data-value=\"" + alias + "\"><img class=il src=.css/search.png></div>";
-
-        row += "<tr class=f_row id=\"tr_" + alias + "\" ";
+        if (type != active_type) {   
+          row += "<tr class=\"f_row hide\" ";
+        } else {
+          row += "<tr class=f_row ";
+        } 
+        row += "id=\"tr_" + alias + "\" ";
+        row += "data-type=\"" + type + "\" ";
         row += "data-alias=\"" + alias + "\" ";
         row += "data-name=\"" + name + "\" ";
         row += "data-notes=\"" + notes + "\" ";
@@ -362,12 +384,12 @@ $(document).ready(function(){
 
   function openEdit (cl) {
     var rid = '#tr_' + cl;
+    var ftype = $(".hp_type_active").data("val");
     var alias = $(rid).data('alias');
     var name = $(rid).data('name');
     var notes = $(rid).data('notes');
     var global = $(rid).data('global');
     var filter = h2s($(rid).data('filter'));
-    var type = alias[0];
     var row = '';
     row += "<tr id=filter_content>";
     row += "<td class=f_row colspan=6><textarea id=\"txt_" + alias +"\" rows=10>";
@@ -375,10 +397,9 @@ $(document).ready(function(){
     row += "\"alias\": \"" + alias + "\",\n";
     row += "\"name\": \"" + name + "\",\n";
     row += "\"notes\": \"" + notes + "\",\n";
-    row += "\"filter\": \"" + filter + "\"\n";
+    row += "\"" + ftype + "\": \"" + filter + "\"\n";
     row += "}";
     row += "</textarea>";
-
     // We cant remove globals
     if (global == 0) {
       row += "<div class=filter_bees><div class=filter_update>update</div><div class=filter_remove>remove</div></div>";
@@ -389,6 +410,191 @@ $(document).ready(function(){
 
     $('#tr_' + cl).after(row);
   }
+
+ // Refresh filter listing
+  $(document).on("click", ".filter_refresh", function(event) {
+    mkFilterBox();
+  });
+
+  // Create new filter
+  $(document).on("click", ".filter_new", function(event) {
+    // There can be only one :/  
+    if ($('#tr_New').length == 0 && $('#filter_content').length == 0) {
+      newEntry = mkEntry();
+      if ($('#tr_help').length == 0) {
+        $('#tl4').prepend(newEntry);
+      } else {
+        $('#tr_help').after(newEntry);
+      }
+    }
+  });
+    
+  // Rule expansion (gives access to edit as well)
+  $(document).on("click", ".filter_edit", function(event) {
+    currentCL = $(this).attr('id');
+    if (!$("#filter_content")[0]) {
+      openEdit(currentCL);
+      $('#' + currentCL).data('edit','yes');
+      $('td:first-child', $(this).parents('tr')).css('background-color','#c4c4c4');
+      $('td:nth-child(2)', $(this).parents('tr')).css('background-color','#c4c4c4');
+    } else {
+      if ($('#' + currentCL).data('edit') == 'yes') {
+        $("#filter_content").remove();
+        if (currentCL == "New") {
+          $("#tr_" + currentCL).fadeOut('slow', function() {
+            $("#tr_" + currentCL).remove();
+          });
+        } else {
+          $('td:first-child', $(this).parents('tr')).css('background-color','transparent');
+          $('td:nth-child(2)', $(this).parents('tr')).css('background-color','transparent');
+          $('#' + currentCL).data('edit','no');
+        }
+      }
+    }
+  });
+
+  // Update (or create new) filter
+  $(document).on("click", ".filter_update", function(event) {
+    // Hide any previous errors
+    $('.filter_error').empty();
+    eMsg = '';
+    // Get the current filter
+    try {
+      rawTxt = $('#txt_' + currentCL).val();
+      // Fitler out some stuff
+      rawTxt = rawTxt.replace(/[@|&;*\\`]/g, "");
+      rawTxt = rawTxt.replace(/[>]/g, "&gt;");
+      rawTxt = rawTxt.replace(/[<]/g, "&lt;");
+      filterTxt = $.parseJSON(rawTxt);
+
+      if (filterTxt.notes.length == 0) filterTxt.notes = "None.";
+
+      // Check for empty objects
+      var emptyVal = 0;
+      for (var i in filterTxt) {
+        if (filterTxt.hasOwnProperty(i)) {
+          if (filterTxt[i].length == 0) {
+            emptyVal++;
+          }
+        }
+      }
+      if (emptyVal > 0) throw 0; 
+            
+      // Sanitize alias
+      var re = /^[?a-zA-Z][\w-]*$/;
+      var OK = re.exec(filterTxt.alias);
+      if (!OK) throw 1;
+      if (filterTxt.alias == "New") throw 1;
+    
+      // If creating a new filter make sure this alias doesn't already exist
+      if ($("#tr_" + filterTxt.alias)[0] && $('#tr_New')[0]) throw 1;
+
+      // Make sure we dont match a builtin
+      var builtins = ["cc","dip","dpt","ip","sid","sig","sip","spt","scc","dcc","st"];
+      if (builtins.indexOf(filterTxt.alias) != -1) throw 1;
+
+      // Continue..
+      oldCL = currentCL;
+      var ftype = $(".hp_type_active").data("val");
+      var fd = s2h(ftype + "||" + filterTxt.alias + "||" + filterTxt.name + "||" + filterTxt.notes + "||" + filterTxt[ftype]);
+      var urArgs = "type=8&mode=update&data=" + fd;
+      $(function(){
+        $.post(".inc/callback.php?" + urArgs, function(data){cb7(data)}); 
+      });
+
+      function cb7(data){
+        eval("theData=" + data);
+        if (theData.msg) {
+          alert(theData.msg);
+        } else {
+          $("#filter_content").remove();
+        }         
+      }
+
+      newEntry = mkEntry(filterTxt);
+            
+      // If we edited an existing entry update it.
+      if (filterTxt.alias == currentCL) {
+        $('#tr_' + oldCL).attr('id', 'toRemove');
+        $('#toRemove').after(newEntry);
+        $('#toRemove').remove();
+      } else { // We have created a new one so show it.
+        $('#tr_' + oldCL).before(newEntry);
+        $('td:first', $('#tr_' + oldCL)).css('background-color','#e9e9e9');
+      }
+
+      // If we started from a new entry, delete it.
+      if ($('#tr_New').length == 1) {
+        $('#tr_New').remove();
+      }
+
+    } catch (err) {
+      switch (err) {
+        case 0:
+          eMsg += "<span class=warn><br>Error!</span> ";
+          eMsg += "Please supply a value for each object.";
+        break;
+        case 1:
+          eMsg += "<span class=warn><br>Error!</span> "
+          eMsg += "Filter aliases MUST be unique. Valid characters are: ";
+          eMsg += "Aa-Zz, 0-9, - and _ . ";
+          eMsg += "The word \"New\" is reserved and may not be used.";
+        break;
+        default:
+          eMsg += "<span class=warn><br>Format error!</span> ";
+          eMsg += "Please ensure the format above is valid JSON. ";
+          eMsg += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> ";
+          eMsg += "pairs.<br> Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except ";
+          eMsg += "the last pair before the closing curly brace <b>\"}\"</b>.";
+          eMsg += " Strings must be enclosed within double quotes.";
+        break;
+      }
+      $('.filter_error').append(eMsg);
+      $('.filter_error').fadeIn();
+    }
+  });
+
+  // Remove a filter
+  $(document).on("click", ".filter_remove", function(event) {
+    var oktoRM = confirm("Are you sure you want to remove this filter?");
+    if (oktoRM) {
+      var urArgs = "type=8&mode=remove&data=" + currentCL;
+      $(function(){
+        $.post(".inc/callback.php?" + urArgs, function(data){cb8(data)});
+      }); 
+
+      function cb8(data){
+        eval("theData=" + data);
+        if (theData.msg != '') {
+          alert(theData.msg);
+        } else {
+          $("#filter_content").remove();
+          $("#tr_" + currentCL).fadeOut('slow', function() {
+            $("#tr_" + currentCL).remove();
+          });
+        }
+      }
+    }
+  });
+
+  // Type toggle
+  $(document).on('click', '.hp_type', function() {
+    var type = $(this).data('val');
+    // Do nothing if we are already the active
+    if ($(this).hasClass('hp_type_active')) return;
+    // Do nothing if edit is open
+    if ($('#filter_content')[0]) return;
+    // Do nothing if we are creating
+    if ($('#tr_New')[0]) return;
+    $('.hp_type').attr('class','hp_type');
+    $(this).attr('class', 'hp_type hp_type_active');
+    $('.f_row').hide();
+    $('.f_row').each(function() {
+      var co = this;
+      if ($(co).data('type') == type) $(co).fadeIn('slow','linear');
+    });
+    
+  });
 
   // Help!?
   $(document).on("click", ".filter_help", function(event) {
@@ -455,166 +661,6 @@ $(document).ready(function(){
       $('#tl4').before(tbl);
     } else {
       $('#tbl_help').remove();
-    }
-  });
-
-  // Refresh filter listing
-  $(document).on("click", ".filter_refresh", function(event) {
-    mkFilterBox();
-  });
-
-  // Create new filter
-  $(document).on("click", ".filter_new", function(event) {
-    // There can be only one :/  
-    if ($('#tr_New').length == 0 && $('#filter_content').length == 0) {
-      newEntry = mkEntry();
-      if ($('#tr_help').length == 0) {
-        $('#tl4').prepend(newEntry);
-      } else {
-        $('#tr_help').after(newEntry);
-      }
-    }
-  });
-    
-  // Filter expansion (gives access to edit as well)
-  $(document).on("click", ".filter_edit", function(event) {
-    currentCL = $(this).attr('id');
-    if (!$("#filter_content")[0]) {
-      openEdit(currentCL);
-      $('#' + currentCL).data('edit','yes');
-      $('td:first', $(this).parents('tr')).css('background-color','#c4c4c4');
-    } else {
-      $("#filter_content").remove();
-      if (currentCL == "New") {
-        $("#tr_" + currentCL).fadeOut('slow', function() {
-          $("#tr_" + currentCL).remove();
-        });
-      } else {
-        $('td:first', $(this).parents('tr')).css('background-color','transparent');
-        $('#' + currentCL).data('edit','no');
-      }
-    }
-  });        
-
-  // Update (or create new) filter
-  $(document).on("click", ".filter_update", function(event) {
-    // Hide any previous errors
-    $('.filter_error').empty();
-    eMsg = '';
-    // Get the current filter
-    try {
-      rawTxt = $('#txt_' + currentCL).val();
-      // Fitler out some stuff
-      rawTxt = rawTxt.replace(/[@|&;*\\`]/g, "");
-      rawTxt = rawTxt.replace(/[>]/g, "&gt;");
-      rawTxt = rawTxt.replace(/[<]/g, "&lt;");
-      filterTxt = $.parseJSON(rawTxt);
-
-      if (filterTxt.notes.length == 0) filterTxt.notes = "None.";
-
-      // Check for empty objects
-      emptyVal = 0;
-      for (var i in filterTxt) {
-        if (filterTxt.hasOwnProperty(i)) {
-          if (filterTxt[i].length == 0) {
-            emptyVal++;
-          }
-        }
-      }
-
-      if (emptyVal > 0) throw 0; 
-            
-      // Sanitize alias
-      var re = /^[?a-zA-Z][\w-]*$/;
-      var OK = re.exec(filterTxt.alias);
-      if (!OK) throw 1;
-      if (filterTxt.alias == "New") throw 1;
-
-      // Make sure we dont match a builtin
-      var builtins = ["cc","dip","dpt","ip","sid","sig","sip","spt","scc","dcc","st"];
-      if (builtins.indexOf(filterTxt.alias) != -1) throw 1;
-
-      // Continue..
-      oldCL = currentCL;
-      fd = s2h(filterTxt.alias + "||" + filterTxt.name + "||" + filterTxt.notes + "||" + filterTxt.filter);
-      var urArgs = "type=8&mode=update&data=" + fd;
-
-      $(function(){
-        $.post(".inc/callback.php?" + urArgs, function(data){cb7(data)}); 
-      });
-
-      function cb7(data){
-        eval("theData=" + data);
-        if (theData.msg) {
-          alert(theData.msg);
-        } else {
-          $("#filter_content").remove();
-        }         
-      }
-
-      newEntry = mkEntry(filterTxt);
-            
-      // If we edited an existing entry update it.
-      if (filterTxt.alias == currentCL) {
-        $('#tr_' + oldCL).attr('id', 'toRemove');
-        $('#toRemove').after(newEntry);
-        $('#toRemove').remove();
-      } else {
-        $('#tr_' + oldCL).before(newEntry);
-        $('td:first', $('#tr_' + oldCL)).css('background-color','#e9e9e9');
-      }
-
-      // If we started from a new entry, delete it.
-      if ($('#tr_New').length == 1) {
-        $('#tr_New').remove();
-      }
-
-    } catch (err) {
-
-      switch (err) {
-        case 0:
-          eMsg += "<span class=warn><br>Error!</span> ";
-          eMsg += "Please supply a value for each object.";
-          break;
-        case 1:
-          eMsg += "<span class=warn><br>Error!</span> "
-          eMsg += "Filter aliases MUST be unique. Valid characters are: ";
-          eMsg += "Aa-Zz, 0-9, - and _ . ";
-          eMsg += "The word \"New\" is reserved and may not be used.";
-          break;
-        default:
-          eMsg += "<span class=warn><br>Format error!</span> ";
-          eMsg += "Please ensure the format above is valid JSON. ";
-          eMsg += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> ";
-          eMsg += "pairs.<br> Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except ";
-          eMsg += "the last pair before the closing curly brace <b>\"}\"</b>.";
-          eMsg += " Strings must be enclosed within double quotes.";
-      }
-      $('.filter_error').append(eMsg);
-      $('.filter_error').fadeIn();
-    }
-  });
-
-  // Remove a filter
-  $(document).on("click", ".filter_remove", function(event) {
-    var oktoRM = confirm("Are you sure you want to remove this filter?");
-    if (oktoRM) {
-      var urArgs = "type=8&mode=remove&data=" + currentCL;
-      $(function(){
-        $.post(".inc/callback.php?" + urArgs, function(data){cb8(data)});
-      }); 
-
-      function cb8(data){
-        eval("theData=" + data);
-        if (theData.msg != '') {
-          alert(theData.msg);
-        } else {
-          $("#filter_content").remove();
-          $("#tr_" + currentCL).fadeOut('slow', function() {
-            $("#tr_" + currentCL).remove();
-          });
-        }
-      }
     }
   });
 
@@ -1084,6 +1130,22 @@ $(document).ready(function(){
     srchSrcLabel();
   });
 
+  // Type toggle
+  $(document).on('click', '.lu_type', function() {
+    var type = $(this).data('val');
+    $('.lu_type').attr('class','lu_type');
+    $(this).attr('class', 'lu_type lu_type_active');
+    if (type == 'url') {
+      $('#el_tdc').fadeOut();
+      $("#tlsrchbox").hide();
+      $("#tlurlbox").show();  
+    } else {
+      $('#el_tdc').fadeIn();
+      $("#tlurlbox").hide();
+      $("#tlsrchbox").show();
+    }
+  });
+
   function mkSrchBox() {
     if ($('#tlsrchbox')[0]) return;
     $('#srch_stat_msg').hide();
@@ -1098,7 +1160,6 @@ $(document).ready(function(){
     head += "</tr></thead>";
     
     var srccount = esSources.length;
-    
     for (var i=0; i < srccount; i++) {
       if (esSources[i].state == "off") continue;
 
@@ -1112,7 +1173,7 @@ $(document).ready(function(){
       row += "<td class=sub><input id=cb_" + name + " class=chk_es ";
       row += "type=checkbox data-searchtype=es data-logtype=" + type + "></td>";
       row += "<td class=nr><div class=srch_edit>" + name + "</div></td>";
-      row += "<td class=nr><input id=\"clid_" + clid + "\" class=color></div></td>";
+      row += "<td class=nr><input id=\"clid_" + clid + "\" class=\"color {pickerPosition:'right'}\"></div></td>";
       row += "<td class=nr>" + desc + "</td>";
       row += "</tr>";
     }
@@ -1127,7 +1188,29 @@ $(document).ready(function(){
       headers: {
         0:{sorter:false},
       },
-        cancelSelection:false
+      cancelSelection:false
+    });
+  }
+
+  function mkUrlBox () {
+    var tbl = '', head = '', row = '', input = ''; 
+    head += "<thead><tr>";
+    head += "<th class=sub width=100px>ALIAS</th>";
+    head += "<th class=sub width=200px>NAME</th>";
+    head += "<th class=sub>URL</th>";
+    head += "</tr></thead>";
+
+    tbl += "<table id=tlurlbox class=\"box_table hide\" width=100% cellpadding=0 cellspacing=0>";
+    tbl += head;
+    tbl += row;
+    tbl += "</table>";
+   
+    $(".srch_tbl").append(tbl);
+    $("#tlurlbox").tablesorter({
+       headers: {
+         0:{sorter:false},
+       },
+       cancelSelection:false
     });
   }
 

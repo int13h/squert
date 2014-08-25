@@ -577,8 +577,8 @@ function fi() {
 
     switch ($mode) {
         case "query"  : 
-            $query = "SELECT UNHEX(name) AS name, alias, filter, UNHEX(notes) as notes, age, global, username
-                      FROM filters
+            $query = "SELECT type, UNHEX(name) AS name, alias, filter, UNHEX(notes) as notes, age, global, username
+                      FROM filters 
                       ORDER BY global,name ASC";
 
             $result = mysql_query($query);
@@ -595,7 +595,7 @@ function fi() {
 
         case "update" :
             $data = hextostr($_REQUEST['data']);
-            list($alias, $name, $notes, $filter) = explode("||", $data);
+            list($type, $alias, $name, $notes, $filter) = explode("||", $data);
             $name = strtohex($name);
             $notes = strtohex($notes);
             $remove = array("DELETE","UPDATE","INSERT","SELECT","CONCAT","REGEXP",
@@ -603,10 +603,10 @@ function fi() {
             $filter = str_ireplace($remove, "", $filter);
             $filter = strtohex($filter);
             
-            $query = "INSERT INTO filters (name,alias,username,filter,notes)
-                      VALUES ('$name','$alias','$user','$filter','$notes')
+            $query = "INSERT INTO filters (type,name,alias,username,filter,notes)
+                      VALUES ('$type','$name','$alias','$user','$filter','$notes')
                       ON DUPLICATE KEY UPDATE 
-                      name='$name',alias='$alias',filter='$filter',notes='$notes'";
+                      type='$type',name='$name',alias='$alias',filter='$filter',notes='$notes'";
 
             mysql_query($query);
             $result = mysql_error();

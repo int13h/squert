@@ -45,6 +45,16 @@ SQueRT is a tool that is used to query event data
 	* md5
 * MySQL client
 
+## Upgrade
+
+You will need to run these commands:
+
+`mysql> ALTER TABLE filters ADD type VARCHAR(16) FIRST;`
+
+`mysql> ALTER TABLE filters ADD INDEX type (type);`
+
+`mysql> UPDATE filters SET type = 'filter' WHERE type IS NULL;`
+
 ## Install
 
 1) Extract the squert tarball to a web directory and rename it to "squert"

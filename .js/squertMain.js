@@ -116,6 +116,7 @@ $(document).ready(function(){
       eval("ec=" + data);
       var esum = 0;
             
+// Check this again..
       for (var i=0; i<ec.length; i++) {
         var ecount = ec[i].count;
         var eclass = ec[i].status;
@@ -133,7 +134,7 @@ $(document).ready(function(){
         }
         if (eclass == 0) {
           qTotal = ecount;
-        } 
+        }
         $("#c-" + eclass).append("<span class=per>(" + p + "%)</span>");
       }
             
@@ -1588,16 +1589,16 @@ $(document).ready(function(){
   } 
 
   //
-  // Add filter parts to box
+  // Object click handlers
   //
 
- $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link,.nr_f", function(event) {
+ $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link,.nr_f", function() {
     var prefix = $(this).data('type');
     var suffix = $(this).text();
     var tfocus = "#search";
     switch (prefix) {
-      case    'ip': $('#search').val(prefix + " " + suffix);
-                    hItemAdd(suffix);
+      case    'ip': hItemAdd(suffix);
+                    mkPickBox(prefix,suffix);
       break;
       case   'sip': $('#search').val(prefix + " " + suffix);
                     hItemAdd(suffix);
@@ -1658,6 +1659,59 @@ $(document).ready(function(){
       break;
     } 
     $(tfocus).focus();
+  });
+
+  //
+  // Picker Box
+  //
+
+  function mkPickBox(prefix,suffix) {
+    if ($('#t_search').data('state') == 1) return;
+    $('.pickbox').fadeIn('fast');
+    var tbl = '', row = '';
+    // Local stuff first 
+    row += "<tr class=p_row data-type=l data-alias=ip><td class=nr>SRC or DST</td></tr>";
+    row += "<tr class=p_row data-type=l data-alias=sip><td class=nr>SRC</td></tr>";
+    row += "<tr class=p_row data-type=l data-alias=dip><td class=nr>DST</td></tr>";
+    // Now populate externals
+    $('.f_row').each(function() {
+      var ct = $(this).data('type');
+      if (ct == 'url') {
+        var alias = $(this).data('alias');
+        var name  = $(this).data('name');
+        var url   = $(this).data('filter'); 
+        row += "<tr class=p_row data-type=r data-alias=\"" + alias + "\" data-url=\"" + url + "\">";
+        row += "<td class=nr>" + name + "</td>";
+        row += "</tr>";
+      }
+    });
+
+    tbl += "<table id=tlpick data-val=\"" + suffix + "\" width=100% class=box_table cellpadding=0 cellspacing=0>";
+    tbl += row;
+    tbl += "</table>";
+    if ($('#tlpick')[0]) $('#tlpick').remove();
+    $(".pickbox_tbl").append(tbl);
+  }
+
+  $(document).on('click', '.p_row', function() {
+    $('.pickbox').fadeOut('fast');
+    var ctype = $(this).data('type');
+    var alias = $(this).data('alias');
+    var args  = $('#tlpick').data('val');
+    switch(ctype) {
+      case "l":
+        $('#search').val(alias + " " + args);
+        $('.b_update').click();
+      break;
+      case "r":
+        var url = h2s($(this).data('url')).replace("${ip}", args);
+        window.open(url);
+      break; 
+    }   
+  });
+
+  $(document).on('click', '.pickbox_close', function() {
+    $('.pickbox').fadeOut('fast');
   });
 
   //
@@ -1730,6 +1784,9 @@ $(document).ready(function(){
     $("#ico03").click();
   });
   $.alt('4', function() {
+    $("#ico05").click();
+  });
+  $.alt('5', function() {
     $("#ico04").click();
   });
 

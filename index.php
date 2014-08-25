@@ -262,11 +262,16 @@ dbC();
 
 <div class=box id=fltr_box>
   <div class=fltr_top>
-    <div class=box_label>FILTERS</div>
+    <div class=box_label>FILTERS and URLs</div>
     <div title="close" class="box_close" data-box=fltr><img class=il src=.css/close.png></div>
     <div title=add class=filter_new><img class=il src=.css/add.png></div>
     <div title=refresh class=filter_refresh><img class=il src=.css/reload.png></div>
     <div title=help class=filter_help><img class=il src=.css/help.png></div>
+  </div>
+  <div class=hp_links>
+    <div class=hp_typet>type:</div>
+    <div class="hp_type hp_type_active" data-val=filter>FILTER</div>
+    <div class=hp_type data-val=url>URL</div>
   </div>
   <div class=fltr_tbl></div>
 </div>
@@ -289,9 +294,10 @@ dbC();
     <div title="close" class="box_close" data-box=srch><img class=il src=.css/close.png></div>
     <div id=srch_stat_msg class="box_stat hide"></div> 
   </div>
-  <div class=tab_subgroup>
-    <div data-tab="tab_es"  class="tsg tsg_active">ELASTICSEARCH</div>
-    <div data-tab="tab_url" class="tsg">URL</div>
+  <div class=lu_links>
+    <div class=lu_typet>type:</div>
+    <div class="lu_type lu_type_active" data-val=esc>ELASTICSEARCH</div>
+    <div class=lu_type data-val=url>URL</div>
   </div>
   <div class=srch_controls>
     <div class=cat_l1>QUERY:</div>
@@ -299,20 +305,30 @@ dbC();
     <div class=clear_srch><img title=clear class=il src=.css/delete.png></div>
     <div class=cat_l1>TERMS:</div>
     <div class=cat_r1 id=srchterms></div>
-    <div class=cat_l1>INTERVAL:</div>
-    <div class=cat_r1 id=srchint>
-      <input id=el_start class=el_ts type=text maxlength=19>
-      &nbsp;&nbsp;-> &nbsp;&nbsp;
-      <input id=el_end class=el_ts type=text maxlength=19>
-    </div>
-    <div class=cat_l1>
-      <div class=srch_do><img title=search class=il src=.css/search.png></div>
-    </div>
-    <div class=cat_r1 id=srchsrc>
-       <b>no</b> sources are selected
+    <div id=el_tdc>
+      <div class=cat_l1>INTERVAL:</div>
+      <div class=cat_r1 id=srchint>
+        <input id=el_start class=el_ts type=text maxlength=19>
+        &nbsp;&nbsp;-&gt; &nbsp;&nbsp;
+        <input id=el_end class=el_ts type=text maxlength=19>
+      </div>
+      <div class=cat_l1>
+        <div class=srch_do><img title=search class=il src=.css/search.png></div>
+      </div>
+      <div class=cat_r1 id=srchsrc>
+         <b>no</b> sources are selected
+      </div>
     </div>
   </div>
   <div class=srch_tbl></div>
+</div>
+
+<div class=pickbox>
+  <div class=srch_top>
+    <div class=box_label id=pickbox_label>LOOKUP</div>
+    <div title="close" class="pickbox_close"><img class=il src=.css/close.png></div>
+  </div>
+  <div class=pickbox_tbl></div>
 </div>
 
 <div class=bottom>
