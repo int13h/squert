@@ -25,6 +25,14 @@ Changes v1.3.0:
 
 See: [Changes v1.3.0](http://www.squertproject.org/summaryofchangesforsquertversion130)
 
+Changes v1.4.0:
+
+* URLs
+* Moved to menu on click
+* Object colouring
+* Bugfixes
+
+See: [Changes v1.4.0](http://www.squertproject.org/summaryofchangesforsquertversion140)
 
 ## Description
 
