@@ -5,6 +5,12 @@ text-align:left;
 background-color:#fafafa;
 padding:0;
 margin:0;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
 }
 tr.none {
 border:none;
@@ -79,6 +85,7 @@ cursor:pointer;
 float:left;
 margin-left:10px;
 color:#cc0000;
+margin-top:1px;
 }
 div.b_update_note{
 font-weight:bold;
@@ -96,6 +103,7 @@ opacity:.6;
 div.t_stats {
 float:right;
 height:14px;
+margin-top:3px;
 }
 div.t_pbar {
 float:right;
@@ -103,6 +111,7 @@ height:14px;
 text-align:right;
 width:200px;
 margin-right:3px;
+margin-top:3px;
 }
 div.aaa {
 padding-top:40px;
@@ -506,8 +515,7 @@ z-index:30;
 }
 div.pickbox {
 position:fixed;
-width:200px;
-height:150px;
+width:250px;
 top:50%;
 left:50%;
 margin-top:-75px;
@@ -516,6 +524,12 @@ display:none;
 background-color:#f4f4f4;
 border:1pt solid #9c9c9c;
 z-index:30;
+}
+div.pickbox_tbl {
+width:100%;
+float:left;
+max-height:200px;
+overflow:auto;
 }
 div.fltr_tbl,div.ac_tbl {
 width:100%;
@@ -532,12 +546,6 @@ overflow:auto;
 div.srch_tbl {
 width:100%;
 height:300px;
-float:left;
-overflow:auto;
-}
-div.pickbox_tbl {
-width:100%;
-height:100px;
 float:left;
 overflow:auto;
 }
@@ -603,6 +611,10 @@ background-color:#fff;
 tr.p_row:hover {
 cursor:pointer;
 background-color:#fff;
+}
+tr.p_row_dark {
+font-style:italic;
+font-weight:bold;
 }
 .input_quick {
 float:left;
@@ -823,6 +835,9 @@ font-size:11px;
 padding:3px 5px;
 border-bottom:1pt dotted #dbdbdb;
 }
+td.nr_dark {
+background-color:#c9c9c9;
+}
 td.row_nopad {
 background:transparent;
 border:1pt solid #c4c4c4;
@@ -831,6 +846,14 @@ border-right:none;
 border-left:none;
 color:#000;
 font-size:11px;
+}
+td.pr {
+background:transparent;
+color:#000;
+font-size:11px;
+padding:5px 3px;
+padding-left:15px;
+border-bottom:1pt dotted #dbdbdb;
 }
 td.ac_row_active {
 background:#e9e9e9;
@@ -1775,10 +1798,12 @@ text-decoration:underline;
 cursor:pointer;
 }
 .select {
--o-user-select: text;
--moz-user-select: text;
--webkit-user-select: text;
-user-select: text;
+-webkit-touch-callout:text;
+-webkit-user-select:text;
+-khtml-user-select:text;
+-moz-user-select:text;
+-ms-user-select:text;
+user-select:text;
 }
 div.event_class {
 margin-top:10px;

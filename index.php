@@ -55,7 +55,7 @@ dbC();
 <body>
 <div id=tab_group class=tab_group>
   <div id=t_sum class=tab>EVENTS</div>
-  <div id=t_inc class=tab>INCIDENTS</div>
+  <!--div id=t_inc class=tab>INCIDENTS</div-->
   <div id=t_ovr class=tab>SUMMARY</div>
   <div id=t_view class=tab>VIEWS</div> 
   <div id=t_search class=search data-state=0>
@@ -78,11 +78,11 @@ dbC();
     <div class=db_link data-val=sc>SOURCE COUNTRY</div>
     <div class=db_link data-val=dc>DESTINATION COUNTRY</div>
     <div class=db_linkt>type:</div>
-    <div class=db_type data-type=cl>CLUSTER LAYOUT</div>
-    <div class=db_type data-type=eb>EDGE BUNDLING</div>
-    <div class=db_type data-type=hp>HIVE PLOT</div>
+    <!--div class=db_type data-type=cl>CLUSTER LAYOUT</div-->
+    <!--div class=db_type data-type=eb>EDGE BUNDLING</div-->
+    <!--div class=db_type data-type=hp>HIVE PLOT</div-->
     <div class=db_type data-type=sk data-state=1>SANKEY DIAGRAM</div>
-    <div class=db_save><span class=links>save as svg</span></div>
+    <!--div class=db_save><span class=links>save as svg</span></div-->
   </div>
 </div>
 
@@ -325,7 +325,7 @@ dbC();
 
 <div class=pickbox>
   <div class=srch_top>
-    <div class=box_label id=pickbox_label>LOOKUP</div>
+    <div class=box_label id=pickbox_label></div>
     <div title="close" class="pickbox_close"><img class=il src=.css/close.png></div>
   </div>
   <div class=pickbox_tbl></div>

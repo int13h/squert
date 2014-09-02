@@ -114,14 +114,11 @@ $(document).ready(function(){
         }
       }
       eval("ec=" + data);
+
       var esum = 0;
             
-// Check this again..
       for (var i=0; i<ec.length; i++) {
-        var ecount = ec[i].count;
-        var eclass = ec[i].status;
-        esum += parseInt(ecount);
-        $("#c-" + eclass).text(ecount);
+        esum += parseInt(ec[i].count) || 0;
       }
           
       for (var i=0; i<ec.length; i++) {
@@ -135,6 +132,7 @@ $(document).ready(function(){
         if (eclass == 0) {
           qTotal = ecount;
         }
+        $("#c-" + eclass).text(ecount); 
         $("#c-" + eclass).append("<span class=per>(" + p + "%)</span>");
       }
             
@@ -154,8 +152,11 @@ $(document).ready(function(){
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
       }
+
+      $("#title").html("squert (" + qTotal + ") - " + thisUser);
+
     }
-    $("#title").html("squert (" + qTotal + ") - " + thisUser);
+
   }
 
   //
@@ -534,7 +535,7 @@ $(document).ready(function(){
       var tbl = '';
       tbl += "<tr class=eview id=active_eview><td colspan=" + cols + ">";
       tbl += "<div id=eview class=eview>";
-      tbl += "<div class=sigtxt></div>";
+      tbl += "<div class=\"sigtxt select\"></div>";
       tbl += "<div class=eview_actions>";
       tbl += "<input id=ca0 class=chk_all type=checkbox checked>";
       tbl += "<span class=ec_label>CATEGORIZE</span><span class=bold id=class_count>";
@@ -655,6 +656,8 @@ $(document).ready(function(){
   $(document).on("click", ".sub2_active", function(event) {
     // Close payload if it is open
     if ($(".eview_sub2")[0]) closeSubRow1();
+    var bail = $("#loader").css('display');
+    if (bail != 'none') return; 
     if (!$(".eview_sub3")[0]) {
       $("#loader").show();
       composite = $(this).data('tx').split("-");
@@ -1528,7 +1531,7 @@ $(document).ready(function(){
             }
           }
 
-          row += "<table align=center width=100% cellpadding=0 cellspacing=0>";
+          row += "<table class=select align=center width=100% cellpadding=0 cellspacing=0>";
           row += "<tr>";
           row += "<th class=sub4 rowspan=2>DATA</th>";
           row += "<th class=sub2 width=460>HEX</th>";
@@ -1545,7 +1548,7 @@ $(document).ready(function(){
 
         } else {
 
-          head += "<table class=tlip align=center width=100% cellpadding=0 cellspacing=0>";
+          head += "<table class=\"tlip select\"  align=center width=100% cellpadding=0 cellspacing=0>";
           head += "<tr>";
           head += "<th class=sub2>EVENT DETAIL</th>";
           head += "</tr>";
@@ -1561,7 +1564,7 @@ $(document).ready(function(){
            
         }
                     
-        tbl += "<tr class=eview_sub2 id=eview_sub2><td class=sub2 colspan=" + nCols + ">";
+        tbl += "<tr class=\"eview_sub2 select\" id=eview_sub2><td class=sub2 colspan=" + nCols + ">";
 
         if ( sg != 0 ) {
           tbl += "<div class=sigtxt></div>";
@@ -1592,31 +1595,31 @@ $(document).ready(function(){
   // Object click handlers
   //
 
- $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link,.nr_f", function() {
+ $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link,.nr_f", function(e) {
     var prefix = $(this).data('type');
     var suffix = $(this).text();
     var tfocus = "#search";
     switch (prefix) {
       case    'ip': hItemAdd(suffix);
-                    mkPickBox(prefix,suffix);
+                    mkPickBox(prefix,suffix,0);
       break;
-      case   'sip': $('#search').val(prefix + " " + suffix);
-                    hItemAdd(suffix);
+      case   'sip': hItemAdd(suffix);
+                    mkPickBox(prefix,suffix,0);
       break;
-      case   'dip': $('#search').val(prefix + " " + suffix);
-                    hItemAdd(suffix);
+      case   'dip': hItemAdd(suffix);
+                    mkPickBox(prefix,suffix,0);
       break;
       case    'cc': var cc = $(this).data('value');
-                    $('#search').val(prefix + " " + cc);
                     hItemAdd(cc);
+                    mkPickBox(prefix,cc,suffix);
       break;
       case   'scc': var cc = $(this).data('value');
-                    $('#search').val(prefix + " " + cc);
                     hItemAdd(cc);
+                    mkPickBox(prefix,cc,suffix);
       break;
       case   'dcc': var cc = $(this).data('value');
-                    $('#search').val(prefix + " " + cc);
                     hItemAdd(cc);
+                    mkPickBox(prefix,cc,suffix);
       break;
       case   'cmt': suffix = $(this).data('comment');
                     $("#rt").text("off");
@@ -1641,14 +1644,14 @@ $(document).ready(function(){
                     $('.b_update').click();
       break;
       case   'sid': var value = $(this).data('value');
-                    $('#search').val(prefix + " " + value);
                     hItemAdd(suffix);
+                    mkPickBox(prefix,value,suffix);
       break;
-      case   'spt': $('#search').val(prefix + " " + suffix);
-                    hItemAdd(suffix);
+      case   'spt': hItemAdd(suffix);
+                    mkPickBox(prefix,suffix,0);
       break;
-      case   'dpt': $('#search').val(prefix + " " + suffix);
-                    hItemAdd(suffix);
+      case   'dpt': hItemAdd(suffix);
+                    mkPickBox(prefix,suffix,0);
       break;
       case    'st': var suffix = $(this).attr('id').split('-')[1];
                     $('#search').val(prefix + " " + suffix);
@@ -1656,23 +1659,47 @@ $(document).ready(function(){
                     $('#rt').attr('class','tvalue_off');
                     $('#rt').text('off');
                     rtbit = 0;
+                    $('.b_update').click();                  
       break;
     } 
-    $(tfocus).focus();
   });
 
   //
   // Picker Box
   //
 
-  function mkPickBox(prefix,suffix) {
+  function mkPickBox(prefix,suffix,rsuffix) {
     if ($('#t_search').data('state') == 1) return;
-    $('.pickbox').fadeIn('fast');
     var tbl = '', row = '';
-    // Local stuff first 
-    row += "<tr class=p_row data-type=l data-alias=ip><td class=nr>SRC or DST</td></tr>";
-    row += "<tr class=p_row data-type=l data-alias=sip><td class=nr>SRC</td></tr>";
-    row += "<tr class=p_row data-type=l data-alias=dip><td class=nr>DST</td></tr>";
+  
+    row += "<tr class=\"row p_row_dark\" data-type=l data-alias=cc><td class=nr>LOCAL SEARCH</td></tr>";
+
+    // Local stuff first
+    switch (prefix[prefix.length - 1]) {
+      case "c": 
+        row += "<tr class=p_row data-type=l data-alias=cc><td class=pr>SRC or DST</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=scc><td class=pr>SRC</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=dcc><td class=pr>DST</td></tr>";
+      break;
+      case "p":
+        row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>SRC or DST</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>SRC</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=dip><td class=pr>DST</td></tr>";
+        // Coming soon!
+        /*row += "<tr class=p_row data-type=l data-alias=tag><td class=nr>ADD/REMOVE TAG</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=col><td class=nr>CHANGE COLOUR</td></tr>";*/
+      break;
+      case "t":
+        row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>SRC</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=dpt><td class=p>DST</td></tr>";
+      break;
+      case "d":
+        row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>SIGNATURE</td></tr>";
+      break;
+    }
+
+    row += "<tr class=\"row p_row_dark\" data-type=l data-alias=cc><td class=nr>REMOTE SEARCH</td></tr>";
+
     // Now populate externals
     $('.f_row').each(function() {
       var ct = $(this).data('type');
@@ -1681,7 +1708,7 @@ $(document).ready(function(){
         var name  = $(this).data('name');
         var url   = $(this).data('filter'); 
         row += "<tr class=p_row data-type=r data-alias=\"" + alias + "\" data-url=\"" + url + "\">";
-        row += "<td class=nr>" + name + "</td>";
+        row += "<td class=pr>" + name + "</td>";
         row += "</tr>";
       }
     });
@@ -1690,11 +1717,30 @@ $(document).ready(function(){
     tbl += row;
     tbl += "</table>";
     if ($('#tlpick')[0]) $('#tlpick').remove();
+
     $(".pickbox_tbl").append(tbl);
+    $('.pickbox').fadeIn('fast');
+
+    var boxlabel = suffix;
+    
+    // Use more descriptive names where possible
+    var re = /(sid|cc|scc|dcc)/;
+    var OK = re.exec(prefix);
+    if (OK) {
+      var boxlabel = rsuffix;
+    }
+
+    if (boxlabel.length > 24) {
+      boxlabel = boxlabel.substring(0,24);
+      boxlabel += "..";
+    }
+
+    $('#pickbox_label').text(boxlabel).css('font-weight','normal');
   }
 
   $(document).on('click', '.p_row', function() {
     $('.pickbox').fadeOut('fast');
+ 
     var ctype = $(this).data('type');
     var alias = $(this).data('alias');
     var args  = $('#tlpick').data('val');
@@ -1704,7 +1750,7 @@ $(document).ready(function(){
         $('.b_update').click();
       break;
       case "r":
-        var url = h2s($(this).data('url')).replace("${ip}", args);
+        var url = h2s($(this).data('url')).replace("${var}", args);
         window.open(url);
       break; 
     }   
@@ -1766,6 +1812,10 @@ $(document).ready(function(){
         $('.pop').attr('title','Click to expand');
       break;
     } 
+  });
+ 
+  $(document).on("click", "#h_box", function() {
+    $("#po").click();
   });
 
   if (!$('.h_item')[0]) {

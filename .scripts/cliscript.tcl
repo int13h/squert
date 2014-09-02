@@ -225,7 +225,6 @@ while { 1 } {
     # Strip the command and faux winname from the msg
     set data [lindex $msg 2]
 
-
     switch -exact -- $data {
 
         HDR     { set SESSION_STATE HDR }

@@ -21,12 +21,12 @@ $types = array(
                  '1' => 'eg',
                  '2' => 'ed',
                 '2a' => 'ee',
-                 '3' => 'pd',
-                 '4' => 'si',
-                 '5' => 'tb',
+                 '3' => 'payload',
+                 '4' => 'signatures',
+                 '5' => 'tab',
                  '6' => 'ec',
-                 '7' => 'tx',
-                 '8' => 'fi',
+                 '7' => 'transcript',
+                 '8' => 'filters',
                  '9' => 'cat',
                 '10' => 'map',
                 '11' => 'comments',
@@ -97,7 +97,7 @@ function ec() {
     echo $theJSON;
 }
 
-function si() {
+function signatures() {
 
     function urlMkr($line) {
         $pattern = '/reference:url,([^;]+)/';
@@ -413,7 +413,7 @@ function ee() {
     echo $theJSON;
 }
 
-function pd() {
+function payload() {
 
     global $offset;
     $comp = mysql_real_escape_string($_REQUEST['object']);
@@ -502,12 +502,12 @@ function pd() {
 
 }
 
-function tb() {
+function tab() {
     $tab = $_REQUEST['tab'];
     $_SESSION['sTab'] = $tab;
 }
 
-function tx() {
+function transcript() {
 
     global $offset;
     $txdata  = hextostr($_REQUEST['txdata']);
@@ -524,7 +524,6 @@ function tx() {
     $sensorName = mysql_result($qResult, 0);
  
     $cmd = "../.scripts/cliscript.tcl \"$usr\" \"$sensorName\" \"$timestamp\" $sid $sip $dip $spt $dpt";
-
     $descspec = array(
                  0 => array("pipe", "r"),
                  1 => array("pipe", "w"),
@@ -554,6 +553,7 @@ function tx() {
             case "HDR": $line = preg_replace('/(^HDR:)(.*$)/', "<span class=txtext_hdr>$2</span>", $line); break;
             case "DST": $line = preg_replace('/^DST:.*$/', "<span class=txtext_dst>$0</span>", $line); break;
             case "SRC": $line = preg_replace('/^SRC:.*$/', "<span class=txtext_src>$0</span>", $line); break;
+            default: $line = ""; break; 
         }
 
         if (strlen($line) > 0) {
@@ -571,7 +571,7 @@ function tx() {
     echo $theJSON;
 }
 
-function fi() {   
+function filters() {   
     $user = $_SESSION['sUser'];
     $mode = mysql_real_escape_string($_REQUEST['mode']);
 

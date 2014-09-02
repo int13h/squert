@@ -317,7 +317,7 @@ $(document).ready(function(){
 
   // Space hog. Hide by default.
   $('.content-right,.rl').css('margin-top','15px');
-  $('.content-left').css('top','54px'); 
+  $('.content-left').css('top','58px'); 
 
   // Show/Hide calendar
   $(document).on('click', '.ctt', function(event) {
@@ -326,7 +326,7 @@ $(document).ready(function(){
       case 'block':
         $('#cal').hide();
         $('.content-right,.rl').css('margin-top','15px');
-        $('.content-left').css('top','54px');
+        $('.content-left').css('top','58px');
       break;
       default:
         $('#cal').show();
