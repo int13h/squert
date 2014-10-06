@@ -173,7 +173,6 @@ function es() {
     $object = mysql_real_escape_string($_REQUEST['object']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
     $filter = hextostr($_REQUEST['filter']);
-    
     if ($filter != 'empty') {
         if (substr($filter, 0,4) == 'cmt ') {
             $comment = explode('cmt ', $filter);
@@ -213,7 +212,6 @@ function es() {
               $qp2
               GROUP BY f3
               ORDER BY f5 $sv";
-    
     $result = mysql_query($query);
     $rows = array();
 

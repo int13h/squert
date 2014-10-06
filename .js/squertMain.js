@@ -147,7 +147,7 @@ $(document).ready(function(){
       }
       if (lastcount < newcount) {
         if (caller != 0) {
-          $(".b_update_note").show();
+          $(".b_update").css('opacity','1');
         }
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
@@ -183,7 +183,6 @@ $(document).ready(function(){
   switch (tab_cached) {
     case "t_sum": 
       $('.content-right').show();
-      $('.content-left').show();
     break;
     case "t_ovr":
       $('.content-right').hide();
@@ -217,13 +216,15 @@ $(document).ready(function(){
       $("#" + content).attr('class','content');
       $("#" + this.id + "_content").attr('class','content_active');
       activeTab = $(".tab_active").attr('id');
+      $('.pin').hide();
       
       switch (activeTab) {
         case "t_sum": 
           $('.content-right').show();
-          $('.content-left').show();
+          if (Number($('.botog').data('val')) == 1) $('.content-left').show();
           $('.t_pbar').css('opacity',1);
           $('.db_links').hide();
+          $('.pin').show();
         break;
         case "t_ovr":
           $('.content-right').hide();
@@ -321,22 +322,45 @@ $(document).ready(function(){
     }
   });
 
-  // Toggle bottom bar (accommodate full window screenshots)
-  $(document).on("click", "#botog", function(event) {
-    var cv = $('#botog').text();
-    switch (cv) {
-      case  'on':
-        $('#botog').attr('class','tvalue_off');
-        $('#botog').text('off');
+  // Toggle side/lower bars 
+  $(document).on("click", ".botog", function(event) {
+    var n = Number($('.botog').data("val"));
+   switch (n) {
+      case 1:
+        $('.botog').data("val","0");
+        $('.content-right').css("width","100%");
+        $('.botog').attr('src','.css/layout0.png');
       break;
-      case 'off':
-        $('#botog').attr('class','tvalue_on');
-        $('#botog').text('on');
+      case 0:
+        $('.botog').data("val","1");
+        $('.content-right').css("width","82%");
+        $('.botog').attr('src','.css/layout1.png');
       break;
-    }    
-    $('.bottom').animate({width: 'toggle'});
-  });
+    }
+    $('.bottom').animate({height: 'toggle'});
+    $('.content-left').animate({width: 'toggle'}); 
+ });
   
+  // Section show and hide
+  $(".st").click(function() {
+    var thisSec = $(this).data("sec");
+    var thisSecID = "#sec_" + thisSec;
+    var thisSecVis = $(thisSecID).css("display");
+    var lastSection = "h";
+    switch (thisSecVis) {
+      case "none":
+        $(this).attr("src", ".css/uarr.png");
+        if (thisSec != lastSection) $(this).parents(".label_l").css("border-bottom","1pt solid #c9c9c9");
+        $(thisSecID).slideDown();
+      break;
+      default:
+        $(this).attr("src", ".css/darr.png");
+        if (thisSec != lastSection) $(this).parents(".label_l").css("border-bottom","none");
+        $(thisSecID).slideUp();
+      break;
+    }
+  });
+
   // If search is in focus, update on enter
   $('#search').keypress(function(e) {
     if (!e) e=window.event;
@@ -376,6 +400,7 @@ $(document).ready(function(){
 
   // Update page
   $(document).on("click", ".b_update", function(event) {
+    $(".b_update").css('opacity','.3');
     // Remove any supplementary results
     if ($("#extresult")[0]) $("#extresult").remove(); 
     // Where are we?
@@ -425,26 +450,6 @@ $(document).ready(function(){
           $(this).prop("checked",false);
         });
         $('.b_update').click();
-      break;
-    }
-  });
-
-  // Section show and hide
-  $(".label_m").click(function(event) {
-    var thisSec = $(this).data("sec");
-    var thisSecID = "#sec_" + thisSec;
-    var thisSecVis = $(thisSecID).css("display");
-    var lastSection = "h";
-    switch (thisSecVis) {
-      case "none":
-        $(this).html("<img title=collapse class=il src=.css/uarr.png>");
-        if (thisSec != lastSection) $(this).parent().css("border-bottom","1pt solid #c9c9c9");
-        $(thisSecID).slideDown();
-      break;
-      default:
-        $(this).html("<img title=expand class=il src=.css/darr.png>");
-        if (thisSec != lastSection) $(this).parent().css("border-bottom","none");
-        $(thisSecID).slideUp();
       break;
     }
   });
@@ -748,11 +753,11 @@ $(document).ready(function(){
           } else {
             theFilter = tmpFilter;
           }
-        } else {
+        } else { // The filter does not exist
           theFilter = s2h('empty');
         }
       }
-    } else {
+    } else { // No filter supplied
       theFilter = s2h('empty');
     }
     return theFilter;
@@ -895,15 +900,15 @@ $(document).ready(function(){
 
           row += "<td class=row>" + cells + "</td>";
           row += "<td class=row>" + timeStamp + "</td>";
-          row += "<td class=\"row row_filter\" data-type=sid data-value=";
+          row += "<td class=\"row row_filter select\" data-type=sid data-value=";
           row += d0[i].f3 + ">" + d0[i].f2 + "</td>";
-          row += "<td class=row>" + d0[i].f3 + "</td>";
+          row += "<td class=\"row select\">" + d0[i].f3 + "</td>";
           row += "<td class=row>" + d0[i].f8 + "</td>";
                   
           if ( sumEC > 0) {
             rowPer = Number(d0[i].f1/sumEC*100).toFixed(3);
           } else {
-            rowPer = "0.000%";
+            rowPer = "0.000";
           }
    
           row += "<td class=row><b>" + rowPer + "%</b></td>";
@@ -1017,10 +1022,10 @@ $(document).ready(function(){
           if (rt == 0) row += "<td class=sub>" + catCells + "</td>";
           row += "<td class=sub>" + cells + "</td>";
           row += "<td class=\"sub timestamp\">" + max_time + "</td>";
-          row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip>" + src_ip + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" data-type=cc data-value=" + src_cc + ">";
           row += cs[1] + src_clong + " (." + src_cc.toLowerCase() + ")" + "</td>";
-          row += "<td class=\"sub sub_filter\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip>" + dst_ip + "</td>";
           row += "<td class=\"sub " + cd[0] + "\" data-type=cc data-value=" + dst_cc + ">";
           row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
           row += "</tr>";
@@ -1142,11 +1147,11 @@ $(document).ready(function(){
           row += cv + "</div></td>";
           row += "<td class=\"sub timestamp\" title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += txBit;
-          row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
-          row += "<td class=\"sub sub_filter\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip>" + dst_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=dpt>" + dst_port + "</td>";
-          row += "<td class=\"sub sub_filter\" data-type=sid data-value= ";
+          row += "<td class=\"sub sub_filter select\" data-type=sid data-value= ";
           row += sig_id + ">" + signature + "</td>";
           row += "</td></tr>";
         }
@@ -1292,11 +1297,11 @@ $(document).ready(function(){
           row += "<td class=sub><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
           row += "<td class=\"sub timestamp\" title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += txBit;
-          row += "<td class=\"sub sub_filter\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" title=\"" + src_clong + "\" data-type=cc data-value=";
           row += src_cc +">" + cs[1] + "</td>";
-          row += "<td class=\"sub sub_filter\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip>" + dst_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=dpt>" + dst_port + "</td>";
           row += "<td class=\"sub " + cd[0] + "\" title=\"" + dst_clong + "\" data-type=cc data-value=";
           row += dst_cc +">" + cd[1] + "</td>";

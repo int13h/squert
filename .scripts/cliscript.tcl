@@ -213,7 +213,7 @@ set SESSION_STATE DEBUG
 
 while { 1 } {
 
-    if { [eof $socketID] } { puts "ERROR: Lost connection to server."; exit 1 }
+    if { [eof $socketID] } { puts "ERROR: Lost connection to server."; exit 1; }
 
     if { [catch {gets $socketID} msg] } {
 

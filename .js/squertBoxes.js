@@ -8,6 +8,7 @@ $(document).ready(function(){
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');
+    if (caller = "update") return;
     if (caller == "extresult") {
         $("#extresult").remove();
         $("#tl1").show();
@@ -1088,6 +1089,7 @@ $(document).ready(function(){
   });
 
   $(document).on('click','.srch_do', function() {
+    if ($('#srch_ldr')[0]) return;
     doSrch();
   });    
 
@@ -1104,6 +1106,9 @@ $(document).ready(function(){
       $('#srch_stat_msg').fadeIn();
       return;
     }
+
+    $('#srch_stat_msg').hide();
+
     var searchtype = "es";
     var logtype = "(";
     var i = 0;
@@ -1248,7 +1253,8 @@ $(document).ready(function(){
   function esSearch(log) {
     $('#srch_box_label').after('<img id=srch_ldr class=cm_tbl_ldr src=\".css/load.gif\">');
     var logtype = s2h(log);
-    var filter = s2h($(".srch_txt").val());
+    var _filter = $(".srch_txt").val().replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+    var filter = s2h(_filter);
     var start = $('#el_start').val();
     var end = $('#el_end').val();
     var when = s2h(start + "|" + end);
@@ -1287,28 +1293,19 @@ $(document).ready(function(){
         row += "<tr class=pcomm><td id=extdata class=\"raw\">The query returned no results.</td></tr>";
       }
 
-      /*Figure out time domain
+      // Figure out time domain
       var colours = d3.scale.linear()
           .domain([0,10])
           .range(["#e9e9e9","#5d5d5d"]);
 
-      var color = colours(o);*/
-
+      //var colour = colours(o);
       for (var i=0; i < records; i++) {
+        var p1 = "", p2 = "";
         row += "<tr class=pcomm><td class=\"raw select\">";
+
         for (key in d.hits.hits[i]._source) {
           if (key == "@timestamp") continue;
           var value = d.hits.hits[i]._source[key];        
-
-          // Format timestamps if utime 
-          if (key == 'timestamp') {
-            var re = /^\d{10}\.\d{6}$/;
-            var OK = re.exec(value);
-            if (OK) {
-              var tv = Number(d.hits.hits[i]._source[key].split(".")[0] * 1000);
-              value = mkStamp(tv,0,0);
-            }
-          }
 
           // Decorate the type
           var exstyle = "";
@@ -1320,9 +1317,24 @@ $(document).ready(function(){
             var fg = $('#clid_' + clid).css('color');
             exstyle = " style=\"background-color:" + bg + "; color:" + fg + ";\""; 
           }
-          row += "<div class=ex_key>" + key + "=</div>";
-          row += "<div class=\"" + vclass + "\"" + exstyle + ">" + value + "</div>";
+
+          // Format timestamps if utime 
+          if (key == 'timestamp') {
+            var re = /^(\d{10}\.\d{6}|\d{10})$/;
+            var OK = re.exec(value);
+            if (OK) {
+              var tv = Number(d.hits.hits[i]._source[key].split(".")[0] * 1000);
+              value = mkStamp(tv,0,0);
+            }
+            p1 += "<div class=ex_key>" + key + "=</div>";
+            p1 += "<div class=\"" + vclass + "\"" + exstyle + ">" + value + "</div>"; 
+          } else {
+            p2 += "<div class=ex_key>" + key + "=</div>";
+            p2 += "<div class=\"" + vclass + "\"" + exstyle + ">" + value + "</div>";
+          }
         }
+    
+        row += p1 + p2; 
         row += "</td></tr>";
       }
 

@@ -59,6 +59,7 @@ dbC();
   <div id=t_ovr class=tab>SUMMARY</div>
   <div id=t_view class=tab>VIEWS</div> 
   <div id=t_search class=search data-state=0>
+    <div data-box=update class="b_update icon" id=ico00><img title=refresh class="il ilb" src=.css/update.png></div>
     <div data-box=cat  class=icon id=ico01><img title=comments class="il ilb" src=.css/comment.png></div>
     <div data-box=ac   class=icon id=ico02><img title=autocat class="il ilb" src=.css/autocat.png></div>
     <div data-box=sen  class=icon id=ico03><img title=sensors class="il ilb" src=.css/sensor.png></div>
@@ -68,7 +69,7 @@ dbC();
   </div>
   <div id=cal></div>
   <div class=timeline>
-    <div class=b_update><img src=.css/update.png></div><div class=b_update_note>!</div>
+    <div class=pin><img data-val=1 class=botog src=.css/layout1.png title="Show/Hide panes"></div>
     <div class=t_pbar></div>
     <div class=t_stats></div>
   </div>
@@ -90,16 +91,15 @@ dbC();
   <div class=content-left>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>TOGGLE</span><div class=label_m data-sec=t><img title=collapse class=il src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>TOGGLE</span><div class=label_m><img data-sec=t title=collapse class="il st" src=.css/uarr.png></div></div>
       <div class=secl id=sec_t>
         <div class=label>queue only</div><div id=rt class=tvalue_on>on</div>
         <div class=label>grouping</div><div id=gr class=tvalue_on>on</div>
-        <div class=label>bottom bar</div><div id=botog class=tvalue_on>on</div>
       </div>
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>SUMMARY</span><div class=label_m data-sec=s><img title=collapse class=il src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>SUMMARY</span><div class=label_m><img data-sec=s title=collapse class="il st" src=.css/uarr.png></div></div>
       <div class=secl id=sec_s>  
         <div class=label>queued events</div><div id=qtotal class=value>-</div>
         <div class=label>total events</div><div id=etotal class=value>-</div>
@@ -110,7 +110,7 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>COUNT BY PRIORITY</span><div class=label_m data-sec=p><img title=collapse class=il src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>COUNT BY PRIORITY</span><div class=label_m><img data-sec=p title=collapse class="il st" src=.css/uarr.png></div></div>
       <div class=secl id=sec_p>
         <div class=label>high</div><div id=pr_1 class=value>-</div>
         <div class=label>medium</div><div id=pr_2 class=value>-</div>
@@ -120,7 +120,7 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>COUNT BY CLASSIFICATION</span><div class=label_m data-sec=c><img title=collapse class=il src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>COUNT BY CLASSIFICATION</span><div class=label_m><img data-sec=c title=collapse class="il st" src=.css/uarr.png></div></div>
       <div class=secl id=sec_c>  
 
         <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='compromised L1 (F1)'>
@@ -156,7 +156,7 @@ dbC();
     <div class=event_cont>
       <div class=label_l><span class=ec_label>HISTORY</span>
         <img title="Click to expand" id=pi class=pop src=.css/po.png>
-        <div class=label_m data-sec=h><img title=collapse class=il src=.css/uarr.png></div>  
+        <div class=label_m><img data-sec=h title=collapse class="il st" src=.css/uarr.png></div>  
       </div>
       <div class=secl id=sec_h>
         <div id=h_box class=h_box></div>

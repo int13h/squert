@@ -85,6 +85,13 @@ var esSources = [{
   "desc":"Barracuda spam firewall",
   "loke":"",
   "state":"on"
+},
+{
+  "name":"PRADS",
+  "type":"prads",
+  "desc":"Passive Real-time Asset Detection",
+  "loke":"",
+  "state":"on"
 }];
 
 // Classifications
