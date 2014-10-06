@@ -8,7 +8,7 @@ $(document).ready(function(){
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');
-    if (caller = "update") return;
+    if (caller == "update") return;
     if (caller == "extresult") {
         $("#extresult").remove();
         $("#tl1").show();
