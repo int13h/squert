@@ -81,7 +81,7 @@ $(document).ready(function(){
  
   // Get event statuses
   var eTotal = 0, qTotal = 0;
-  function statusPoll(caller) {
+ function statusPoll(caller) {
     // See if we are filtering by sensor
     var theSensors = s2h('empty');
     if ($('.chk_sen:checked').length > 0) {
@@ -324,7 +324,8 @@ $(document).ready(function(){
 
   // Toggle side/lower bars 
   $(document).on("click", ".botog", function(event) {
-    var n = Number($('.botog').data("val"));
+   if ($('.tab_active').attr('id') != 't_sum') return;
+   var n = Number($('.botog').data("val"));
    switch (n) {
       case 1:
         $('.botog').data("val","0");
@@ -1600,71 +1601,66 @@ $(document).ready(function(){
   // Object click handlers
   //
 
- $(document).on("click", ".sub_filter,.row_filter,.tof,.value_link,.nr_f", function(e) {
+ $(document).on("click", ".ex_val,.sub_filter,.row_filter,.tof,.value_link,.nr_f", function(e) {
     var prefix = $(this).data('type');
+    if (prefix == "none") return;
     var suffix = $(this).text();
     var tfocus = "#search";
     switch (prefix) {
-      case    'ip': hItemAdd(suffix);
-                    mkPickBox(prefix,suffix,0);
+      case    'ip': 
+      case   'sip':
+      case   'dip':
+      case   'spt':
+      case   'dpt':    
+      case  'hash':  
+        hItemAdd(suffix);
+        mkPickBox(prefix,suffix,0);
       break;
-      case   'sip': hItemAdd(suffix);
-                    mkPickBox(prefix,suffix,0);
+      case    'cc':
+      case   'scc':
+      case   'dcc': 
+        var cc = $(this).data('value');
+        hItemAdd(cc);
+        mkPickBox(prefix,cc,suffix);
       break;
-      case   'dip': hItemAdd(suffix);
-                    mkPickBox(prefix,suffix,0);
+      case   'cmt': 
+        suffix = $(this).data('comment');
+        $("#rt").text("off");
+        $("#rt").attr('class','tvalue_off');
+        $('#search').val(prefix + " " + suffix);
+        hItemAdd(suffix);
+        if ($('#cat_box').css('display') != 'none') {
+          $('#ico01').click();
+        }
+        $('.b_update').click();
       break;
-      case    'cc': var cc = $(this).data('value');
-                    hItemAdd(cc);
-                    mkPickBox(prefix,cc,suffix);
+      case 'cmt_c': 
+        $('.cat_msg_txt').val(suffix);
+        hItemAdd(suffix);
+        tfocus = ".cat_msg_txt";
       break;
-      case   'scc': var cc = $(this).data('value');
-                    hItemAdd(cc);
-                    mkPickBox(prefix,cc,suffix);
+      case   'fil': 
+        var fil = $(this).data('value');
+        $('#search').val(fil);
+        hItemAdd(fil);
+        if ($('#fltr_box').css('display') != 'none') {
+          $('#ico04').click();
+        }
+        $('.b_update').click();
       break;
-      case   'dcc': var cc = $(this).data('value');
-                    hItemAdd(cc);
-                    mkPickBox(prefix,cc,suffix);
+      case   'sid': 
+        var value = $(this).data('value');
+        hItemAdd(suffix);
+        mkPickBox(prefix,value,suffix);
       break;
-      case   'cmt': suffix = $(this).data('comment');
-                    $("#rt").text("off");
-                    $("#rt").attr('class','tvalue_off');
-                    $('#search').val(prefix + " " + suffix);
-                    hItemAdd(suffix);
-                    if ($('#cat_box').css('display') != 'none') {
-                      $('#ico01').click();
-                    }
-                    $('.b_update').click();
-      break;
-      case 'cmt_c': $('.cat_msg_txt').val(suffix);
-                    hItemAdd(suffix);
-                    tfocus = ".cat_msg_txt";
-      break;
-      case   'fil': var fil = $(this).data('value');
-                    $('#search').val(fil);
-                    hItemAdd(fil);
-                    if ($('#fltr_box').css('display') != 'none') {
-                      $('#ico04').click();
-                    }
-                    $('.b_update').click();
-      break;
-      case   'sid': var value = $(this).data('value');
-                    hItemAdd(suffix);
-                    mkPickBox(prefix,value,suffix);
-      break;
-      case   'spt': hItemAdd(suffix);
-                    mkPickBox(prefix,suffix,0);
-      break;
-      case   'dpt': hItemAdd(suffix);
-                    mkPickBox(prefix,suffix,0);
-      break;
-      case    'st': var suffix = $(this).attr('id').split('-')[1];
-                    $('#search').val(prefix + " " + suffix);
-                    // RT must be off to return anything
-                    $('#rt').attr('class','tvalue_off');
-                    $('#rt').text('off');
-                    rtbit = 0;
-                    $('.b_update').click();                  
+      case    'st': 
+        var suffix = $(this).attr('id').split('-')[1];
+        $('#search').val(prefix + " " + suffix);
+        // RT must be off to return anything
+        $('#rt').attr('class','tvalue_off');
+        $('#rt').text('off');
+        rtbit = 0;
+        $('.b_update').click();                  
       break;
     } 
   });

@@ -240,7 +240,7 @@ function getTimestamp() {
     fval = 'YES';
     fval_c = 'fl_val_on';
   }
-  var tl = "<div class=ctt><img title=\"toggle date controls\" class=ct src=.css/ct.png><span class=fl>INTERVAL: </span><span class=" + fbt_c + " data-ft=tl>";
+  var tl = "<div class=ctt><span class=fl>INTERVAL: </span><span class=" + fbt_c + " data-ft=tl>";
   tl += ts_sd + " " + ts_st + " -> " + ts_ed + " " + ts_et + " (" + ts_os + ")";
   tl += "</span></div>";
   tl += "<span class=fl>FILTERED BY OBJECT: </span><span class=" + fval_c + " data-ft=ob>" + fval + "</span>";

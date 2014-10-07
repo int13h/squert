@@ -59,17 +59,17 @@ dbC();
   <div id=t_ovr class=tab>SUMMARY</div>
   <div id=t_view class=tab>VIEWS</div> 
   <div id=t_search class=search data-state=0>
-    <div data-box=update class="b_update icon" id=ico00><img title=refresh class="il ilb" src=.css/update.png></div>
-    <div data-box=cat  class=icon id=ico01><img title=comments class="il ilb" src=.css/comment.png></div>
-    <div data-box=ac   class=icon id=ico02><img title=autocat class="il ilb" src=.css/autocat.png></div>
-    <div data-box=sen  class=icon id=ico03><img title=sensors class="il ilb" src=.css/sensor.png></div>
+    <div data-box=ret class=icon><img data-val=1 class=botog src=.css/layout1.png title="Show/Hide panes"></div>
+    <div data-box=ret class="b_update icon"><img title=refresh class="il ilb" src=.css/update.png></div>
+    <div data-box=cat class=icon id=ico01><img title=comments class="il ilb" src=.css/comment.png></div>
+    <div data-box=ac class=icon id=ico02><img title=autocat class="il ilb" src=.css/autocat.png></div>
+    <div data-box=sen class=icon id=ico03><img title=sensors class="il ilb" src=.css/sensor.png></div>
     <div data-box=srch class=icon id=ico05><img title=lookup class="il ilb" src=.css/ext.png></div>
     <div data-box=fltr class=icon id=ico04><img title=filters class="il ilb" src=.css/filter.png></div>
     <input class=search id=search type=text size=60 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
   </div>
   <div id=cal></div>
   <div class=timeline>
-    <div class=pin><img data-val=1 class=botog src=.css/layout1.png title="Show/Hide panes"></div>
     <div class=t_pbar></div>
     <div class=t_stats></div>
   </div>

@@ -8,7 +8,7 @@ $(document).ready(function(){
 
   $(document).on("click", ".icon,.box_close,#cmnt", function(event) {
     var caller = $(this).data('box');
-    if (caller == "update") return;
+    if (caller == "ret") return;
     if (caller == "extresult") {
         $("#extresult").remove();
         $("#tl1").show();
@@ -1300,7 +1300,7 @@ $(document).ready(function(){
 
       //var colour = colours(o);
       for (var i=0; i < records; i++) {
-        var p1 = "", p2 = "";
+        var p0 = "", p1 = "", p2 = "";
         row += "<tr class=pcomm><td class=\"raw select\">";
 
         for (key in d.hits.hits[i]._source) {
@@ -1308,33 +1308,46 @@ $(document).ready(function(){
           var value = d.hits.hits[i]._source[key];        
 
           // Decorate the type
-          var exstyle = "";
           var vclass = "ex_val";
-          if (key == "type") {
-            vclass = "ex_type";
-            var clid = value.replace(/(\s+)/, "");
-            var bg = $('#clid_' + clid).css('background-color');
-            var fg = $('#clid_' + clid).css('color');
-            exstyle = " style=\"background-color:" + bg + "; color:" + fg + ";\""; 
-          }
+          var datatype = "none";
 
-          // Format timestamps if utime 
-          if (key == 'timestamp') {
-            var re = /^(\d{10}\.\d{6}|\d{10})$/;
-            var OK = re.exec(value);
-            if (OK) {
-              var tv = Number(d.hits.hits[i]._source[key].split(".")[0] * 1000);
-              value = mkStamp(tv,0,0);
-            }
-            p1 += "<div class=ex_key>" + key + "=</div>";
-            p1 += "<div class=\"" + vclass + "\"" + exstyle + ">" + value + "</div>"; 
-          } else {
-            p2 += "<div class=ex_key>" + key + "=</div>";
-            p2 += "<div class=\"" + vclass + "\"" + exstyle + ">" + value + "</div>";
+          switch (key) {
+            case "type": 
+              vclass = "ex_type";
+              var clid = value.replace(/(\s+)/, "");
+              var bg = $('#clid_' + clid).css('background-color');
+              var fg = $('#clid_' + clid).css('color');
+              var exstyle = " style=\"background-color:" + bg + "; color:" + fg + ";\""; 
+              p0 += "<div class=ex_key>" + key + "=</div>";
+              p0 += "<div class=\"" + vclass + "\"" + "data-type=\"" + datatype +"\" " + exstyle + ">" + value + "</div>";
+            break;
+            case "timestamp":
+              // Format timestamps if utime 
+              var re = /^(\d{10}\.\d{6}|\d{10})$/;
+              var OK = re.exec(value);
+              if (OK) {
+                var tv = Number(d.hits.hits[i]._source[key].split(".")[0] * 1000);
+                value = mkStamp(tv,0,0);
+              }
+              p1 += "<div class=ex_key>" + key + "=</div>";
+              p1 += "<div class=\"" + vclass + "\">" + value + "</div>"; 
+            break;
+            case "src_ip":
+            case "dst_ip":
+              datatype = "ip";
+            break;
+            case "md5":
+            case "sha1":
+            case "sha256":
+              datatype = "hash";
+            break;
+            default:
+              p2 += "<div class=ex_key>" + key + "=</div>";
+              p2 += "<div class=\"" + vclass + "\"" + "data-type=\"" + datatype +"\">" + value + "</div>";   
           }
         }
     
-        row += p1 + p2; 
+        row += p0 + p1 + p2; 
         row += "</td></tr>";
       }
 
