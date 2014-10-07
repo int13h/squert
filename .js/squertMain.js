@@ -147,7 +147,7 @@ $(document).ready(function(){
       }
       if (lastcount < newcount) {
         if (caller != 0) {
-          $(".b_update").css('opacity','1');
+          if ($(".icon_notifier").css('display') == 'none') $(".icon_notifier").fadeToggle();
         }
         $("#etotal").html(eTotal);
         $("#qtotal").html(qTotal);
@@ -385,7 +385,7 @@ $(document).ready(function(){
       }
   });
 
-  // Sort ASC/DESC
+  // Sort ASC/DESfadeToggleC
   $(document).on("click", ".event_time", function(event) {
     var csv = $(".event_time").text();
     switch (csv) {
@@ -401,7 +401,7 @@ $(document).ready(function(){
 
   // Update page
   $(document).on("click", ".b_update", function(event) {
-    $(".b_update").css('opacity','.3');
+    $(".icon_notifier").fadeToggle();
     // Remove any supplementary results
     if ($("#extresult")[0]) $("#extresult").remove(); 
     // Where are we?

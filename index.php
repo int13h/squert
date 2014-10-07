@@ -61,6 +61,7 @@ dbC();
   <div id=t_search class=search data-state=0>
     <div data-box=ret class=icon><img data-val=1 class=botog src=.css/layout1.png title="Show/Hide panes"></div>
     <div data-box=ret class="b_update icon"><img title=refresh class="il ilb" src=.css/update.png></div>
+    <div class="icon_notifier"><img src=.css/exc.png></div> 
     <div data-box=cat class=icon id=ico01><img title=comments class="il ilb" src=.css/comment.png></div>
     <div data-box=ac class=icon id=ico02><img title=autocat class="il ilb" src=.css/autocat.png></div>
     <div data-box=sen class=icon id=ico03><img title=sensors class="il ilb" src=.css/sensor.png></div>

@@ -1334,12 +1334,18 @@ $(document).ready(function(){
             break;
             case "src_ip":
             case "dst_ip":
+            case "src":
+            case "dst":
               datatype = "ip";
+              p2 += "<div class=ex_key>" + key + "=</div>";
+              p2 += "<div class=\"" + vclass + "\"" + "data-type=\"" + datatype +"\">" + value + "</div>";
             break;
             case "md5":
             case "sha1":
             case "sha256":
               datatype = "hash";
+              p2 += "<div class=ex_key>" + key + "=</div>";
+              p2 += "<div class=\"" + vclass + "\"" + "data-type=\"" + datatype +"\">" + value + "</div>";
             break;
             default:
               p2 += "<div class=ex_key>" + key + "=</div>";

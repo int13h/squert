@@ -1242,31 +1242,31 @@ function esquery() {
     $params['ignore'] = '400,404';
 
     $json = "{
-        \"query\": {
-            \"filtered\": {
-                \"query\": {
-                    \"query_string\": {
-                        \"query\": \"_type:$logtype AND ($filter)\"
-                    }
-                },
-                \"filter\": {
-                    \"range\": {
-                        \"@timestamp\": {
-                            \"from\": $start,
-                            \"to\": $end
+      \"query\": {
+          \"filtered\": {
+              \"query\": {
+                  \"query_string\": {
+                      \"query\": \"type:$logtype AND ($filter)\"
+                  }
+              },
+              \"filter\": {
+                  \"range\": {
+                      \"@timestamp\": {
+                          \"from\": $start,
+                          \"to\": $end
                         }
-                    }
-                }
-            },
-            \"size\": 500,
-            \"sort\": [
-                {
-                    \"@timestamp\": {
-                        \"order\": \"desc\"
-                    }
-                }
-            ]
-        }
+                      }
+                  }
+              }
+          },
+          \"size\": 500,
+          \"sort\": [
+              {
+                  \"@timestamp\": {
+                      \"order\": \"desc\"
+                  }
+              }
+          ]
     }";
 
     $params['body']  = $json;
