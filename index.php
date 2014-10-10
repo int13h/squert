@@ -67,10 +67,11 @@ dbC();
     <div data-box=sen class=icon id=ico03><img title=sensors class="il ilb" src=.css/sensor.png></div>
     <div data-box=srch class=icon id=ico05><img title=lookup class="il ilb" src=.css/ext.png></div>
     <div data-box=fltr class=icon id=ico04><img title=filters class="il ilb" src=.css/filter.png></div>
-    <input class=search id=search type=text size=60 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
+    <input class=search id=search type=text size=40 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
   </div>
   <div id=cal></div>
   <div class=timeline>
+    <div id=loader class=loader><img class=ldimg src=".css/load.gif"></div>
     <div class=t_pbar></div>
     <div class=t_stats></div>
   </div>
@@ -90,7 +91,6 @@ dbC();
 
 <div class=lr>
   <div class=content-left>
-
     <div class=event_cont>
       <div class=label_l><span class=ec_label>TOGGLE</span><div class=label_m><img data-sec=t title=collapse class="il st" src=.css/uarr.png></div></div>
       <div class=secl id=sec_t>
@@ -334,7 +334,7 @@ dbC();
 
 <div class=bottom>
   <div id=t_usr class=user data-c_usr=<?php echo $sUser;?>>WELCOME&nbsp;&nbsp;<b><?php echo $sUser;?></b>&nbsp;&nbsp;|<span id=logout class=logout>LOGOUT</span></div>
-  <div class=b_tray><span id=loader class=loader>Working <img class=ldimg src=".css/load.gif"></span></div>
+  <div class=b_tray></div>
   <div class=b_class><span class=class_msg></span>&nbsp;</div>
   <div class=b_clock id=b_utc><span class=clock_lbl>UTC</span> <span id=clock_utc>00:00:00</span></div>
   <div class=b_clock id=b_local><span class=clock_lbl>LOCAL</span> <span id=clock_local>00:00:00</span></div>

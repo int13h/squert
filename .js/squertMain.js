@@ -385,7 +385,7 @@ $(document).ready(function(){
       }
   });
 
-  // Sort ASC/DESfadeToggleC
+  // Sort ASC/DESC
   $(document).on("click", ".event_time", function(event) {
     var csv = $(".event_time").text();
     switch (csv) {
@@ -977,6 +977,8 @@ $(document).ready(function(){
           var dst_cc    = theData[i].dstc    || "-";
           var c_sid     = theData[i].c_sid   || "0";
           var c_cid     = theData[i].c_cid   || "0";
+          var scolour   = theData[i].scolour || "FFFFFF";
+          var dcolour   = theData[i].dcolour || "FFFFFF";
           var cs = getCountry(src_cc).split("|");
           if (cs[1] == "LO") { cs[1] = ""; }
           var cd = getCountry(dst_cc).split("|");
@@ -1023,10 +1025,10 @@ $(document).ready(function(){
           if (rt == 0) row += "<td class=sub>" + catCells + "</td>";
           row += "<td class=sub>" + cells + "</td>";
           row += "<td class=\"sub timestamp\">" + max_time + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip data-col=" + scolour + "><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" data-type=cc data-value=" + src_cc + ">";
           row += cs[1] + src_clong + " (." + src_cc.toLowerCase() + ")" + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip data-col=" + dcolour + "><div class=object style=\"background-color:#" + dcolour + ";\"></div>"  + dst_ip + "</td>";
           row += "<td class=\"sub " + cd[0] + "\" data-type=cc data-value=" + dst_cc + ">";
           row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
           row += "</tr>";
@@ -1096,9 +1098,9 @@ $(document).ready(function(){
         head += "<th class=sub1 width=20>ST</th>";
         head += "<th class=sub1 width=130>TIMESTAMP</th>";
         head += "<th class=sub1 width=110>EVENT ID</th>";
-        head += "<th class=sub1 width=100>SOURCE</th>";
+        head += "<th class=sub1 width=110>SOURCE</th>";
         head += "<th class=sub1 width=40>PORT</th>";
-        head += "<th class=sub1 width=100>DESTINATION</th>";
+        head += "<th class=sub1 width=110>DESTINATION</th>";
         head += "<th class=sub1 width=40>PORT</th>";
         head += "<th class=sub1>SIGNATURE</th>";
         head += "</tr></thead>";
@@ -1213,10 +1215,10 @@ $(document).ready(function(){
         head += "<th class=sub width=2></th>";
         head += "<th class=sub width=120>TIMESTAMP</th>";
         head += "<th class=sub width=110>ID</th>";
-        head += "<th class=sub width=90>SOURCE</th>";
+        head += "<th class=sub width=110>SOURCE</th>";
         head += "<th class=sub width=40>PORT</th>";
         head += "<th class=sub width=30>CC</th>";
-        head += "<th class=sub width=90>DESTINATION</th>";
+        head += "<th class=sub width=110>DESTINATION</th>";
         head += "<th class=sub width=40>PORT</th>";
         head += "<th class=sub width=30>CC</th>";
         head += "<th class=sub>SIGNATURE</th>";
@@ -1259,6 +1261,8 @@ $(document).ready(function(){
           var sig_pri   = d2a[i].f16 || "0";
           var signature = d2a[i].f14 || "-";
           var evt_msg   = "-";
+          var scolour   = d2a[i].scolour || "ffffff";
+          var dcolour   = d2a[i].dcolour || "ffffff";
           var cs = getCountry(src_cc).split("|");
           var cd = getCountry(dst_cc).split("|");
 
@@ -1298,11 +1302,11 @@ $(document).ready(function(){
           row += "<td class=sub><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
           row += "<td class=\"sub timestamp\" title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += txBit;
-          row += "<td class=\"sub sub_filter select\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" title=\"" + src_clong + "\" data-type=cc data-value=";
           row += src_cc +">" + cs[1] + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip><div class=object style=\"background-color:#" + dcolour + ";\"></div>" + dst_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=dpt>" + dst_port + "</td>";
           row += "<td class=\"sub " + cd[0] + "\" title=\"" + dst_clong + "\" data-type=cc data-value=";
           row += dst_cc +">" + cd[1] + "</td>";
@@ -1605,6 +1609,7 @@ $(document).ready(function(){
     var prefix = $(this).data('type');
     if (prefix == "none") return;
     var suffix = $(this).text();
+    var colour = $(this).data('col') || "FFFFFF";
     var tfocus = "#search";
     switch (prefix) {
       case    'ip': 
@@ -1614,14 +1619,14 @@ $(document).ready(function(){
       case   'dpt':    
       case  'hash':  
         hItemAdd(suffix);
-        mkPickBox(prefix,suffix,0);
+        mkPickBox(prefix,suffix,0,colour);
       break;
       case    'cc':
       case   'scc':
       case   'dcc': 
         var cc = $(this).data('value');
         hItemAdd(cc);
-        mkPickBox(prefix,cc,suffix);
+        mkPickBox(prefix,cc,suffix,colour);
       break;
       case   'cmt': 
         suffix = $(this).data('comment');
@@ -1651,7 +1656,7 @@ $(document).ready(function(){
       case   'sid': 
         var value = $(this).data('value');
         hItemAdd(suffix);
-        mkPickBox(prefix,value,suffix);
+        mkPickBox(prefix,value,suffix,colour);
       break;
       case    'st': 
         var suffix = $(this).attr('id').split('-')[1];
@@ -1669,12 +1674,10 @@ $(document).ready(function(){
   // Picker Box
   //
 
-  function mkPickBox(prefix,suffix,rsuffix) {
+  function mkPickBox(prefix,suffix,rsuffix,colour) {
     if ($('#t_search').data('state') == 1) return;
+    var objhex = s2h(suffix);
     var tbl = '', row = '';
-  
-    row += "<tr class=\"row p_row_dark\" data-type=l data-alias=cc><td class=nr>LOCAL SEARCH</td></tr>";
-
     // Local stuff first
     switch (prefix[prefix.length - 1]) {
       case "c": 
@@ -1686,20 +1689,21 @@ $(document).ready(function(){
         row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>SRC or DST</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>SRC</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=dip><td class=pr>DST</td></tr>";
-        // Coming soon!
-        /*row += "<tr class=p_row data-type=l data-alias=tag><td class=nr>ADD/REMOVE TAG</td></tr>";
-        row += "<tr class=p_row data-type=l data-alias=col><td class=nr>CHANGE COLOUR</td></tr>";*/
+        row += "<tr class=n_row data-type=c data-alias=col><td class=pr>COLOUR&nbsp;&nbsp;";
+        row += "<input id=menucol class=\"color {pickerPosition:'top'}\" value=\"" + colour + "\" maxlength=6>";
+        row += "<span class=csave data-object=" + objhex + ">update</span></td></tr>";
       break;
       case "t":
         row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>SRC</td></tr>";
-        row += "<tr class=p_row data-type=l data-alias=dpt><td class=p>DST</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=dpt><td class=pr>DST</td></tr>";
       break;
       case "d":
         row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>SIGNATURE</td></tr>";
       break;
+      case "h":
+        row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>TERM SEARCH</td></tr>";
+      break;
     }
-
-    row += "<tr class=\"row p_row_dark\" data-type=l data-alias=cc><td class=nr>REMOTE SEARCH</td></tr>";
 
     // Now populate externals
     $('.f_row').each(function() {
@@ -1709,7 +1713,7 @@ $(document).ready(function(){
         var name  = $(this).data('name');
         var url   = $(this).data('filter'); 
         row += "<tr class=p_row data-type=r data-alias=\"" + alias + "\" data-url=\"" + url + "\">";
-        row += "<td class=pr>" + name + "</td>";
+        row += "<td class=pr><span class=pr>" + name + "</span></td>";
         row += "</tr>";
       }
     });
@@ -1737,6 +1741,7 @@ $(document).ready(function(){
     }
 
     $('#pickbox_label').text(boxlabel).css('font-weight','normal');
+    var myPicker = new jscolor.color(document.getElementById('menucol'), {})
   }
 
   $(document).on('click', '.p_row', function() {
@@ -1753,8 +1758,31 @@ $(document).ready(function(){
       case "r":
         var url = h2s($(this).data('url')).replace("${var}", args);
         window.open(url);
-      break; 
+      break;
     }   
+  });
+
+ 
+  // Update object colours
+  $(document).on('click', '.csave', function() {
+    var object = $(this).data('object');
+    var colour = $('#menucol').val();
+    var urArgs = "type=19&object=" + object + "&value=" + colour;
+    $(function(){
+      $.post(".inc/callback.php?" + urArgs, function(data){cb22(data)});
+    });
+
+    function cb22(data){
+      eval("theData=" + data);
+      if (theData.msg != '') {
+        alert(theData.msg);
+      } else {
+        var curObject = $('#pickbox_label').text();
+        $(".sub_filter:contains(" + curObject + ")").each(function() {
+          $(this).find('.object').css('background-color', '#' + colour);
+        });
+      }
+    }  
   });
 
   $(document).on('click', '.pickbox_close', function() {

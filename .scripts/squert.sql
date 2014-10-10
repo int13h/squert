@@ -64,6 +64,14 @@ INSERT IGNORE INTO stat_types (type,description) VALUES ('3','Source IP');
 INSERT IGNORE INTO stat_types (type,description) VALUES ('4','Destination IP');
 INSERT IGNORE INTO stat_types (type,description) VALUES ('5','Signature ID'); 
 
+CREATE TABLE IF NOT EXISTS object_mappings
+(
+  object VARCHAR(255),
+  value  VARCHAR(255),
+  INDEX object (object),
+  PRIMARY KEY (object)
+);
+
 ALTER TABLE user_info
 ADD email VARCHAR(320) NOT NULL DEFAULT 'none',
 ADD type ENUM('ADMIN','USER') NOT NULL DEFAULT 'USER',
@@ -107,6 +115,6 @@ VALUES ('filter','','1','5368656C6C202D2044657374696E6174696F6E20436F756E7472792
 INSERT IGNORE INTO filters (type,username,global,name,notes,alias,filter)
 VALUES ('filter','','1','5368656C6C202D204576656E7420537461747573','546869732069732061206275696C742D696E20726561642D6F6E6C792066696C7465722E','st','286576656e742e737461747573203d2027242729');
 
-CREATE INDEX comment ON sguildb.history (comment(50));
-CREATE INDEX sid ON sguildb.history (sid);
-CREATE INDEX cid ON sguildb.history (cid);
+CREATE INDEX comment ON history (comment(50));
+CREATE INDEX sid ON history (sid);
+CREATE INDEX cid ON history (cid);

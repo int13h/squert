@@ -37,6 +37,7 @@ $types = array(
                 '16' => 'view',
                 '17' => 'autocat',
                 '18' => 'esquery',
+                '19' => 'addcolour',
 );
 
 $type = $types[$type];
@@ -260,6 +261,8 @@ function eg() {
               mdst.c_long AS dst_cc,
               msrc.cc AS srcc,
               mdst.cc AS dstc,
+              osrc.value AS scolour,
+              odst.value AS dcolour, 
               GROUP_CONCAT(event.sid) AS c_sid,
               GROUP_CONCAT(event.cid) AS c_cid,
               GROUP_CONCAT(event.status) AS c_status,
@@ -269,6 +272,8 @@ function eg() {
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
+              LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object
+              LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object
               $qp2
               GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
               ORDER BY maxTime $sv";
@@ -395,10 +400,14 @@ function ee() {
               event.signature AS f14,
               event.signature_id AS f15,
               event.priority AS f16,
-              event.signature_gen AS f17
+              event.signature_gen AS f17,
+              osrc.value AS scolour,
+              odst.value AS dcolour
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
+              LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object
+              LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object
               $qp2
               ORDER BY event.timestamp $sv";
 
@@ -1251,7 +1260,7 @@ function esquery() {
               },
               \"filter\": {
                   \"range\": {
-                      \"@timestamp\": {
+                      \"timestamp\": {
                           \"from\": $start,
                           \"to\": $end
                         }
@@ -1262,7 +1271,7 @@ function esquery() {
           \"size\": 500,
           \"sort\": [
               {
-                  \"@timestamp\": {
+                  \"timestamp\": {
                       \"order\": \"desc\"
                   }
               }
@@ -1277,6 +1286,31 @@ function esquery() {
     } 
 */
     $theJSON = json_encode($result);
+    echo $theJSON;
+}
+
+function addcolour() {   
+    $user   = $_SESSION['sUser'];
+    $obtype = "ip";
+    $object = mysql_real_escape_string(hextostr($_REQUEST['object'])); 
+    $value  = mysql_real_escape_string($_REQUEST['value']);
+
+    switch ($obtype) {
+        case "ip":
+            $object = sprintf("%u", ip2long($object));
+        break;
+    }
+
+    $query = "INSERT INTO object_mappings (object,value)
+              VALUES ('$object','$value')
+              ON DUPLICATE KEY UPDATE 
+              object='$object',value='$value'";
+
+    mysql_query($query);
+    $result = mysql_error();
+    $return = array("msg" => $result);
+
+    $theJSON = json_encode($return); 
     echo $theJSON;
 }
 
