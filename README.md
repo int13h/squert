@@ -39,7 +39,7 @@ Changes v1.5.0
 * Object colouring from context menu
 * Bugfixes
 
-See: [Changes v1.5.0](http://www.squertproject.org/summaryofchangesforversion150)
+See: [Changes v1.5.0](http://www.squertproject.org/summaryofchangesforsquertversion150)
 
 
 ## Description
