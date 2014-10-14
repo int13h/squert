@@ -1302,11 +1302,11 @@ $(document).ready(function(){
           row += "<td class=sub><div class=pr" + d2a[i].f16 + ">" + d2a[i].f16 + "</div></td>";
           row += "<td class=\"sub timestamp\" title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += txBit;
-          row += "<td class=\"sub sub_filter select\" data-type=ip><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip data-col=" + scolour + "><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" title=\"" + src_clong + "\" data-type=cc data-value=";
           row += src_cc +">" + cs[1] + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-type=ip><div class=object style=\"background-color:#" + dcolour + ";\"></div>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-type=ip data-col=" + dcolour + "><div class=object style=\"background-color:#" + dcolour + ";\"></div>" + dst_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=dpt>" + dst_port + "</td>";
           row += "<td class=\"sub " + cd[0] + "\" title=\"" + dst_clong + "\" data-type=cc data-value=";
           row += dst_cc +">" + cd[1] + "</td>";
@@ -1608,27 +1608,27 @@ $(document).ready(function(){
  $(document).on("click", ".ex_val,.sub_filter,.row_filter,.tof,.value_link,.nr_f", function(e) {
     var prefix = $(this).data('type');
     if (prefix == "none") return;
+    var mX = e.pageX; 
+    var mY = e.pageY;
     var suffix = $(this).text();
     var colour = $(this).data('col') || "FFFFFF";
     var tfocus = "#search";
     switch (prefix) {
-      case    'ip': 
-      case   'sip':
-      case   'dip':
-      case   'spt':
-      case   'dpt':    
-      case  'hash':  
+      case 'ip': 
+      case 'spt':
+      case 'dpt':    
+      case 'hash':  
         hItemAdd(suffix);
-        mkPickBox(prefix,suffix,0,colour);
+        mkPickBox(prefix,suffix,0,colour,mX,mY);
       break;
-      case    'cc':
-      case   'scc':
-      case   'dcc': 
+      case 'cc':
+      case 'scc':
+      case 'dcc': 
         var cc = $(this).data('value');
         hItemAdd(cc);
-        mkPickBox(prefix,cc,suffix,colour);
+        mkPickBox(prefix,cc,suffix,colour,mX,mY);
       break;
-      case   'cmt': 
+      case 'cmt': 
         suffix = $(this).data('comment');
         $("#rt").text("off");
         $("#rt").attr('class','tvalue_off');
@@ -1644,7 +1644,7 @@ $(document).ready(function(){
         hItemAdd(suffix);
         tfocus = ".cat_msg_txt";
       break;
-      case   'fil': 
+      case 'fil': 
         var fil = $(this).data('value');
         $('#search').val(fil);
         hItemAdd(fil);
@@ -1653,12 +1653,12 @@ $(document).ready(function(){
         }
         $('.b_update').click();
       break;
-      case   'sid': 
+      case 'sid': 
         var value = $(this).data('value');
         hItemAdd(suffix);
-        mkPickBox(prefix,value,suffix,colour);
+        mkPickBox(prefix,value,suffix,colour,mX,mY);
       break;
-      case    'st': 
+      case 'st': 
         var suffix = $(this).attr('id').split('-')[1];
         $('#search').val(prefix + " " + suffix);
         // RT must be off to return anything
@@ -1667,6 +1667,10 @@ $(document).ready(function(){
         rtbit = 0;
         $('.b_update').click();                  
       break;
+      case 'el':
+        var suffix = $(this).data('value');
+        mkPickBox(prefix,suffix,0,colour,mX,mY);
+      break;
     } 
   });
 
@@ -1674,8 +1678,9 @@ $(document).ready(function(){
   // Picker Box
   //
 
-  function mkPickBox(prefix,suffix,rsuffix,colour) {
-    if ($('#t_search').data('state') == 1) return;
+  function mkPickBox(prefix,suffix,rsuffix,colour,mX,mY) {
+    //if ($('#t_search').data('state') == 1) return;
+    var doexternals = "yes";
     var objhex = s2h(suffix);
     var tbl = '', row = '';
     // Local stuff first
@@ -1690,8 +1695,8 @@ $(document).ready(function(){
         row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>SRC</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=dip><td class=pr>DST</td></tr>";
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>COLOUR&nbsp;&nbsp;";
-        row += "<input id=menucol class=\"color {pickerPosition:'top'}\" value=\"" + colour + "\" maxlength=6>";
-        row += "<span class=csave data-object=" + objhex + ">update</span></td></tr>";
+        row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
+        row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
       break;
       case "t":
         row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>SRC</td></tr>";
@@ -1703,30 +1708,34 @@ $(document).ready(function(){
       case "h":
         row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>TERM SEARCH</td></tr>";
       break;
+      case "l":
+        row += "<tr class=n_row data-type=c data-alias=col><td class=pr>COLOUR&nbsp;&nbsp;";
+        row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
+        row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
+        doexternals = "no";
+      break;
     }
 
-    // Now populate externals
-    $('.f_row').each(function() {
-      var ct = $(this).data('type');
-      if (ct == 'url') {
-        var alias = $(this).data('alias');
-        var name  = $(this).data('name');
-        var url   = $(this).data('filter'); 
-        row += "<tr class=p_row data-type=r data-alias=\"" + alias + "\" data-url=\"" + url + "\">";
-        row += "<td class=pr><span class=pr>" + name + "</span></td>";
-        row += "</tr>";
-      }
-    });
+    // If applicable populate externals
+    if (doexternals == "yes") {
+      $('.f_row').each(function() {
+        var ct = $(this).data('type');
+        if (ct == 'url') {
+          var alias = $(this).data('alias');
+          var name  = $(this).data('name');
+          var url   = $(this).data('filter'); 
+          row += "<tr class=p_row data-type=r data-alias=\"" + alias + "\" data-url=\"" + url + "\">";
+          row += "<td class=pr><span class=pr>" + name + "</span></td>";
+          row += "</tr>";
+        }
+      });
+    }
 
     tbl += "<table id=tlpick data-val=\"" + suffix + "\" width=100% class=box_table cellpadding=0 cellspacing=0>";
     tbl += row;
     tbl += "</table>";
-    if ($('#tlpick')[0]) $('#tlpick').remove();
-
-    $(".pickbox_tbl").append(tbl);
-    $('.pickbox').fadeIn('fast');
-
-    var boxlabel = suffix;
+ 
+   var boxlabel = suffix;
     
     // Use more descriptive names where possible
     var re = /(sid|cc|scc|dcc)/;
@@ -1741,7 +1750,34 @@ $(document).ready(function(){
     }
 
     $('#pickbox_label').text(boxlabel).css('font-weight','normal');
-    var myPicker = new jscolor.color(document.getElementById('menucol'), {})
+
+    if ($('#tlpick')[0]) $('#tlpick').remove();
+    $(".pickbox_tbl").append(tbl);
+    $('.pickbox').fadeIn('fast');
+
+    // Colour Picker
+    $("#menucol").spectrum({
+    showInput: true,
+    className: "full-spectrum",
+    showInitial: true,
+    showPalette: true,
+    showSelectionPalette: true,
+    maxPaletteSize: 6,
+    preferredFormat: "hex",
+    localStorageKey: "spectrum.demo",
+    move: function (color) {},
+    show: function () {},
+    beforeShow: function () {},
+    hide: function () {},
+    change: function() {},
+    palette: [
+      ['rgb(247,247,247)','rgb(217,217,217)','rgb(189,189,189)','rgb(150,150,150)','rgb(99,99,99)','rgb(37,37,37)'],
+      ['rgb(237,248,233)','rgb(199,233,192)','rgb(161,217,155)','rgb(116,196,118)','rgb(49,163,84)','rgb(0,109,44)'],
+      ['rgb(242,240,247)','rgb(218,218,235)','rgb(188,189,220)','rgb(158,154,200)','rgb(117,107,177)','rgb(84,39,143)'],
+      ['rgb(239,243,255)','rgb(198,219,239)','rgb(158,202,225)','rgb(107,174,214)','rgb(49,130,189)','rgb(8,81,156)'],
+      ['rgb(255,255,178)','rgb(254,217,118)','rgb(254,178,76)','rgb(253,141,60)','rgb(240,59,32)','rgb(189,0,38)']
+      ]
+    });
   }
 
   $(document).on('click', '.p_row', function() {
@@ -1761,13 +1797,16 @@ $(document).ready(function(){
       break;
     }   
   });
-
  
   // Update object colours
   $(document).on('click', '.csave', function() {
+    var obtype = $(this).data('obtype');
     var object = $(this).data('object');
-    var colour = $('#menucol').val();
-    var urArgs = "type=19&object=" + object + "&value=" + colour;
+    var colour = $('#menucol').val().replace(/#/,"").toUpperCase();
+    var re = /^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+    var OK = re.exec(colour);
+    if (!OK) return;
+    var urArgs = "type=19&obtype=" + obtype + "_c&object=" + object + "&value=" + colour;
     $(function(){
       $.post(".inc/callback.php?" + urArgs, function(data){cb22(data)});
     });
@@ -1776,11 +1815,18 @@ $(document).ready(function(){
       eval("theData=" + data);
       if (theData.msg != '') {
         alert(theData.msg);
-      } else {
+      } else { // We should be good..
         var curObject = $('#pickbox_label').text();
-        $(".sub_filter:contains(" + curObject + ")").each(function() {
-          $(this).find('.object').css('background-color', '#' + colour);
-        });
+        if (obtype == "el") {
+          var html = "<div class=object style=\"background-color:#" + colour + ";\"></div>" + colour;
+          $('#el_' + curObject).html(html);
+          $('#el_' + curObject).data('colour', colour);
+        } else { 
+          $(".sub_filter:contains(" + curObject + ")").each(function() {
+            $(this).find('.object').css('background-color', '#' + colour).parent().data('col', colour);
+          });
+        }
+        $('.pickbox').fadeOut('fast');
       }
     }  
   });
@@ -2353,12 +2399,13 @@ $(document).ready(function(){
         $("#ov_" + cbArgs + "_sl").text("");
       }
       for (var i=0; i<raw.length - 1; i++) {
-        var cnt   = raw[i].f1 || "-";
-        var sigs  = raw[i].f2 || "-";
-        var ip2   = raw[i].f3 || "-";
-        var cc    = raw[i].f4 || "-";
-        var clong = raw[i].f5 || "-";
-        var ip    = raw[i].f6 || "-"; 
+        var cnt    = raw[i].f1 || "-";
+        var sigs   = raw[i].f2 || "-";
+        var ip2    = raw[i].f3 || "-";
+        var cc     = raw[i].f4 || "-";
+        var clong  = raw[i].f5 || "-";
+        var ip     = raw[i].f6 || "-";
+        var colour = raw[i].f7 || "FFFFFF"; 
         var cs = getCountry(cc).split("|");
         if (cs[1] == "LO") { cs[1] = ""; }
         var per = 0;
@@ -2374,8 +2421,8 @@ $(document).ready(function(){
           row += cs[1] + clong + " (." + cc.toLowerCase() + ")" + "</td>";
           row += "<td class=row><b>" + ip + "</b></td>";         
         } else {
-          row += "<td class=sub_filter data-type=" + wip + "ip>" + ip + "</td>";
-          row += "<td class=" + cs[0] + " data-type=" + wip + "cc data-value=" + cc + ">"; 
+          row += "<td class=sub_filter data-type=ip data-col=" + colour + "><div class=object style=\"background-color:#" + colour + ";\"></div>" + ip + "</td>";
+          row += "<td class=" + cs[0] + " data-type=cc data-value=" + cc + ">"; 
           row += cs[1] + clong + " (." + cc.toLowerCase() + ")" + "</td>";
         }
         row += "</tr>";
@@ -2389,9 +2436,6 @@ $(document).ready(function(){
       $("#ov_" + cbArgs + "_sl").after(tbl);
       $("#ov_" + cbArgs + "_msg").html("viewing <b><span id=ov_" + cbArgs + "_sl_lbl>" + i + "</b> of <b>" + records + " </b>results"); 
       mkSlider("ov_" + cbArgs + "_sl", i, records);
-      //$("#top" + cbArgs).tablesorter({
-      //    cancelSelection:true
-      //});
     }
 
     // Ports

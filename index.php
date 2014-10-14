@@ -36,6 +36,7 @@ dbC();
 <link rel="stylesheet" type="text/css" href=".css/cal.css" />
 <link rel="stylesheet" type="text/css" href=".css/jquery-jvectormap-1.2.2.css" />
 <link rel="stylesheet" type="text/css" href=".css/charts.css" />
+<link rel="stylesheet" type="text/css" href=".css/spectrum.css" />
 <script type="text/javascript" src=".js/jq.js"></script>
 <script type="text/javascript" src=".js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src=".js/squertFunctions.js"></script>
@@ -48,7 +49,7 @@ dbC();
 <script type="text/javascript" src=".js/d3/d3.min.js"></script>
 <script type="text/javascript" src=".js/d3/sankey.js"></script>
 <script type="text/javascript" src=".js/d3/packages.js"></script>
-<script type="text/javascript" src=".js/jscolor/jscolor.js"></script>
+<script type="text/javascript" src=".js/spectrum.js"></script>
 
 <title id=title>squert</title>
 </head>

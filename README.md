@@ -29,10 +29,18 @@ Changes v1.4.0:
 
 * URLs
 * Moved to menu on click
-* Object colouring
 * Bugfixes
 
 See: [Changes v1.4.0](http://www.squertproject.org/summaryofchangesforsquertversion140)
+
+Changes v1.5.0
+
+* Control layout changes
+* Object colouring from context menu
+* Bugfixes
+
+See: [Changes v1.5.0](http://www.squertproject.org/summaryofchangesforversion150)
+
 
 ## Description
 

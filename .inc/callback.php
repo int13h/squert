@@ -38,6 +38,7 @@ $types = array(
                 '17' => 'autocat',
                 '18' => 'esquery',
                 '19' => 'addcolour',
+                '20' => 'getcolour',
 );
 
 $type = $types[$type];
@@ -272,8 +273,8 @@ function eg() {
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
-              LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object
-              LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object
+              LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'ip_c'
+              LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'ip_c'
               $qp2
               GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
               ORDER BY maxTime $sv";
@@ -406,8 +407,8 @@ function ee() {
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
-              LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object
-              LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object
+              LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'ip_c'
+              LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'ip_c'
               $qp2
               ORDER BY event.timestamp $sv";
 
@@ -897,9 +898,12 @@ function summary() {
                       COUNT(DISTINCT(event.{$oppip}_ip)) AS f3,
                       m{$subtype}.cc AS f4, 
                       m{$subtype}.c_long AS f5,
-                      INET_NTOA(event.{$subtype}_ip) AS f6
+                      INET_NTOA(event.{$subtype}_ip) AS f6,
+                      o{$subtype}.value AS f7 
                       FROM event
-                      LEFT JOIN mappings AS m{$subtype} ON event.{$subtype}_ip = m{$subtype}.ip  
+                      LEFT JOIN mappings AS m{$subtype} ON event.{$subtype}_ip = m{$subtype}.ip
+                      LEFT JOIN object_mappings AS o{$subtype} ON event.{$subtype}_ip = o{$subtype}.object 
+                      AND o{$subtype}.type = 'ip_c'
                       $qp2
                       GROUP BY f6
                       ORDER BY f1 DESC";
@@ -1291,26 +1295,42 @@ function esquery() {
 
 function addcolour() {   
     $user   = $_SESSION['sUser'];
-    $obtype = "ip";
+    $obtype = mysql_real_escape_string($_REQUEST['obtype']);
     $object = mysql_real_escape_string(hextostr($_REQUEST['object'])); 
     $value  = mysql_real_escape_string($_REQUEST['value']);
 
     switch ($obtype) {
-        case "ip":
+        case "ip_c":
             $object = sprintf("%u", ip2long($object));
         break;
     }
 
-    $query = "INSERT INTO object_mappings (object,value)
-              VALUES ('$object','$value')
+    $query = "INSERT INTO object_mappings (type,object,value)
+              VALUES ('$obtype','$object','$value')
               ON DUPLICATE KEY UPDATE 
-              object='$object',value='$value'";
+              type='$obtype',object='$object',value='$value'";
 
     mysql_query($query);
     $result = mysql_error();
     $return = array("msg" => $result);
 
     $theJSON = json_encode($return); 
+    echo $theJSON;
+}
+
+function getcolour() {   
+    $user   = $_SESSION['sUser'];
+
+    $query = "SELECT object, value AS colour
+              FROM object_mappings
+              WHERE type = 'el_c'"; 
+
+    $result = mysql_query($query);
+    $rows = array();
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
+    $theJSON = json_encode($rows);
     echo $theJSON;
 }
 

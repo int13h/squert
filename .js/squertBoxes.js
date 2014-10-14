@@ -1198,20 +1198,35 @@ $(document).ready(function(){
     var srccount = esSources.length;
     for (var i=0; i < srccount; i++) {
       if (esSources[i].state == "off") continue;
-
       var name = esSources[i].name;
       var type = esSources[i].type;
       var desc = esSources[i].desc;
       var loke = esSources[i].loke;
       var clid = type.replace(/(\s+)/, "");
       
-      row += "<tr id=class=f_row>";
+      row += "<tr class=f_row>";
       row += "<td class=sub><input id=cb_" + name + " class=chk_es ";
       row += "type=checkbox data-searchtype=es data-logtype=" + type + "></td>";
       row += "<td class=nr><div class=srch_edit>" + name + "</div></td>";
-      row += "<td class=nr><input id=\"clid_" + clid + "\" class=\"color {pickerPosition:'right'}\"></td>";
+      row += "<td id=el_" + clid + " class=\"nr sub_filter\" data-col=FFFFFF data-type=el data-value=" + clid + "><div class=object style=\"background-color:#FFFFFF;\"></div>FFFFFF</td>";
       row += "<td class=nr>" + desc + "</td>";
       row += "</tr>";
+    }
+    
+    // Fetch our colour mappings
+    var urArgs = "type=20";
+    $(function(){
+      $.post(".inc/callback.php?" + urArgs, function(data){cb23(data)});
+    });
+
+    function cb23(data){
+      eval("theData=" + data);
+      for (var i=0; i<theData.length; i++) {
+        var object = theData[i].object;
+        var colour = theData[i].colour;
+        var html = "<div class=object style=\"background-color:#" + colour + ";\"></div>" + colour;
+        $('#el_' + object).html(html).data('col',colour);
+      }
     }
 
     tbl += "<table id=tlsrchbox class=box_table width=100% cellpadding=0 cellspacing=0>";
@@ -1315,9 +1330,10 @@ $(document).ready(function(){
             case "type": 
               vclass = "ex_type";
               var clid = value.replace(/(\s+)/, "");
-              var bg = $('#clid_' + clid).css('background-color');
-              var fg = $('#clid_' + clid).css('color');
-              var exstyle = " style=\"background-color:" + bg + "; color:" + fg + ";\""; 
+              var bg = $('#el_' + clid).data('colour');
+              // If our background is too dark adjust the foreground accordingly
+              var fg = bRw(bg) || "000000";
+              var exstyle = " style=\"background-color:#" + bg + "; color:#" + fg + ";\""; 
               p0 += "<div class=ex_key>" + key + "=</div>";
               p0 += "<div class=\"" + vclass + "\"" + "data-type=\"" + datatype +"\" " + exstyle + ">" + value + "</div>";
             break;

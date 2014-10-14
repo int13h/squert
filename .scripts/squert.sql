@@ -66,10 +66,12 @@ INSERT IGNORE INTO stat_types (type,description) VALUES ('5','Signature ID');
 
 CREATE TABLE IF NOT EXISTS object_mappings
 (
+  type   VARCHAR(4),
   object VARCHAR(255),
   value  VARCHAR(255),
+  INDEX type (type),
   INDEX object (object),
-  PRIMARY KEY (object)
+  PRIMARY KEY (type,object)
 );
 
 ALTER TABLE user_info
