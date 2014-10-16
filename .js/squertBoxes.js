@@ -1213,6 +1213,19 @@ $(document).ready(function(){
       row += "</tr>";
     }
     
+   tbl += "<table id=tlsrchbox class=box_table width=100% cellpadding=0 cellspacing=0>";
+    tbl += head;
+    tbl += row;
+    tbl += "</table>";
+    $(".srch_tbl").append(tbl);
+
+    $("#tlsrchbox").tablesorter({
+      headers: {
+        0:{sorter:false},
+      },
+      cancelSelection:false
+    });
+
     // Fetch our colour mappings
     var urArgs = "type=20";
     $(function(){
@@ -1225,23 +1238,10 @@ $(document).ready(function(){
         var object = theData[i].object;
         var colour = theData[i].colour;
         var html = "<div class=object style=\"background-color:#" + colour + ";\"></div>" + colour;
-        $('#el_' + object).html(html).data('col',colour);
+        $('#el_' + object).html(html).data('col', colour);
       }
     }
-
-    tbl += "<table id=tlsrchbox class=box_table width=100% cellpadding=0 cellspacing=0>";
-    tbl += head;
-    tbl += row;
-    tbl += "</table>";
-    $(".srch_tbl").append(tbl);
-
-    $("#tlsrchbox").tablesorter({
-      headers: {
-        0:{sorter:false},
-      },
-      cancelSelection:false
-    });
-  }
+  } 
 
   function mkUrlBox () {
     var tbl = '', head = '', row = '', input = ''; 
@@ -1330,9 +1330,9 @@ $(document).ready(function(){
             case "type": 
               vclass = "ex_type";
               var clid = value.replace(/(\s+)/, "");
-              var bg = $('#el_' + clid).data('colour');
+              var bg = $('#el_' + clid).data('col');
               // If our background is too dark adjust the foreground accordingly
-              var fg = bRw(bg) || "000000";
+              var fg = bRw(bg);
               var exstyle = " style=\"background-color:#" + bg + "; color:#" + fg + ";\""; 
               p0 += "<div class=ex_key>" + key + "=</div>";
               p0 += "<div class=\"" + vclass + "\"" + "data-type=\"" + datatype +"\" " + exstyle + ">" + value + "</div>";
