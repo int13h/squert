@@ -370,28 +370,14 @@ background-color:#f4f4f4;
 div.tvalue_on:hover,div.tvalue_off:hover {
 cursor:pointer;
 }
-div.h_box {
+div.h_box,div.tg_box {
 margin-left:4px;
 width:100%;
-height:100%;
+height:50px;
 float:left;
 clear:right;
 color:#666;
 font-size:11px;
-}
-div.h_box_o {
-padding:10px;
-position:fixed;
-top:50%;
-left:50%;
-height:510px;
-width:920px;
-margin-left:-460px;
-margin-top:-255px;
-background-color:#f4f4f4;
-border-radius:3px;
-border:1pt solid #000;
-z-index:100;
 }
 span.h_item{
 font-size:11px;
@@ -1823,4 +1809,74 @@ text-decoration:underline;
 font-size:12px;
 color:blue;
 margin-left:10px;
+}
+/* Tags */
+div.tag {
+font-size:11px;
+padding:5px;
+margin-bottom:5px;
+margin-right:2px;
+display:inline-block;
+border-radius:5px;
+background-color:#e9e9e9;
+border:1pt solid #c9c9c9;
+}
+div.tag_src{
+color:blue;
+}
+div.tag_dst{
+color:red;
+}
+div.tag_empty,div.history_empty {
+font-weight:bold;
+font-size:13pt;
+color:#dadada;
+width:100%;
+margin-top:10px;
+margin-left:5px;
+}
+/*trbl*/
+div.tagbox {
+position:fixed;
+padding:10px 0px 10px 15px;
+top:50%;
+left:50%;
+margin-top:56px;
+margin-left:-86px;
+display:none;
+background-color:#e9e9e9;
+border:1pt solid #9c9c9c;
+z-index:32;
+border-radius:5px;
+}
+span.tagok, span.tagcancel{
+font-size:12px;
+font-weight:normal;
+text-decoration:underline;
+cursor:pointer;
+margin-right:10px;
+color:#185FAB; 
+}
+span.tagrm{
+font-size:12px;
+font-weight:normal;
+text-decoration:underline;
+cursor:pointer;
+margin-right:10px;
+margin-left:10px;
+color:#cc0000;
+}
+span.spacer{
+color:#545454;
+font-size:16px;
+font-weight:bold;
+}
+.taginput{
+border:none;
+border: 1pt solid #c9c9c9;
+border-radius:3px;
+margin-right:10px;
+padding:10px;
+font-size:14px;
+color:#545454;
 }

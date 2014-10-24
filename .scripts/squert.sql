@@ -69,9 +69,10 @@ CREATE TABLE IF NOT EXISTS object_mappings
   type   VARCHAR(4),
   object VARCHAR(255),
   value  VARCHAR(255),
+  hash   CHAR(32),
   INDEX type (type),
   INDEX object (object),
-  PRIMARY KEY (type,object)
+  PRIMARY KEY (hash)
 );
 
 ALTER TABLE user_info

@@ -455,6 +455,11 @@ $(document).ready(function(){
     }
   });
 
+  function clearTags() {
+    $('.tag').remove();
+    $('.tag_empty').show();
+  }
+
   //
   // Rows
   //
@@ -472,6 +477,8 @@ $(document).ready(function(){
     $("#loader").hide();
     // Reset checkbox
     $(".chk_all").prop("checked",false);
+    // Clear Tags
+    clearTags();
   }
   function closeSubRow() {
     $("#eview_sub1").remove();
@@ -487,6 +494,8 @@ $(document).ready(function(){
     $("#ca0").show();
     // Remove any open externals
     if ($("#extresult")[0]) $("#extresult").remove();
+    // Clear Tags
+    clearTags();
   }
   function closeSubRow1() {
     $("#eview_sub2").remove();
@@ -1025,10 +1034,10 @@ $(document).ready(function(){
           if (rt == 0) row += "<td class=sub>" + catCells + "</td>";
           row += "<td class=sub>" + cells + "</td>";
           row += "<td class=\"sub timestamp\">" + max_time + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-type=ip data-col=" + scolour + "><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-sord=src data-type=ip data-col=" + scolour + "><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" data-type=cc data-value=" + src_cc + ">";
           row += cs[1] + src_clong + " (." + src_cc.toLowerCase() + ")" + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-type=ip data-col=" + dcolour + "><div class=object style=\"background-color:#" + dcolour + ";\"></div>"  + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-sord=dst data-type=ip data-col=" + dcolour + "><div class=object style=\"background-color:#" + dcolour + ";\"></div>"  + dst_ip + "</td>";
           row += "<td class=\"sub " + cd[0] + "\" data-type=cc data-value=" + dst_cc + ">";
           row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
           row += "</tr>";
@@ -1118,12 +1127,18 @@ $(document).ready(function(){
           var dst_port  = d2[i].f6  || "-";
           var sig_id    = d2[i].f11 || "-";
           var signature = d2[i].f10 || "-";
+          var src_tag   = d2[i].f13 || "-";
+          var dst_tag   = d2[i].f14 || "-";
           var txBit     = "";
           rid = "s" + i + "-" + sid + "-" + cid;
           eid = sid + "-" + cid;
           row += "<tr class=d_row_sub1 id=s" + i + " data-sg=0 data-cols=9 data-filter=\"" + eid + "\">";
           tclass = "c" + eclass;
           cv = classifications.class[tclass][0].short;
+
+          // Add tags
+          if (dst_tag != "-") addTag(dst_tag,dst_ip,"dst");
+          if (src_tag != "-") addTag(src_tag,src_ip,"src");
 
           // Timestamp
           var compts       = d2[i].f2.split(",") || "--";
@@ -1150,9 +1165,9 @@ $(document).ready(function(){
           row += cv + "</div></td>";
           row += "<td class=\"sub timestamp\" title=\"UTC: " + utctimestamp + "\">" + timestamp + "</td>";
           row += txBit;
-          row += "<td class=\"sub sub_filter select\" data-type=ip>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-sord=src data-type=ip>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-type=ip>" + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select\" data-sord=dst data-type=ip>" + dst_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=dpt>" + dst_port + "</td>";
           row += "<td class=\"sub sub_filter select\" data-type=sid data-value= ";
           row += sig_id + ">" + signature + "</td>";
@@ -1614,7 +1629,11 @@ $(document).ready(function(){
     var colour = $(this).data('col') || "FFFFFF";
     var tfocus = "#search";
     switch (prefix) {
-      case 'ip': 
+      case 'ip':
+        hItemAdd(suffix);
+        var sord = $(this).data('sord');
+        mkPickBox(prefix,suffix,sord,colour,mX,mY);
+      break; 
       case 'spt':
       case 'dpt':    
       case 'hash':  
@@ -1679,7 +1698,6 @@ $(document).ready(function(){
   //
 
   function mkPickBox(prefix,suffix,rsuffix,colour,mX,mY) {
-    //if ($('#t_search').data('state') == 1) return;
     var doexternals = "yes";
     var objhex = s2h(suffix);
     var tbl = '', row = '';
@@ -1692,8 +1710,9 @@ $(document).ready(function(){
       break;
       case "p":
         row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>SRC or DST</td></tr>";
-        row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>SRC</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>SRC</td></tr>"; 
         row += "<tr class=p_row data-type=l data-alias=dip><td class=pr>DST</td></tr>";
+        row += "<tr class=p_row data-type=t data-alias=tag><td class=pr>ADD / REMOVE TAG</td></tr>";
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
@@ -1735,7 +1754,7 @@ $(document).ready(function(){
     tbl += row;
     tbl += "</table>";
  
-   var boxlabel = suffix;
+    var boxlabel = suffix;
     
     // Use more descriptive names where possible
     var re = /(sid|cc|scc|dcc)/;
@@ -1749,7 +1768,7 @@ $(document).ready(function(){
       boxlabel += "..";
     }
 
-    $('#pickbox_label').text(boxlabel).css('font-weight','normal');
+    $('#pickbox_label').text(boxlabel).css('font-weight','normal').data('sord', rsuffix);
 
     if ($('#tlpick')[0]) $('#tlpick').remove();
     $(".pickbox_tbl").append(tbl);
@@ -1771,34 +1790,102 @@ $(document).ready(function(){
     hide: function () {},
     change: function() {},
     palette: [
-      ['rgb(247,247,247)','rgb(217,217,217)','rgb(189,189,189)','rgb(150,150,150)','rgb(99,99,99)','rgb(37,37,37)'],
-      ['rgb(237,248,233)','rgb(199,233,192)','rgb(161,217,155)','rgb(116,196,118)','rgb(49,163,84)','rgb(0,109,44)'],
-      ['rgb(242,240,247)','rgb(218,218,235)','rgb(188,189,220)','rgb(158,154,200)','rgb(117,107,177)','rgb(84,39,143)'],
-      ['rgb(239,243,255)','rgb(198,219,239)','rgb(158,202,225)','rgb(107,174,214)','rgb(49,130,189)','rgb(8,81,156)'],
-      ['rgb(255,255,178)','rgb(254,217,118)','rgb(254,178,76)','rgb(253,141,60)','rgb(240,59,32)','rgb(189,0,38)']
+      ['rgb(217,217,217)','rgb(189,189,189)','rgb(150,150,150)','rgb(99,99,99)','rgb(37,37,37)'],
+      ['rgb(199,233,192)','rgb(161,217,155)','rgb(116,196,118)','rgb(49,163,84)','rgb(0,109,44)'],
+      ['rgb(218,218,235)','rgb(188,189,220)','rgb(158,154,200)','rgb(117,107,177)','rgb(84,39,143)'],
+      ['rgb(198,219,239)','rgb(158,202,225)','rgb(107,174,214)','rgb(49,130,189)','rgb(8,81,156)'],
+      ['rgb(254,217,118)','rgb(254,178,76)','rgb(253,141,60)','rgb(240,59,32)','rgb(189,0,38)']
       ]
     });
   }
 
+  // URLs 
   $(document).on('click', '.p_row', function() {
-    $('.pickbox').fadeOut('fast');
- 
+    if ($('.tagbox').css('display') != 'none') $('.tagcancel').click(); 
     var ctype = $(this).data('type');
     var alias = $(this).data('alias');
     var args  = $('#tlpick').data('val');
     switch(ctype) {
       case "l":
+        $('.pickbox').fadeOut('fast');
         $('#search').val(alias + " " + args);
         $('.b_update').click();
       break;
       case "r":
+        $('.pickbox').fadeOut('fast');
         var url = h2s($(this).data('url')).replace("${var}", args);
         window.open(url);
       break;
+      case "t":
+        $('.tagbox').fadeIn('fast');
+        $('.taginput').focus();
+      break;
     }   
   });
- 
-  // Update object colours
+
+  // Tags
+  function truncTag(tag) {
+    var len = 20;
+    // Truncate
+    if (tag.length > len) tag = tag.substring(0,len) + "..";
+    return tag;
+  }
+
+  $('.taginput').keypress(function(e) {
+    if (!e) e=window.event;
+    key = e.keyCode ? e.keyCode : e.which;
+    if (key == 13) $('.tagok').click();
+  });
+
+  $(document).on('click', '.tagok', function() {
+    var tag  = $('.taginput').val();
+    var obj  = $('#pickbox_label').text();
+    var sord = $('#pickbox_label').data('sord');
+    var re   = /^[?a-zA-Z0-9][\s\w-]*$/; 
+    var OK = re.exec(tag);
+    if (OK) addTag(tag,obj,sord);
+  });
+
+  $(document).on('click', '.tagcancel', function() {
+    $('.taginput').val('');
+    $('.tagbox').fadeOut('fast');
+  });
+
+  $(document).on('click', '.tagrm', function() {
+    var tag  = truncTag($('.taginput').val());
+    var obj  = $('#pickbox_label').text();
+    var sord = $('#pickbox_label').data('sord');
+    doTag(s2h(obj),tag,'rm');
+    $(".tag_" + sord + ":contains('" + tag + "')").remove();
+    $('.tagcancel').click();
+  });
+
+  function addTag(tag,obj,type){
+    tag = truncTag(tag);
+    // Hide empty
+    $('.tag_empty').hide()
+    // Add Tag
+    if ($(".tag:contains('" + tag + "')").length == 0) {
+      var newTag = "<div class=\"tag tag_" + type  +"\">" + tag + "</div>";
+      $('#tg_box').prepend(newTag);
+    }
+    doTag(s2h(obj),tag,'add');
+    $('.tagcancel').click();
+  }
+
+  function doTag(obj,tag,op) {
+    var urArgs = "type=19&obtype=tag&object=" + obj + "&value=" + tag + "&op=" + op;
+    $(function(){
+      $.post(".inc/callback.php?" + urArgs, function(data){cb22(data)});
+    });
+
+    function cb22(data){
+      eval("theData=" + data);
+      if (theData.msg != '') alert(theData.msg);  
+    }
+  }
+
+  // Colours
   $(document).on('click', '.csave', function() {
     var obtype = $(this).data('obtype');
     var object = $(this).data('object');
@@ -1832,6 +1919,7 @@ $(document).ready(function(){
   });
 
   $(document).on('click', '.pickbox_close', function() {
+    $('.tagcancel').click();
     $('.pickbox').fadeOut('fast');
   });
 
@@ -1846,7 +1934,7 @@ $(document).ready(function(){
       itemTitle = item.substring(0,33) + "..";
     }
     // Remove empty message
-    if ($('#h_empty')[0]) $('#h_empty').remove();
+    $('.history_empty').hide();
 
     // If the item doesn't exist, add it. Otherwise, we start counting.
     if ($(".h_item:contains('" + itemTitle + "')").length > 0) {
@@ -1871,30 +1959,8 @@ $(document).ready(function(){
     }
   }
 
-  $(document).on("click", ".pop", function() {
-    var cid = $('.pop').attr('id');
-    switch (cid) {
-      case 'pi': 
-        $('.pop').attr('id','po');
-        $('.pop').attr('src','.css/pi.png');
-        $('#h_box').attr('class','h_box_o');
-        $('.pop').attr('title','Click to collapse'); 
-      break;
-      case 'po':
-        $('.pop').attr('id','pi');
-        $('.pop').attr('src','.css/po.png');
-        $('#h_box').attr('class','h_box');
-        $('.pop').attr('title','Click to expand');
-      break;
-    } 
-  });
- 
-  $(document).on("click", "#h_box", function() {
-    $("#po").click();
-  });
-
   if (!$('.h_item')[0]) {
-    $('#h_box').append('<span id=h_empty>History is empty</span>');
+    $('.history_empty').show();
   }
 
   // Alt mappings for icons

@@ -37,7 +37,7 @@ $types = array(
                 '16' => 'view',
                 '17' => 'autocat',
                 '18' => 'esquery',
-                '19' => 'addcolour',
+                '19' => 'addremoveobject',
                 '20' => 'getcolour',
 );
 
@@ -341,8 +341,12 @@ function ed() {
               event.ip_proto AS f9,
               event.signature AS f10,
               event.signature_id AS f11,
-              event.priority AS f12
+              event.priority AS f12,
+              osrc.value AS f13,
+              odst.value AS f14
               FROM event
+              LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'tag'
+              LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'tag'
               $qp2
               $rt
               ORDER BY event.timestamp $sv";
@@ -1293,22 +1297,36 @@ function esquery() {
     echo $theJSON;
 }
 
-function addcolour() {   
+function addremoveobject() {   
     $user   = $_SESSION['sUser'];
     $obtype = mysql_real_escape_string($_REQUEST['obtype']);
     $object = mysql_real_escape_string(hextostr($_REQUEST['object'])); 
     $value  = mysql_real_escape_string($_REQUEST['value']);
+    $op     = mysql_real_escape_string($_REQUEST['op']);
 
+    // For everything but tags we want to replace the existing value
+    $hash = md5($obtype . $object);    
     switch ($obtype) {
         case "ip_c":
             $object = sprintf("%u", ip2long($object));
         break;
+        case "tag":
+            $object = sprintf("%u", ip2long($object)); 
+            $hash = md5($obtype . $object . $value);
+        break; 
     }
 
-    $query = "INSERT INTO object_mappings (type,object,value)
-              VALUES ('$obtype','$object','$value')
-              ON DUPLICATE KEY UPDATE 
-              type='$obtype',object='$object',value='$value'";
+    switch ($op) {
+        case "add":
+            $query = "INSERT INTO object_mappings (type,object,value,hash)
+                      VALUES ('$obtype','$object','$value','$hash')
+                      ON DUPLICATE KEY UPDATE 
+                      type='$obtype',object='$object',value='$value',hash='$hash'";
+        break;
+        case "rm":
+            $query = "DELETE FROM object_mappings WHERE hash = '$hash'";
+        break;
+    }                
 
     mysql_query($query);
     $result = mysql_error();

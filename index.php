@@ -106,8 +106,8 @@ dbC();
         <div class=label>queued events</div><div id=qtotal class=value>-</div>
         <div class=label>total events</div><div id=etotal class=value>-</div>
         <div class=label>total signatures</div><div id=esignature class=value>-</div>
-        <div class=label>total sources</div><div id=esrc class=value>-</div>
-        <div class=label>total destinations</div><div id=edst class=value>-</div>
+        <!--div class=label>total sources</div><div id=esrc class=value>-</div-->
+        <!--div class=label>total destinations</div><div id=edst class=value>-</div-->
       </div>
     </div>
 
@@ -156,15 +156,26 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>HISTORY</span>
-        <img title="Click to expand" id=pi class=pop src=.css/po.png>
-        <div class=label_m><img data-sec=h title=collapse class="il st" src=.css/uarr.png></div>  
+      <div class=label_l><span class=ec_label>TAGS</span>
+        <div class=label_m><img data-sec=tg title=collapse class="il st" src=.css/uarr.png></div>  
       </div>
-      <div class=secl id=sec_h>
-        <div id=h_box class=h_box></div>
+      <div class=secl id=sec_tg>
+        <div id=tg_box class=tg_box>
+          <div class=tag_empty>no tags</div>
+        </div>
       </div>
     </div>
 
+    <div class=event_cont>
+      <div class=label_l><span class=ec_label>HISTORY</span>
+        <div class=label_m><img data-sec=h title=collapse class="il st" src=.css/uarr.png></div>  
+      </div>
+      <div class=secl id=sec_h>
+        <div id=h_box class=h_box>
+          <div class=history_empty>no history</div>
+        </div>
+      </div>
+    </div>
   </div>
   
   <div class=content-right>
@@ -303,7 +314,7 @@ dbC();
   </div>
   <div class=srch_controls>
     <div class=cat_l1>QUERY:</div>
-    <div class=cat_r1><input class=srch_txt type=text maxlength=255 value="*"></div>
+    <div class=cat_r1><input class=srch_txt type=text maxlength=1000 value="*"></div>
     <div class=clear_srch><img title=clear class=il src=.css/delete.png></div>
     <div class=cat_l1>TERMS:</div>
     <div class=cat_r1 id=srchterms></div>
@@ -331,6 +342,14 @@ dbC();
     <div title="close" class="pickbox_close"><img class=il src=.css/close.png></div>
   </div>
   <div class=pickbox_tbl></div>
+</div>
+
+<div class=tagbox>
+  <input type=text class=taginput maxlength=50 width=200>
+  <span class=tagok>ADD</span>
+  <span class=tagcancel>CANCEL</span>
+  <span class=spacer>|</span>
+  <span class=tagrm>REMOVE</span>
 </div>
 
 <div class=bottom>

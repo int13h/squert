@@ -396,7 +396,7 @@ function bRw(c) {
   var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
   
   var colour = "000000";
-  if (luma < 40) {
+  if (luma < 60) {
     colour = "FFFFFF";
   }
   return colour;
