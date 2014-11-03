@@ -938,10 +938,10 @@ $(document).ready(function(){
       var sl = [1,2,11,12,13,14,15,16,17];
       if (sl.indexOf(Number(ruleTxt.status)) == -1) throw 2;
 
-      // Validate IPs
-      var OK = chkIP(ruleTxt.src_ip);
+      // Validate IPs or CIDRs
+      var OK = chkCIDR(ruleTxt.src_ip);
       if (!OK) throw 3;     
-      var OK = chkIP(ruleTxt.dst_ip);
+      var OK = chkCIDR(ruleTxt.dst_ip);
       if (!OK) throw 3;
 
       // Validate ports

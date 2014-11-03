@@ -134,6 +134,12 @@ function h2s(hex) {
   return str;
 }
 
+function chkCIDR(net) {
+  var re = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$|^any$/;
+  var OK = re.exec(net);
+  return OK;
+}
+
 function chkIP(ip) {
   var re = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$|^any$/;
   var OK = re.exec(ip);
