@@ -773,7 +773,7 @@ $(document).ready(function(){
         var user      = theData[i].user      || 'any';
         var active    = theData[i].active    || 'no';
         var timestamp = theData[i].ts        || '-';
-        var expires   = theData[i].erase     || 'no';
+        var expires   = theData[i].erase     || 'none';
 
         var tclass = "c" + status;
         var cv = classifications.class[tclass][0].short;
@@ -1016,7 +1016,7 @@ $(document).ready(function(){
           eMsg += "Signature can not exceed 255 characters";
         break;
         case 8:
-          eMsg += "Expiry must be of the form \"YYYY-MM-DD HH:MM:SS\" or \"2 hours | 1 day | 6 weeks | 9 months\"";
+          eMsg += "Expiry must be of the form \"YYYY-MM-DD HH:MM:SS\" or \"2 hours | 1 day | 6 weeks | 9 months\" or \"none\"";
         break;
         default:
           eMsg += "<span class=warn>Format error!</span> ";
