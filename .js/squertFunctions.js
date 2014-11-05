@@ -40,7 +40,7 @@ var esSources = [{
 {
   "name":"BRO_NOTICE",
   "type":"bro_notice",
-  "desc":"Bro noitce log",
+  "desc":"Bro notice log",
   "loke":"",
   "state":"on"
 },

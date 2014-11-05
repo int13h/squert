@@ -988,11 +988,22 @@ $(document).ready(function(){
           var c_cid     = theData[i].c_cid   || "0";
           var scolour   = theData[i].scolour || "FFFFFF";
           var dcolour   = theData[i].dcolour || "FFFFFF";
+          var src_tag   = theData[i].src_tag || "-";
+          var dst_tag   = theData[i].dst_tag || "-";
           var cs = getCountry(src_cc).split("|");
           if (cs[1] == "LO") { cs[1] = ""; }
           var cd = getCountry(dst_cc).split("|");
           if (cd[1] == "LO") { cd[1] = ""; }
 
+          // Add tags (1 to many)
+          if (src_tag != "-") {
+              addTag(src_tag,src_ip,"src"); 
+          }   
+
+          if (dst_tag != "-") {
+              addTag(dst_tag,dst_ip,"dst"); 
+          }
+ 
           // Create sid.cid list
           var sids = c_sid.split(",");
           var cids = c_cid.split(",");
@@ -1004,7 +1015,7 @@ $(document).ready(function(){
           es0 = theData[i].c_status.split(",");
           var unclass = 0;                  
           $.each(es0, function(a,b) {
-            switch (b) {
+            switch (b) {  
               case "0": unclass++; break;
             }
           });
@@ -1841,7 +1852,7 @@ $(document).ready(function(){
     var tag  = $('.taginput').val();
     var obj  = $('#pickbox_label').text();
     var sord = $('#pickbox_label').data('sord');
-    var re   = /^[?a-zA-Z0-9][\s\w-]*$/; 
+    var re   = /^[?a-zA-Z0-9][\s{1}\w-\.]*$/; 
     var OK = re.exec(tag);
     if (OK) addTag(tag,obj,sord);
   });
@@ -1861,12 +1872,12 @@ $(document).ready(function(){
   });
 
   function addTag(tag,obj,type){
-    tag = truncTag(tag);
+    var t_tag = truncTag(tag);
     // Hide empty
     $('.tag_empty').hide()
     // Add Tag
-    if ($(".tag:contains('" + tag + "')").length == 0) {
-      var newTag = "<div class=\"tag tag_" + type  +"\">" + tag + "</div>";
+    if ($(".tag:contains('" + t_tag + "')").length == 0) {
+      var newTag = "<div class=\"tag tag_" + type  +"\">" + t_tag + "</div>";
       $('#tg_box').prepend(newTag);
     }
     doTag(s2h(obj),tag,'add');
@@ -1890,10 +1901,11 @@ $(document).ready(function(){
     var obtype = $(this).data('obtype');
     var object = $(this).data('object');
     var colour = $('#menucol').val().replace(/#/,"").toUpperCase();
+    var op = "add";
     var re = /^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
     var OK = re.exec(colour);
     if (!OK) return;
-    var urArgs = "type=19&obtype=" + obtype + "_c&object=" + object + "&value=" + colour;
+    var urArgs = "type=19&obtype=" + obtype + "_c&object=" + object + "&value=" + colour + "&op=" + op;
     $(function(){
       $.post(".inc/callback.php?" + urArgs, function(data){cb22(data)});
     });

@@ -263,7 +263,7 @@ function eg() {
               msrc.cc AS srcc,
               mdst.cc AS dstc,
               osrc.value AS scolour,
-              odst.value AS dcolour, 
+              odst.value AS dcolour,
               GROUP_CONCAT(event.sid) AS c_sid,
               GROUP_CONCAT(event.cid) AS c_cid,
               GROUP_CONCAT(event.status) AS c_status,
@@ -278,7 +278,6 @@ function eg() {
               $qp2
               GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
               ORDER BY maxTime $sv";
-
     $result = mysql_query($query);
 
     $rows = array();

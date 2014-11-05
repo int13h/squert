@@ -1818,14 +1818,16 @@ margin-bottom:5px;
 margin-right:2px;
 display:inline-block;
 border-radius:5px;
-background-color:#e9e9e9;
-border:1pt solid #c9c9c9;
 }
 div.tag_src{
-color:blue;
+color:#21008a;
+background-color:#ededfb;
+border:1pt solid #21008a;
 }
 div.tag_dst{
-color:red;
+color:#7f0000;
+background-color:#fbeded;
+border:1pt solid #7f0000;
 }
 div.tag_empty,div.history_empty {
 font-weight:bold;
@@ -1854,7 +1856,7 @@ font-size:12px;
 font-weight:normal;
 text-decoration:underline;
 cursor:pointer;
-margin-right:10px;
+margin-right:5px;
 color:#185FAB; 
 }
 span.tagrm{
@@ -1863,7 +1865,7 @@ font-weight:normal;
 text-decoration:underline;
 cursor:pointer;
 margin-right:10px;
-margin-left:10px;
+margin-left:5px;
 color:#cc0000;
 }
 span.spacer{
