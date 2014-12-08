@@ -351,12 +351,10 @@ $(document).ready(function(){
     switch (thisSecVis) {
       case "none":
         $(this).attr("src", ".css/uarr.png");
-        if (thisSec != lastSection) $(this).parents(".label_l").css("border-bottom","1pt solid #c9c9c9");
         $(thisSecID).slideDown();
       break;
       default:
         $(this).attr("src", ".css/darr.png");
-        if (thisSec != lastSection) $(this).parents(".label_l").css("border-bottom","none");
         $(thisSecID).slideUp();
       break;
     }
@@ -1842,26 +1840,30 @@ $(document).ready(function(){
     return tag;
   }
 
+  // Fire tag add on enter
   $('.taginput').keypress(function(e) {
     if (!e) e=window.event;
     key = e.keyCode ? e.keyCode : e.which;
     if (key == 13) $('.tagok').click();
   });
-
+ 
+  // Close tag entry
+  $(document).on('click', '.tagcancel', function() {
+    $('.taginput').val('');
+    $('.tagbox').fadeOut('fast');
+  });
+ 
+  // Add a tag
   $(document).on('click', '.tagok', function() {
     var tag  = $('.taginput').val();
     var obj  = $('#pickbox_label').text();
     var sord = $('#pickbox_label').data('sord');
     var re   = /^[?a-zA-Z0-9][\s{1}\w-\.]*$/; 
     var OK = re.exec(tag);
-    if (OK) addTag(tag,obj,sord);
+    if (OK) doTag(s2h(obj),tag,'add');
   });
 
-  $(document).on('click', '.tagcancel', function() {
-    $('.taginput').val('');
-    $('.tagbox').fadeOut('fast');
-  });
-
+  // Remove a tag
   $(document).on('click', '.tagrm', function() {
     var tag  = truncTag($('.taginput').val());
     var obj  = $('#pickbox_label').text();
@@ -1871,7 +1873,7 @@ $(document).ready(function(){
     $('.tagcancel').click();
   });
 
-  function addTag(tag,obj,type){
+  function addTag(tag,obj,type) {
     var t_tag = truncTag(tag);
     // Hide empty
     $('.tag_empty').hide()
@@ -1880,8 +1882,6 @@ $(document).ready(function(){
       var newTag = "<div class=\"tag tag_" + type  +"\">" + t_tag + "</div>";
       $('#tg_box').prepend(newTag);
     }
-    doTag(s2h(obj),tag,'add');
-    $('.tagcancel').click();
   }
 
   function doTag(obj,tag,op) {
@@ -1892,7 +1892,13 @@ $(document).ready(function(){
 
     function cb22(data){
       eval("theData=" + data);
-      if (theData.msg != '') alert(theData.msg);  
+      if (theData.msg != '') {
+        alert(theData.msg);  
+      } else {
+        var sord = $('#pickbox_label').data('sord');
+        addTag(tag,obj,sord);
+        $('.tagcancel').click();
+      }     
     }
   }
 

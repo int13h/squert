@@ -112,7 +112,7 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>COUNT BY PRIORITY</span><div class=label_m><img data-sec=p title=collapse class="il st" src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>PRIORITY</span><div class=label_m><img data-sec=p title=collapse class="il st" src=.css/uarr.png></div></div>
       <div class=secl id=sec_p>
         <div class=label>high</div><div id=pr_1 class=value>-</div>
         <div class=label>medium</div><div id=pr_2 class=value>-</div>
@@ -122,7 +122,7 @@ dbC();
     </div>
 
     <div class=event_cont>
-      <div class=label_l><span class=ec_label>COUNT BY CLASSIFICATION</span><div class=label_m><img data-sec=c title=collapse class="il st" src=.css/uarr.png></div></div>
+      <div class=label_l><span class=ec_label>CLASSIFICATION</span><div class=label_m><img data-sec=c title=collapse class="il st" src=.css/uarr.png></div></div>
       <div class=secl id=sec_c>  
 
         <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='compromised L1 (F1)'>

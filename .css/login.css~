@@ -49,7 +49,7 @@ table.boxes {
     font-size: .7em;
     margin: 0 auto;
     width: 450px;
-    color: #a0a0a0;
+    color: #c9c9c9;
     padding-left: 10px;
     padding-top:10px;
 }
