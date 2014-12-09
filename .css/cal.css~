@@ -131,7 +131,7 @@ color:#666;
 }
 .dt_b:hover {
 cursor:pointer;
-background-color:#fff;
+background-color:#e9e9e9;
 }
 .dt_error{
 display:none;
