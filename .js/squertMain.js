@@ -695,7 +695,7 @@ $(document).ready(function(){
         var row = '',tbl = '';
         row += "<table class=txtable align=center width=100% cellpadding=0 cellspacing=0>";
         row += "<tr>";
-        row += "<td class=\"txtext select\">";
+        row += "<td class=\"txtext select\" data-type=tx>";
         row += txResult;
         row += "</td></tr></table>";
 
@@ -1629,12 +1629,20 @@ $(document).ready(function(){
   // Object click handlers
   //
 
- $(document).on("click", ".ex_val,.sub_filter,.row_filter,.tof,.value_link,.nr_f", function(e) {
+ $(document).on("click", ".txtext,.ex_val,.sub_filter,.row_filter,.tof,.value_link,.nr_f", function(e) {
     var prefix = $(this).data('type');
     if (prefix == "none") return;
     var mX = e.pageX; 
     var mY = e.pageY;
-    var suffix = $(this).text();
+    var suffix = '';
+   
+    if (window.getSelection().toString().length > 0) {
+      suffix = window.getSelection().toString();
+      prefix = "zz";  
+    } else {  
+      suffix = $(this).text();
+    }
+
     var colour = $(this).data('col') || "FFFFFF";
     var tfocus = "#search";
     switch (prefix) {
@@ -1697,6 +1705,10 @@ $(document).ready(function(){
       break;
       case 'el':
         var suffix = $(this).data('value');
+        mkPickBox(prefix,suffix,0,colour,mX,mY);
+      break;
+      case 'zz':
+        hItemAdd(prefix);
         mkPickBox(prefix,suffix,0,colour,mX,mY);
       break;
     } 
