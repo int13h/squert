@@ -264,8 +264,6 @@ function eg() {
               mdst.cc AS dstc,
               osrc.value AS scolour,
               odst.value AS dcolour,
-              tsrc.value AS src_tag,
-              tdst.value AS dst_tag, 
               GROUP_CONCAT(event.sid) AS c_sid,
               GROUP_CONCAT(event.cid) AS c_cid,
               GROUP_CONCAT(event.status) AS c_status,
@@ -277,10 +275,8 @@ function eg() {
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'ip_c'
               LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'ip_c'
-              LEFT JOIN object_mappings AS tsrc ON event.src_ip = tsrc.object AND tsrc.type = 'tag'
-              LEFT JOIN object_mappings AS tdst ON event.dst_ip = tdst.object AND tdst.type = 'tag'
               $qp2
-              GROUP BY event.src_ip, src_cc, event.dst_ip, dst_cc
+              GROUP BY event.src_ip, event.dst_ip
               ORDER BY maxTime $sv";
 
     $result = mysql_query($query);
@@ -346,13 +342,14 @@ function ed() {
               event.signature AS f10,
               event.signature_id AS f11,
               event.priority AS f12,
-              osrc.value AS f13,
-              odst.value AS f14
+              GROUP_CONCAT(osrc.value) AS f13,
+              GROUP_CONCAT(odst.value) AS f14
               FROM event
               LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'tag'
               LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'tag'
               $qp2
               $rt
+              GROUP BY event.sid,event.cid
               ORDER BY event.timestamp $sv";
     
     $result = mysql_query($query);

@@ -548,7 +548,7 @@ $(document).ready(function(){
       var tbl = '';
       tbl += "<tr class=eview id=active_eview><td colspan=" + cols + ">";
       tbl += "<div id=eview class=eview>";
-      tbl += "<div class=\"sigtxt select\"></div>";
+      tbl += "<div class=\"sigtxt select\" data-type=tx></div>";
       tbl += "<div class=eview_actions>";
       tbl += "<input id=ca0 class=chk_all type=checkbox checked>";
       tbl += "<span class=ec_label>CATEGORIZE</span><span class=bold id=class_count>";
@@ -1582,7 +1582,7 @@ $(document).ready(function(){
 
         } else {
 
-          head += "<table class=\"tlip select\"  align=center width=100% cellpadding=0 cellspacing=0>";
+          head += "<table class=\"tlip select\" data-type=tx align=center width=100% cellpadding=0 cellspacing=0>";
           head += "<tr>";
           head += "<th class=sub2>EVENT DETAIL</th>";
           head += "</tr>";
@@ -1629,19 +1629,29 @@ $(document).ready(function(){
   // Object click handlers
   //
 
- $(document).on("click", ".txtext,.ex_val,.sub_filter,.row_filter,.tof,.value_link,.nr_f", function(e) {
+ $(document).on("click", ".select,.ex_val,.sub_filter,.row_filter,.tof,.value_link,.nr_f", function(e) {
+    // Check if we are coming from a legit object
     var prefix = $(this).data('type');
     if (prefix == "none") return;
+
+    // Check if we are coming from a sane selection
+    var selLen = window.getSelection().toString().length;
+    if (selLen > 4) {
+      if (selLen < 255) { // Might need to change these based on how people use this
+        prefix = "zz";
+        var suffix = window.getSelection().toString();
+        var re = /\s/g;
+        var NOK = re.exec(suffix);
+        if (NOK) return;
+      } else {
+        return;
+      }
+    } else {
+      var suffix = $(this).text();
+    }
+  
     var mX = e.pageX; 
     var mY = e.pageY;
-    var suffix = '';
-   
-    if (window.getSelection().toString().length > 0) {
-      suffix = window.getSelection().toString();
-      prefix = "zz";  
-    } else {  
-      suffix = $(this).text();
-    }
 
     var colour = $(this).data('col') || "FFFFFF";
     var tfocus = "#search";
@@ -1708,7 +1718,7 @@ $(document).ready(function(){
         mkPickBox(prefix,suffix,0,colour,mX,mY);
       break;
       case 'zz':
-        hItemAdd(prefix);
+        hItemAdd(suffix);
         mkPickBox(prefix,suffix,0,colour,mX,mY);
       break;
     } 
