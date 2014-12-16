@@ -82,10 +82,12 @@ $(document).ready(function(){
    
     var html = '';
     html += "<table class=dt_table><tr><td class=dt_content><span class=dt_error data-err=0>Format Error!</span>";
-    html += "<span class=fl>DATE</span>&nbsp;<input class=dt_input id=ts_sdate type=text maxlength=10>"; 
-    html += " - <input class=dt_input id=ts_edate type=text maxlength=10>";
-    html += "&nbsp;&nbsp;<span class=fl>TIME</span><input class=dt_input id=ts_stime type=text maxlength=8>";
-    html += " - <input class=dt_input id=ts_etime type=text maxlength=8>";
+    html += "<span class=fl>START</span>&nbsp";
+    html += "<input class=dt_input id=ts_sdate type=text maxlength=10>&nbsp;";
+    html += "<input class=dt_input id=ts_stime type=text maxlength=8>";
+    html += "<span class=fl>END</span>&nbsp";
+    html += "<input class=dt_input id=ts_edate type=text maxlength=10>&nbsp;";
+    html += "<input class=dt_input id=ts_etime type=text maxlength=8>";
     html += "&nbsp;&nbsp;<span class=fl>UTC</span><input class=dt_utc id=ts_utc type=checkbox" + checkUTC + ">";
     html += "&nbsp;&nbsp;<span class=fl>TZ OFFSET</span><input class=dt_input id=ts_offset";
     html += " type=text" + inputUTC + "></td>";

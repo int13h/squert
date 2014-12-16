@@ -1208,7 +1208,7 @@ $(document).ready(function(){
       row += "<td class=sub><input id=cb_" + name + " class=chk_es ";
       row += "type=checkbox data-searchtype=es data-logtype=" + type + "></td>";
       row += "<td class=nr><div class=srch_edit>" + name + "</div></td>";
-      row += "<td id=el_" + clid + " class=\"nr sub_filter\" data-col=FFFFFF data-type=el data-value=" + clid + "><div class=object style=\"background-color:#FFFFFF;\"></div>FFFFFF</td>";
+      row += "<td id=el_" + clid + " class=\"nr sub_filter\" data-type=el data-value=" + clid + "><div class=object style=\"background-color:#FFFFFF;\"></div>FFFFFF</td>";
       row += "<td class=nr>" + desc + "</td>";
       row += "</tr>";
     }
@@ -1238,7 +1238,7 @@ $(document).ready(function(){
         var object = theData[i].object;
         var colour = theData[i].colour;
         var html = "<div class=object style=\"background-color:#" + colour + ";\"></div>" + colour;
-        $('#el_' + object).html(html).data('col', colour);
+        $('#el_' + object).html(html);
       }
     }
   } 
@@ -1330,7 +1330,7 @@ $(document).ready(function(){
             case "type": 
               vclass = "ex_type";
               var clid = value.replace(/(\s+)/, "");
-              var bg = $('#el_' + clid).data('col');
+              var bg = $('#el_' + clid).text();
               // If our background is too dark adjust the foreground accordingly
               var fg = bRw(bg);
               var exstyle = " style=\"background-color:#" + bg + "; color:#" + fg + ";\""; 
