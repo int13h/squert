@@ -574,10 +574,12 @@ function transcript() {
         }
     }
 
-    $fmtd  .= "<br>" . $debug;
+    if (strlen($fmtd) > 0) {
+        $fmtd  .= "<br>" . $debug;
+    }
 
     $result = array("tx"  => "$fmtd",
-                    "dbg" => "$debug",
+                    "dbg" => "$_raw",
                     "cmd" => "$cmd");
 
     $theJSON = json_encode($result);

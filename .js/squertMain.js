@@ -683,14 +683,20 @@ $(document).ready(function(){
       // See if a transcript is available
       var urArgs = "type=" + 7 + "&txdata=" + txdata;
       $(function(){
-        $.get(".inc/callback.php?" + urArgs, function(data){cb5(data)});
+        $.post(".inc/callback.php?" + urArgs, function(data){cb5(data)});
       });
 
       function cb5(data){
         eval("txRaw=" + data);
         txCMD    = txRaw.cmd;
         txResult = txRaw.tx;
+        txDebug  = txRaw.dbg;
         if (txResult == "DEBUG:") txResult += " No data was returned.";
+        if (!txResult) {
+          txResult =  "Transcript request failed!<br>";
+          txResult += "<b>The command was:</b> " + txCMD + "<br>";
+          txResult += "<b>The response was:</b> " + txDebug;
+        }
 
         var row = '',tbl = '';
         row += "<table class=txtable align=center width=100% cellpadding=0 cellspacing=0>";
@@ -1405,6 +1411,7 @@ $(document).ready(function(){
         // If IP version is 0 we can jump right to the payload (likely bro, http or ossec agent) 
         if (theData[0].ip_ver != 0) {       
    
+          var PDATA = 0;
           head += "<table class=tlip align=center width=100% cellpadding=0 cellspacing=0>";
           head += "<tr>";
           head += "<th class=sub4 rowspan=2>IP</th>";
@@ -1582,30 +1589,42 @@ $(document).ready(function(){
 
         } else {
 
-          head += "<table class=\"tlip select\" data-type=tx align=center width=100% cellpadding=0 cellspacing=0>";
-          head += "<tr>";
-          head += "<th class=sub2>EVENT DETAIL</th>";
-          head += "</tr>";
-
+          head += "<table class=select data-type=tx align=center width=100% cellpadding=0 cellspacing=0>";
           var p_ascii = "No Data Sent.";
           if (theData[2]) {
-            var re = /\n/g;
-            p_ascii = h2s(theData[2].data_payload).replace(re, "<br>");
+            var tmp = h2s(theData[2].data_payload).split("\n");
+            p_ascii = '';
+            for (var i in tmp) {
+              var parts = tmp[i].split(":\t");
+              p_ascii += "<div class=\"select key\">" + parts[0] + "</div>";
+              p_ascii += "<div class=\"select val\">" + parts[1] + "</div>";
+            }
+             
           }
           row += "<tr class=d_row_sub2>";
           row += "<td class=\"sub3_d select\">" + p_ascii + "</td>";
           row += "</tr></table>";
-           
         }
                     
         tbl += "<tr class=\"eview_sub2 select\" id=eview_sub2><td class=sub2 colspan=" + nCols + ">";
 
+        // If we are not grouped we show the signature text
         if ( sg != 0 ) {
           tbl += "<div class=sigtxt></div>";
           sigLookup(sg);
         }
+
         var eventComment = theData[0].comment || 'None.';
-        tbl += "<div class=comments>comments: " + eventComment + "</div>";
+        var eventTag = 'None.';
+        tbl += "<div class=comments> COMMENTS</div>";
+        tbl += "<div class=area>" + eventComment + "</div>";
+        tbl += "<div class=tags> TAGS</div>";
+        tbl += "<div class=area>" + eventTag + "</div>";
+        if (PDATA != 0) {
+          tbl += "<div class=details> DETAILS</div>";
+        } else {
+          tbl += "<div class=payload> PAYLOAD</div>";
+        }
         tbl += head;
         tbl += row;
         tbl += "</td></tr>";
@@ -1735,31 +1754,31 @@ $(document).ready(function(){
     // Local stuff first
     switch (prefix[prefix.length - 1]) {
       case "c": 
-        row += "<tr class=p_row data-type=l data-alias=cc><td class=pr>SRC or DST</td></tr>";
-        row += "<tr class=p_row data-type=l data-alias=scc><td class=pr>SRC</td></tr>";
-        row += "<tr class=p_row data-type=l data-alias=dcc><td class=pr>DST</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=cc><td class=pr>:: SRC or DST</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=scc><td class=pr>:: SRC</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=dcc><td class=pr>:: DST</td></tr>";
       break;
       case "p":
-        row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>SRC or DST</td></tr>";
-        row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>SRC</td></tr>"; 
-        row += "<tr class=p_row data-type=l data-alias=dip><td class=pr>DST</td></tr>";
-        row += "<tr class=p_row data-type=t data-alias=tag><td class=pr>ADD / REMOVE TAG</td></tr>";
-        row += "<tr class=n_row data-type=c data-alias=col><td class=pr>COLOUR&nbsp;&nbsp;";
+        row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>:: SRC or DST</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>:: SRC</td></tr>"; 
+        row += "<tr class=p_row data-type=l data-alias=dip><td class=pr>:: DST</td></tr>";
+        row += "<tr class=p_row data-type=t data-alias=tag><td class=pr>:: ADD / REMOVE TAG</td></tr>";
+        row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
       break;
       case "t":
-        row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>SRC</td></tr>";
-        row += "<tr class=p_row data-type=l data-alias=dpt><td class=pr>DST</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>:: SRC</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=dpt><td class=pr>:: DST</td></tr>";
       break;
       case "d":
-        row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>SIGNATURE</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: SIGNATURE</td></tr>";
       break;
       case "h":
-        row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>TERM SEARCH</td></tr>";
+        row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: TERM SEARCH</td></tr>";
       break;
       case "l":
-        row += "<tr class=n_row data-type=c data-alias=col><td class=pr>COLOUR&nbsp;&nbsp;";
+        row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
         doexternals = "no";

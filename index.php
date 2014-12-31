@@ -338,7 +338,7 @@ dbC();
 
 <div class=pickbox>
   <div class=srch_top>
-    <div class=box_label id=pickbox_label></div>
+    <div class=box_label_pb id=pickbox_label></div>
     <div title="close" class="pickbox_close"><img class=il src=.css/close.png></div>
   </div>
   <div class=pickbox_tbl></div>
