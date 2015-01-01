@@ -117,16 +117,13 @@ text-align:center;
 vertical-align:middle;
 }
 .dt_b {
-float:right;
+float:left;
 font-size:11px;
 font-weight:normal;
-text-align:center;
 margin-right:5px;
-border-radius:4px;
-width:65px;
 padding:4px;
-background-color:lightyellow;
-color:#666;
+color:#185FAB;
+text-decoration:underline;
 }
 .dt_b:hover {
 cursor:pointer;

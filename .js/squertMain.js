@@ -1682,7 +1682,6 @@ $(document).ready(function(){
       break; 
       case 'spt':
       case 'dpt':    
-      case 'hash':  
         hItemAdd(suffix);
         mkPickBox(prefix,suffix,0,colour,mX,mY);
       break;
@@ -1774,9 +1773,6 @@ $(document).ready(function(){
       case "d":
         row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: SIGNATURE</td></tr>";
       break;
-      case "h":
-        row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: TERM SEARCH</td></tr>";
-      break;
       case "l":
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
@@ -1784,9 +1780,10 @@ $(document).ready(function(){
         doexternals = "no";
       break;
     }
-
+    
     // If applicable populate externals
     if (doexternals == "yes") {
+      row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       $('.f_row').each(function() {
         var ct = $(this).data('type');
         if (ct == 'url') {
@@ -1849,7 +1846,7 @@ $(document).ready(function(){
     });
   }
 
-  // URLs 
+  // Pickbox click events 
   $(document).on('click', '.p_row', function() {
     if ($('.tagbox').css('display') != 'none') $('.tagcancel').click(); 
     var ctype = $(this).data('type');
@@ -1870,6 +1867,13 @@ $(document).ready(function(){
         $('.tagbox').fadeIn('fast');
         $('.taginput').focus();
       break;
+      case "s":
+        $('.pickbox').fadeOut('fast', function() {;
+          $('#ico05').click();
+        });
+        $('.srch_txt').val(args);
+      break;
+      default: return;
     }   
   });
 

@@ -91,7 +91,7 @@ $(document).ready(function(){
     html += "&nbsp;&nbsp;<span class=fl>UTC</span><input class=dt_utc id=ts_utc type=checkbox" + checkUTC + ">";
     html += "&nbsp;&nbsp;<span class=fl>TZ OFFSET</span><input class=dt_input id=ts_offset";
     html += " type=text" + inputUTC + "></td>";
-    html += "<td width=175 class=dt_content><div id=dt_reset class=dt_b>reset values</div><div id=dt_savetz class=dt_b>save TZ</div></td>";
+    html += "<td width=175 class=dt_content><div id=dt_savetz class=dt_b>save TZ</div><div id=dt_reset class=dt_b>reset values</div></td>";
     html += "<td class=cog><img class=il src=.css/lr.png></td><tr></table>";
     $('#cal').prepend(html);
   }
