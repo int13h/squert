@@ -190,10 +190,9 @@ $.alt = function(key, callback, args) {
   });        
 }
 
-function mkStamp(datetime,op,offset) {
-
+function mkStamp(dt,op,offset) {
+  var datetime = dt.replace(' ', 'T');
   var ms = Date.parse(datetime);
-  
   function pad(i) {
     if (i < 10) return "0" + i;
       return i;
@@ -204,12 +203,13 @@ function mkStamp(datetime,op,offset) {
     case "-": var dt = new Date(ms - offset); break;
     case   0: var dt = new Date(datetime); break;
   }
-  var y = dt.getFullYear();
-  var m = pad(dt.getMonth() + 1);
-  var d = pad(dt.getDate());
-  var hh =pad(dt.getHours());
-  var mm =pad(dt.getMinutes());
-  var ss =pad(dt.getSeconds());
+
+  var y  = dt.getFullYear();
+  var m  = pad(dt.getMonth() + 1);
+  var d  = pad(dt.getDate());
+  var hh = pad(dt.getHours());
+  var mm = pad(dt.getMinutes());
+  var ss = pad(dt.getSeconds());
   
   return y + "-" + m + "-" + d + " " + hh + ":" + mm + ":" + ss;
 
