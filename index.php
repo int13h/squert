@@ -193,10 +193,6 @@ dbC();
     <div id=t_ovr_content class=content>
       <br>     
       <div class=onepane>
-        <div class=ovbl>GEOGRAPHIC DISTRIBUTION</div><div id=ovmapstat class=ovstat></div><div class=ovbi id=ov_map_msg></div><div class=ovsl id=ov_map_sl></div>
-        <div id=ov_map></div>
-      </div>
-      <div class=onepane>
         <div class=ovbl>TOP SIGNATURES</div><div id=ovestat class=ovstat></div><div class=ovbi id=ov_signature_msg></div><div class=ovsl id=ov_signature_sl></div>
         <div id=ov_signature></div>
       </div>
@@ -229,6 +225,10 @@ dbC();
           <div class=ovbl>TOP DESTINATION PORTS</div><div class=ovbi id=ov_dstpt_msg></div><div class=ovsl id=ov_dstpt_sl></div>
           <div id=ov_dstpt></div>
         </div>
+      </div>
+      <div class=onepane>
+        <div class=ovbl>GEOGRAPHIC DISTRIBUTION</div><div id=ovmapstat class=ovstat></div><div class=ovbi id=ov_map_msg></div><div class=ovsl id=ov_map_sl></div>
+        <div id=ov_map></div>
       </div>
     </div>
   </div>
@@ -325,11 +325,13 @@ dbC();
         &nbsp;&nbsp;-&gt; &nbsp;&nbsp;
         <input id=el_end class=el_ts type=text maxlength=19>
       </div>
-      <div class=cat_l1>
-        <div class=srch_do><img title=search class=il src=.css/search.png></div>
-      </div>
-      <div class=cat_r1 id=srchsrc>
-         <b>no</b> sources are selected
+      <div class=cat_row>
+        <div class=cat_l1>
+          <div class=srch_do><img title=search class=il src=.css/search.png></div>
+        </div>
+        <div class=cat_r1 id=srchsrc>
+          <b>no</b> sources are selected
+        </div>
       </div>
     </div>
   </div>

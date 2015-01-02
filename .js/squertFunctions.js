@@ -190,8 +190,8 @@ $.alt = function(key, callback, args) {
   });        
 }
 
-function mkStamp(dt,op,offset) {
-  var datetime = dt.replace(' ', 'T');
+function mkStamp(timestamp,op,offset) {
+  var datetime = timestamp.replace(' ', 'T');
   var ms = Date.parse(datetime);
   function pad(i) {
     if (i < 10) return "0" + i;

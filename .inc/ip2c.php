@@ -64,7 +64,9 @@ function IP2C($string,$isCLI) {
 
                 mysql_query("INSERT IGNORE INTO mappings (registry,cc,c_long,type,ip,date,status)
                              VALUES (\"$registry\",\"$cc\",\"$c_long\",\"$type\",\"$ip\",\"$date\",\"$status\")");
+                echo "-- Mapped $ip to $cc ($c_long)\n";
             }
+            
         }
     }
 
@@ -78,7 +80,6 @@ function IP2C($string,$isCLI) {
                             $when m.ip IS NULL");
     $dipList = mysql_query("SELECT DISTINCT(e.dst_ip) FROM event AS e LEFT JOIN mappings AS m ON e.dst_ip=m.ip
                             $when m.ip IS NULL");
-
     $sipCount = $dipCount = 0;
     if ($sipList) {
         $sipCount = mysql_num_rows($sipList);

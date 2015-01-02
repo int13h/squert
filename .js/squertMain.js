@@ -81,7 +81,7 @@ $(document).ready(function(){
  
   // Get event statuses
   var eTotal = 0, qTotal = 0;
- function statusPoll(caller) {
+  function statusPoll(caller) {
     // See if we are filtering by sensor
     var theSensors = s2h('empty');
     if ($('.chk_sen:checked').length > 0) {
@@ -145,7 +145,14 @@ $(document).ready(function(){
       if (caller == 0) { // Fresh load
         lastcount = newcount;
       }
+
+      // Last RT value
+      var lastQ = Number($("#qtotal").html());  
       if (lastcount < newcount) {
+        $("#etotal").html(eTotal);
+      } 
+
+      if (lastQ < qTotal) {
         if (caller != 0) {
           if ($(".icon_notifier").css('display') == 'none') $(".icon_notifier").fadeToggle();
         }
@@ -849,7 +856,7 @@ $(document).ready(function(){
         head += "<th class=sort width=70>ACTIVITY</th>";
         head += "<th class=sort width=90>LAST EVENT</th>";
         head += "<th class=sort>SIGNATURE</th>";
-        head += "<th class=sort>ID</th>";
+        head += "<th class=sort width=100>ID</th>";
         head += "<th class=sort width=60>PROTO</th>";
         head += "<th class=sort width=80>% TOTAL</th>";
         head += "</tr></thead>";
@@ -911,20 +918,21 @@ $(document).ready(function(){
 
           timeParts = d0[i].f5.split(" ");
           timeStamp = timeParts[1];
-
-          row += "<td class=row>" + cells + "</td>";
-          row += "<td class=row>" + timeStamp + "</td>";
-          row += "<td class=\"row row_filter select\" data-type=sid data-value=";
-          row += d0[i].f3 + ">" + d0[i].f2 + "</td>";
-          row += "<td class=\"row select\">" + d0[i].f3 + "</td>";
-          row += "<td class=row>" + d0[i].f8 + "</td>";
-                  
+         
           if ( sumEC > 0) {
             rowPer = Number(d0[i].f1/sumEC*100).toFixed(3);
           } else {
             rowPer = "0.000";
           }
-   
+
+          row += "<td class=row>" + cells + "</td>";
+          row += "<td class=row>" + timeStamp + "</td>";
+          row += "<td class=\"row row_filter select\" data-type=sid data-value=" + d0[i].f3 + ">";
+          row += "<div class=bars_e style=\"width:" + rowPer + "%;\"></div><div class=bars_e_txt>" + d0[i].f2 + "</div></td>";
+          row += "<td class=\"row select\">" + d0[i].f3 + "</td>";
+          row += "<td class=row>" + d0[i].f8 + "</td>";
+                  
+             
           row += "<td class=row><b>" + rowPer + "%</b></td>";
           row += "</td></tr>";
         }

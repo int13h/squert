@@ -332,8 +332,8 @@ $(document).ready(function(){
       break;
       default:
         $('#cal').show();
-        $('.content-right,.rl').css('margin-top','71px');
-        $('.content-left').css('top','110px');
+        $('.content-right,.rl').css('margin-top','69px');
+        $('.content-left').css('top','113px');
       break;
     }
   });

@@ -21,16 +21,13 @@ width:30px;
 text-align:center;
 }
 .month {
-background-color:#7c7c7c;
-color:#f4f4f4;
+color:#666;
 cursor:pointer;
 }
 .month:hover {
-background-color:#333;
-color:#e9e9e9;
+cursor:pointer;
 }
 .dmonth {
-background-color:#7c7c7c;
 color:#a4a4a4;
 }
 .days {
@@ -47,13 +44,6 @@ font-size:11px;
 font-weight:400;
 padding:0px 2px 0px 2px;
 color:#666;
-user-select:none;
--moz-user-select: none;
--webkit-user-select: none;
--ms-user-select:none;
-}
-.hour {
-background-color:#f4f4f4;
 }
 .hour:hover {
 cursor:pointer;
@@ -78,8 +68,7 @@ color:#000;
 cursor:pointer;
 }
 .amonth,.aday,.ahour {
-background:#fffbd0;
-color:#000;
+color:#4f69a5;
 }
 .ahour {
 cursor:pointer;
@@ -92,7 +81,6 @@ font-size:12px;
 color:#336;
 border-left:none;
 border-right:none;
-background-color:#c9c9c9;
 }
 .dt_content {
 text-align:right;
