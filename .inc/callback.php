@@ -269,7 +269,9 @@ function eg() {
               GROUP_CONCAT(event.status) AS c_status,
               GROUP_CONCAT(SUBSTR(CONVERT_TZ(event.timestamp,'+00:00','$offset'),12,5)) AS c_ts,
               GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
-              event.priority AS f13
+              event.priority AS f13,
+              msrc.age AS src_age,
+              mdst.age AS dst_age
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
@@ -408,7 +410,9 @@ function ee() {
               event.priority AS f16,
               event.signature_gen AS f17,
               osrc.value AS scolour,
-              odst.value AS dcolour
+              odst.value AS dcolour,
+              msrc.age AS src_age,
+              mdst.age AS dst_age
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
@@ -1289,7 +1293,7 @@ function esquery() {
           ]
     }";
 
-    $params['body']  = $json;
+    $params['body'] = $json;
     $result = $client->search($params);
 /*
     if ($result[2] == "e") {

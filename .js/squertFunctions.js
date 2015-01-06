@@ -45,13 +45,6 @@ var esSources = [{
   "state":"on"
 },
 {
-  "name":"BRO_SMTP",
-  "type":"bro_smtp",
-  "desc":"Bro SMTP log",
-  "loke":"",
-  "state":"on"
-},
-{
   "name":"BRO_SOFTWARE",
   "type":"bro_software",
   "desc":"Bro software log",
@@ -80,16 +73,23 @@ var esSources = [{
   "state":"on"
 },
 {
-  "name":"Barracuda",
-  "type":"barracuda",
+  "name":"BARRACUDA_RECV",
+  "type":"barracuda_RECV",
   "desc":"Barracuda spam firewall",
   "loke":"",
   "state":"on"
 },
 {
-  "name":"PRADS",
-  "type":"prads",
-  "desc":"Passive Real-time Asset Detection",
+  "name":"BARRACUDA_SCAN",
+  "type":"barracuda_SCAN",
+  "desc":"Barracuda spam firewall",
+  "loke":"",
+  "state":"on"
+},
+{
+  "name":"BARRACUDA_SEND",
+  "type":"barracuda_SEND",
+  "desc":"Barracuda spam firewall",
   "loke":"",
   "state":"on"
 }];
@@ -191,7 +191,10 @@ $.alt = function(key, callback, args) {
 }
 
 function mkStamp(timestamp,op,offset) {
-  var datetime = timestamp.replace(' ', 'T');
+  var re = /^\d{13}$/;
+  var OK = re.exec(timestamp);
+  var datetime = timestamp;
+  if (!OK) datetime = timestamp.replace(' ', 'T');
   var ms = Date.parse(datetime);
   function pad(i) {
     if (i < 10) return "0" + i;
@@ -213,6 +216,14 @@ function mkStamp(timestamp,op,offset) {
   
   return y + "-" + m + "-" + d + " " + hh + ":" + mm + ":" + ss;
 
+}
+
+function getTimeDiff(ts) {
+  var ts = ts.replace(' ', 'T') || 0;
+  var s = Date.parse(ts);
+  var e = new Date(); 
+  var diff = Math.round((e-s)/86400000);
+  return diff;
 }
 
 function getTimestamp() {
@@ -407,3 +418,12 @@ function bRw(c) {
   }
   return colour;
 }
+
+function sog(n) {
+  var colours = d3.scale.linear()
+        .domain([0,365])
+        .range(["#000000","#c9c9c9"]);
+
+  return colours(n);
+}
+

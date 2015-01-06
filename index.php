@@ -325,6 +325,7 @@ dbC();
         &nbsp;&nbsp;-&gt; &nbsp;&nbsp;
         <input id=el_end class=el_ts type=text maxlength=19>
       </div>
+      <div id=el_reset class=dt_b>reset</div>
       <div class=cat_row>
         <div class=cat_l1>
           <div class=srch_do><img title=search class=il src=.css/search.png></div>

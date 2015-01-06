@@ -928,7 +928,8 @@ $(document).ready(function(){
           row += "<td class=row>" + cells + "</td>";
           row += "<td class=row>" + timeStamp + "</td>";
           row += "<td class=\"row row_filter select\" data-type=sid data-value=" + d0[i].f3 + ">";
-          row += "<div class=bars_e style=\"width:" + rowPer + "%;\"></div><div class=bars_e_txt>" + d0[i].f2 + "</div></td>";
+          //row += "<div class=bars_e style=\"width:" + rowPer + "%;\"></div><div class=bars_e_txt>" + d0[i].f2 + "</div></td>";
+          row += d0[i].f2 + "</td>";
           row += "<td class=\"row select\">" + d0[i].f3 + "</td>";
           row += "<td class=row>" + d0[i].f8 + "</td>";
                   
@@ -980,8 +981,10 @@ $(document).ready(function(){
         head += "<th class=sub width=70>ACTIVITY</th>";
         head += "<th class=sub>LAST EVENT</th>";
         head += "<th class=sub width=110>SOURCE</th>";
+        head += "<th class=sub width=40>AGE</th>";
         head += "<th class=sub width=160>COUNTRY</th>";
         head += "<th class=sub width=110>DESTINATION</th>";
+        head += "<th class=sub width=40>AGE</th>";
         head += "<th class=sub width=160>COUNTRY</th>";
         head += "</tr></thead>";
         var curclasscount = 0, tlCount = 0, rtCount = 0;
@@ -1002,6 +1005,24 @@ $(document).ready(function(){
           var dcolour   = theData[i].dcolour || "FFFFFF";
           var src_tag   = theData[i].src_tag || "-";
           var dst_tag   = theData[i].dst_tag || "-";
+          var src_age   = theData[i].src_age || "-";
+          var dst_age   = theData[i].dst_age || "-";
+
+          // Object age
+          var src_age_n = "-";
+          var dst_age_n = "-";
+          var sa_col,da_col = "#545454";
+ 
+          if (src_age != "-") {
+            src_age_n = getTimeDiff(src_age);
+            var sa_col = sog(src_age_n);
+          }
+
+          if (dst_age != "-") {
+            dst_age_n = getTimeDiff(dst_age);
+            var da_col = sog(dst_age_n);
+          }
+
           var cs = getCountry(src_cc).split("|");
           if (cs[1] == "LO") { cs[1] = ""; }
           var cd = getCountry(dst_cc).split("|");
@@ -1058,9 +1079,11 @@ $(document).ready(function(){
           row += "<td class=sub>" + cells + "</td>";
           row += "<td class=\"sub timestamp\">" + max_time + "</td>";
           row += "<td class=\"sub sub_filter select\" data-sord=src data-type=ip data-col=" + scolour + "><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
+          row += "<td class=sub style=\"color:" + sa_col + ";\" title=\"" + src_age + "\">" + src_age_n + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" data-type=cc data-value=" + src_cc + ">";
           row += cs[1] + src_clong + " (." + src_cc.toLowerCase() + ")" + "</td>";
           row += "<td class=\"sub sub_filter select\" data-sord=dst data-type=ip data-col=" + dcolour + "><div class=object style=\"background-color:#" + dcolour + ";\"></div>"  + dst_ip + "</td>";
+          row += "<td class=sub style=\"color:" + da_col + ";\" title=\"" + dst_age + "\">" + dst_age_n + "</td>";
           row += "<td class=\"sub " + cd[0] + "\" data-type=cc data-value=" + dst_cc + ">";
           row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
           row += "</tr>";
@@ -1255,9 +1278,11 @@ $(document).ready(function(){
         head += "<th class=sub width=110>ID</th>";
         head += "<th class=sub width=110>SOURCE</th>";
         head += "<th class=sub width=40>PORT</th>";
+        head += "<th class=sub width=40>AGE</th>";
         head += "<th class=sub width=30>CC</th>";
         head += "<th class=sub width=110>DESTINATION</th>";
         head += "<th class=sub width=40>PORT</th>";
+        head += "<th class=sub width=40>AGE</th>";
         head += "<th class=sub width=30>CC</th>";
         head += "<th class=sub>SIGNATURE</th>";
         head += "</tr></thead>";
@@ -1301,8 +1326,25 @@ $(document).ready(function(){
           var evt_msg   = "-";
           var scolour   = d2a[i].scolour || "ffffff";
           var dcolour   = d2a[i].dcolour || "ffffff";
-          var cs = getCountry(src_cc).split("|");
-          var cd = getCountry(dst_cc).split("|");
+          var cs        = getCountry(src_cc).split("|");
+          var cd        = getCountry(dst_cc).split("|");
+          var src_age   = d2a[i].src_age || "-"; 
+          var dst_age   = d2a[i].dst_age || "-"; 
+
+          // Object age
+          var src_age_n = "-"; 
+          var dst_age_n = "-"; 
+          var sa_col,da_col = "#545454";
+ 
+          if (src_age != "-") {
+            src_age_n = getTimeDiff(src_age);
+            var sa_col = sog(src_age_n);
+          }
+
+          if (dst_age != "-") {
+            dst_age_n = getTimeDiff(dst_age);
+            var da_col = sog(dst_age_n);
+          }
 
           // Timestamp
           var compts       = d2a[i].f2.split(",") || "--";
@@ -1342,10 +1384,12 @@ $(document).ready(function(){
           row += txBit;
           row += "<td class=\"sub sub_filter select\" data-type=ip data-col=" + scolour + "><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=spt>" + src_port + "</td>";
+          row += "<td class=sub style=\"color:" + sa_col + ";\" title=\"" + src_age + "\">" + src_age_n + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" title=\"" + src_clong + "\" data-type=cc data-value=";
           row += src_cc +">" + cs[1] + "</td>";
           row += "<td class=\"sub sub_filter select\" data-type=ip data-col=" + dcolour + "><div class=object style=\"background-color:#" + dcolour + ";\"></div>" + dst_ip + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=dpt>" + dst_port + "</td>";
+          row += "<td class=sub style=\"color:" + da_col + ";\" title=\"" + dst_age + "\">" + dst_age_n + "</td>"
           row += "<td class=\"sub " + cd[0] + "\" title=\"" + dst_clong + "\" data-type=cc data-value=";
           row += dst_cc +">" + cd[1] + "</td>";
           row += "<td class=\"sub sub_filter\" data-type=sid data-value=" + sig_id + ">" + signature + "</td></tr>";
@@ -1366,12 +1410,14 @@ $(document).ready(function(){
        $("#qtotal").html(rsumRT);
 
         tbl += "<table id=tl3a class=chart align=center width=100% border=0 cellpadding=0 cellspacing=0>";
-        tbl += "<tr><td class=dark colspan=10><div>";
-        tbl += "<div class=chrt_ts></div>";
-        tbl += "</div><div class=event_class>";
+        tbl += "<tr><td>";
+        tbl += "<div class=chrt_ts>";
+        tbl += "<div class=event_class>";
         tbl += "categorize <span class=bold id=class_count>" + 0 + "</span>";
         tbl += " of <span id=cat_count class=bold>" + sumED + "</span> event(s)" + cmsg;
-        tbl += "</div><div class=event_time>" + sorttxt + "</div>";
+        tbl += "</div>";
+        tbl += "<div class=event_time>" + sorttxt + "</div>";
+        tbl += "</div>";
         tbl += "</td></tr></table>";
         tbl += "<table id=tl3b class=main align=center width=100% cellpadding=0 cellspacing=0>";
         tbl += head;
@@ -1978,7 +2024,7 @@ $(document).ready(function(){
         if (obtype == "el") {
           var html = "<div class=object style=\"background-color:#" + colour + ";\"></div>" + colour;
           $('#el_' + curObject).html(html);
-          $('#el_' + curObject).data('colour', colour);
+          $('#el_' + curObject).data('col', colour);
         } else { 
           $(".sub_filter:contains(" + curObject + ")").each(function() {
             $(this).find('.object').css('background-color', '#' + colour).parent().data('col', colour);
@@ -1997,6 +2043,10 @@ $(document).ready(function(){
   //
   // Object History
   //
+
+  $('window').bind('beforeunload',function() {
+return 'hi!';
+  });
 
   function hItemAdd(item) {
     var itemTitle = item;

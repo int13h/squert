@@ -61,7 +61,7 @@ color:#545454;
 color:#c9c9c9;
 }
 .sday {
-background-color:#c9c9c9;
+background-color:#d8d8d8;
 color:#000;
 }
 .day:hover,.sday:hover {
@@ -69,6 +69,7 @@ cursor:pointer;
 }
 .amonth,.aday,.ahour {
 color:#4f69a5;
+font-weight:bold;
 }
 .ahour {
 cursor:pointer;

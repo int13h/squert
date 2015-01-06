@@ -130,7 +130,7 @@ Password<br>
 <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
 <td class=err><?php echo $err;?></td></tr>
 </table>
-<div class=cp>Version 1.5.1<span>&copy;2014 Paul Halliday</span></div>
+<div class=cp>Version 1.5.1<span>&copy;2015 Paul Halliday</span></div>
 </form>
 <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>
 </body>

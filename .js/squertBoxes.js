@@ -1239,6 +1239,7 @@ $(document).ready(function(){
         var colour = theData[i].colour;
         var html = "<div class=object style=\"background-color:#" + colour + ";\"></div>" + colour;
         $('#el_' + object).html(html);
+        $('#el_' + object).data('col', colour);
       }
     }
   } 
