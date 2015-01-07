@@ -48,7 +48,8 @@ function IP2C($string,$isCLI) {
     function lookup($list) {
 
         while ($row = mysql_fetch_row($list)) {
-            $ip = $row[0];
+            $ip  = $row[0];
+            $dot = long2ip((float)$ip);
             $ipLookup = mysql_query("SELECT registry, cc, c_long, type, date, status FROM ip2c WHERE
                                      $ip >=start_ip AND $ip <= end_ip LIMIT 1");
 
@@ -64,7 +65,7 @@ function IP2C($string,$isCLI) {
 
                 mysql_query("REPLACE INTO mappings (registry,cc,c_long,type,ip,date,status)
                              VALUES (\"$registry\",\"$cc\",\"$c_long\",\"$type\",\"$ip\",\"$date\",\"$status\")");
-                echo "-- Mapped $ip to $cc ($c_long)\n";
+                echo "-- Mapped $dot ($ip) to $cc ($c_long)\n";
             }
             
         }

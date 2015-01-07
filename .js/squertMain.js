@@ -55,8 +55,9 @@ $(document).ready(function(){
   //
   
   // Keep track of context 
-  var thisUser = $('#t_usr').data('c_usr');
-  var rtbit = 0;
+  thisUser = $('#t_usr').data('c_usr');
+  thisTZ = $('#user_tz').val();
+  rtbit = 0;
   eventList("0-aaa-00");
   $("#loader").show();
 
@@ -597,8 +598,8 @@ $(document).ready(function(){
 
       // Populate search times 
       var bt = $("#" + callerID).find('[class*="timestamp"]').html();
-      var est = mkStamp(bt,"-",3600000);
-      var eet = mkStamp(bt,"+",3600000);
+      var est = mkStamp(bt,"-",3600000,thisTZ);
+      var eet = mkStamp(bt,"+",3600000,thisTZ);
        
       $('#el_start').val(est);
       $('#el_end').val(eet);
@@ -639,8 +640,8 @@ $(document).ready(function(){
 
       // Populate search times 
       var bt = $("#" + callerID).find('[class*="timestamp"]').html();
-      var est = mkStamp(bt,"-",1800000);
-      var eet = mkStamp(bt,"+",1800000);
+      var est = mkStamp(bt,"-",1800000,thisTZ);
+      var eet = mkStamp(bt,"+",1800000,thisTZ);
        
       $('#el_start').val(est);
       $('#el_end').val(eet);
@@ -1014,12 +1015,12 @@ $(document).ready(function(){
           var sa_col,da_col = "#545454";
  
           if (src_age != "-") {
-            src_age_n = getTimeDiff(src_age);
+            src_age_n = getTimeDiff(src_age,thisTZ);
               sa_col = sog(src_age_n);
           }
 
           if (dst_age != "-") {
-            dst_age_n = getTimeDiff(dst_age);
+            dst_age_n = getTimeDiff(dst_age,thisTZ);
             da_col = sog(dst_age_n);
           }
 
@@ -1337,12 +1338,12 @@ $(document).ready(function(){
           var sa_col,da_col = "#545454";
  
           if (src_age != "-") {
-            src_age_n = getTimeDiff(src_age);
+            src_age_n = getTimeDiff(src_age,thisTZ);
             var sa_col = sog(src_age_n);
           }
 
           if (dst_age != "-") {
-            dst_age_n = getTimeDiff(dst_age);
+            dst_age_n = getTimeDiff(dst_age,thisTZ);
             var da_col = sog(dst_age_n);
           }
 
@@ -2044,10 +2045,6 @@ $(document).ready(function(){
   // Object History
   //
 
-  $('window').bind('beforeunload',function() {
-return 'hi!';
-  });
-
   function hItemAdd(item) {
     var itemTitle = item;
     // Truncate
@@ -2178,9 +2175,9 @@ return 'hi!';
       $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", hlhov)},
         function(){$(this).css("background-color", hlcol)});
     } else {
-      $("#s" + clickTwo[1]).css("background-color", "#fafafa");
+      $("#s" + clickTwo[1]).css("background-color", "transparent");
       $("#s" + clickTwo[1]).hover(function(){$(this).css("background-color", "#f4f4f4")},
-        function(){$(this).css("background-color", "#fafafa")});
+        function(){$(this).css("background-color", "transparent")});
     }
   });
 
@@ -2191,9 +2188,9 @@ return 'hi!';
       case 0:
         $(".chk_event").prop("checked",false);
         $("#ca0").prop("checked",false);
-        $(".d_row_sub1").css("background-color", "#fafafa");
+        $(".d_row_sub1").css("background-color", "transparent");
         $(".d_row_sub1").hover(function(){$(this).css("background-color", "#f4f4f4")},
-          function(){$(this).css("background-color", "#fafafa")});
+          function(){$(this).css("background-color", "transparent")});
         break;
       default:
         $(".chk_event").each(function() {
@@ -2222,9 +2219,9 @@ return 'hi!';
       case 0:
         $(".chk_event").prop("checked",false);
         $("#ca2").prop("checked",false);
-        $(".d_row_sub1").css("background-color", "#fafafa");
-        $(".d_row_sub1").hover(function(){$(this).css("background-color", "#c9c9c9")},
-          function(){$(this).css("background-color", "#fafafa")});
+        $(".d_row_sub1").css("background-color", "transparent");
+        $(".d_row_sub1").hover(function(){$(this).css("background-color", "#f4f4f4")},
+          function(){$(this).css("background-color", "transparent")});
         break;
       default:
         $(".chk_event").each(function() {

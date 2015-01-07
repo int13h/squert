@@ -190,12 +190,12 @@ $.alt = function(key, callback, args) {
   });        
 }
 
-function mkStamp(timestamp,op,offset) {
+function mkStamp(timestamp,op,offset,tz) {
   var re = /^\d{13}$/;
   var OK = re.exec(timestamp);
   var datetime = timestamp;
   if (!OK) datetime = timestamp.replace(' ', 'T');
-  var ms = Date.parse(datetime);
+  var ms = Number(new Date(datetime + tz));
   function pad(i) {
     if (i < 10) return "0" + i;
       return i;
@@ -218,10 +218,10 @@ function mkStamp(timestamp,op,offset) {
 
 }
 
-function getTimeDiff(ts) {
+function getTimeDiff(ts,tz) {
   var ts = ts.replace(' ', 'T') || 0;
-  var s = Date.parse(ts);
-  var e = new Date(); 
+  var s = Number(new Date(ts + tz));
+  var e = Number(new Date()); 
   var diff = Math.round((e-s)/86400000);
   return diff;
 }
