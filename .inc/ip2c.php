@@ -62,7 +62,7 @@ function IP2C($string,$isCLI) {
                 $date           = $result[4];
                 $status         = $result[5];
 
-                mysql_query("INSERT IGNORE INTO mappings (registry,cc,c_long,type,ip,date,status)
+                mysql_query("REPLACE INTO mappings (registry,cc,c_long,type,ip,date,status)
                              VALUES (\"$registry\",\"$cc\",\"$c_long\",\"$type\",\"$ip\",\"$date\",\"$status\")");
                 echo "-- Mapped $ip to $cc ($c_long)\n";
             }
@@ -77,9 +77,9 @@ function IP2C($string,$isCLI) {
     // Start timing
     $st = microtime(true);
     $sipList = mysql_query("SELECT DISTINCT(e.src_ip) FROM event AS e LEFT JOIN mappings AS m ON e.src_ip=m.ip
-                            $when m.ip IS NULL");
+                            WHERE (m.ip IS NULL OR m.cc = '01')");
     $dipList = mysql_query("SELECT DISTINCT(e.dst_ip) FROM event AS e LEFT JOIN mappings AS m ON e.dst_ip=m.ip
-                            $when m.ip IS NULL");
+                            WHERE (m.ip IS NULL OR m.cc = '01')");
     $sipCount = $dipCount = 0;
     if ($sipList) {
         $sipCount = mysql_num_rows($sipList);

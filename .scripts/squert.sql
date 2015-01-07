@@ -12,8 +12,7 @@ CREATE TABLE IF NOT EXISTS ip2c
   INDEX cc (cc),
   INDEX c_long (c_long),
   INDEX type (type),
-  INDEX start_ip (start_ip),
-  INDEX end_ip (end_ip)
+  PRIMARY KEY(start_ip, end_ip)
 );  
 
 INSERT IGNORE INTO ip2c (registry,cc,c_long,type,start_ip,end_ip,date,status)

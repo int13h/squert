@@ -418,7 +418,7 @@ if {$a == 1} {
     }
 
     puts "Updating database.."
-    popMysql "LOAD DATA LOCAL INFILE '$workDir/$resultsFile' INTO TABLE $DBNAME.$DBTABLE FIELDS TERMINATED BY '||'"
+    popMysql "LOAD DATA LOCAL INFILE '$workDir/$resultsFile' REPLACE INTO TABLE $DBNAME.$DBTABLE FIELDS TERMINATED BY '||'"
 
     if {[file exists $resultsFile]} {
         file delete -force $resultsFile

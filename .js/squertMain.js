@@ -1015,12 +1015,12 @@ $(document).ready(function(){
  
           if (src_age != "-") {
             src_age_n = getTimeDiff(src_age);
-            var sa_col = sog(src_age_n);
+              sa_col = sog(src_age_n);
           }
 
           if (dst_age != "-") {
             dst_age_n = getTimeDiff(dst_age);
-            var da_col = sog(dst_age_n);
+            da_col = sog(dst_age_n);
           }
 
           var cs = getCountry(src_cc).split("|");

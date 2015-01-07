@@ -420,6 +420,8 @@ function bRw(c) {
 }
 
 function sog(n) {
+
+  if (n == 0) return '#cc0000';
   var colours = d3.scale.linear()
         .domain([0,365])
         .range(["#000000","#c9c9c9"]);
