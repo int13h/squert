@@ -270,6 +270,9 @@ width:18%;
 border-right:1pt solid #acacac;
 clear:both;
 z-index:1;
+overflow:auto;
+overflow-x:hidden;
+margin-bottom:25px;
 }
 div.content-right {
 width:82%;
@@ -378,11 +381,11 @@ cursor:pointer;
 }
 div.h_box,div.tg_box {
 margin-left:4px;
+margin-right:4px;
+margin-bottom:5px;
 width:100%;
-height:50px;
 float:left;
 clear:right;
-color:#666;
 font-size:11px;
 }
 span.h_item{
@@ -1862,21 +1865,20 @@ margin-left:10px;
 }
 /* Tags */
 div.tag {
-font-size:12px;
-padding:5px 10px 5px 10px;
+font-size:11px;
+padding:5px 5px 5px 5px;
 margin-bottom:5px;
-margin-right:3px;
+margin-right:5px;
 display:inline-block;
 border-radius:3px;
-border:1pt solid #e9e9e9;
+border:1pt solid #c9c9c9;
+background-color:#ecf1f4;
+cursor:pointer;
+color:#545454;
 }
-div.tag_src{
-color:#21008a;
-background-color:#ededfb;
-}
-div.tag_dst{
-color:#7f0000;
-background-color:#fbeded;
+div.tag_active {
+background-color:#000;
+color:#f4f4f4;
 }
 div.tag_empty,div.history_empty {
 font-weight:bold;
@@ -1885,6 +1887,7 @@ color:#dadada;
 width:100%;
 margin-top:10px;
 margin-left:5px;
+margin-bottom:10px;
 }
 /*trbl*/
 div.tagbox {

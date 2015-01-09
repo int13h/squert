@@ -207,10 +207,14 @@ function es() {
               GROUP_CONCAT(DISTINCT(event.sid)) AS f10,
               GROUP_CONCAT(event.status) AS f11,
               GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
-              event.priority AS f13
+              event.priority AS f13,
+              GROUP_CONCAT(DISTINCT(src_tag.value)) AS f14,
+              GROUP_CONCAT(DISTINCT(dst_tag.value)) AS f15              
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
+              LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
+              LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               $qp2
               GROUP BY f3
               ORDER BY f5 $sv";
@@ -271,12 +275,16 @@ function eg() {
               GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
               event.priority AS f13,
               msrc.age AS src_age,
-              mdst.age AS dst_age
+              mdst.age AS dst_age,
+              GROUP_CONCAT(DISTINCT(src_tag.value)) AS f14,
+              GROUP_CONCAT(DISTINCT(dst_tag.value)) AS f15
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'ip_c'
               LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'ip_c'
+              LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
+              LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               $qp2
               GROUP BY event.src_ip, event.dst_ip
               ORDER BY maxTime $sv";
@@ -344,11 +352,11 @@ function ed() {
               event.signature AS f10,
               event.signature_id AS f11,
               event.priority AS f12,
-              GROUP_CONCAT(osrc.value) AS f13,
-              GROUP_CONCAT(odst.value) AS f14
+              CONCAT(src_tag.value) AS f13,
+              CONCAT(dst_tag.value) AS f14
               FROM event
-              LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'tag'
-              LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'tag'
+              LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
+              LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               $qp2
               $rt
               GROUP BY event.sid,event.cid
@@ -409,15 +417,19 @@ function ee() {
               event.signature_id AS f15,
               event.priority AS f16,
               event.signature_gen AS f17,
-              osrc.value AS scolour,
-              odst.value AS dcolour,
-              msrc.age AS src_age,
-              mdst.age AS dst_age
+              osrc.value AS f18,
+              odst.value AS f19,
+              msrc.age AS f20,
+              mdst.age AS f21,
+              CONCAT(src_tag.value) AS f22,
+              CONCAT(dst_tag.value) AS f23         
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'ip_c'
               LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'ip_c'
+              LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
+              LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               $qp2
               ORDER BY event.timestamp $sv";
 
@@ -444,9 +456,13 @@ function payload() {
               event.src_port, event.dst_port, event.ip_proto,
               event.signature, event.signature_id,
               CONVERT_TZ(event.timestamp,'+00:00','$offset'), event.sid, event.cid,
-              GROUP_CONCAT(history.comment SEPARATOR ' || ') AS comment
+              GROUP_CONCAT(history.comment SEPARATOR ' || ') AS comment,
+              GROUP_CONCAT(src_tag.value) AS srctag,
+              GROUP_CONCAT(dst_tag.value) AS dsttag
               FROM event
               LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid
+              LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
+              LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               WHERE event.sid='$sid' AND event.cid='$cid'";
 
     $result = mysql_query($query);

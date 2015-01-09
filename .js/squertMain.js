@@ -408,6 +408,8 @@ $(document).ready(function(){
   // Update page
   $(document).on("click", ".b_update", function(event) {
     $(".icon_notifier").fadeToggle();
+    $(".tag").remove();
+    $(".tag_empty").show();
     // Remove any supplementary results
     if ($("#extresult")[0]) $("#extresult").remove(); 
     // Where are we?
@@ -462,8 +464,7 @@ $(document).ready(function(){
   });
 
   function clearTags() {
-    $('.tag').remove();
-    $('.tag_empty').show();
+    $(".tag").removeClass("tag_active");
   }
 
   //
@@ -755,7 +756,8 @@ $(document).ready(function(){
             // This is the base filter
             preFilter = h2s(tmpFilter);
             // This is the user supplied text.
-            theQuestion = fParts[1].replace(/['@|&;*\\`]/g, "");
+            var re = new RegExp("^" + fParts[0] + "\\s{1}|[';\\\`]","g");
+            theQuestion = fParts.join(' ').replace(re, "");
             // We will accept multiple questions if they are comma delimited
             questionParts = theQuestion.split(",");
             if (questionParts.length > 1) {
@@ -882,8 +884,33 @@ $(document).ready(function(){
           sumDC = "-";
           sumEC = eTotal;
         }
+
         var sumRT = 0;
+       
+        // Tag array
+        var tags= new Array();
+
         for (var i=0; i<d0.length; i++) {
+
+          var src_tag = d0[i].f14 || "-";
+          var dst_tag = d0[i].f15 || "-";
+
+          // Populate tags array
+          if (src_tag != "-") {
+            var src_tags = src_tag.split(",");
+            $.each(src_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
+
+          if (dst_tag != "-") {
+            var dst_tags = dst_tag.split(",");
+            $.each(dst_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
 
           // How many events are not categorized?
           var unClass = d0[i].f11.split(",").filter(function(x){return x==0}).length;
@@ -943,7 +970,12 @@ $(document).ready(function(){
         $('#qtotal').text(sumRT); 
         $('#etotal').text(sumEC); 
         $('#esignature').text(sumSI);
-        
+       	 
+        // Populate tags
+        for (var i=0; i < tags.length; i++) {
+          addTag(tags[i]);    
+        }
+
         tbl += "<table width=100% id=tl1 cellpadding=0 cellspacing=0 align=center>";
         tbl += head;
         tbl += row;
@@ -991,6 +1023,9 @@ $(document).ready(function(){
         var curclasscount = 0, tlCount = 0, rtCount = 0;
         var timeValues = "", scid = "";
 
+        // Tag array
+        var tags = new Array();
+
         for (var i=0; i<theData.length; i++) {
           var count     = theData[i].count   || "0"; 
           var src_ip    = theData[i].src_ip  || "-";
@@ -1004,10 +1039,27 @@ $(document).ready(function(){
           var c_cid     = theData[i].c_cid   || "0";
           var scolour   = theData[i].scolour || "FFFFFF";
           var dcolour   = theData[i].dcolour || "FFFFFF";
-          var src_tag   = theData[i].src_tag || "-";
-          var dst_tag   = theData[i].dst_tag || "-";
+          var src_tag   = theData[i].f14     || "-";
+          var dst_tag   = theData[i].f15     || "-";
           var src_age   = theData[i].src_age || "-";
           var dst_age   = theData[i].dst_age || "-";
+
+          // Populate tags array
+          if (src_tag != "-") {
+            var src_tags = src_tag.split(",");
+            $.each(src_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
+
+          if (dst_tag != "-") {
+            var dst_tags = dst_tag.split(",");
+            $.each(dst_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
 
           // Object age
           var src_age_n = "-";
@@ -1029,15 +1081,6 @@ $(document).ready(function(){
           var cd = getCountry(dst_cc).split("|");
           if (cd[1] == "LO") { cd[1] = ""; }
 
-          // Add tags (1 to many)
-          if (src_tag != "-") {
-              addTag(src_tag,src_ip,"src"); 
-          }   
-
-          if (dst_tag != "-") {
-              addTag(dst_tag,dst_ip,"dst"); 
-          }
- 
           // Create sid.cid list
           var sids = c_sid.split(",");
           var cids = c_cid.split(",");
@@ -1090,6 +1133,11 @@ $(document).ready(function(){
           row += "</tr>";
         }
         
+        // Populate tags
+        for (var i=0; i < tags.length; i++) {
+          addTag(tags[i]);    
+        }
+
         // Add scid's to checkbox
         $("#ca0").data("scid", scid.replace(/,$/, ""));
 
@@ -1164,6 +1212,10 @@ $(document).ready(function(){
         // Update class_count
         $("#class_count").html(0);
         var tlCount=0, rtCount=0;
+
+        // Tag array
+        var tags= new Array();
+
         for (var i=0; i<d2.length; i++) {
           var eclass    = d2[i].f1  || "-";
           var sid       = d2[i].f7  || "0";
@@ -1183,9 +1235,22 @@ $(document).ready(function(){
           tclass = "c" + eclass;
           cv = classifications.class[tclass][0].short;
 
-          // Add tags
-          if (dst_tag != "-") addTag(dst_tag,dst_ip,"dst");
-          if (src_tag != "-") addTag(src_tag,src_ip,"src");
+          // Populate tags array
+          if (src_tag != "-") {
+            var src_tags = src_tag.split(",");
+            $.each(src_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });  
+          }    
+
+          if (dst_tag != "-") {
+            var dst_tags = dst_tag.split(",");
+            $.each(dst_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
 
           // Timestamp
           var compts       = d2[i].f2.split(",") || "--";
@@ -1228,6 +1293,11 @@ $(document).ready(function(){
         }
 
         var cols = $('th.sort').length;
+
+        // Populate tags
+        for (var i=0; i < tags.length; i++) {
+          addTag(tags[i]);
+        }
 
         tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=" + cols + ">";
         tbl += "<table id=tl3 class=table align=center width=100% cellpadding=0 cellspacing=0>";
@@ -1307,6 +1377,9 @@ $(document).ready(function(){
           if (aeclass == 0) rsumRT++;
         }
        
+        // Tag array
+        var tags = new Array();
+
         for (var i=0; i<d2a.length; i++) {
           if (i == maxI) { break; }
           var eclass    = d2a[i].f1  || "-";
@@ -1325,12 +1398,33 @@ $(document).ready(function(){
           var sig_pri   = d2a[i].f16 || "0";
           var signature = d2a[i].f14 || "-";
           var evt_msg   = "-";
-          var scolour   = d2a[i].scolour || "ffffff";
-          var dcolour   = d2a[i].dcolour || "ffffff";
-          var cs        = getCountry(src_cc).split("|");
-          var cd        = getCountry(dst_cc).split("|");
-          var src_age   = d2a[i].src_age || "-"; 
-          var dst_age   = d2a[i].dst_age || "-"; 
+          var scolour   = d2a[i].f18 || "ffffff";
+          var dcolour   = d2a[i].f19 || "ffffff";
+          var src_age   = d2a[i].f20 || "-"; 
+          var dst_age   = d2a[i].f21 || "-";
+          var src_tag   = d2a[i].f22 || "-";
+          var dst_tag   = d2a[i].f23 || "-";
+
+          // Populate tags array
+          if (src_tag != "-") {
+            var src_tags = src_tag.split(",");
+            $.each(src_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
+
+          if (dst_tag != "-") {
+            var dst_tags = dst_tag.split(",");
+            $.each(dst_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
+
+          // Additional GEO
+          var cs = getCountry(src_cc).split("|");
+          var cd = getCountry(dst_cc).split("|");
 
           // Object age
           var src_age_n = "-"; 
@@ -1375,7 +1469,7 @@ $(document).ready(function(){
             txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
           }
    
-          row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=12 data-filter=\"" + eid + "\">";
+          row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=14 data-filter=\"" + eid + "\">";
           row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + "></td>";
           row += "<td class=\"sub sub1_active\"><div class=a_" + cv + " id=class_box_" + i + ">";
@@ -1408,8 +1502,14 @@ $(document).ready(function(){
           cmsg = " / <span class=bold>"  + sumRE + "</span> not shown";
         }
 
-       $("#qtotal").html(rsumRT);
+        $("#qtotal").html(rsumRT);
 
+        // Populate tags
+        for (var i=0; i < tags.length; i++) {
+          addTag(tags[i]);
+        }
+
+        // Draw
         tbl += "<table id=tl3a class=chart align=center width=100% border=0 cellpadding=0 cellspacing=0>";
         tbl += "<tr><td>";
         tbl += "<div class=chrt_ts>";
@@ -1668,13 +1768,37 @@ $(document).ready(function(){
           tbl += "<div class=sigtxt></div>";
           sigLookup(sg);
         }
-
+       
+        // Comments and tags are done here
+        var tags         = new Array();
+        var eventTag     = 'None.';
         var eventComment = theData[0].comment || 'None.';
-        var eventTag = 'None.';
+        var src_tag      = theData[0].srctag  || '-';
+        var dst_tag      = theData[0].dsttag  || '-';
+
+        // Populate tags array
+        if (src_tag != "-") {
+          var src_tags = src_tag.split(",");
+          $.each(src_tags, function(n,tag) {
+            var t = tags.indexOf(tag);
+            if (t < 0) tags.push(tag);
+          });
+        }
+
+        if (dst_tag != "-") {
+          var dst_tags = dst_tag.split(",");
+          $.each(dst_tags, function(n,tag) {
+            var t = tags.indexOf(tag);
+            if (t < 0) tags.push(tag);
+          });
+        }
+
+        if (tags.length > 0) eventTag = '';
+
         tbl += "<div class=comments> COMMENTS</div>";
-        tbl += "<div class=area>" + eventComment + "</div>";
+        tbl += "<div class=area id=comm_area>" + eventComment + "</div>";
         tbl += "<div class=tags> TAGS</div>";
-        tbl += "<div class=area>" + eventTag + "</div>";
+        tbl += "<div class=area id=tag_area>" + eventTag + "</div>";
         if (PDATA != 0) {
           tbl += "<div class=details> DETAILS</div>";
         } else {
@@ -1690,7 +1814,13 @@ $(document).ready(function(){
         var rC = $(".d_row_sub1").length;
         if ( rC <= 499 ) {
           $(".d_row_sub1").fadeTo('fast','0.2');
-        } 
+        }
+
+        // Populate tags
+        for (var i=0; i < tags.length; i++) {
+          addTag(tags[i]);
+        }
+ 
       }
       break;
     }
@@ -1932,13 +2062,23 @@ $(document).ready(function(){
     }   
   });
 
+  //
   // Tags
+  //
+
   function truncTag(tag) {
     var len = 20;
     // Truncate
     if (tag.length > len) tag = tag.substring(0,len) + "..";
     return tag;
   }
+
+  // Filter results on tag click
+  $(document).on('click', '.tag', function() {
+    var tag = $(this).text();
+    $('#search').val('tag ' + tag);
+    $('.b_update').click();
+  });
 
   // Fire tag add on enter
   $('.taginput').keypress(function(e) {
@@ -1957,9 +2097,8 @@ $(document).ready(function(){
   $(document).on('click', '.tagok', function() {
     var tag  = $('.taginput').val();
     var obj  = $('#pickbox_label').text();
-    var sord = $('#pickbox_label').data('sord');
     var re   = /^[?a-zA-Z0-9][\s{1}\w-\.]*$/; 
-    var OK = re.exec(tag);
+    var OK   = re.exec(tag);
     if (OK) doTag(s2h(obj),tag,'add');
   });
 
@@ -1967,21 +2106,32 @@ $(document).ready(function(){
   $(document).on('click', '.tagrm', function() {
     var tag  = truncTag($('.taginput').val());
     var obj  = $('#pickbox_label').text();
-    var sord = $('#pickbox_label').data('sord');
     doTag(s2h(obj),tag,'rm');
-    $(".tag_" + sord + ":contains('" + tag + "')").remove();
+    $(".tag" + ":contains('" + tag + "')").remove();
     $('.tagcancel').click();
   });
 
-  function addTag(tag,obj,type) {
+  // Display or Toggle tags
+  function addTag(tag) {
     var t_tag = truncTag(tag);
+    var newTag = "<div class=tag>" + t_tag + "</div>";
     // Hide empty
-    $('.tag_empty').hide()
-    // Add Tag
-    if ($(".tag:contains('" + t_tag + "')").length == 0) {
-      var newTag = "<div class=\"tag tag_" + type  +"\">" + t_tag + "</div>";
-      $('#tg_box').prepend(newTag);
-    }
+    $('.tag_empty').hide();
+    // Check if tag exists
+    var tag_exists = 0;
+    $('.tag').each(function() {
+      if ($(this).text() == t_tag) {
+        $(this).addClass('tag_active');
+        tag_exists = 1;
+      }
+    }); 
+
+    // Add tag to left pane
+    if (tag_exists == 0) $('#tg_box').prepend(newTag);
+    
+    // If we have a payload add here as well
+    if ($('#eview_sub2')[0]) $('#tag_area').prepend(newTag);
+
   }
 
   function doTag(obj,tag,op) {
@@ -1995,8 +2145,7 @@ $(document).ready(function(){
       if (theData.msg != '') {
         alert(theData.msg);  
       } else {
-        var sord = $('#pickbox_label').data('sord');
-        addTag(tag,obj,sord);
+        if (op != 'rm') addTag(tag,obj);
         $('.tagcancel').click();
       }     
     }
@@ -2444,6 +2593,7 @@ $(document).ready(function(){
         }  
         
         var msg = count + " event" + ess + " categorized";
+        clearTags();
       break;
     }
 
