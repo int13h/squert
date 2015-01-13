@@ -973,8 +973,9 @@ $(document).ready(function(){
         $('#qtotal').text(sumRT); 
         $('#etotal').text(sumEC); 
         $('#esignature').text(sumSI);
-       	clearTags();
+        
         // Populate tags
+        clearTags();
         for (var i=0; i < tags.length; i++) {
           addTag(tags[i]);    
         }
@@ -2082,7 +2083,7 @@ $(document).ready(function(){
 
   // Filter results or add as new
   $(document).on('click', '.tag', function() {
-    var tag = $(this).text(); 
+    var tag = $(this).data('val'); 
     if($('.taginput').is(":visible")) {
       $('.taginput').val(tag);
       $('.taginput').focus(); 
@@ -2148,16 +2149,16 @@ $(document).ready(function(){
 
     // Add tag to left pane
     if (tag_exists == 0) {
-      var newTag = "<div data-val=\"" + tag + "\" class=tag>" + t_tag + "</div>";
+      var newTag = "<div title=\"" + tag + "\" data-val=\"" + tag + "\" class=tag>" + t_tag + "</div>";
       $('#tg_box').prepend(newTag);
     }
     
-    // If we have a payload add here as well
+    // If we have the payload open, add here as well
     if ($('#eview_sub2')[0]) {
       if($('#pickbox_label').is(":visible")) {
           theClass = $('#pickbox_label').data('sord')[0];
       }
-      var newTag = "<div data-val=\"" + longTag + "\" class=tag_" + theClass + ">" + t_tag + "</div>"; 
+      var newTag = "<div title=\"" + longTag + "\" data-val=\"" + longTag + "\" class=tag_" + theClass + ">" + t_tag + "</div>"; 
       $('#tag_area').prepend(newTag);
     }
 
