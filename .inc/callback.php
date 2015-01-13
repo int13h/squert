@@ -352,8 +352,8 @@ function ed() {
               event.signature AS f10,
               event.signature_id AS f11,
               event.priority AS f12,
-              CONCAT(src_tag.value) AS f13,
-              CONCAT(dst_tag.value) AS f14
+              GROUP_CONCAT(DISTINCT(src_tag.value)) AS f13,
+              GROUP_CONCAT(DISTINCT(dst_tag.value)) AS f14
               FROM event
               LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
               LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'

@@ -109,7 +109,6 @@ switch $TYPE {
             exit 1
         }
         set COMMAND [list DisableAutoCatRule $AID]
-     
     }
     default { 
         puts "ERROR: No type match was found"

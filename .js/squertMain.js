@@ -60,8 +60,7 @@ $(document).ready(function(){
   rtbit = 0;
   eventList("0-aaa-00");
   $("#loader").show();
-
-  var lastclasscount = 0;
+  lastclasscount = 0;
 
   $(document).on("click", "#dt_savetz", function(event) {
     if ($('.dt_error').data('err') == 0) {
@@ -516,6 +515,8 @@ $(document).ready(function(){
     $(".chk_all").prop("checked",false);
     // Remove any open externals
     if ($("#extresult")[0]) $("#extresult").remove();
+    // Clear Tags
+    clearTags();
   }
   function closeSubRow2() {
     $("#eview_sub3").remove();
@@ -525,6 +526,8 @@ $(document).ready(function(){
       $(".d_row_sub1_active").attr('class','d_row_sub1');
     }
     $("#loader").hide();
+    // Clear Tags
+    clearTags();
   }
 
   //
@@ -702,9 +705,9 @@ $(document).ready(function(){
         txDebug  = txRaw.dbg;
         if (txResult == "DEBUG:") txResult += " No data was returned.";
         if (!txResult) {
-          txResult =  "Transcript request failed!<br>";
-          txResult += "<b>The command was:</b> " + txCMD + "<br>";
-          txResult += "<b>The response was:</b> " + txDebug;
+          txResult =  "<b>Transcript request failed!</b><br><br>";
+          txResult += "<b>The command was:</b><br>" + txCMD + "<br><br>";
+          txResult += "<b>The response was:</b>" + txDebug.replace(/DEBUG:/g,"<br>");
         }
 
         var row = '',tbl = '';
@@ -970,7 +973,7 @@ $(document).ready(function(){
         $('#qtotal').text(sumRT); 
         $('#etotal').text(sumEC); 
         $('#esignature').text(sumSI);
-       	 
+       	clearTags();
         // Populate tags
         for (var i=0; i < tags.length; i++) {
           addTag(tags[i]);    
@@ -1134,6 +1137,7 @@ $(document).ready(function(){
         }
         
         // Populate tags
+        clearTags();
         for (var i=0; i < tags.length; i++) {
           addTag(tags[i]);    
         }
@@ -1295,8 +1299,9 @@ $(document).ready(function(){
         var cols = $('th.sort').length;
 
         // Populate tags
+        clearTags();
         for (var i=0; i < tags.length; i++) {
-          addTag(tags[i]);
+          addTag(tags[i],0);
         }
 
         tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=" + cols + ">";
@@ -1505,6 +1510,7 @@ $(document).ready(function(){
         $("#qtotal").html(rsumRT);
 
         // Populate tags
+        clearTags();
         for (var i=0; i < tags.length; i++) {
           addTag(tags[i]);
         }
@@ -1780,16 +1786,16 @@ $(document).ready(function(){
         if (src_tag != "-") {
           var src_tags = src_tag.split(",");
           $.each(src_tags, function(n,tag) {
-            var t = tags.indexOf(tag);
-            if (t < 0) tags.push(tag);
+            var t = tags.indexOf(tag + ",s");
+            if (t < 0) tags.push(tag + ",s");
           });
         }
 
         if (dst_tag != "-") {
           var dst_tags = dst_tag.split(",");
           $.each(dst_tags, function(n,tag) {
-            var t = tags.indexOf(tag);
-            if (t < 0) tags.push(tag);
+            var t = tags.indexOf(tag + ",d");
+            if (t < 0) tags.push(tag + ",d");
           });
         }
 
@@ -1817,6 +1823,7 @@ $(document).ready(function(){
         }
 
         // Populate tags
+        clearTags();
         for (var i=0; i < tags.length; i++) {
           addTag(tags[i]);
         }
@@ -2073,11 +2080,16 @@ $(document).ready(function(){
     return tag;
   }
 
-  // Filter results on tag click
+  // Filter results or add as new
   $(document).on('click', '.tag', function() {
-    var tag = $(this).text();
-    $('#search').val('tag ' + tag);
-    $('.b_update').click();
+    var tag = $(this).text(); 
+    if($('.taginput').is(":visible")) {
+      $('.taginput').val(tag);
+      $('.taginput').focus(); 
+    } else {
+      $('#search').val('tag ' + tag);
+      $('.b_update').click();
+    }
   });
 
   // Fire tag add on enter
@@ -2113,10 +2125,18 @@ $(document).ready(function(){
 
   // Display or Toggle tags
   function addTag(tag) {
-    var t_tag = truncTag(tag);
-    var newTag = "<div class=tag>" + t_tag + "</div>";
+    // If we entered from payload we have some additional info
+    if ($('#eview_sub2')[0]) {  
+      var longTag  = tag.split(",")[0];
+      var theClass = tag.split(",")[1];
+      var t_tag = truncTag(longTag);
+    } else {
+      var t_tag = truncTag(tag);
+    }          
+
     // Hide empty
     $('.tag_empty').hide();
+
     // Check if tag exists
     var tag_exists = 0;
     $('.tag').each(function() {
@@ -2127,10 +2147,19 @@ $(document).ready(function(){
     }); 
 
     // Add tag to left pane
-    if (tag_exists == 0) $('#tg_box').prepend(newTag);
+    if (tag_exists == 0) {
+      var newTag = "<div data-val=\"" + tag + "\" class=tag>" + t_tag + "</div>";
+      $('#tg_box').prepend(newTag);
+    }
     
     // If we have a payload add here as well
-    if ($('#eview_sub2')[0]) $('#tag_area').prepend(newTag);
+    if ($('#eview_sub2')[0]) {
+      if($('#pickbox_label').is(":visible")) {
+          theClass = $('#pickbox_label').data('sord')[0];
+      }
+      var newTag = "<div data-val=\"" + longTag + "\" class=tag_" + theClass + ">" + t_tag + "</div>"; 
+      $('#tag_area').prepend(newTag);
+    }
 
   }
 
@@ -2145,7 +2174,7 @@ $(document).ready(function(){
       if (theData.msg != '') {
         alert(theData.msg);  
       } else {
-        if (op != 'rm') addTag(tag,obj);
+        if (op != 'rm') addTag(tag);
         $('.tagcancel').click();
       }     
     }

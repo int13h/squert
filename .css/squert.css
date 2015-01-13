@@ -1876,9 +1876,33 @@ background-color:#ecf1f4;
 cursor:pointer;
 color:#545454;
 }
+div.tag_d {
+font-size:11px;
+padding:5px 5px 5px 5px;
+margin-bottom:5px;
+margin-right:5px;
+display:inline-block;
+border-radius:3px;
+border:1pt solid red;
+background-color:red;
+cursor:pointer;
+color:#f4f4f4;
+}
+div.tag_s {
+font-size:11px;
+padding:5px 5px 5px 5px;
+margin-bottom:5px;
+margin-right:5px;
+display:inline-block;
+border-radius:3px;
+border:1pt solid blue;
+background-color:blue;
+cursor:pointer;
+color:#f4f4f4;
+}
 div.tag_active {
 background-color:#000;
-color:#f4f4f4;
+color:#fff;
 }
 div.tag_empty,div.history_empty {
 font-weight:bold;
