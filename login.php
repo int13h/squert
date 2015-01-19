@@ -116,7 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 </head>
 <body>
 <form name=credcheck method=post action=login.php>
-<br><br><br><br><br>
+<div class=squares></div>
+<div class=box>
 <table class=boxes width=450 align=center cellpadding=1 cellspacing=0>
 <tr><td colspan=2 class=header>
 squert - Please login to continue</td></tr>
@@ -131,6 +132,7 @@ Password<br>
 <td class=err><?php echo $err;?></td></tr>
 </table>
 <div class=cp>Version 1.6.0<span>&copy;2015 Paul Halliday</span></div>
+</div>
 </form>
 <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>
 </body>
