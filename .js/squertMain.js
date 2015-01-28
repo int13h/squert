@@ -543,7 +543,8 @@ $(document).ready(function(){
     if (!$(".d_row_active")[0] && rowType == 'sid') {
       $("#loader").show(); 
       // This leaves us with sid-gid
-      rowValue = curID.replace("sid-","");
+      var rowValue = curID.replace("sid-","");
+      var sigID = rowValue.split("-")[0];
      
       $(".d_row_active").attr('class', 'd_row');
       $("#active_eview").attr('class','d_row');
@@ -561,6 +562,11 @@ $(document).ready(function(){
       tbl += "<tr class=eview id=active_eview><td colspan=" + cols + ">";
       tbl += "<div id=eview class=eview>";
       tbl += "<div class=\"sigtxt select\" data-type=tx></div>";
+      tbl += "<div class=eview_charts>";
+      tbl += "<div class=ev_l>&darr;</div>";
+      tbl += "<div class=ev_hm></div>";
+      tbl += "<div class=ev_py></div>";
+      tbl += "</div>";
       tbl += "<div class=eview_actions>";
       tbl += "<input id=ca0 class=chk_all type=checkbox checked>";
       tbl += "<span class=ec_label>CATEGORIZE</span><span class=bold id=class_count>";
@@ -572,8 +578,13 @@ $(document).ready(function(){
       tbl += "<span class=link>both</span>";
       tbl += "</div></td></tr>";
       $("#" + curID).after(tbl);
-      eventList("1-" + rowValue);
+
+      // Lookup signature
       sigLookup(rowValue);
+
+      // Fetch results
+      eventList("1-" + rowValue);
+
       $("#eview").show();
       $(".d_row").fadeTo('0','0.2');
     } else {
@@ -1753,6 +1764,7 @@ $(document).ready(function(){
 
           head += "<table class=select data-type=tx align=center width=100% cellpadding=0 cellspacing=0>";
           var p_ascii = "No Data Sent.";
+          // This needs to be more robust. 
           if (theData[2]) {
             var tmp = h2s(theData[2].data_payload).split("\n");
             p_ascii = '';
@@ -1773,6 +1785,11 @@ $(document).ready(function(){
         // If we are not grouped we show the signature text
         if ( sg != 0 ) {
           tbl += "<div class=sigtxt></div>";
+          tbl += "<div class=eview_charts>";
+          tbl += "<div class=ev_l>&darr;</div>";
+          tbl += "<div class=ev_hm></div>";
+          tbl += "<div class=ev_py></div>";
+          tbl += "</div>";
           sigLookup(sg);
         }
        
@@ -1955,6 +1972,10 @@ $(document).ready(function(){
         row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>:: SRC</td></tr>"; 
         row += "<tr class=p_row data-type=l data-alias=dip><td class=pr>:: DST</td></tr>";
         row += "<tr class=p_row data-type=t data-alias=tag><td class=pr>:: ADD / REMOVE TAG</td></tr>";
+        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        if ($('#eview')[0]) {
+          row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
+        }
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
@@ -1965,8 +1986,12 @@ $(document).ready(function(){
       break;
       case "d":
         row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: SIGNATURE</td></tr>";
+        if ($('#eview')[0]) {
+          row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
+        }        
       break;
       case "l":
+        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
@@ -1976,7 +2001,6 @@ $(document).ready(function(){
     
     // If applicable populate externals
     if (doexternals == "yes") {
-      row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       $('.f_row').each(function() {
         var ct = $(this).data('type');
         if (ct == 'url') {
@@ -2065,6 +2089,10 @@ $(document).ready(function(){
           $('#ico05').click();
         });
         $('.srch_txt').val(args);
+      break;
+      case "h":
+        doHistory(args);
+        $('.pickbox').fadeOut('fast');
       break;
       default: return;
     }   
@@ -3092,6 +3120,27 @@ $(document).ready(function(){
   $(document).on("click", "#map_src, #map_dst", function() {
     doMap($(this).attr('id').split("_")[1]);
   });
+
+  //
+  // History
+  //
+
+  function doHistory(object) {
+    var urArgs = "type=" + 21 + "&object=" + s2h("aa" + object) + "&ts=" + theWhen;
+    $(function(){
+      $.get(".inc/callback.php?" + urArgs, function(data){cb21(data)});
+    });  
+
+    function cb21(data){
+      eval("chartData=" + data);
+      var records = chartData.records;
+      if (records > 0) { 
+        mkHeatMap(".ev_hm",chartData.start,chartData.rows,object);
+      } else {
+        return;
+      }
+    }
+  }
 
 // The End.
 });

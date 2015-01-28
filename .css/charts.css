@@ -46,31 +46,44 @@ stroke-opacity: .4;
 .link:hover, .link1:hover {
 stroke-opacity: .5;
 }
-
 .axis {
-  stroke: #000;
-  stroke-width: 1.5px;
+stroke: #000;
+stroke-width: 1.5px;
 }
-
 .node circle {
-  stroke: #000;
+stroke: #000;
 }
-
 .link {
-  fill: none;
-  stroke: #999;
-  stroke-width: 1.5px;
-  stroke-opacity: .3;
+fill: none;
+stroke: #999;
+stroke-width: 1.5px;
+stroke-opacity: .3;
 }
-
 .link.active {
-  stroke: red;
-  stroke-width: 2px;
-  stroke-opacity: 1;
+stroke: red;
+stroke-width: 2px;
+stroke-opacity: 1;
 }
-
 .node circle.active {
-  stroke: red;
-  stroke-width: 3px;
+stroke: red;
+stroke-width: 3px;
 }
-
+/* heatmap */
+text.mono {
+font-size: 9pt;
+font-family: Consolas, courier;
+fill: #aaa;
+padding-left:10px;
+}
+text.chrtlbl {
+font-size: 14px;
+font-family: Consolas, courier;
+fill: #666;
+padding-left:i20px;
+}
+text.axis-workweek {
+fill: #000;
+}
+text.axis-worktime {
+fill: #000;
+}

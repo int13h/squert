@@ -827,7 +827,7 @@ td.pr {
 background:transparent;
 color:#000;
 font-size:11px;
-padding:5px 3px;
+padding:7px 3px;
 padding-left:15px;
 }
 span.pr {
@@ -906,6 +906,23 @@ color:#545454;
 float:left;
 font-weight:medium;
 width:100%;
+}
+div.eview_charts { 
+float:left;
+width:100%;
+}
+div.ev_l {
+margin-top:58px;
+margin-left:5px;
+float:left;
+color:#545454;
+display:none;
+}
+div.ev_hm {
+float:left;
+}
+div.ev_py {
+float:left;
 }
 div.eview_sub {
 clear:both;

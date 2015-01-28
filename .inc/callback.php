@@ -17,10 +17,10 @@ $db = mysql_select_db($dbName,$link);
 $type = $_REQUEST['type'];
 
 $types = array(
-                 '0' => 'es',
-                 '1' => 'eg',
-                 '2' => 'ed',
-                '2a' => 'ee',
+                 '0' => 'level0',
+                 '1' => 'level1',
+                 '2' => 'level2',
+                '2a' => 'level2a',
                  '3' => 'payload',
                  '4' => 'signatures',
                  '5' => 'tab',
@@ -39,6 +39,7 @@ $types = array(
                 '18' => 'esquery',
                 '19' => 'addremoveobject',
                 '20' => 'getcolour',
+                '21' => 'objhistory',
 );
 
 $type = $types[$type];
@@ -51,10 +52,9 @@ if (isset($_REQUEST['ts'])) {
     $stime  = $tsParts[2];
     $etime  = $tsParts[3];
     $offset = $tsParts[4];
-
-    $when = "event.timestamp BETWEEN 
-             CONVERT_TZ('$sdate $stime','$offset','+00:00') AND
-             CONVERT_TZ('$edate $etime','$offset','+00:00')";
+    $start  = "CONVERT_TZ('$sdate $stime','$offset','+00:00')";
+    $end    = "CONVERT_TZ('$edate $etime','$offset','+00:00')"; 
+    $when   = "event.timestamp BETWEEN $start AND $end";
 }
 
 if (isset($_REQUEST['sensors'])) {
@@ -170,7 +170,7 @@ function signatures() {
 
 }
 
-function es() {   
+function level0() {   
     global $offset, $when, $sensors, $rt;
     $object = mysql_real_escape_string($_REQUEST['object']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
@@ -207,14 +207,10 @@ function es() {
               GROUP_CONCAT(DISTINCT(event.sid)) AS f10,
               GROUP_CONCAT(event.status) AS f11,
               GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
-              event.priority AS f13,
-              GROUP_CONCAT(DISTINCT(src_tag.value)) AS f14,
-              GROUP_CONCAT(DISTINCT(dst_tag.value)) AS f15              
+              event.priority AS f13
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
-              LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
-              LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               $qp2
               GROUP BY f3
               ORDER BY f5 $sv";
@@ -228,7 +224,7 @@ function es() {
     echo $theJSON;
 }
 
-function eg() {
+function level1() {
 
     global $offset, $when, $sensors, $rt;
     $sid = mysql_real_escape_string($_REQUEST['object']);
@@ -258,6 +254,7 @@ function eg() {
                 $rt";
     }
 
+    // LEVEL 1
     $query = "SELECT COUNT(event.signature) AS count,
               MAX(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS maxTime,
               INET_NTOA(event.src_ip) AS src_ip,
@@ -300,8 +297,7 @@ function eg() {
     echo $theJSON;
 }
 
-// 2
-function ed() {
+function level2() {
 
     global $offset, $when, $sensors, $rt;
     $comp = mysql_real_escape_string($_REQUEST['object']);
@@ -373,8 +369,7 @@ function ed() {
 
 }
 
-// 2a
-function ee() {
+function level2a() {
 
     global $offset, $when, $sensors, $rt;
     $sv = mysql_real_escape_string($_REQUEST['sv']);
@@ -420,9 +415,7 @@ function ee() {
               osrc.value AS f18,
               odst.value AS f19,
               msrc.age AS f20,
-              mdst.age AS f21,
-              CONCAT(src_tag.value) AS f22,
-              CONCAT(dst_tag.value) AS f23         
+              mdst.age AS f21
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
@@ -431,6 +424,7 @@ function ee() {
               LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
               LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               $qp2
+              GROUP BY event.sid, event.cid
               ORDER BY event.timestamp $sv";
 
     $result = mysql_query($query);
@@ -733,14 +727,32 @@ function remove_comment() {
 }
 
 function map() {
-    global $when;
-    $filter = $_REQUEST['filter'];
+    global $when, $sensors;
+    $filter  = hextostr($_REQUEST['filter']);
+
+    if ($filter != 'empty') {
+        if (substr($filter, 0,4) == 'cmt ') {
+            $comment = explode('cmt ', $filter);
+            $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid
+                    WHERE history.comment = '$comment[1]'";
+        } else {
+            $filter = str_replace('&lt;','<', $filter);
+            $filter = str_replace('&gt;','>', $filter);
+            $filter = "AND " . $filter;
+            $qp2 = "WHERE $when
+                    $sensors
+                    $filter";
+        }
+    } else {
+        $qp2 = "WHERE $when
+                $sensors";
+    }
 
     $srcq = "SELECT COUNT(src_ip) AS c, m1.cc 
              FROM event 
              LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
              LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
-             WHERE $when
+             $qp2
              AND src_ip NOT BETWEEN 167772160 AND 184549375
              AND src_ip NOT BETWEEN 2886729728 AND 2886795263
              AND src_ip NOT BETWEEN 3232235520 AND 3232301055
@@ -752,7 +764,7 @@ function map() {
              FROM event 
              LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
              LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
-             WHERE $when
+             $qp2
              AND dst_ip NOT BETWEEN 167772160 AND 184549375
              AND dst_ip NOT BETWEEN 2886729728 AND 2886795263
              AND dst_ip NOT BETWEEN 3232235520 AND 3232301055
@@ -1372,6 +1384,45 @@ function getcolour() {
         $rows[] = $row;
     }
     $theJSON = json_encode($rows);
+    echo $theJSON;
+}
+
+function objhistory () {
+    global $offset, $start, $sdate;
+    $object = hextostr($_REQUEST['object']);
+    $object = str_replace("aa", "", $object);
+
+    // Plant, animal or mineral?  
+    $re = '/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/';
+    $obtype = 0;
+    if (preg_match($re, $object)) {
+        $obtype = 1;
+    }
+     
+    switch ($obtype) {
+        case 0: $subject = "signature_id = '$object'"; break;
+        case 1: $subject = "(src_ip = INET_ATON('$object') OR dst_ip = INET_ATON('$object'))"; break;
+    } 
+
+    $query = "SELECT
+              DATE(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS day,
+              HOUR(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS hour,
+              COUNT(event.timestamp) AS value
+              FROM event 
+              WHERE event.timestamp BETWEEN $start - INTERVAL 6 DAY AND $start + INTERVAL 1 DAY 
+              AND $subject
+              GROUP BY day,hour
+              ORDER BY day ASC";
+
+    $result = mysql_query($query);
+    $rows = array();
+    $records = 0;
+
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+        $records ++;
+    }
+    $theJSON = json_encode(array("rows" => $rows, "start" => $sdate, "records" => $records));
     echo $theJSON;
 }
 

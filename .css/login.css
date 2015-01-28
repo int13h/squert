@@ -1,5 +1,5 @@
 body {
-background:#222;
+background:#fff;
 font-family:verdana, trebuchet ms, helvetica, sans;
 }
 div.squares{
@@ -15,9 +15,7 @@ div.box {
 position:fixed;
 width:100%;
 height:100%;
-top:50%;
-bottom:50%;
-margin-top:-250px;
+top:20%;
 }
 td.header {
 font-size:12px;
@@ -64,7 +62,7 @@ font-size:.8em;
 font-size:.7em;
 margin:0 auto;
 width:450px;
-color:#a0a0a0;
+color:#383838;
 padding-left:10px;
 padding-top:10px;
 }

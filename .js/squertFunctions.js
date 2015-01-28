@@ -335,6 +335,9 @@ function sigLookup(sid) {
 function mkGrid(values) {
   var cells = "<table class=grid cellspacing=none><tr>";
   var composite = values.split(",");
+  var colors = ['rgb(240,240,240)','rgb(217,217,217)','rgb(189,189,189)','rgb(150,150,150)','rgb(115,115,115)','rgb(82,82,82)','rgb(37,37,37)','rgb(0,0,0)'];  
+  var buckets = colors.length - 3;
+
   for (var i=0; i<24;) {
     var n = i;
     if (n < 10) {
@@ -345,9 +348,10 @@ function mkGrid(values) {
       if (composite[c] == n) o++;
     }
     if (o > 0) {
-      colours = d3.scale.linear()
-        .domain([0,10])
-        .range(["#e9e9e9","#5d5d5d"]);
+      var colours = d3.scale.quantile()
+        .domain([0, buckets - 1, d3.max(values, function (d) { return d.value; })])
+        .range(colors);
+
       var color = colours(o);
       
       cells += "<td class=c_on style=\"background-color:" + color + "\"; title=\"" + n + ":00 &#61;&gt; " + o + " events\">1</td>";

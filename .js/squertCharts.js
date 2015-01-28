@@ -193,3 +193,123 @@ function mkSankey(callerID,data,w,h) {
     link.attr("d", path);
   }
 }
+
+//
+// Heatmap
+//
+
+function mkHeatMap(callerID,start,data,object) {
+
+  if ($('#objgrid')[0]) $('#objgrid').remove();
+
+  var margin = { top: 50, right: 0, bottom: 0, left: 35 },
+      width = 600 - margin.left - margin.right,
+      height = 240 - margin.top - margin.bottom,
+      gridSize = Math.floor(width / 24),
+      colors = ['rgb(247,251,255)','rgb(222,235,247)','rgb(198,219,239)','rgb(158,202,225)','rgb(107,174,214)','rgb(66,146,198)','rgb(33,113,181)','rgb(8,81,156)','rgb(8,48,107)'],
+      buckets = colors.length - 3,
+      strdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      times = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
+
+  // The days are laid out in reverse so we need to keep track
+  // of what the order is in relation to the first plot
+  // and the order of the incoming data
+  var t = Number(new Date(start).getDay());
+  var days = new Array();
+  var ofst = new Array();
+  for (var i = 0; i < 7; i++) {
+    if (t < 0) t = 6;
+    days.push(strdays[t]);
+    ofst.push(t);
+    t--;
+  }
+
+  var maxV = d3.max(data, function (d) { return +d.value; });
+  var colorScale = d3.scale.quantile()
+      .domain([0, buckets - 1, maxV])
+      .range(colors);
+
+  var svg = d3.select(callerID).append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .attr("id","objgrid")
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  $(".ev_l").show();
+
+  // Chart title
+  svg.append("text")
+    .attr("x",-20)
+    .attr("y",-25) 
+    .attr("class","chrtlbl") 
+    .text("7 day history for " + object + " (all events)");
+
+  // Grid
+  var ht = 23;
+  var lc = "#e9e9e9"; 
+
+  // hlines
+  var yh = 0;
+  for (var i = 0; i <= 7; i++) {
+    svg.append("svg:line")
+        .attr("x1", 0)
+        .attr("y1", yh)
+        .attr("x2", width - 18)
+        .attr("y2", yh)
+        .style("stroke", lc)
+        .style("stroke-width", 1);
+    yh = yh + ht;
+  };
+
+  // vlines
+  var xh = 0;
+  for (var i = 0; i <= 24; i++) {
+    svg.append("svg:line")
+        .attr("x1", xh)
+        .attr("y1", 0)
+        .attr("x2", xh)
+        .attr("y2", ht * 7)
+        .style("stroke", lc)
+        .style("stroke-width", 1);
+    xh = xh + ht;
+  };
+
+  // Labels
+  var dayLabels = svg.selectAll(".dayLabel")
+      .data(days)
+      .enter().append("text")
+      .text(function (d) { return d; })
+      .attr("x", 0)
+      .attr("y", function (d, i) { return i * gridSize; })
+      .style("text-anchor", "end")
+      .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+      .attr("class", function (d, i) { return ((i >= 0 && d[0] != "S") ? "dayLabel mono axis-workweek" : "dayLabel mono "); });
+
+  var timeLabels = svg.selectAll(".timeLabel")
+      .data(times)
+      .enter().append("text")
+      .text(function(d) { return d; })
+      .attr("x", function(d, i) { return i * gridSize; })
+      .attr("y", 0)
+      .style("text-anchor", "middle")
+      .attr("transform", "translate(" + gridSize / 2 + ", -6)")
+      .attr("class", function(d, i) { return ((i >= 7 && i <= 17) ? "timeLabel mono axis-worktime" : "timeLabel mono"); });
+
+  // Plot
+  var heatMap = svg.selectAll(".hour")
+      .data(data)
+      .enter().append("rect")
+      .attr("x", function(d) { return d.hour * gridSize + 1; })
+      .attr("y", function(d) { var nday = Number(new Date(d.day).getDay()); return ofst.indexOf(nday) * gridSize + 1 })
+      .attr("rx", 0)
+      .attr("ry", 0)
+      .attr("width", gridSize - 2)
+      .attr("height", gridSize - 2)
+      .style("fill", colors[0]);
+
+  heatMap.transition().duration(1000)
+         .style("fill", function(d) { return colorScale(d.value); });
+
+  heatMap.append("title").text(function(d) { return d.value; });
+}
