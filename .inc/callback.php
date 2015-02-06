@@ -46,7 +46,7 @@ $type = $types[$type];
 
 if (isset($_REQUEST['ts'])) {
     // Need EC
-    $tsParts = explode("|", hextostr(mysql_real_escape_string($_REQUEST['ts'])));
+    $tsParts = explode("|", mysql_real_escape_string(hextostr($_REQUEST['ts'])));
     $sdate  = $tsParts[0]; 
     $edate  = $tsParts[1];
     $stime  = $tsParts[2];
@@ -58,7 +58,7 @@ if (isset($_REQUEST['ts'])) {
 }
 
 if (isset($_REQUEST['sensors'])) {
-    $sensors = hextostr($_REQUEST['sensors']);
+    $sensors = mysql_real_escape_string(hextostr($_REQUEST['sensors']));
     if ($sensors == 'empty') {
         $sensors = '';
     }
@@ -272,16 +272,12 @@ function level1() {
               GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
               event.priority AS f13,
               msrc.age AS src_age,
-              mdst.age AS dst_age,
-              GROUP_CONCAT(DISTINCT(src_tag.value)) AS f14,
-              GROUP_CONCAT(DISTINCT(dst_tag.value)) AS f15
+              mdst.age AS dst_age
               FROM event
               LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'ip_c'
               LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'ip_c'
-              LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
-              LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               $qp2
               GROUP BY event.src_ip, event.dst_ip
               ORDER BY maxTime $sv";
@@ -303,7 +299,7 @@ function level2() {
     $comp = mysql_real_escape_string($_REQUEST['object']);
     $filter = hextostr($_REQUEST['filter']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
-    $adqp = hextostr(mysql_real_escape_string($_REQUEST['adqp']));
+    $adqp = mysql_real_escape_string(hextostr($_REQUEST['adqp']));
     list($ln,$sid,$src_ip,$dst_ip) = explode("-", $comp);
     $src_ip = sprintf("%u", ip2long($src_ip));
     $dst_ip = sprintf("%u", ip2long($dst_ip));
@@ -421,8 +417,6 @@ function level2a() {
               LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'ip_c'
               LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'ip_c'
-              LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
-              LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
               $qp2
               GROUP BY event.sid, event.cid
               ORDER BY event.timestamp $sv";
@@ -748,28 +742,28 @@ function map() {
                 $sensors";
     }
 
-    $srcq = "SELECT COUNT(src_ip) AS c, m1.cc 
-             FROM event 
-             LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
-             LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
+    $srcq = "SELECT COUNT(src_ip) AS c, msrc.cc 
+             FROM event
+             LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+             LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip 
              $qp2
              AND src_ip NOT BETWEEN 167772160 AND 184549375
              AND src_ip NOT BETWEEN 2886729728 AND 2886795263
              AND src_ip NOT BETWEEN 3232235520 AND 3232301055
-             AND m1.cc IS NOT NULL
-             GROUP BY m1.cc
+             AND msrc.cc IS NOT NULL
+             GROUP BY msrc.cc
              ORDER BY c DESC";
 
-    $dstq = "SELECT COUNT(dst_ip) AS c, m2.cc 
-             FROM event 
-             LEFT JOIN mappings AS m1 ON event.src_ip = m1.ip
-             LEFT JOIN mappings AS m2 ON event.dst_ip = m2.ip
+    $dstq = "SELECT COUNT(dst_ip) AS c, mdst.cc 
+             FROM event
+             LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+             LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip 
              $qp2
              AND dst_ip NOT BETWEEN 167772160 AND 184549375
              AND dst_ip NOT BETWEEN 2886729728 AND 2886795263
              AND dst_ip NOT BETWEEN 3232235520 AND 3232301055
-             AND m2.cc IS NOT NULL
-             GROUP BY m2.cc
+             AND mdst.cc IS NOT NULL
+             GROUP BY mdst.cc
              ORDER BY c DESC";
 
     $srcr = mysql_query($srcq);
@@ -940,7 +934,8 @@ function summary() {
                       INET_NTOA(event.{$subtype}_ip) AS f6,
                       o{$subtype}.value AS f7 
                       FROM event
-                      LEFT JOIN mappings AS m{$subtype} ON event.{$subtype}_ip = m{$subtype}.ip
+                      LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+                      LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
                       LEFT JOIN object_mappings AS o{$subtype} ON event.{$subtype}_ip = o{$subtype}.object 
                       AND o{$subtype}.type = 'ip_c'
                       $qp2
@@ -954,6 +949,8 @@ function summary() {
                       COUNT(DISTINCT(event.dst_ip)) AS f4,
                       event.{$subtype}_port AS f5
                       FROM event
+                      LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+                      LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
                       $qp2
                       GROUP BY f5
                       ORDER BY f1 DESC";
@@ -965,6 +962,8 @@ function summary() {
                       event.signature_id AS f4,
                       event.signature AS f5
                       FROM event
+                      LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+                      LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
                       $qp2
                       GROUP BY f4
                       ORDER BY f1 DESC";
@@ -973,15 +972,17 @@ function summary() {
             $query = "SELECT COUNT(event.{$subtype}_ip) AS f1,
                       COUNT(DISTINCT(event.signature)) AS f2,
                       COUNT(DISTINCT(event.{$oppip}_ip)) AS f3,
-                      m.cc AS f4,
-                      m.c_long AS f5,
+                      m{$subtype}.cc AS f4,
+                      m{$subtype}.c_long AS f5,
                       COUNT(DISTINCT(event.{$subtype}_ip)) AS f6
-                      FROM event LEFT JOIN mappings AS m ON event.{$subtype}_ip = m.ip
+                      FROM event
+                      LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+                      LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
                       $qp2
                       AND event.{$subtype}_ip NOT BETWEEN 167772160 AND 184549375
                       AND event.{$subtype}_ip NOT BETWEEN 2886729728 AND 2886795263 
                       AND event.{$subtype}_ip NOT BETWEEN 3232235520 AND 3232301055
-                      AND m.cc IS NOT NULL GROUP BY m.cc ORDER BY f1 DESC"; 
+                      AND m{$subtype}.cc IS NOT NULL GROUP BY m{$subtype}.cc ORDER BY f1 DESC"; 
         break; 
     }
     $result = mysql_query($query);
@@ -1414,17 +1415,40 @@ function objhistory () {
               GROUP BY day,hour
               ORDER BY day ASC";
 
-    $result = mysql_query($query);
-    $rows = array();
-    $records = 0;
+    $rows1 = $rows2 = array(); 
+    $r1 = $r2 = 0;
+
+    $result = mysql_unbuffered_query($query);
 
     while ($row = mysql_fetch_assoc($result)) {
-        $rows[] = $row;
-        $records ++;
+        $rows1[] = $row;
+        $r1++;
     }
-    $theJSON = json_encode(array("rows" => $rows, "start" => $sdate, "records" => $records));
+  
+    $result = "";
+
+    if ($r1 != 0 && $obtype == 1) {
+        $query = "SELECT
+                  COUNT(signature_id) AS value,
+                  signature AS label,
+                  signature_id AS sid
+                  FROM event
+                  WHERE event.timestamp BETWEEN $start - INTERVAL 6 DAY AND $start + INTERVAL 1 DAY
+                  AND $subject
+                  GROUP BY signature_id
+                  ORDER BY value DESC";
+
+        $result = mysql_unbuffered_query($query); 
+        while ($row = mysql_fetch_assoc($result)) {
+            $rows2[] = $row;
+            $r2++;
+        }
+    } 
+
+    $theJSON = json_encode(array("rows1" => $rows1, "rows2" => $rows2, "start" => $sdate, "r1" => $r1, "r2" => $r2));
     echo $theJSON;
 }
 
 $type();
+unset($theJSON); 
 ?>

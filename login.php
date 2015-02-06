@@ -116,7 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 </head>
 <body>
 <form name=credcheck method=post action=login.php>
-<div class=squares></div>
 <div class=box>
 <table class=boxes width=450 align=center cellpadding=1 cellspacing=0>
 <tr><td colspan=2 class=header>

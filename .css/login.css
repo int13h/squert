@@ -1,15 +1,6 @@
 body {
-background:#fff;
+background:#d5d5d5;
 font-family:verdana, trebuchet ms, helvetica, sans;
-}
-div.squares{
-background: url("square.png") repeat scroll left top rgba(0, 0, 0, 0.4);
-height: 100%;
-max-width: 100%;
-position: fixed;
-top: 0px;
-width: 100%;
-z-index:-1;
 }
 div.box {
 position:fixed;
@@ -21,8 +12,9 @@ td.header {
 font-size:12px;
 font-weight:normal;
 padding:20px;
-background:#222;
-color:#dddddd;
+background:#e7e7e7;
+color:#333366;
+border-bottom:1pt solid #c9c9c9;
 }
 td.boxes {
 font-size:.8em;
@@ -32,6 +24,7 @@ table.boxes {
 border-collapse:collapse;
 background:#ffffff;
 margin:0 auto;
+border:1pt solid #c9c9c9;
 }
 .rb {
 background:#DDDDDD;
@@ -53,6 +46,7 @@ height:30px;
 width:300px;
 font-size:1.5em;
 padding:10px;
+color:#545454;
 }
 .err {
 color:#cc0000;

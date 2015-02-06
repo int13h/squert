@@ -132,6 +132,7 @@ width:100%;
 padding-top:10px;
 padding-bottom:5px;
 float:left;
+background-color:#fff;
 }
 div.rl {
 float:left;
@@ -248,9 +249,6 @@ border-top-right-radius:4px;
 border-bottom-right-radius:4px;
 position:absolute;
 float:left;
-}
-tr.t_row:hover {
-background-color:#fafafa;
 }
 #wm0 {
 text-align:center;
@@ -606,9 +604,9 @@ background-color:#cc0000;
 tr.pcomm:hover,tr.ac_row:hover,tr.f_row:hover {
 background-color:#fff;
 }
-tr.p_row:hover, tr.n_row:hover {
+tr.p_row:hover, tr.n_row:hover, tr.t_row:hover {
 cursor:pointer;
-background-color:#fafafa;
+background-color:#deebf7;
 }
 tr.p_row_dark {
 font-style:italic;
@@ -658,6 +656,54 @@ cursor:pointer;
 padding:12px 0px 12px 5px;
 font-weight:normal;
 border-top:none;
+}
+thead.lines {
+border-bottom:1pt solid #e9e9e9;
+}
+th.blank {
+color:#333366;
+font-size:11px;
+text-align:left;
+cursor:pointer;
+font-weight:normal;
+padding-bottom:6px;
+}
+td.blank {
+background:transparent;
+color:#000;
+font-size:11px;
+padding: 5px 5px;
+}
+div.py_bar {
+border: 1pt solid #B3BEE8;
+border-left:none;
+background-color:#ecf1f4;
+height:14px;
+margin-top:-19px;
+border-top-right-radius:2px;
+border-bottom-right-radius:3px;
+}
+table.py_tbl {
+display:table;
+width:560px;
+border-spacing:0;
+border-collapse:collapse;
+}
+table.py_tbl thead, table.py_tbl tbody {
+float:left;
+width:560px;
+}
+table.py_tbl tbody {
+overflow-y:auto;
+overflow-x:hidden;
+border:1pt solid #e9e9e9;
+max-height:148px;
+}
+table.py_tbl tr {
+display:table;
+text-align:left;
+padding:1px;
+width:560px;
 }
 th.sub1 {
 background:#f4f4f4;
@@ -781,7 +827,7 @@ font-size:12px;
 text-decoration:none;
 padding:15px;
 }
-td.row,td.row_active,.row_filter,.sub_filter {
+td.row,td.row_active,.sub_filter {
 background:transparent;
 color:#000;
 font-size:11px;
@@ -827,7 +873,7 @@ td.pr {
 background:transparent;
 color:#000;
 font-size:11px;
-padding:7px 3px;
+padding:5px 3px;
 padding-left:15px;
 }
 span.pr {
@@ -910,19 +956,21 @@ width:100%;
 div.eview_charts { 
 float:left;
 width:100%;
+display:none;
 }
 div.ev_l {
-margin-top:58px;
+margin-top:63px;
 margin-left:5px;
 float:left;
 color:#545454;
-display:none;
 }
 div.ev_hm {
 float:left;
 }
 div.ev_py {
 float:left;
+margin-left:25px;
+margin-top:14px;
 }
 div.eview_sub {
 clear:both;

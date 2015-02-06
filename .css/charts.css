@@ -70,15 +70,14 @@ stroke-width: 3px;
 }
 /* heatmap */
 text.mono {
-font-size: 9pt;
-font-family: Consolas, courier;
+font-size: 10px;
 fill: #aaa;
 padding-left:10px;
 }
 text.chrtlbl {
-font-size: 14px;
-font-family: Consolas, courier;
-fill: #666;
+font-family: tahoma, calibri, helvetica, sans;
+font-size: 11px;
+fill: #333366;
 padding-left:i20px;
 }
 text.axis-workweek {
@@ -86,4 +85,18 @@ fill: #000;
 }
 text.axis-worktime {
 fill: #000;
+}
+/* pie chart */
+path.slice {
+stroke-width:2px;
+}
+polyline {
+stroke: #666;
+stroke-width: 1px;
+fill: none;
+}
+.pielbl {
+font-size:9px;
+color:#545454;
+padding:5px;
 }

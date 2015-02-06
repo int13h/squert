@@ -97,7 +97,7 @@ $(document).ready(function(){
 
     var urArgs = "type=" + 6 + "&ts=" + theWhen + "&sensors=" + theSensors;
     $(function(){
-      $.post(".inc/callback.php?" + urArgs, function(data){cb(data)});
+      $.get(".inc/callback.php?" + urArgs, function(data){cb(data)});
     });
 
     function cb(data){
@@ -463,7 +463,8 @@ $(document).ready(function(){
   });
 
   function clearTags() {
-    $(".tag").removeClass("tag_active");
+    $(".tag").remove();
+    $(".tag_empty").show();
   }
 
   //
@@ -901,30 +902,7 @@ $(document).ready(function(){
 
         var sumRT = 0;
        
-        // Tag array
-        var tags= new Array();
-
         for (var i=0; i<d0.length; i++) {
-
-          var src_tag = d0[i].f14 || "-";
-          var dst_tag = d0[i].f15 || "-";
-
-          // Populate tags array
-          if (src_tag != "-") {
-            var src_tags = src_tag.split(",");
-            $.each(src_tags, function(n,tag) {
-              var t = tags.indexOf(tag);
-              if (t < 0) tags.push(tag);
-            });
-          }
-
-          if (dst_tag != "-") {
-            var dst_tags = dst_tag.split(",");
-            $.each(dst_tags, function(n,tag) {
-              var t = tags.indexOf(tag);
-              if (t < 0) tags.push(tag);
-            });
-          }
 
           // How many events are not categorized?
           var unClass = d0[i].f11.split(",").filter(function(x){return x==0}).length;
@@ -985,12 +963,6 @@ $(document).ready(function(){
         $('#etotal').text(sumEC); 
         $('#esignature').text(sumSI);
         
-        // Populate tags
-        clearTags();
-        for (var i=0; i < tags.length; i++) {
-          addTag(tags[i]);    
-        }
-
         tbl += "<table width=100% id=tl1 cellpadding=0 cellspacing=0 align=center>";
         tbl += head;
         tbl += row;
@@ -1038,9 +1010,6 @@ $(document).ready(function(){
         var curclasscount = 0, tlCount = 0, rtCount = 0;
         var timeValues = "", scid = "";
 
-        // Tag array
-        var tags = new Array();
-
         for (var i=0; i<theData.length; i++) {
           var count     = theData[i].count   || "0"; 
           var src_ip    = theData[i].src_ip  || "-";
@@ -1054,27 +1023,8 @@ $(document).ready(function(){
           var c_cid     = theData[i].c_cid   || "0";
           var scolour   = theData[i].scolour || "FFFFFF";
           var dcolour   = theData[i].dcolour || "FFFFFF";
-          var src_tag   = theData[i].f14     || "-";
-          var dst_tag   = theData[i].f15     || "-";
           var src_age   = theData[i].src_age || "-";
           var dst_age   = theData[i].dst_age || "-";
-
-          // Populate tags array
-          if (src_tag != "-") {
-            var src_tags = src_tag.split(",");
-            $.each(src_tags, function(n,tag) {
-              var t = tags.indexOf(tag);
-              if (t < 0) tags.push(tag);
-            });
-          }
-
-          if (dst_tag != "-") {
-            var dst_tags = dst_tag.split(",");
-            $.each(dst_tags, function(n,tag) {
-              var t = tags.indexOf(tag);
-              if (t < 0) tags.push(tag);
-            });
-          }
 
           // Object age
           var src_age_n = "-";
@@ -1148,12 +1098,6 @@ $(document).ready(function(){
           row += "</tr>";
         }
         
-        // Populate tags
-        clearTags();
-        for (var i=0; i < tags.length; i++) {
-          addTag(tags[i]);    
-        }
-
         // Add scid's to checkbox
         $("#ca0").data("scid", scid.replace(/,$/, ""));
 
@@ -1795,7 +1739,7 @@ $(document).ready(function(){
        
         // Comments and tags are done here
         var tags         = new Array();
-        var eventTag     = 'None.';
+        var eventTag     = '<span id=tag_none>None.</span>';
         var eventComment = theData[0].comment || 'None.';
         var src_tag      = theData[0].srctag  || '-';
         var dst_tag      = theData[0].dsttag  || '-';
@@ -1960,35 +1904,40 @@ $(document).ready(function(){
     var doexternals = "yes";
     var objhex = s2h(suffix);
     var tbl = '', row = '';
-    // Local stuff first
+    // Local stuff first 
     switch (prefix[prefix.length - 1]) {
       case "c": 
         row += "<tr class=p_row data-type=l data-alias=cc><td class=pr>:: SRC or DST</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=scc><td class=pr>:: SRC</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=dcc><td class=pr>:: DST</td></tr>";
+        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "p":
         row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>:: SRC or DST</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=sip><td class=pr>:: SRC</td></tr>"; 
         row += "<tr class=p_row data-type=l data-alias=dip><td class=pr>:: DST</td></tr>";
         row += "<tr class=p_row data-type=t data-alias=tag><td class=pr>:: ADD / REMOVE TAG</td></tr>";
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
-        if ($('#eview')[0]) {
+        if ($('.sigtxt')[0]) {
           row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
         }
+        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
-        row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
+        row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">save</span>";
+        row += "<span class=csave data-obtype=" + rsuffix + " data-object=" + prefix + ">save all</span>";
+        row += "</td></tr>";
       break;
       case "t":
         row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>:: SRC</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=dpt><td class=pr>:: DST</td></tr>";
+        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "d":
         row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: SIGNATURE</td></tr>";
-        if ($('#eview')[0]) {
+        if ($('.sigtxt')[0]) {
           row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
-        }        
+        }
+        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "l":
         row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
@@ -2102,9 +2051,8 @@ $(document).ready(function(){
   // Tags
   //
 
-  function truncTag(tag) {
-    var len = 20;
-    // Truncate
+  // Truncate
+  function truncTag(tag,len) {
     if (tag.length > len) tag = tag.substring(0,len) + "..";
     return tag;
   }
@@ -2145,7 +2093,7 @@ $(document).ready(function(){
 
   // Remove a tag
   $(document).on('click', '.tagrm', function() {
-    var tag  = truncTag($('.taginput').val());
+    var tag  = truncTag($('.taginput').val(),20);
     var obj  = $('#pickbox_label').text();
     doTag(s2h(obj),tag,'rm');
     $(".tag" + ":contains('" + tag + "')").remove();
@@ -2158,9 +2106,9 @@ $(document).ready(function(){
     if ($('#eview_sub2')[0]) {  
       var longTag  = tag.split(",")[0];
       var theClass = tag.split(",")[1];
-      var t_tag = truncTag(longTag);
+      var t_tag = truncTag(longTag,20);
     } else {
-      var t_tag = truncTag(tag);
+      var t_tag = truncTag(tag,20);
     }          
 
     // Hide empty
@@ -2186,6 +2134,8 @@ $(document).ready(function(){
       if($('#pickbox_label').is(":visible")) {
           theClass = $('#pickbox_label').data('sord')[0];
       }
+      // Remove placeholder
+      if ($('#tag_none')[0]) $('#tag_none').remove();
       var newTag = "<div title=\"" + longTag + "\" data-val=\"" + longTag + "\" class=tag_" + theClass + ">" + t_tag + "</div>"; 
       $('#tag_area').prepend(newTag);
     }
@@ -2218,6 +2168,11 @@ $(document).ready(function(){
     var re = /^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
     var OK = re.exec(colour);
     if (!OK) return;
+    // Single or multiple?
+    if (obtype == "src" || obtype == "dst") {
+      alert(0);
+    }
+
     var urArgs = "type=19&obtype=" + obtype + "_c&object=" + object + "&value=" + colour + "&op=" + op;
     $(function(){
       $.post(".inc/callback.php?" + urArgs, function(data){cb22(data)});
@@ -2913,7 +2868,7 @@ $(document).ready(function(){
         row += "<td class=row><b>" + per + "%</b></td>";
         row += "<td class=row><b>" + src + "</b></td>";
         row += "<td class=row><b>" + dst + "</b></td>";
-        row += "<td class=row_filter data-type=sid data-value=";
+        row += "<td class=sub_filter data-type=sid data-value=";
         row += sid + ">" + sig + "</td>";
         row += "<td class=row>" + sid + "</td>";
         row += "</tr>";
@@ -3043,18 +2998,10 @@ $(document).ready(function(){
   }
 
   // Make a map
-  function doMap(req) {
+  function doMap() {
     theWhen = getTimestamp();
     var theFilter = mkFilter();
     var working = "Working<br><img src=.css/load.gif>";
-    switch (req) {
-      case "src":
-        filter = "src"; break;
-      case "dst":
-        filter = "dst"; break;
-      default:
-        filter = 0; break;
-    }
 
     $('#wm0').html(working);
 
@@ -3126,6 +3073,7 @@ $(document).ready(function(){
   //
 
   function doHistory(object) {
+    $('#loader').show();
     var urArgs = "type=" + 21 + "&object=" + s2h("aa" + object) + "&ts=" + theWhen;
     $(function(){
       $.get(".inc/callback.php?" + urArgs, function(data){cb21(data)});
@@ -3133,12 +3081,57 @@ $(document).ready(function(){
 
     function cb21(data){
       eval("chartData=" + data);
-      var records = chartData.records;
-      if (records > 0) { 
-        mkHeatMap(".ev_hm",chartData.start,chartData.rows,object);
+      var r1 = chartData.r1;
+      var r2 = chartData.r2;
+      var sum = 0;
+      if (r1 > 0) {
+        mkHeatMap(".ev_hm",chartData.start,chartData.rows1,object);
+        $('#obhist_sig').remove();
+        if (r2 > 0) {
+ 
+          for (var i=0; i < r2; i++) {
+             sum += Number(chartData.rows2[i].value);
+          }
+            
+          var tbl = '', head = '', row = ''; 
+          head += "<thead><tr>";
+          head += "<th width=60 class=blank>COUNT</th>";
+          head += "<th width=70 class=blank>%TOTAL</th>";
+          head += "<th class=blank>SIGNATURE</th>";
+          head += "</tr></thead>";         
+          row += "<tbody>";
+
+          for (var i=0; i < r2; i++) {
+
+            var cnt = chartData.rows2[i].value || "-";
+            var sig = chartData.rows2[i].label || "-";
+            var sid = chartData.rows2[i].sid   || "-";
+            var per = 0;
+            if (sum > 0) var per = parseFloat(cnt/sum*100).toFixed(2);
+            var tsg = truncTag(sig,60);
+
+            row += "<tr class=t_row>";
+            row += "<td width=60 class=blank><b>" + cnt + "</b></td>";
+            row += "<td width=70 class=blank><b>" + per + "%</b></td>";
+            row += "<td class=\"blank row_filter\" data-type=sid data-value=";
+            row += sid + " title=\"" + sid + "::" + sig + "\">" + tsg + "</td>";
+            row += "</tr>"
+            row += "<tr><td colspan=3><div class=py_bar style=\"width:" + per + "%;\"></div></td></tr>"; 
+          }
+
+          row += "</tbody>";
+          tbl += "<table id=obhist_sig class=py_tbl cellpadding=0 cellspacing=0>";
+          tbl += head;
+          tbl += row;
+          tbl += "</table>";
+          if ($('#obhist_sig')[0]) $('#obhist_sig').remove(); 
+          $(".ev_py").append(tbl);
+        }
       } else {
         return;
       }
+      if ($(".eview_charts")[0]) $('.eview_charts').slideDown('slow');
+      $("#loader").hide();
     }
   }
 
