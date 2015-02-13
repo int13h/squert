@@ -1087,11 +1087,11 @@ $(document).ready(function(){
           if (rt == 0) row += "<td class=sub>" + catCells + "</td>";
           row += "<td class=sub>" + cells + "</td>";
           row += "<td class=\"sub timestamp\">" + max_time + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-sord=src data-type=ip data-col=" + scolour + "><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
+          row += "<td class=\"sub sub_filter select src\" data-sord=src data-type=ip data-col=" + scolour + "><div class=object style=\"background-color:#" + scolour + ";\"></div>" + src_ip + "</td>";
           row += "<td class=sub style=\"color:" + sa_col + ";\" title=\"" + src_age + "\">" + src_age_n + "</td>";
           row += "<td class=\"sub " + cs[0] + "\" data-type=cc data-value=" + src_cc + ">";
           row += cs[1] + src_clong + " (." + src_cc.toLowerCase() + ")" + "</td>";
-          row += "<td class=\"sub sub_filter select\" data-sord=dst data-type=ip data-col=" + dcolour + "><div class=object style=\"background-color:#" + dcolour + ";\"></div>"  + dst_ip + "</td>";
+          row += "<td class=\"sub sub_filter select dst\" data-sord=dst data-type=ip data-col=" + dcolour + "><div class=object style=\"background-color:#" + dcolour + ";\"></div>"  + dst_ip + "</td>";
           row += "<td class=sub style=\"color:" + da_col + ";\" title=\"" + dst_age + "\">" + dst_age_n + "</td>";
           row += "<td class=\"sub " + cd[0] + "\" data-type=cc data-value=" + dst_cc + ">";
           row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
@@ -1923,8 +1923,8 @@ $(document).ready(function(){
         row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
-        row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">save</span>";
-        row += "<span class=csave data-obtype=" + rsuffix + " data-object=" + prefix + ">save all</span>";
+        row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">apply</span>";
+        row += "<span class=csave data-obtype=" + rsuffix + " data-object=" + prefix + ">apply all</span>";
         row += "</td></tr>";
       break;
       case "t":
@@ -1940,11 +1940,13 @@ $(document).ready(function(){
         row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "l":
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">update</span></td></tr>";
         doexternals = "no";
+      break;
+      case "z":
+        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
     }
     
@@ -2170,7 +2172,17 @@ $(document).ready(function(){
     if (!OK) return;
     // Single or multiple?
     if (obtype == "src" || obtype == "dst") {
-      alert(0);
+      var vr = new Array();
+      $("." + obtype).each(function() {
+        var v = $(this).text();
+        var re = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/;
+        var OK = re.exec(v);
+        if (OK) {
+          var t = vr.indexOf(v);
+          if (t < 0) vr.push(v);
+        }
+      });
+      object = vr.toString();
     }
 
     var urArgs = "type=19&obtype=" + obtype + "_c&object=" + object + "&value=" + colour + "&op=" + op;

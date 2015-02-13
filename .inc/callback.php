@@ -9,7 +9,6 @@ if (!(isset($_SESSION['sLogin']) && $_SESSION['sLogin'] != '')) {
 $base = dirname(__FILE__);
 include_once "$base/config.php";
 include_once "$base/functions.php";
-include_once "../vendor/autoload.php";
 
 $link = mysql_connect($dbHost,$dbUser,$dbPass);
 $db = mysql_select_db($dbName,$link);
@@ -1308,18 +1307,17 @@ function esquery() {
                           \"from\": $start,
                           \"to\": $end
                         }
-                      }
-                  }
-              }
-          },
-          \"size\": 500,
-          \"sort\": [
-              {
-                  \"timestamp\": {
-                      \"order\": \"desc\"
-                  }
-              }
-          ]
+                    }
+                }
+            }
+        },
+      \"size\": 500,
+      \"sort\": [{
+        \"timestamp\": {
+          \"order\": \"desc\"
+          }
+        }]
+
     }";
 
     $params['body'] = $json;

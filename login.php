@@ -19,7 +19,7 @@
 //
 //
 
-include '.inc/config.php';
+include_once '.inc/config.php';
 
 $username = $password = $err = '';
 $focus = 'username';

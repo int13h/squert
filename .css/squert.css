@@ -1614,18 +1614,15 @@ text-align:center;
 float:left;
 cursor:pointer;
 margin-right:8px;
-border:1pt solid #a4a4a4;
-padding:2px 8px 0px 8px;
-border-radius:3px;
-background-color:#e9e9e9;
+padding:5px 5px 0px 5px;
 }
 .icon_notifier {
 text-align:center;
 float:left;
 font-weight:bold;
 cursor:pointer;
-margin-left:-16px;
-margin-top:-4px;
+margin-left:-15px;
+margin-top:-2px;
 border-radius:3px;
 background-color:#cc0000;
 width:14px;

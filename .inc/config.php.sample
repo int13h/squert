@@ -18,9 +18,17 @@ $sgPort = "7734";
 
 // Elasticsearch
 $clientparams = array();
-
 $clientparams['hosts'] = array(
-    '127.0.0.1:9200'
+    'https://10.0.0.1:443'
+);
+
+$clientparams['guzzleOptions'] = array(
+    \Guzzle\Http\Client::SSL_CERT_AUTHORITY => 'system',
+    \Guzzle\Http\Client::CURL_OPTIONS => [
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_CAINFO => '/etc/ssl/elasticsearch/es.pem', 
+        CURLOPT_SSLCERTTYPE => 'PEM',
+    ]   
 );
 
 //$clientparams['connectionParams']['auth'] = array(
@@ -28,7 +36,6 @@ $clientparams['hosts'] = array(
 //    'password',  // Password
 //    'Basic'      // Auth: Basic, Digest, NTLM, Any
 //);
-
 
 // Where are the rules? If you have multiple dirs, separate each with: ||
 $rulePath = "../.rules";
