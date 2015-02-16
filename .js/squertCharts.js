@@ -1,4 +1,7 @@
-// Slider for data tables. Copied most of it from the d3 brush examples.
+// None of this would exist without help from 
+// the exampes here: https://github.com/mbostock/d3/wiki/Gallery
+
+// Slider for data tables
 function mkSlider(callerID,low,high) {
   var margin = {top: 3, right: 15, bottom: 3, left: 5},
       width = 100,
@@ -200,7 +203,7 @@ function mkSankey(callerID,data,w,h) {
 
 function mkHeatMap(callerID,start,data,object) {
 
-  if ($('#objgrid')[0]) $('#objgrid').remove();
+  if ($('#chart_grid')[0]) $('#chart_grid').remove();
 
   var margin = { top: 50, right: 0, bottom: 0, left: 35 },
       width = 500 - margin.left - margin.right,
@@ -232,7 +235,7 @@ function mkHeatMap(callerID,start,data,object) {
   var svg = d3.select(callerID).append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      .attr("id","objgrid")
+      .attr("id","chart_grid")
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -507,3 +510,83 @@ function mkPieChart(callerID,data,object) {
 		.remove();
   };
 }
+
+//
+// Line Charts
+//
+
+function mkLine(callerID,data,ymax) {
+
+  if ($('#chart_epm')[0]) $('#chart_epm').remove();
+
+  var w = $(callerID).width();
+
+  var margin = {top: 10, right: 20, bottom: 20, left: 40},
+      width = w - margin.left - margin.right,
+      height = 170 - margin.top - margin.bottom;
+
+  var x = d3.scale.linear()
+      .range([0, width]);
+
+  var y = d3.scale.linear()
+      .range([height, 0]);
+
+  var color = d3.scale.category10();
+
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
+
+  var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left");
+
+  var svg = d3.select(callerID)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .attr("id","chart_epm")
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    x.domain([0,1440]);
+    y.domain([0,ymax]);
+
+    svg.append("g")
+        .attr("class", "x lineaxis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+      .append("text")
+        .attr("class", "label")
+        .attr("x", width)
+        .attr("y", -6)
+        .style("text-anchor", "end")
+        .text("minutes");
+
+    svg.append("g")
+        .attr("class", "y lineaxis")
+        .call(yAxis)
+      .append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("count")
+
+    svg.selectAll(".dot")
+        .data(data)
+      .enter().append("circle")
+        .attr("r", 1)
+        .attr("cx", function(d) {
+          var p = d.time.split(":");
+          var h = Number(p[0]);
+          var m = Number(p[1]);
+          var c = h * 60 + m;
+          return x(c);
+        })
+        .attr("cy", function(d) { return y(d.count); })
+        .style("fill", function(d) { return "#333366"; });
+}
+
+// THE END

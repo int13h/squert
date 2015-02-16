@@ -45,7 +45,7 @@ if (!isset($_SESSION['sEmail']))   { sInt();  } else { $sEmail   = $_SESSION['sE
 if (!isset($_SESSION['sType']))    { sInt();  } else { $sType    = $_SESSION['sType'];}
 if (!isset($_SESSION['sTab']))     { sInt();  } else { $sTab     = $_SESSION['sTab'];}
 if (!isset($_SESSION['tzoffset'])) { sInt();  } else { $tzoffset = $_SESSION['tzoffset'];}
-if (!isset($_REQUEST['id']))       { $id = 0; } else { $id       = $_REQUEST['id'];}
+if (!isset($_REQUEST['id']))       { sInt();  } else { $id       = $_REQUEST['id'];}
 
 // Kill the session if the ids dont match.
 if ($id != $_SESSION['id']) {

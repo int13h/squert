@@ -553,7 +553,7 @@ padding-top:20px;
 padding-bottom:10px;
 width:100%;
 float:left;
-background-color:#e9e9e9;
+background-color:#fff;
 }
 div.tof {
 text-align:center;
@@ -571,6 +571,7 @@ margin-top:-3px;
 margin-right:5px;
 font-size:11px;
 border-radius:4px;
+background-color:#fffff0;
 }
 input.cat_msg_txt {
 width:700px;
@@ -1615,6 +1616,7 @@ float:left;
 cursor:pointer;
 margin-right:8px;
 padding:5px 5px 0px 5px;
+border-radius:5px;
 }
 .icon_notifier {
 text-align:center;
@@ -1624,6 +1626,7 @@ cursor:pointer;
 margin-left:-15px;
 margin-top:-2px;
 border-radius:3px;
+opacity:.7;
 background-color:#cc0000;
 width:14px;
 height:14px;
@@ -1640,7 +1643,7 @@ background-color:#fff;
 margin-left:5px;
 }
 .icon:hover,.srch_do:hover {
-background-color:#fafafa;
+opacity:.7;
 }
 .iconr {
 text-align:center;
@@ -1863,6 +1866,9 @@ color:#000;
 }
 img.il {
 cursor:pointer;
+}
+img.il:hover {
+opacity:.7;
 }
 img.ilb,img.botog {
 width:17px;

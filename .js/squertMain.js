@@ -851,7 +851,22 @@ $(document).ready(function(){
     // Level 0 view - Grouped by Signature
     case "0":
       $('.value').text('-');
-      var urArgs = "type=" + parts[0] + "&object=" + type + "&ts=" + theWhen + "&filter=" + theFilter + "&sensors=" + theSensors + "&rt=" + rt + "&sv=" + sortval;
+
+      // Times Chart
+      var urChrtArgs = "type=22&ts=" + theWhen + "&filter=" + theFilter + "&sensors=" + theSensors;
+      $(function(){
+        $.get(".inc/callback.php?" + urChrtArgs, function(data){cb22(data)});
+      });
+
+      function cb22(data){
+        eval("chartData=" + data);
+        var r = chartData.r;
+        if (r > 0) {
+          mkLine(".times",chartData.rows,chartData.m);
+        }
+      }
+
+      var urArgs = "type=" + parts[0] + "&ts=" + theWhen + "&filter=" + theFilter + "&sensors=" + theSensors + "&rt=" + rt + "&sv=" + sortval;
       $(function(){
         $.get(".inc/callback.php?" + urArgs, function(data){cb1(data)});
       });
@@ -2841,9 +2856,6 @@ $(document).ready(function(){
       $("#ov_" + cbArgs + "_sl").after(tbl);
       $("#ov_" + cbArgs + "_msg").html("viewing <b><span id=ov_" + cbArgs + "_sl_lbl>" + i + "</b> of <b>" + records + " </b>results"); 
       mkSlider("ov_" + cbArgs + "_sl", i, records);
-      //$("#top" + cbArgs).tablesorter({
-      //    cancelSelection:true
-      //});
     }
     // Signature
     function cb16(data){
@@ -2895,9 +2907,6 @@ $(document).ready(function(){
       $("#ov_signature_sl").after(tbl);
       $("#ov_signature_msg").html("viewing <b><span id=ov_signature_sl_lbl>" + i + "</span></b> of <b>" + records + " </b>results");
       mkSlider("ov_signature_sl", i, records);
-      //$("#topsignature").tablesorter({
-      //    cancelSelection:true
-      //});
     }
   }
 
@@ -3146,6 +3155,5 @@ $(document).ready(function(){
       $("#loader").hide();
     }
   }
-
 // The End.
 });

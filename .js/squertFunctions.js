@@ -73,22 +73,8 @@ var esSources = [{
   "state":"on"
 },
 {
-  "name":"BARRACUDA_RECV",
-  "type":"barracuda_RECV",
-  "desc":"Barracuda spam firewall",
-  "loke":"",
-  "state":"on"
-},
-{
-  "name":"BARRACUDA_SCAN",
-  "type":"barracuda_SCAN",
-  "desc":"Barracuda spam firewall",
-  "loke":"",
-  "state":"on"
-},
-{
-  "name":"BARRACUDA_SEND",
-  "type":"barracuda_SEND",
+  "name":"BARRACUDA",
+  "type":"barracuda",
   "desc":"Barracuda spam firewall",
   "loke":"",
   "state":"on"

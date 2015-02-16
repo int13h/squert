@@ -39,6 +39,7 @@ $types = array(
                 '19' => 'addremoveobject',
                 '20' => 'getcolour',
                 '21' => 'objhistory',
+                '22' => 'times',
 );
 
 $type = $types[$type];
@@ -171,7 +172,6 @@ function signatures() {
 
 function level0() {   
     global $offset, $when, $sensors, $rt;
-    $object = mysql_real_escape_string($_REQUEST['object']);
     $sv = mysql_real_escape_string($_REQUEST['sv']);
     $filter = hextostr($_REQUEST['filter']);
     if ($filter != 'empty') {
@@ -213,6 +213,7 @@ function level0() {
               $qp2
               GROUP BY f3
               ORDER BY f5 $sv";
+
     $result = mysql_query($query);
     $rows = array();
 
@@ -1447,6 +1448,49 @@ function objhistory () {
     echo $theJSON;
 }
 
+function times() {   
+    global $offset, $when, $sensors;
+    $filter = mysql_real_escape_string(hextostr($_REQUEST['filter']));
+    if ($filter != 'empty') {
+        $filter = str_replace('&lt;','<', $filter);
+        $filter = str_replace('&gt;','>', $filter);
+        $filter = "AND " . $filter;
+        $qp2 = "WHERE $when
+                $sensors
+                $filter";
+    } else {
+        $qp2 = "WHERE $when
+                $sensors";
+    }
+
+    $query = "SELECT
+              SUBSTRING(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5) AS time,
+              COUNT(signature) AS count 
+              FROM event
+              $qp2
+              GROUP BY time 
+              ORDER BY timestamp";
+
+    $result = mysql_query($query);
+    $rows = array();
+    $r = $m = 0;
+
+    while ($row = mysql_fetch_assoc($result)) {
+        $rows[] = $row;
+        $cnts[] = $row['count'];
+        $r++;
+    }
+    if ($r > 0) {
+      $m = max($cnts);
+    } 
+
+    $theJSON = json_encode(array("rows" => $rows, "r" => $r, "m" => $m));
+    echo $theJSON;
+}
+
 $type();
+unset($rows);
+unset($rows1);
+unset($result);
 unset($theJSON); 
 ?>

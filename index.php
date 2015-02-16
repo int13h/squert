@@ -180,7 +180,7 @@ dbC();
   
   <div class=content-right>
     <div id=t_sum_content class=content>
-      <div id=aaa-00 class=aaa></div>
+      <div id=aaa-00 class=aaa><div class=times></div></div>
     </div>
   </div>
 
