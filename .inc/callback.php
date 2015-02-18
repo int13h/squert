@@ -1450,7 +1450,7 @@ function objhistory () {
 
 function times() {   
     global $offset, $when, $sensors;
-    $filter = mysql_real_escape_string(hextostr($_REQUEST['filter']));
+    $filter = hextostr($_REQUEST['filter']);
     if ($filter != 'empty') {
         $filter = str_replace('&lt;','<', $filter);
         $filter = str_replace('&gt;','>', $filter);
@@ -1467,10 +1467,11 @@ function times() {
               SUBSTRING(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5) AS time,
               COUNT(signature) AS count 
               FROM event
+              LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+              LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
               $qp2
               GROUP BY time 
               ORDER BY timestamp";
-
     $result = mysql_query($query);
     $rows = array();
     $r = $m = 0;

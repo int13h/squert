@@ -520,26 +520,48 @@ function mkLine(callerID,data,ymax) {
   if ($('#chart_epm')[0]) $('#chart_epm').remove();
 
   var w = $(callerID).width();
+  var h = 150;
+  var ymax = Number(ymax);
+  var hmax = Number(0);
 
-  var margin = {top: 10, right: 20, bottom: 20, left: 40},
+  // We want to calculate hourly sums as well
+  var hours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  
+  // Strip leading zero from hour spot
+  function trunc(h) {
+    if (h[0] == 0) h = h[1];
+    return h;
+  }
+
+  // Convert to % so that we can plot relative to value but use existing axis
+  function getY(n,hmax,height) {
+    var v = Number(height - (n * (height / hmax)));
+    return v;
+  }
+
+  var margin = {top: 14, right: 20, bottom: 20, left: 40},
       width = w - margin.left - margin.right,
-      height = 170 - margin.top - margin.bottom;
+      height = h - margin.top - margin.bottom;
 
   var x = d3.scale.linear()
-      .range([0, width]);
+      .range([0, width])
+      .domain([0,1440]);
 
   var y = d3.scale.linear()
-      .range([height, 0]);
-
-  var color = d3.scale.category10();
+      .range([height, 0])
+      .domain([0,ymax + 20]);
 
   var xAxis = d3.svg.axis()
       .scale(x)
       .orient("bottom");
+  
+  var yticks = 6;
+  if (ymax < 6) yticks = ymax;
 
   var yAxis = d3.svg.axis()
       .scale(y)
-      .orient("left");
+      .orient("left")
+      .ticks(yticks);
 
   var svg = d3.select(callerID)
       .append("svg")
@@ -549,8 +571,22 @@ function mkLine(callerID,data,ymax) {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    x.domain([0,1440]);
-    y.domain([0,ymax]);
+  // Grid
+  var ht = width / 24;
+  var lc = "#f4f4f4";
+
+  // vlines
+  var xh = 0;
+  for (var i = 0; i <= 24; i++) {
+    svg.append("svg:line")
+        .attr("x1", xh) 
+        .attr("y1", 0)
+        .attr("x2", xh) 
+        .attr("y2", height)
+        .style("stroke", lc)
+        .style("stroke-linecap", "round")
+        .style("stroke-width", 1); 
+    xh = xh + ht;} 
 
     svg.append("g")
         .attr("class", "x lineaxis")
@@ -558,21 +594,14 @@ function mkLine(callerID,data,ymax) {
         .call(xAxis)
       .append("text")
         .attr("class", "label")
-        .attr("x", width)
+        .attr("x", width - 8)
         .attr("y", -6)
         .style("text-anchor", "end")
-        .text("minutes");
+        .text("grouped by minute");
 
     svg.append("g")
         .attr("class", "y lineaxis")
-        .call(yAxis)
-      .append("text")
-        .attr("class", "label")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("count")
+        .call(yAxis);
 
     svg.selectAll(".dot")
         .data(data)
@@ -580,13 +609,43 @@ function mkLine(callerID,data,ymax) {
         .attr("r", 1)
         .attr("cx", function(d) {
           var p = d.time.split(":");
-          var h = Number(p[0]);
+          var h = Number(trunc(p[0]));
+          // Populate our hours array and keep a running total
+          var s = hours[h];
+          var cnt = Number(d.count); 
+          hours[h] = s + cnt;
           var m = Number(p[1]);
           var c = h * 60 + m;
           return x(c);
         })
         .attr("cy", function(d) { return y(d.count); })
-        .style("fill", function(d) { return "#333366"; });
-}
+        .style("fill", function(d) { return "#5858a5"; });
 
+  // Add hourly sums
+  var xh = 0;
+  var hmax = Math.max.apply(null, hours); 
+  for (var i = 0; i <= 23; i++) {
+    if (hours[i] == 0) continue;
+    var yh = getY(hours[i],hmax,height);
+    svg.append("rect")
+      .attr("x", xh + ht / 4 + 1)  
+      .attr("y", yh - 11)
+      .attr("rx", "3")
+      .attr("ry", "3")
+      .attr("class", "colsums")
+      .attr("width", "30")
+      .attr("height", "15")
+      .style("fill", "#000")
+      .style("fill-opacity", ".4");
+    svg.append("text")
+      .attr("x", xh + ht/2) 
+      .attr("y", yh)
+      .style("text-anchor", "middle")
+      .style("font-size", "10px")
+      .style("fill", "#fff")
+      .text(hours[i]);
+
+    xh = xh + ht;
+  }
+}
 // THE END

@@ -347,7 +347,7 @@ $(document).ready(function(){
     }
     $('.bottom').animate({height: 'toggle'});
     $('.content-left').animate({width: 'toggle'}); 
- });
+  });
   
   // Section show and hide
   $(".st").click(function() {
