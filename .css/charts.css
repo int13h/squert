@@ -78,7 +78,7 @@ text.chrtlbl {
 font-family: tahoma, calibri, helvetica, sans;
 font-size: 11px;
 fill: #333366;
-padding-left:i20px;
+padding-left:20px;
 }
 text.axis-workweek {
 fill: #000;
@@ -101,7 +101,7 @@ color:#545454;
 padding:5px;
 }
 /* line chart */
-.lineaxis path,.lineaxis line, .linesaxis text {
+.lineaxis path,.lineaxis line {
 fill: none;
 stroke: #c9c9c9;
 shape-rendering: crispEdges;
@@ -111,11 +111,11 @@ color:#e9e9e9;
 font-size:10px;
 }
 .linedot {
-stroke: #c9c9c9;
+fill:#666;
+stroke:#fff;
 }
-text {
+.axistxt {
 font-size:10px;
 fill: #333366;
-stroke:none;
-cursor:pointer;
 }
+

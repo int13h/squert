@@ -526,6 +526,9 @@ function mkLine(callerID,data,ymax) {
 
   // We want to calculate hourly sums as well
   var hours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  // This is a kludge but I couldn't for the life of me get the x axis
+  // to format how I wanted.
+  var xhour = ["01","02","03","04","05","06","07","08","09",10,11,12,13,14,15,16,17,18,19,20,21,22,23];
   
   // Strip leading zero from hour spot
   function trunc(h) {
@@ -533,28 +536,29 @@ function mkLine(callerID,data,ymax) {
     return h;
   }
 
-  // Convert to % so that we can plot relative to value but use existing axis
+  // Convert hourly sum into something that we can plot relative to the existing axis
   function getY(n,hmax,height) {
     var v = Number(height - (n * (height / hmax)));
     return v;
   }
 
-  var margin = {top: 14, right: 20, bottom: 20, left: 40},
+  var margin = {top: 14, right: 20, bottom: 25, left: 40},
       width = w - margin.left - margin.right,
       height = h - margin.top - margin.bottom;
 
-  var x = d3.scale.linear()
-      .range([0, width])
-      .domain([0,1440]);
+  var  x = d3.scale.linear()
+       .domain([0,1440])
+       .range([0,width])
+
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom")
+      .ticks(0);
 
   var y = d3.scale.linear()
       .range([height, 0])
       .domain([0,ymax + 20]);
 
-  var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom");
-  
   var yticks = 6;
   if (ymax < 6) yticks = ymax;
 
@@ -573,7 +577,7 @@ function mkLine(callerID,data,ymax) {
 
   // Grid
   var ht = width / 24;
-  var lc = "#f4f4f4";
+  var lc = "#e9e9e9";
 
   // vlines
   var xh = 0;
@@ -588,25 +592,21 @@ function mkLine(callerID,data,ymax) {
         .style("stroke-width", 1); 
     xh = xh + ht;} 
 
+    // Axes
     svg.append("g")
-        .attr("class", "x lineaxis")
+        .attr("class", "x lineaxis axistxt")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-      .append("text")
-        .attr("class", "label")
-        .attr("x", width - 8)
-        .attr("y", -6)
-        .style("text-anchor", "end")
-        .text("grouped by minute");
+        .call(xAxis);
 
     svg.append("g")
-        .attr("class", "y lineaxis")
+        .attr("class", "y lineaxis axistxt")
         .call(yAxis);
 
+    // Plot
     svg.selectAll(".dot")
         .data(data)
       .enter().append("circle")
-        .attr("r", 1)
+        .attr("r", 2)
         .attr("cx", function(d) {
           var p = d.time.split(":");
           var h = Number(trunc(p[0]));
@@ -619,31 +619,29 @@ function mkLine(callerID,data,ymax) {
           return x(c);
         })
         .attr("cy", function(d) { return y(d.count); })
-        .style("fill", function(d) { return "#5858a5"; });
+        .attr("class", "linedot");
 
-  // Add hourly sums
+  // Hourly sums
   var xh = 0;
   var hmax = Math.max.apply(null, hours); 
   for (var i = 0; i <= 23; i++) {
-    if (hours[i] == 0) continue;
-    var yh = getY(hours[i],hmax,height);
-    svg.append("rect")
-      .attr("x", xh + ht / 4 + 1)  
-      .attr("y", yh - 11)
-      .attr("rx", "3")
-      .attr("ry", "3")
-      .attr("class", "colsums")
-      .attr("width", "30")
-      .attr("height", "15")
-      .style("fill", "#000")
-      .style("fill-opacity", ".4");
+    if (hours[i] != 0) {
+      var yh = getY(hours[i],hmax,height);
+      svg.append("text")
+        .attr("x", xh + ht/2) 
+        .attr("y", yh)
+        .style("text-anchor", "middle")
+        .style("text-decoration", "underline")
+        .style("font-size", "10px")
+        .style("fill", "#000")
+        .text(hours[i]);
+    }
+    // Ghetto axis
     svg.append("text")
-      .attr("x", xh + ht/2) 
-      .attr("y", yh)
-      .style("text-anchor", "middle")
-      .style("font-size", "10px")
-      .style("fill", "#fff")
-      .text(hours[i]);
+      .attr("x", xh + ht - 4) 
+      .attr("y", height + 15)
+      .attr("class", "axistxt")
+      .text(xhour[i]);
 
     xh = xh + ht;
   }
