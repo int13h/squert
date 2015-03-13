@@ -126,31 +126,31 @@ dbC();
       <div class=secl id=sec_c>  
 
         <div id=b_class-11 class=label_c data-c=11 data-cn=C1 title='compromised L1 (F1)'>
-        <div class=b_C1></div>compromised L1</div><div data-type=st id=c-11 class=value_link>-</div>
+        <div class=b_C1></div>compromised L1</div><div data-type=st id=c-11 class="ecv value_link">-</div>
 
         <div id=b_class-12 class=label_c data-c=12 data-cn=C2 title='compromised L2 (F2)'>
-        <div class=b_C2></div>compromised L2</div><div data-type=st id=c-12 class=value_link>-</div>
+        <div class=b_C2></div>compromised L2</div><div data-type=st id=c-12 class="ecv value_link">-</div>
       
         <div id=b_class-13 class=label_c data-c=13 data-cn=C3 title='attempted unauthorized access (F3)'>
-        <div class=b_C3></div>attempted access</div><div data-type=st id=c-13 class=value_link>-</div>
+        <div class=b_C3></div>attempted access</div><div data-type=st id=c-13 class="ecv value_link">-</div>
 
         <div id=b_class-14 class=label_c data-c=14 data-cn=C4 title='denial of service attack (F4)'>
-        <div class=b_C4></div>denial of service</div><div data-type=st id=c-14 class=value_link>-</div>
+        <div class=b_C4></div>denial of service</div><div data-type=st id=c-14 class="ecv value_link">-</div>
       
         <div id=b_class-15 class=label_c data-c=15 data-cn=C5 title='policy violation (F5)'>
-        <div class=b_C5></div>policy violation</div><div data-type=st id=c-15 class=value_link>-</div>
+        <div class=b_C5></div>policy violation</div><div data-type=st id=c-15 class="ecv value_link">-</div>
 
         <div id=b_class-16 class=label_c data-c=16 data-cn=C6 title='reconnaissance (F6)'>
-        <div class=b_C6></div>reconnaissance</div><div data-type=st id=c-16 class=value_link>-</div>
+        <div class=b_C6></div>reconnaissance</div><div data-type=st id=c-16 class="ecv value_link">-</div>
       
         <div id=b_class-17 class=label_c data-c=17 data-cn=C7 title='malicious (F7)'>
-        <div class=b_C7></div>malicious</div><div data-type=st id=c-17 class=value_link>-</div>
+        <div class=b_C7></div>malicious</div><div data-type=st id=c-17 class="ecv value_link">-</div>
 
         <div id=b_class-1 class=label_c data-c=1 data-cn=NA title='no further action required (F8)'>
-        <div class=b_NA></div>no action req&#x2019;d.</div><div data-type=st id=c-1 class=value_link>-</div>
+        <div class=b_NA></div>no action req&#x2019;d.</div><div data-type=st id=c-1 class="ecv value_link">-</div>
       
         <div id=b_class-2 class=label_c data-c=2 data-cn=ES title='escalate event (F9)'>
-        <div class=b_ES></div>escalated event</div><div data-type=st id=c-2 class=value_link>-</div>
+        <div class=b_ES></div>escalated event</div><div data-type=st id=c-2 class="ecv value_link">-</div>
 
       </div>
     </div>

@@ -120,7 +120,9 @@ $(document).ready(function(){
       for (var i=0; i<ec.length; i++) {
         esum += parseInt(ec[i].count) || 0;
       }
-          
+
+      // Populate classification values
+      $(".ecv").text("-");
       for (var i=0; i<ec.length; i++) {
         var ecount = ec[i].count;
         var eclass = ec[i].status;
@@ -1272,7 +1274,7 @@ $(document).ready(function(){
         // Populate tags
         clearTags();
         for (var i=0; i < tags.length; i++) {
-          addTag(tags[i],0);
+          addTag(tags[i]);
         }
 
         tbl += "<tr class=eview_sub1 id=eview_sub1><td colspan=" + cols + ">";
@@ -2085,6 +2087,30 @@ $(document).ready(function(){
       $('.b_update').click();
     }
   });
+
+  // Remove individual tags on "(X)" click via payload area
+  $(document).on('mouseenter', '.tag_d, .tag_s', function() {
+    var tag = $(this).data('val');
+    if ($(".tag_x")[0]) return;
+    var dw = $(this).width() - 5 + "px";
+    $(this).append("<div class=tag_x title=\"Remove Tag\">X</div>");
+    $(".tag_x").css("margin-left", dw);
+    $(".tag_x").fadeIn("slow");
+     
+  });
+
+  $(document).on('mouseleave', '.tag_d, .tag_s', function() {
+    $('.tag_x').remove();
+  });
+
+  $(document).on('click', '.tag_x', function() {
+    var tag = $(this).parent().data("val");
+    var obj = $(this).parent().data("obj");
+    $(this).parent().remove();
+    var len = $("#tag_area").text().length;
+    if (len == 0) $("#tag_area").append("<span id=tag_none>None.</span>");
+    //doTag(s2h(obj),tag,'rm');
+  });  
 
   // Fire tag add on enter
   $('.taginput').keypress(function(e) {

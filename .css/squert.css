@@ -1946,27 +1946,42 @@ color:#545454;
 }
 div.tag_d {
 font-size:11px;
+font-weight:bold;
 padding:5px 5px 5px 5px;
 margin-bottom:5px;
-margin-right:5px;
+margin-right:9px;
 display:inline-block;
 border-radius:3px;
-border:1pt solid red;
+border:1pt solid #000;
 background-color:red;
-cursor:pointer;
 color:#f4f4f4;
 }
 div.tag_s {
 font-size:11px;
+font-weight:bold;
 padding:5px 5px 5px 5px;
 margin-bottom:5px;
-margin-right:5px;
+margin-right:9px;
 display:inline-block;
 border-radius:3px;
-border:1pt solid blue;
+border:1pt solid #000;
 background-color:blue;
-cursor:pointer;
 color:#f4f4f4;
+}
+div.tag_x {
+position: absolute;
+background-color: #000;
+color: #fff;
+border: 2pt solid #BDBDBD;
+border-radius: 9px;
+text-align: center;
+font-size: 11px;
+font-weight: bold;
+width: 16px;
+height: 14px;
+margin-top: -29px;
+display: none;
+cursor: pointer;
 }
 div.tag_active {
 background-color:#000;

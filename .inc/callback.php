@@ -58,14 +58,14 @@ if (isset($_REQUEST['ts'])) {
 }
 
 if (isset($_REQUEST['sensors'])) {
-    $sensors = mysql_real_escape_string(hextostr($_REQUEST['sensors']));
+    $sensors = hextostr($_REQUEST['sensors']);
     if ($sensors == 'empty') {
         $sensors = '';
     }
 }
 
 if (isset($_REQUEST['rt'])) {
-    $rt = mysql_real_escape_string($_REQUEST['rt']);
+    $rt = $_REQUEST['rt'];
     if ($rt == 1) {
         $rt = "AND event.status = 0";
     } else {
