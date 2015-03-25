@@ -621,7 +621,7 @@ function filters() {
             list($type, $alias, $name, $notes, $filter) = explode("||", $data);
             $name = strtohex($name);
             $notes = strtohex($notes);
-            $remove = array("DELETE","UPDATE","INSERT","SELECT","CONCAT","REGEXP",
+            $remove = array("DELETE","UPDATE","INSERT","SELECT","CONCAT",
                             "REVERSE","REPLACE","RLIKE","SUBSTR","SUBSTRING");
             $filter = str_ireplace($remove, "", $filter);
             $filter = strtohex($filter);

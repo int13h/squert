@@ -68,7 +68,8 @@ color:#000;
 cursor:pointer;
 }
 .amonth,.aday,.ahour {
-color:#4f69a5;
+color:#fff;
+background-color:#db4d4d;
 font-weight:bold;
 }
 .ahour {
