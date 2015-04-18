@@ -129,7 +129,12 @@ function signatures() {
 
                     foreach($ruleLines as $line) {
 
-                        $searchCount = preg_match("/sid\:\s*$sigID\s*\;/",$line);
+                        if ( $gID > 100 ) {
+                                $searchCount = preg_match("/sid\:\s*$sigID\s*\;\s*gid\:\s*$gID\s*\;/",$line);
+                        } else {
+                                $searchCount = preg_match("/sid\:\s*$sigID\s*\;/",$line);
+                        }
+
 
                         if($searchCount > 0) {
                             $tempMsg = preg_match("/\bmsg\s*:\s*\"(.+?)\"\s*;/i",$line,$ruleMsg);
