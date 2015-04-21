@@ -750,7 +750,13 @@ $(document).ready(function(){
   // Filter constructor
   function mkFilter() {
     if ($('#search').val().length > 0) {
-      var fParts = $('#search').val().split(" ");
+
+      // If no term is supplied default to a string search
+      var srchVal = $('#search').val();
+      var fParts = "";
+      if (srchVal.indexOf(" ") == -1) srchVal = "sig " + srchVal;
+      fParts = srchVal.split(" ");
+
       if (fParts[0] == 'cmt') {
         var theFilter = s2h($('#search').val());
         rtbit = 0;
