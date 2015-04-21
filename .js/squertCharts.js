@@ -106,6 +106,7 @@ function mkSankey(callerID,data,w,h) {
 
   var sankey = d3.sankey()
       .nodeWidth(5)
+      .nodePadding(14)
       .size([width, height])
       .nodes(data.nodes)
       .links(data.links)
@@ -180,7 +181,7 @@ function mkSankey(callerID,data,w,h) {
           }
         })
       .attr("width", 16)
-      .attr("height", 8)
+      .attr("height", 11)
       .attr("x", -22)
       .attr("y", function(d) { return d.dy / 2 - 5; })
       .filter(function(d) { return d.x < width / 2; })
