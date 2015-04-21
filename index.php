@@ -68,7 +68,7 @@ dbC();
     <div data-box=sen class=icon id=ico03><img title=sensors class="il ilb" src=.css/sensor.png></div>
     <div data-box=srch class=icon id=ico05><img title=lookup class="il ilb" src=.css/ext.png></div>
     <div data-box=fltr class=icon id=ico04><img title=filters class="il ilb" src=.css/filter.png></div>
-    <input class=search id=search type=text size=40 maxlength=1000><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
+    <input class=search id=search type=text size=40 maxlength=1000 placeholder=Filter /><div id=clear_search class=iconr><img title=clear class=il src=.css/delete.png></div>
   </div>
   <div id=cal></div>
   <div class=timeline>
@@ -243,7 +243,7 @@ dbC();
   </div>
   <div class=cm_controls>
     <div class=cat_l1>COMMENT:</div>
-    <div class=cat_r1><input class=cat_msg_txt type=text maxlength=255></div>
+    <div class=cat_r1><input class=cat_msg_txt type=text maxlength=255 placeholder=Comment /></div>
     <div class=cat_l1>CLASSIFICATION:</div>
     <div class=cat_r1 id=cw_buttons>
       <div class=b_C1 data-n=11>C1</div>

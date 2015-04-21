@@ -106,7 +106,7 @@ color:#333366;
 }
 span.fl_val_on {
 color:#e9e9e9;
-background:#5782AD;
+background:#3a3a3a;
 color:#fff;
 border-radius:2px;
 padding:3px;
@@ -361,14 +361,13 @@ float:left;
 text-align:center;
 margin-right:5px;
 clear:right;
-border:1pt solid #666;
 border-radius:3px;
 width:20px;
 padding:2px;
 }
 div.tvalue_on {
 color:#f4f4f4;
-background-color:#5782AD;
+background-color:#3a3a3a;
 }
 div.tvalue_off {
 color:#666;
@@ -1060,30 +1059,25 @@ background-color:#fff;
 clear:both;
 }
 div.tab {
-width:80px;
+width:100px;
 color:#a4a4a4;
 float:left;
 font-size:12px;
 cursor:pointer;
 padding:6px;
-border:1pt solid #c9c9c9;
-border-top:none;
 margin-left:3px;
-border-bottom-right-radius:3px;
-border-bottom-left-radius:3px;
 }
 div.tab:hover {
 color:#595959;
 }
 div.tab_active {
-width:80px;
-color:#333366;
+width:100px;
+color:#fff;
 float:left;
 font-size:12px;
 padding:6px;
-border:1pt solid #a4a4a4;
 border-top:none;
-background-color:#ecf1f4;
+background-color:#db4d4d;
 margin-left:3px;
 border-bottom-right-radius:3px;
 border-bottom-left-radius:3px;
@@ -1126,9 +1120,10 @@ padding:6px 10px 0 0;
 }
 input.search {
 border:1pt solid #a4a4a4;
-background-color:#fffff0;
+background-color:#fff;
 padding:4px;
-border-radius:4px;
+padding-left:5px;
+border-radius:3px;
 }
 span.clear {
 font-size:14px;

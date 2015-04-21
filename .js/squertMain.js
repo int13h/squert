@@ -372,24 +372,14 @@ $(document).ready(function(){
   // If search is in focus, update on enter
   $('#search').keypress(function(e) {
     if (!e) e=window.event;
-      key = e.keyCode ? e.keyCode : e.which;
-      if (key == 13) {
-        // Close comment box if it is open
-        if ($('#cat_box').css('display') != 'none') {
-          $('#ico01').click(); 
-        }
-        // Jump to all events if we are not in the events tab
-        var active = $(".tab_active").attr('id');
-        if (active != 't_sum') {
-          $('#gr').attr('class','tvalue_off');
-          $('#gr').text('off');
-          $('#rt').attr('class','tvalue_off');
-          $('#rt').text('off');
-          rtbit = 0;        
-          $('#t_sum').click();
-        }
-        newView("u");
+    key = e.keyCode ? e.keyCode : e.which;
+    if (key == 13) {
+      // Close comment box if it is open
+      if ($('#cat_box').css('display') != 'none') {
+        $('#ico01').click(); 
       }
+      $('.b_update').click();
+    }
   });
 
   // Sort ASC/DESC

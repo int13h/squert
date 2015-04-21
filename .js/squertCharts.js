@@ -180,7 +180,7 @@ function mkSankey(callerID,data,w,h) {
           }
         })
       .attr("width", 16)
-      .attr("height", 9)
+      .attr("height", 8)
       .attr("x", -22)
       .attr("y", function(d) { return d.dy / 2 - 5; })
       .filter(function(d) { return d.x < width / 2; })
