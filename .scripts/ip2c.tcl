@@ -21,6 +21,12 @@ exec tclsh "$0" "$@"
 #
 #
 
+### Proxy settings
+set useProxy 0
+set proxyHost ""
+set proxyPort 3128
+set proxyType "http"
+
 ### Config and Country file
 set configFile "../.inc/config.php"
 set countryFile "../.inc/countries.php"
@@ -66,11 +72,12 @@ if [catch {package require uri} uriVersion] {
     exit
 }
 
-### Load ftp support
-if [catch {package require ftp} ftpVersion] {
-    puts "Error: Package ftp not found"
+### Load curl support
+if [catch {package require TclCurl} curlVersion] {
+    puts "Error: Package TclCurl not found"
     exit
 }
+
 if [catch {package require ftp::geturl} ftpgeturlVersion] {
     puts "Error: Package ftp::geturl not found"
     exit
@@ -311,36 +318,52 @@ if {$fail == "no"} {
         set x 0
         set state 0
 
+
         while { $x < 2 } {
 
-            if {[set fdc [ftp::Open $urlparts(host) $urlparts(user) $urlparts(pwd) \
-            	-port $urlparts(port) -mode passive]] == -1} {
+            set curlhandle [ ::curl::init ]
 
-                puts "$siteDesc timed out. Moving on.."
-                break
-            }
-
-            if {$state == 0 && $fdc >=0} {
+            if {$state == 0 && $curlhandle >=0} {
                 set OUTFILE "$siteFile\_current.md5"
                 set toGet $siteFile.md5
+                set siteUrl "$siteLoc$siteFile.md5"
+                if {$useProxy == 0} {
+                    $curlhandle configure -url $siteUrl -file $OUTFILE
+                } else {
+                    $curlhandle configure -url $siteUrl \
+                                          -file $OUTFILE \
+                                          -proxy $proxyHost \
+                                          -proxyport $proxyPort \
+                                          -proxytype $proxyType
+                }
                 set msg "Fetching $siteDesc Checksum.."
                 set doGet "yes"
-            } elseif {$state == 1 && $fdc >=0} {
+            } elseif {$state == 1 && $curlhandle >=0} {
                 set OUTFILE "$siteFile.txt"
                 set toGet $siteFile
-            }      
+                set siteUrl "$siteLoc$siteFile"
+                if {$useProxy == 0} {
+                    $curlhandle configure -url $siteUrl -file $OUTFILE
+                } else {
+                    $curlhandle configure -url $siteUrl \
+                                          -file $OUTFILE \
+                                          -proxy $proxyHost \
+                                          -proxyport $proxyPort \
+                                          -proxytype $proxyType
+                }
+            }
 
             puts $msg
 
-            if {[catch {ftp::Get $fdc $urlparts(path)/$toGet $OUTFILE} ftpError]} {
-                puts "ERROR: $ftpError"
+            if {[catch {$curlhandle perform } curlError ] } {
+                puts "ERROR: $curlError"
             } else {
-                ftp::Close $fdc
+                $curlhandle cleanup
             }
 
             set curMD5 [md5::md5 -hex -file $OUTFILE]
 
-            if {$state == 0 && $fdc >=0} {
+            if {$state == 0 && $curlhandle >=0} {
                 if {$noMD5 == "yes"} {
                     set msg "Bookmark not found, Fetching $siteDesc Data."
                     set doGet yes
@@ -359,7 +382,7 @@ if {$fail == "no"} {
                 }
             }
 
-            if {$state == 1 && $fdc >=0} {          
+            if {$state == 1 && $curlhandle >=0} {
                 set fp [open "$siteFile\_current.md5" r]
                 set data [read $fp]
                 close $fp
