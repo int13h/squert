@@ -875,9 +875,10 @@ $(document).ready(function(){
     var isOn = 'disable';
     if ($(id).data('active') == "N") isOn = "enable";
     if (cl != "ac_new") {
-      dBut = "<div class=ac_disable>" + isOn + "</div>";
+      dBut += "<div class=ac_disable>" + isOn + "</div>";
+      dBut += "<div class=ac_remove>remove</div>";
     } else {
-      dBut = "<div class=ac_create>create</div>";
+      dBut += "<div class=ac_create>create</div>";
     }
     row += "<div class=ac_bees>" + dBut + "</div>";
     row += "<div class=ac_error></div>";
@@ -1031,19 +1032,22 @@ $(document).ready(function(){
     }
   });
 
-  // Enable/Disable rule
-  $(document).on("click", ".ac_disable", function(event) {
-    var action = $('.ac_disable').text();
+  // Enable/Disable/Remove rule
+  $(document).on("click", ".ac_disable,.ac_remove", function(event) {
+    var action = $(this).text();
     var oktoM = confirm("Are you sure you want to " + action + " this rule?");
     if (oktoM) {
       var type = 0;
       switch (action) {
         case "disable": type = 3; break;
         case  "enable": type = 2; break;
+        case  "remove": type = 4; break;
       }
       if (type == 0) return;
+
       var toM = type + "-" + currentCL.split("_")[1];
       var urArgs = "type=17&mode=toggle&obj=" + toM;
+
       $(function(){
         $.post(".inc/callback.php?" + urArgs, function(data){cb20(data)});
       }); 

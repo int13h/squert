@@ -1661,7 +1661,7 @@ border: 1pt solid #cc0000;
 .sensor_show:hover,.button:hover {
 background-color:#2C77C7;
 }
-.filter_update,.filter_remove,.ac_create,.ac_disable {
+.filter_update,.filter_remove,.ac_create,.ac_disable,.ac_remove {
 float:left;
 font-weight:400;
 text-align:center;
@@ -1682,7 +1682,7 @@ background-color:#1a8cff;
 color:#fff;
 margin-left:10px;
 }
-div.cat_msg_add:hover,.filter_update:hover,.filter_remove:hover,.ac_disable:hover,.ac_create:hover {
+.ac_remove:hover, div.cat_msg_add:hover,.filter_update:hover,.filter_remove:hover,.ac_disable:hover,.ac_create:hover {
 background-color:#fff;
 color:#000;
 cursor:pointer;
@@ -1769,7 +1769,7 @@ div.b_close:hover,div.b_close_r:hover {
 opacity:0.7;
 cursor:pointer;
 }
-.filter_remove {
+.filter_remove,.ac_remove {
 background-color:#c00;
 color:#fff;
 }
@@ -1947,8 +1947,7 @@ margin-bottom:5px;
 margin-right:9px;
 display:inline-block;
 border-radius:3px;
-border:1pt solid #000;
-background-color:red;
+background-color:#cc0000;
 color:#f4f4f4;
 }
 div.tag_s {
@@ -1959,15 +1958,14 @@ margin-bottom:5px;
 margin-right:9px;
 display:inline-block;
 border-radius:3px;
-border:1pt solid #000;
-background-color:blue;
+background-color:#22335a;
 color:#f4f4f4;
 }
 div.tag_x {
 position: absolute;
 background-color: #000;
 color: #fff;
-border: 2pt solid #BDBDBD;
+border: 1pt solid #BDBDBD;
 border-radius: 9px;
 text-align: center;
 font-size: 11px;
