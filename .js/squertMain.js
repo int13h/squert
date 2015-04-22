@@ -751,13 +751,30 @@ $(document).ready(function(){
   function mkFilter() {
     if ($('#search').val().length > 0) {
 
-      // If no term is supplied default to a string search
       var srchVal = $('#search').val();
       var fParts = "";
-      if (srchVal.indexOf(" ") == -1) srchVal = "sig " + srchVal;
-      fParts = srchVal.split(" ");
 
-      if (fParts[0] == 'cmt') {
+      // If no term is supplied default to a string, IP or wildcard IP search
+      chkVal:
+      if (srchVal.indexOf(" ") == -1) {
+        var re = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/;
+        if (re.exec(srchVal)) {
+          srchVal = "ip " + srchVal;
+          break chkVal;
+        }
+
+        var re = /^(\d{1,3}|%)\.(\d{1,3}|%)\.(\d{1,3}|%)\.(\d{1,3}|%)/;
+        if (re.exec(srchVal)) {
+          srchVal = "wip " + srchVal;
+          break chkVal;
+        }
+
+        srchVal = "sig " + srchVal;
+      }
+        
+      fParts = srchVal.split(" ");
+      
+      if (fParts[1] == 'cmt') {
         var theFilter = s2h($('#search').val());
         rtbit = 0;
       } else {
