@@ -756,7 +756,7 @@ $(document).ready(function(){
 
       // If no term is supplied default to a string, IP or wildcard IP search
       chkVal:
-      if (srchVal.indexOf(" ") == -1) {
+      if (srchVal.indexOf(" ") == -1 && srchVal[0] != "!")  {
         var re = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/;
         if (re.exec(srchVal)) {
           srchVal = "ip " + srchVal;
@@ -772,7 +772,7 @@ $(document).ready(function(){
         srchVal = "sig " + srchVal;
       }
         
-      fParts = srchVal.split(" ");
+      fParts = srchVal.replace(/^!/,"").split(" ");
       
       if (fParts[1] == 'cmt') {
         var theFilter = s2h($('#search').val());
