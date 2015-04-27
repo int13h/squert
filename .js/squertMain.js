@@ -773,8 +773,7 @@ $(document).ready(function(){
       }
         
       fParts = srchVal.replace(/^!/,"").split(" ");
-      
-      if (fParts[1] == 'cmt') {
+      if (fParts[0] == 'cmt') {
         var theFilter = s2h($('#search').val());
         rtbit = 0;
       } else {
