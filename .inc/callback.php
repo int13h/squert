@@ -206,10 +206,14 @@ function level0() {
     GROUP_CONCAT(DISTINCT(event.sid)) AS f10,
     GROUP_CONCAT(event.status) AS f11,
     GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
-    event.priority AS f13
+    event.priority AS f13,
+    GROUP_CONCAT(DISTINCT(src_tag.value)) AS f14,
+    GROUP_CONCAT(DISTINCT(dst_tag.value)) AS f15              
     FROM event
     LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
     LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
+    LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
+    LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
     $qp2
     GROUP BY f3
     ORDER BY f5 $sv";
@@ -272,12 +276,16 @@ function level1() {
     GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
     event.priority AS f13,
     msrc.age AS src_age,
-    mdst.age AS dst_age
+    mdst.age AS dst_age,
+    GROUP_CONCAT(DISTINCT(src_tag.value)) AS f14,
+    GROUP_CONCAT(DISTINCT(dst_tag.value)) AS f15
     FROM event
     LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
     LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
     LEFT JOIN object_mappings AS osrc ON event.src_ip = osrc.object AND osrc.type = 'ip_c'
     LEFT JOIN object_mappings AS odst ON event.dst_ip = odst.object AND odst.type = 'ip_c'
+    LEFT JOIN object_mappings AS src_tag ON event.src_ip = src_tag.object AND src_tag.type = 'tag'
+    LEFT JOIN object_mappings AS dst_tag ON event.dst_ip = dst_tag.object AND dst_tag.type = 'tag'
     $qp2
     GROUP BY event.src_ip, event.dst_ip
     ORDER BY maxTime $sv";

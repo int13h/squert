@@ -455,8 +455,9 @@ $(document).ready(function(){
   });
 
   function clearTags() {
-    $(".tag").remove();
-    $(".tag_empty").show();
+    //$(".tag").remove();
+    //$(".tag_empty").show();
+    $(".tag").removeClass('tag_active');
   }
 
   //
@@ -930,8 +931,31 @@ $(document).ready(function(){
         }
 
         var sumRT = 0;
+
+        // Tag Array
+        var tags = new Array();
        
         for (var i=0; i<d0.length; i++) {
+
+          var src_tag = d0[i].f14 || "-";
+          var dst_tag = d0[i].f15 || "-";
+
+          // Populate tags array
+          if (src_tag != "-") {
+            var src_tags = src_tag.split(",");
+            $.each(src_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
+
+          if (dst_tag != "-") {
+            var dst_tags = dst_tag.split(",");
+            $.each(dst_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
 
           // How many events are not categorized?
           var unClass = d0[i].f11.split(",").filter(function(x){return x==0}).length;
@@ -992,6 +1016,11 @@ $(document).ready(function(){
         $('#etotal').text(sumEC); 
         $('#esignature').text(sumSI);
         
+        // Populate tags
+        for (var i=0; i < tags.length; i++) {
+          addTag(tags[i]);    
+        }
+
         tbl += "<table width=100% id=tl1 cellpadding=0 cellspacing=0 align=center>";
         tbl += head;
         tbl += row;
@@ -1039,6 +1068,9 @@ $(document).ready(function(){
         var curclasscount = 0, tlCount = 0, rtCount = 0;
         var timeValues = "", scid = "";
 
+        // Tag array
+        var tags = new Array();
+
         for (var i=0; i<theData.length; i++) {
           var count     = theData[i].count   || "0"; 
           var src_ip    = theData[i].src_ip  || "-";
@@ -1052,8 +1084,27 @@ $(document).ready(function(){
           var c_cid     = theData[i].c_cid   || "0";
           var scolour   = theData[i].scolour || "FFFFFF";
           var dcolour   = theData[i].dcolour || "FFFFFF";
+          var src_tag   = theData[i].f14     || "-";
+          var dst_tag   = theData[i].f15     || "-";
           var src_age   = theData[i].src_age || "-";
           var dst_age   = theData[i].dst_age || "-";
+
+          // Populate tags array
+          if (src_tag != "-") {
+            var src_tags = src_tag.split(",");
+            $.each(src_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
+
+          if (dst_tag != "-") {
+            var dst_tags = dst_tag.split(",");
+            $.each(dst_tags, function(n,tag) {
+              var t = tags.indexOf(tag);
+              if (t < 0) tags.push(tag);
+            });
+          }
 
           // Object age
           var src_age_n = "-";
@@ -1125,6 +1176,11 @@ $(document).ready(function(){
           row += "<td class=\"sub " + cd[0] + "\" data-type=cc data-value=" + dst_cc + ">";
           row += cd[1] + dst_clong + " (." + dst_cc.toLowerCase() + ")" + "</td>";
           row += "</tr>";
+        }
+
+        // Populate tags
+        for (var i=0; i < tags.length; i++) {
+          addTag(tags[i]);    
         }
         
         // Add scid's to checkbox

@@ -363,6 +363,7 @@ margin-right:5px;
 clear:right;
 border-radius:3px;
 width:20px;
+height:16px;
 padding:2px;
 }
 div.tvalue_on {
@@ -570,7 +571,7 @@ margin-top:-3px;
 margin-right:5px;
 font-size:11px;
 border-radius:4px;
-background-color:#fffff0;
+background-color:#fff;
 }
 input.cat_msg_txt {
 width:700px;
@@ -1934,8 +1935,7 @@ margin-bottom:5px;
 margin-right:5px;
 display:inline-block;
 border-radius:3px;
-border:1pt solid #c9c9c9;
-background-color:#ecf1f4;
+background-color:#F1F2F1;
 cursor:pointer;
 color:#545454;
 }
@@ -1977,7 +1977,7 @@ display: none;
 cursor: pointer;
 }
 div.tag_active {
-background-color:#000;
+background-color:#0e65df;
 color:#fff;
 }
 div.tag_empty,div.history_empty {
