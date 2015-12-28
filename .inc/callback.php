@@ -176,10 +176,11 @@ function level0() {
   $filter = hextostr($_REQUEST['filter']);
   if ($filter != 'empty') {
     if (substr($filter, 0,4) == 'cmt ') {
-      $comment = explode('cmt ', $filter);
+      $comment = mysql_real_escape_string(explode('cmt ', $filter));
       $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
         WHERE history.comment = '$comment[1]'";
     } else {
+      // this needs to be fixed
       $filter = str_replace('&lt;','<', $filter);
       $filter = str_replace('&gt;','>', $filter);
       $filter = "AND " . $filter;
@@ -239,9 +240,10 @@ function level1() {
     if (substr($filter, 0,4) == 'cmt ') {
       $comment = explode('cmt ', $filter);
       $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
-        WHERE history.comment = '$comment[1]'
+        WHERE history.comment = '" . mysql_real_escape_string($comment[1]) . "'
         AND event.signature_id = '$sid'";
     } else {
+      // this needs to be fixed
       $filter = str_replace('&lt;','<', $filter);
       $filter = str_replace('&gt;','>', $filter);
       $filter = "AND " . $filter;
@@ -316,12 +318,11 @@ function level2() {
     if (substr($filter, 0,4) == 'cmt ') {
       $comment = explode('cmt ', $filter);
       $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
-        WHERE history.comment = '$comment[1]'
+        WHERE history.comment = '" . mysql_real_escape_string($comment[1]) . "'
         AND (event.signature_id = '$sid'
         AND event.src_ip = '$src_ip'
         AND event.dst_ip = '$dst_ip')";
     } else {
-
       $qp2 = "WHERE $when
         $sensors
         AND (event.signature_id = '$sid' 
@@ -383,8 +384,9 @@ function level2a() {
     if (substr($filter, 0,4) == 'cmt ') {
       $comment = explode('cmt ', $filter);
       $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
-        WHERE history.comment = '$comment[1]'";
+        WHERE history.comment = '" . mysql_real_escape_string($comment[1]) . "'";
     } else {
+      // this needs to be fixed...
       $filter = str_replace('&lt;','<', $filter);
       $filter = str_replace('&gt;','>', $filter);
       $filter = "AND " . $filter;
@@ -543,16 +545,21 @@ function transcript() {
   $usr     = $_SESSION['sUser'];
   $pwd     = $_SESSION['sPass'];
   list($sid, $timestamp, $sip, $spt, $dip, $dpt) = explode("|", $txdata);
-
+  $sqlsid = mysql_real_escape_string($sid);
   // Lookup sensorname
   $query = "SELECT hostname FROM sensor
-    WHERE sid = '$sid'";
+    WHERE sid = '$sqlsid'";
 
   $qResult = mysql_query($query);
 
   $sensorName = mysql_result($qResult, 0);
-
-  $cmd = "../.scripts/cliscript.tcl \"$usr\" \"$sensorName\" \"$timestamp\" $sid $sip $dip $spt $dpt";
+  $cmdsid = escapeshellarg($sid);
+  $cmdsip = escapeshellarg($sip);
+  $cmddip = escapeshellarg($dip);
+  $cmdspt = escapeshellarg($spt);
+  $cmddpt = escapeshellarg($dpt);
+  
+  $cmd = "../.scripts/cliscript.tcl \"$usr\" \"$sensorName\" \"$timestamp\" $cmdsid $cmdsip $cmddip $cmdspt $cmddpt";
   $descspec = array(
     0 => array("pipe", "r"),
     1 => array("pipe", "w"),
