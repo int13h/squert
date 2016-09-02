@@ -1,8 +1,14 @@
- squert - A Simple Query and Report Tool
+## squert - A Simple Query and Report Tool
+
+
+#######
 
 NOTE: This project is no longer in active develpment. See [here](http://www.pintumbler.org/words/youcantgobackonlyforward) for more detail.
-
 Thanks to everyone that has supported me through the years while I worked on this.
+
+#######
+
+
 
 Home: [http://www.squertproject.org](http://www.squertproject.org)
 
