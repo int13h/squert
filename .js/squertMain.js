@@ -1309,11 +1309,23 @@ $(document).ready(function(){
           }
 
           // Transcript link
+	  // original Squert native pivot:
+          //txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
+          //txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
+          //if (src_port != "-" && dst_port != "-") {
+          //  txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
+          //}
+	  // new pivot to CapMe:
           txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
-
-          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
+          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";
           if (src_port != "-" && dst_port != "-") {
-            txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
+                var startDate = new Date(utctimestamp);
+                var start_tz_offset = (startDate.getTimezoneOffset());
+                var stime = startDate.setTime( startDate.getTime()/1000-(start_tz_offset*60) ) - 3600;
+                var endDate = new Date(utctimestamp);
+                var end_tz_offset = (endDate.getTimezoneOffset());
+                var etime = endDate.setTime( endDate.getTime()/1000-(end_tz_offset*60) ) + 3600;
+                txBit = "<td class='sub sub2_capme' title='Get pcap/transcript via capME'> <a href='/capme/?sip=" + src_ip + "&dip=" + dst_ip + "&spt=" + src_port + "&dpt=" + dst_port + "&stime=" + stime + "&etime=" + etime + "&filename=squert' target='_blank'>" + sid + "." + cid + "</a></td>";
           }
 
           row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
@@ -1508,13 +1520,25 @@ $(document).ready(function(){
           var cv = classifications.class[tclass][0].short;
 
           // Transcript link
+	  // original Squert native pivot:
+          //txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
+          //txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
+          //if (src_port != "-" && dst_port != "-") {
+          //  txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
+          //}
+   	  // new pivot to CapMe:
           txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
-
-          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
+          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";
           if (src_port != "-" && dst_port != "-") {
-            txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
+                var startDate = new Date(utctimestamp);
+                var start_tz_offset = (startDate.getTimezoneOffset());
+                var stime = startDate.setTime( startDate.getTime()/1000-(start_tz_offset*60) ) - 3600;
+                var endDate = new Date(utctimestamp);
+                var end_tz_offset = (endDate.getTimezoneOffset());
+                var etime = endDate.setTime( endDate.getTime()/1000-(end_tz_offset*60) ) + 3600;
+                txBit = "<td class='sub sub2_capme' title='Get PCAP/transcript via capME'> <a href='/capme/?sip=" + src_ip + "&dip=" + dst_ip + "&spt=" + src_port + "&dpt=" + dst_port + "&stime=" + stime + "&etime=" + etime + "&filename=squert' target='_blank'>" + sid + "." + cid + "</a></td>";
           }
-   
+
           row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=14 data-filter=\"" + eid + "\">";
           row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + "></td>";

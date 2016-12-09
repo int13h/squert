@@ -776,6 +776,11 @@ color:#4D5580;
 td.sub2_inactive {
 text-decoration:line-through;
 }
+td.sub2_capme {
+text-decoration:underline;
+cursor:pointer;
+color:#4D5580;
+}
 td.sub_txt {
 width:900px;
 background: #f4f4f4;
