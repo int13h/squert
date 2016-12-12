@@ -125,6 +125,11 @@ function IP2C($string,$isCLI) {
 
 }
 
+/*
+
+Commenting out the following function per
+https://github.com/int13h/squert/issues/76
+
 function TheHTML($string) {
 
     echo "\r<html>
@@ -142,6 +147,7 @@ function TheHTML($string) {
           \r</body>
           \r</html>";
 }
+*/
 
 if (isset($argc)) {
 

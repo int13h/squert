@@ -1,0 +1,5 @@
+[mysqld]
+group_concat_max_len = 100000
+
+[mysqltcl]
+local-infile=1

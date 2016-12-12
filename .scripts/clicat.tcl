@@ -1,4 +1,4 @@
-#!/usr/local/bin/tclsh
+#!/usr/bin/tclsh
 
 # clicat.tcl - Based on "quickscript.tcl"
 # Portions Copyright (C) 2013 Paul Halliday <paul.halliday@gmail.com>

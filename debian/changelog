@@ -1,0 +1,29 @@
+securityonion-squert (20161212-1ubuntu1securityonion5) trusty; urgency=medium
+
+  * fix ip2c.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 17:31:29 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion4) trusty; urgency=medium
+
+  * disable ip2c.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 16:45:49 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion3) trusty; urgency=medium
+
+  * update path in clicat.tcl 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 16:35:50 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion2) trusty; urgency=medium
+
+  * add config.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 16:16:31 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion1) trusty; urgency=low
+
+  * Initial release
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 15:49:09 -0500
