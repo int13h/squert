@@ -1822,9 +1822,7 @@ $(document).ready(function(){
             var tmp = h2s(theData[2].data_payload).split("\n");
             p_ascii = '';
             for (var i in tmp) {
-              var parts = tmp[i].split(":\t");
-              p_ascii += "<div class=\"select key\">" + parts[0] + "</div>";
-              p_ascii += "<div class=\"select val\">" + parts[1] + "</div>";
+              p_ascii += "<div class=\"select val\">" + tmp[i] + "</div>";
             }
              
           }
