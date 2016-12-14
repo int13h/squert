@@ -4,3 +4,4 @@ update-path-in-clicat.tcl
 disable-ip2c.php
 fix-ip2c.php
 add-hash-to-object_mappings-table
+populate-empty-hash-fields

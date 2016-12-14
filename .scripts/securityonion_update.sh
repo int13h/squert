@@ -50,6 +50,7 @@ if [ -d /var/lib/mysql/securityonion_db/ ]; then
 	else
 		echo "Adding hash field to object_mappings table."
                 $MYSQL "ALTER TABLE object_mappings ADD hash CHAR(32);"
+		$MYSQL "UPDATE object_mappings SET hash=md5(concat(type,object,value)) WHERE hash IS NULL;"
                 $MYSQL "ALTER TABLE object_mappings DROP PRIMARY KEY , ADD PRIMARY KEY (hash);"
 	fi
 
