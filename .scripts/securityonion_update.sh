@@ -44,6 +44,15 @@ if [ -d /var/lib/mysql/securityonion_db/ ]; then
                 $MYSQL "UPDATE filters SET type = 'filter' WHERE type IS NULL;;"
 	fi
 
+	# object_mappings table - hash
+        if $MYSQL "DESCRIBE object_mappings" | grep hash >/dev/null 2>&1 ; then
+		echo "object_mappings table already has hash field."
+	else
+		echo "Adding hash field to object_mappings table."
+                $MYSQL "ALTER TABLE object_mappings ADD hash CHAR(32);"
+                $MYSQL "ALTER TABLE object_mappings DROP PRIMARY KEY , ADD PRIMARY KEY (hash);"
+	fi
+
 	# Idempotent operations
 	cat /var/www/so/squert/.scripts/securityonion_update.sql | mysql --defaults-file=/etc/mysql/debian.cnf -U securityonion_db > /var/log/nsm/squert_update.log
 
