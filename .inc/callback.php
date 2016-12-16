@@ -113,61 +113,59 @@ function signatures() {
   $wasMatched = 0;
   $dirs = explode("||",$rulePath);
 
-  if ( $gID > 100 ) {
-    $dc = 0;
-    $wasMatched = 2;
+  if ( $gID == 10001 ) {
+	$result = array("ruletxt" => "Generator ID $gID. OSSEC rules can be found in /var/ossec/rules/.",
+		"rulefile"  => "n/a",
+		"ruleline"  => "n/a",
+		);
+  } elseif ( $gID != 1 && $gID != 3 ) {
+	$result = array("ruletxt" => "Generator ID $gID. This event belongs to a preprocessor or decoder.",
+		"rulefile"  => "n/a",
+		"ruleline"  => "n/a",
+		);
   } else { 
-    $dc = (count($dirs) - 1);
-  }
+	$dc = (count($dirs) - 1);
+	for ($i = 0; $i <= $dc; $i++)
+		if ($ruleDir = opendir($dirs[$i])) {
+			while (false !== ($ruleFile = readdir($ruleDir))) {
+				if ($ruleFile != "." && $ruleFile != "..") {
+					$ruleLines = file("$dirs[$i]/$ruleFile");
+					$lineNumber = 1;
 
-  for ($i = 0; $i <= $dc; $i++)
-    if ($ruleDir = opendir($dirs[$i])) {
-      while (false !== ($ruleFile = readdir($ruleDir))) {
-        if ($ruleFile != "." && $ruleFile != "..") {
-          $ruleLines = file("$dirs[$i]/$ruleFile");
-          $lineNumber = 1;
+					foreach($ruleLines as $line) {
 
-          foreach($ruleLines as $line) {
+						$searchCount = preg_match("/sid\:\s*$sigID\s*\;/",$line);
 
-            $searchCount = preg_match("/sid\:\s*$sigID\s*\;/",$line);
+						if($searchCount > 0) {
+							$tempMsg = preg_match("/\bmsg\s*:\s*\"(.+?)\"\s*;/i",$line,$ruleMsg);
 
-            if($searchCount > 0) {
-              $tempMsg = preg_match("/\bmsg\s*:\s*\"(.+?)\"\s*;/i",$line,$ruleMsg);
+							$line = urlMkr(htmlspecialchars($line));
 
-              $line = urlMkr(htmlspecialchars($line));
+							$result = array("ruletxt"	=> $line,
+								"rulefile"	=> $ruleFile,
+								"ruleline"	=> $lineNumber,
+								);
+							$wasMatched = 1;
+							break;
+						}
+						$lineNumber++;
+					}
+				}
+			}
 
-              $result = array("ruletxt"	=> $line,
-                "rulefile"	=> $ruleFile,
-                "ruleline"	=> $lineNumber,
-              );
-              $wasMatched = 1;
-              break;
-            }
-            $lineNumber++;
-          }
-        }
-      }
+			closedir($ruleDir);
+		}
 
-      closedir($ruleDir);
-    }
-
-  if ($wasMatched == 0) {
-    $result = array("ruletxt" => "No match for signature ID $sigID",
-      "rulefile"  => "n/a",
-      "ruleline"  => "n/a",                 
-    );
-  }
-
-  if ($wasMatched == 2) {
-    $result = array("ruletxt" => "Generator ID > 100. This event belongs to a preprocessor or the decoder. <b>Generator ID:</b> $gID ",
-      "rulefile"  => "n/a",
-      "ruleline"  => "n/a",
-    );
+		if ($wasMatched == 0) {
+			$result = array("ruletxt" => "No match for signature ID $sigID",
+				"rulefile"  => "n/a",
+				"ruleline"  => "n/a",                 
+				);
+		}
   }
 
   $theJSON = json_encode($result);
   echo $theJSON;
-
 }
 
 function level0() {   

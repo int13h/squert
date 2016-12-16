@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion8) trusty; urgency=medium
+
+  * Squert: OSSEC HIDS alerts display NIDS rules #958 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 16 Dec 2016 09:09:13 -0500
+
 securityonion-squert (20161212-1ubuntu1securityonion7) trusty; urgency=medium
 
   * populate empty hash fields 
