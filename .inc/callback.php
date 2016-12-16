@@ -821,6 +821,7 @@ function map() {
   }        
 
   $aSum = $bSum = $cSum = $aItems = $bItems = $cItems = 0;
+  $srcd = $dstd = $alld = "";
 
   function makeDetail($x1,$x2) {
     $detail = ""; 

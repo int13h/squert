@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion9) trusty; urgency=medium
+
+  * initialize srcd, dstd, and alld in callback.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 16 Dec 2016 10:06:58 -0500
+
 securityonion-squert (20161212-1ubuntu1securityonion8) trusty; urgency=medium
 
   * Squert: OSSEC HIDS alerts display NIDS rules #958 
