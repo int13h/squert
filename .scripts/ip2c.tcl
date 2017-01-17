@@ -403,8 +403,7 @@ if {$fail == "no"} {
                         set x [expr $x - 1]
                     }
                 } else {
-                    puts "Checksum not found. Retrying..\n"
-                    set x [expr $x - 1]
+                    puts "Checksum not found. Skipping..\n"
                 }
             }       
 
