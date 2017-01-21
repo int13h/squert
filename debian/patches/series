@@ -7,3 +7,4 @@ add-hash-to-object_mappings-table
 populate-empty-hash-fields
 Squert:-OSSEC-HIDS-alerts-display-NIDS-rules-#958
 initialize-srcd,-dstd,-and-alld-in-callback.php
+Squert:-error-when-removing-comment-#1066

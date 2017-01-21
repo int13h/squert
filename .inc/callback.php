@@ -724,7 +724,7 @@ function remove_comment() {
   $user = $_SESSION['sUser'];
   $comment = hextostr($_REQUEST['comment']);
   $comment = mysql_real_escape_string($comment);
-  $query = "DELETE FROM sguildb.history WHERE comment = '$comment'";
+  $query = "DELETE FROM history WHERE comment = '$comment'";
   mysql_query($query);
   $result = mysql_error();
   $return = array("msg" => $result);
