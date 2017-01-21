@@ -10,3 +10,4 @@ initialize-srcd,-dstd,-and-alld-in-callback.php
 Squert:-error-when-removing-comment-#1066
 update-README.md
 bump-version-to-1.6.4
+Squert:-ip2c-avoid-hard-loop-when-file-unavailable-#1067
