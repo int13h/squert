@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion11) trusty; urgency=medium
+
+  * bump version to 1.6.4 
+
+ -- Doug Burks <doug.burks@gmail.com>  Sat, 21 Jan 2017 05:18:59 -0500
+
 securityonion-squert (20161212-1ubuntu1securityonion10) trusty; urgency=medium
 
   * Squert: error when removing comment #1066 
