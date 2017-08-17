@@ -174,9 +174,9 @@ function level0() {
   $filter = hextostr($_REQUEST['filter']);
   if ($filter != 'empty') {
     if (substr($filter, 0,4) == 'cmt ') {
-      $comment = mysql_real_escape_string(explode('cmt ', $filter));
+      $comment = explode('cmt ', $filter);
       $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
-        WHERE history.comment = '$comment[1]'";
+	        WHERE history.comment = '" . mysql_real_escape_string($comment[1]) . "'";
     } else {
       // this needs to be fixed
       $filter = str_replace('&lt;','<', $filter);
