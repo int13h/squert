@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion14) trusty; urgency=medium
+
+  * fix error in times function 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 18 Aug 2017 08:57:12 -0400
+
 securityonion-squert (20161212-1ubuntu1securityonion13) trusty; urgency=medium
 
   * Squert: comment search not working #1119 

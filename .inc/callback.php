@@ -1483,26 +1483,34 @@ function times() {
   global $offset, $when, $sensors;
   $filter = hextostr($_REQUEST['filter']);
   if ($filter != 'empty') {
+    if (substr($filter, 0,4) == 'cmt ') {
+      $comment = explode('cmt ', $filter);
+      $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
+        WHERE history.comment = '" . mysql_real_escape_string($comment[1]) . "'
+        AND $when $sensors";
+    } else {
+      // this needs to be fixed
     $filter = str_replace('&lt;','<', $filter);
     $filter = str_replace('&gt;','>', $filter);
     $filter = "AND " . $filter;
     $qp2 = "WHERE $when
       $sensors
       $filter";
+    }
   } else {
     $qp2 = "WHERE $when
       $sensors";
   }
 
   $query = "SELECT
-    SUBSTRING(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5) AS time,
+    SUBSTRING(CONVERT_TZ(event.timestamp,'+00:00','$offset'),12,5) AS time,
       COUNT(signature) AS count 
       FROM event
       LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
       LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
       $qp2
       GROUP BY time 
-      ORDER BY timestamp";
+      ORDER BY event.timestamp";
   $result = mysql_query($query);
   $rows = array();
   $r = $m = 0;
