@@ -490,7 +490,7 @@ $(document).ready(function(){
         }
       }
       if (emptyVal > 0) throw 0; 
-            
+          
       // Sanitize alias
       var re = /^[?a-zA-Z][\w-]*$/;
       var OK = re.exec(filterTxt.alias);
@@ -503,7 +503,16 @@ $(document).ready(function(){
       // Make sure we dont match a builtin
       var builtins = ["cc","dip","dpt","ip","sid","sig","sip","spt","scc","dcc","st"];
       if (builtins.indexOf(filterTxt.alias) != -1) throw 1;
+      
+      // Sanitize name
+      var re = /^[?a-zA-Z][\w-]*$/;
+      var OK = re.exec(filterTxt.name);
+      if (!OK) throw 2;
+      if (filterTxt.name == "New") throw 2;
 
+      // If creating a new filter make sure this name doesn't already exist
+      if ($("#tr_" + filterTxt.name)[0] && $('#tr_New')[0]) throw 2;
+	
       // Continue..
       oldCL = currentCL;
       var ftype = $(".hp_type_active").data("val");
@@ -550,6 +559,12 @@ $(document).ready(function(){
         case 1:
           eMsg += "<span class=warn><br>Error!</span> "
           eMsg += "Filter aliases MUST be unique. Valid characters are: ";
+          eMsg += "Aa-Zz, 0-9, - and _ . ";
+          eMsg += "The word \"New\" is reserved and may not be used.";
+        break;
+	case 2:
+          eMsg += "<span class=warn><br>Error!</span> "
+          eMsg += "Valid characters are: ";
           eMsg += "Aa-Zz, 0-9, - and _ . ";
           eMsg += "The word \"New\" is reserved and may not be used.";
         break;
