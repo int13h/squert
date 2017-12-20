@@ -1,0 +1,98 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion15) trusty; urgency=medium
+ .
+   * improve input validation and output filtering
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.inc/callback.php
++++ securityonion-squert-20161212/.inc/callback.php
+@@ -622,7 +622,16 @@ function filters() {
+     $rows = array();
+ 
+     while ($row = mysql_fetch_assoc($result)) {
+-      $rows[] = $row;
++	# we're now iterating through each row of the filter table
++	# for each field in that row, we need to sanitize before output
++	foreach ($row as &$value) {
++		# https://paragonie.com/blog/2015/06/preventing-xss-vulnerabilities-in-php-everything-you-need-know
++		$value = htmlentities($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
++	}
++	# must unset $value per http://php.net/manual/en/control-structures.foreach.php
++	unset($value);
++	# now add the sanitized row to the $rows array
++	$rows[] = $row;
+     }
+ 
+     $theJSON = json_encode($rows); 
+--- securityonion-squert-20161212.orig/.js/squertBoxes.js
++++ securityonion-squert-20161212/.js/squertBoxes.js
+@@ -490,7 +490,7 @@ $(document).ready(function(){
+         }
+       }
+       if (emptyVal > 0) throw 0; 
+-            
++          
+       // Sanitize alias
+       var re = /^[?a-zA-Z][\w-]*$/;
+       var OK = re.exec(filterTxt.alias);
+@@ -503,7 +503,16 @@ $(document).ready(function(){
+       // Make sure we dont match a builtin
+       var builtins = ["cc","dip","dpt","ip","sid","sig","sip","spt","scc","dcc","st"];
+       if (builtins.indexOf(filterTxt.alias) != -1) throw 1;
+-
++      
++      // Sanitize name
++      var re = /^[?a-zA-Z][\w-]*$/;
++      var OK = re.exec(filterTxt.name);
++      if (!OK) throw 2;
++      if (filterTxt.name == "New") throw 2;
++
++      // If creating a new filter make sure this name doesn't already exist
++      if ($("#tr_" + filterTxt.name)[0] && $('#tr_New')[0]) throw 2;
++	
+       // Continue..
+       oldCL = currentCL;
+       var ftype = $(".hp_type_active").data("val");
+@@ -553,6 +562,12 @@ $(document).ready(function(){
+           eMsg += "Aa-Zz, 0-9, - and _ . ";
+           eMsg += "The word \"New\" is reserved and may not be used.";
+         break;
++	case 2:
++          eMsg += "<span class=warn><br>Error!</span> "
++          eMsg += "Valid characters are: ";
++          eMsg += "Aa-Zz, 0-9, - and _ . ";
++          eMsg += "The word \"New\" is reserved and may not be used.";
++        break;
+         default:
+           eMsg += "<span class=warn><br>Format error!</span> ";
+           eMsg += "Please ensure the format above is valid JSON. ";
+--- securityonion-squert-20161212.orig/login.php
++++ securityonion-squert-20161212/login.php
+@@ -130,7 +130,7 @@ Password<br>
+ <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
+ <td class=err><?php echo $err;?></td></tr>
+ </table>
+-<div class=cp>Version 1.6.6<span>&copy;2016 Paul Halliday</span></div>
++<div class=cp>Version 1.6.7<span>&copy;2016 Paul Halliday</span></div>
+ </div>
+ </form>
+ <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>

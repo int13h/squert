@@ -622,7 +622,16 @@ function filters() {
     $rows = array();
 
     while ($row = mysql_fetch_assoc($result)) {
-      $rows[] = $row;
+	# we're now iterating through each row of the filter table
+	# for each field in that row, we need to sanitize before output
+	foreach ($row as &$value) {
+		# https://paragonie.com/blog/2015/06/preventing-xss-vulnerabilities-in-php-everything-you-need-know
+		$value = htmlentities($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+	}
+	# must unset $value per http://php.net/manual/en/control-structures.foreach.php
+	unset($value);
+	# now add the sanitized row to the $rows array
+	$rows[] = $row;
     }
 
     $theJSON = json_encode($rows); 
