@@ -512,11 +512,6 @@ $(document).ready(function(){
 
       // If creating a new filter make sure this name doesn't already exist
       if ($("#tr_" + filterTxt.name)[0] && $('#tr_New')[0]) throw 2;
-
-      // Make sure we dont match a builtin
-      var builtins = ["cc","dip","dpt","ip","sid","sig","sip","spt","scc","dcc","st"];
-      if (builtins.indexOf(filterTxt.name) != -1) throw 2;
-      
 	
       // Continue..
       oldCL = currentCL;
