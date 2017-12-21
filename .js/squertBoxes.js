@@ -505,14 +505,24 @@ $(document).ready(function(){
       if (builtins.indexOf(filterTxt.alias) != -1) throw 1;
       
       // Sanitize name
-      var re = /^[?a-zA-Z][\w-]*$/;
+      var re = /^[?a-zA-Z][\w-\s]*$/;
       var OK = re.exec(filterTxt.name);
       if (!OK) throw 2;
       if (filterTxt.name == "New") throw 2;
 
       // If creating a new filter make sure this name doesn't already exist
       if ($("#tr_" + filterTxt.name)[0] && $('#tr_New')[0]) throw 2;
-	
+
+      // Sanitize notes
+      var re = /^[?a-zA-Z][\w-.\s]*$/;
+      var OK = re.exec(filterTxt.notes);
+      if (!OK) throw 2;
+     
+      // Sanitize url
+      var re = /^[?\/a-zA-Z0-9.\/:?${}(),_!&'@=\-\*#%]*$/;
+      var OK = re.exec(filterTxt.url);
+      if (!OK) throw 3;
+       
       // Continue..
       oldCL = currentCL;
       var ftype = $(".hp_type_active").data("val");
@@ -568,13 +578,17 @@ $(document).ready(function(){
           eMsg += "Aa-Zz, 0-9, - and _ . ";
           eMsg += "The word \"New\" is reserved and may not be used.";
         break;
+	case 3:
+          eMsg += "<span class=warn><br>Error!</span> "
+	  eMsg += "URL format not valid!";
+	break;
         default:
           eMsg += "<span class=warn><br>Format error!</span> ";
           eMsg += "Please ensure the format above is valid JSON. ";
-          eMsg += "I am looking for an opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> ";
+          eMsg += "Ex. An opening curly brace <b>\"{\"</b> followed by <b>\"object\": \"value\"</b> ";
           eMsg += "pairs.<br> Each <b>\"object\": \"value\"</b> pair terminates with a comma <b>\",\"</b> except ";
           eMsg += "the last pair before the closing curly brace <b>\"}\"</b>.";
-          eMsg += " Strings must be enclosed within double quotes.";
+          eMsg += "Strings must be enclosed within double quotes.";
         break;
       }
       $('.filter_error').append(eMsg);
