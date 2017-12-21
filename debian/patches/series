@@ -14,3 +14,4 @@ Squert:-ip2c-avoid-hard-loop-when-file-unavailable-#1067
 Squert:-comment-search-not-working-#1119
 fix-error-in-times-function
 improve-input-validation-and-output-filtering
+merge-and-adjust-comment

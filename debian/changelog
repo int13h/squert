@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion16) trusty; urgency=medium
+
+  * merge and adjust comment 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 21 Dec 2017 06:21:12 -0500
+
 securityonion-squert (20161212-1ubuntu1securityonion15) trusty; urgency=medium
 
   * improve input validation and output filtering 

@@ -621,8 +621,8 @@ function filters() {
 
     $rows = array();
 
+    # iterate through each row of the filter table
     while ($row = mysql_fetch_assoc($result)) {
-	# we're now iterating through each row of the filter table
 	# for each field in that row, we need to sanitize before output
 	foreach ($row as &$value) {
 		# https://paragonie.com/blog/2015/06/preventing-xss-vulnerabilities-in-php-everything-you-need-know
