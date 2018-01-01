@@ -537,74 +537,8 @@ function tab() {
 }
 
 function transcript() {
-
-  global $offset;
-  $txdata  = hextostr($_REQUEST['txdata']);
-  $usr     = $_SESSION['sUser'];
-  $pwd     = $_SESSION['sPass'];
-  list($sid, $timestamp, $sip, $spt, $dip, $dpt) = explode("|", $txdata);
-  $sqlsid = mysql_real_escape_string($sid);
-  // Lookup sensorname
-  $query = "SELECT hostname FROM sensor
-    WHERE sid = '$sqlsid'";
-
-  $qResult = mysql_query($query);
-
-  $sensorName = mysql_result($qResult, 0);
-  $cmdsid = escapeshellarg($sid);
-  $cmdsip = escapeshellarg($sip);
-  $cmddip = escapeshellarg($dip);
-  $cmdspt = escapeshellarg($spt);
-  $cmddpt = escapeshellarg($dpt);
-  
-  $cmd = "../.scripts/cliscript.tcl \"$usr\" \"$sensorName\" \"$timestamp\" $cmdsid $cmdsip $cmddip $cmdspt $cmddpt";
-  $descspec = array(
-    0 => array("pipe", "r"),
-    1 => array("pipe", "w"),
-    2 => array("pipe", "w")
-  );
-
-  $proc = proc_open($cmd, $descspec, $pipes);
-  $debug = "Process execution failed";
-  $_raw = $fmtd = "";
-  if (is_resource($proc)) {
-    fwrite($pipes[0], $pwd);
-    fclose($pipes[0]);
-    $_raw = stream_get_contents($pipes[1]);
-    fclose($pipes[1]);
-    $debug = fgets($pipes[2]);
-    fclose($pipes[2]);
-  }
-
-  $raw = explode("\n", $_raw);
-  foreach ($raw as $line) {
-
-    $line = htmlspecialchars($line);
-    $type = substr($line, 0,3);
-
-    switch ($type) {
-    case "DEB": $debug .= preg_replace('/^DEBUG:.*$/', "<span class=txtext_dbg>$0</span>", $line) . "<br>"; $line = ''; break;
-    case "HDR": $line = preg_replace('/(^HDR:)(.*$)/', "<span class=txtext_hdr>$2</span>", $line); break;
-    case "DST": $line = preg_replace('/^DST:.*$/', "<span class=txtext_dst>$0</span>", $line); break;
-    case "SRC": $line = preg_replace('/^SRC:.*$/', "<span class=txtext_src>$0</span>", $line); break;
-    default: $line = ""; break; 
-    }
-
-    if (strlen($line) > 0) {
-      $fmtd  .= $line . "<br>";
-    }
-  }
-
-  if (strlen($fmtd) > 0) {
-    $fmtd  .= "<br>" . $debug;
-  }
-
-  $result = array("tx"  => "$fmtd",
-    "dbg" => "$_raw",
-    "cmd" => "$cmd");
-
-  $theJSON = json_encode($result);
-  echo $theJSON;
+	# We no longer use Squert's native transcript functionality.
+	# Squert now pivots to CapMe for transcripts.
 }
 
 function filters() {   
@@ -684,7 +618,12 @@ function cat() {
   list($cat, $msg, $lst) = explode("|||", $catdata);
   $msg = htmlentities($msg);
 
-  $cmd = "../.scripts/clicat.tcl 0 \"$usr\" \"$cat\" \"$msg\" \"$lst\"";
+  $cmdusr = escapeshellarg($usr);
+  $cmdcat = escapeshellarg($cat);
+  $cmdmsg = escapeshellarg($msg);
+  $cmdlst = escapeshellarg($lst);
+
+  $cmd = "../.scripts/clicat.tcl 0 $cmdusr $cmdcat $cmdmsg $cmdlst";
   $descspec = array(
     0 => array("pipe", "r"),
     1 => array("pipe", "w")
@@ -1243,7 +1182,19 @@ function autocat() {
       $expires = gmdate("Y-m-d H:i:s", strtotime("+ $expires"));
     }
 
-    $cmd = "../.scripts/clicat.tcl 1 \"$usr\" \"$expires\" \"$v[sensor]\" \"$v[src_ip]\" \"$v[src_port]\" \"$v[dst_ip]\" \"$v[dst_port]\" \"$v[proto]\" \"$v[signature]\" \"$v[status]\" \"$v[comment]\"";
+    $cmdusr = escapeshellarg($usr);
+    $cmdexpires = escapeshellarg($expires);
+    $cmdsensor = escapeshellarg($v['sensor']);
+    $cmdsrcip = escapeshellarg($v['src_ip']);
+    $cmdsrcport = escapeshellarg($v['src_port']);
+    $cmddstip = escapeshellarg($v['dst_ip']);
+    $cmddstport = escapeshellarg($v['dst_port']);
+    $cmdproto = escapeshellarg($v['proto']);
+    $cmdsignature = escapeshellarg($v['signature']);
+    $cmdstatus = escapeshellarg($v['status']);
+    $cmdcomment = escapeshellarg($v['comment']);
+
+    $cmd = "../.scripts/clicat.tcl 1 $cmdusr $cmdexpires $cmdsensor $cmdsrcip $cmdsrcport $cmddstip $cmddstport $cmdproto $cmdsignature $cmdstatus $cmdcomment";
     $descspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"));
     $proc = proc_open($cmd, $descspec, $pipes);
     $debug = "Process execution failed";
@@ -1267,7 +1218,11 @@ function autocat() {
       $type = 3;
     }                
 
-    $cmd = "../.scripts/clicat.tcl $type \"$usr\" $id";
+    $cmdtype = escapeshellarg($type);
+    $cmdusr = escapeshellarg($usr);
+    $cmdid = escapeshellarg($id);
+
+    $cmd = "../.scripts/clicat.tcl $cmdtype $cmdusr $cmdid";
     $descspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"));
     $proc = proc_open($cmd, $descspec, $pipes);
     $debug = "Process execution failed";

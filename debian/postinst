@@ -19,6 +19,28 @@ case "$1" in
 		fi
 	fi
 
+	# Originally, Squert had its own authentication.
+	# We've moved to SSO for the Elastic integration.
+	# Two files need to be updated for Squert or SSO auth:
+	LOGIN="/var/www/so/squert/login.php"
+	JS="/var/www/so/squert/.js/squertMain.js"
+	# Default to Squert auth.
+	# If SSO is configured, copy SSO files.
+	# Otherwise, copy Squert auth files.
+	FROM="/var/www/so/squert/.auth/squert"
+	if ! [ -f ${LOGIN} ]; then
+		echo "${LOGIN} does not exist.  Configuring for Squert authentication."
+	else
+		if grep -q PHP_AUTH_USER ${LOGIN} ; then
+			echo "${LOGIN} is configured for SSO authentication.  Updating SSO auth files."
+			FROM="/var/www/so/squert/.auth/sso"
+		else
+			echo "${LOGIN} is configured for Squert authentication.  Updating Squert auth files."
+		fi
+	fi
+	cp ${FROM}/login.php ${LOGIN} || echo "Error copying ${FROM}/login.php to ${LOGIN}."
+	cp ${FROM}/squertMain.js ${JS} || echo "Error copying ${FROM}/squertMain.js to ${JS}."
+
         apache2ctl restart || echo "Error restarting Apache."
         
 	if ! grep "/var/www/so/squert/.scripts/Ip2c/results.txt" /etc/apparmor.d/local/usr.sbin.mysqld >/dev/null; then
