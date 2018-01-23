@@ -1,0 +1,269 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion23) trusty; urgency=medium
+ .
+   * begin transition to pdo prepared statements
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.inc/callback.php
++++ securityonion-squert-20161212/.inc/callback.php
+@@ -9,10 +9,20 @@ if (!(isset($_SESSION['sLogin']) && $_SE
+ $base = dirname(__FILE__);
+ include_once "$base/config.php";
+ include_once "$base/functions.php";
+-
++// original database connection info
+ $link = mysql_connect($dbHost,$dbUser,$dbPass);
+ $db = mysql_select_db($dbName,$link);
+-
++// PDO prepared statements
++try {
++	// first connect to database with the PDO object. 
++	$dbpdo = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=utf8", "$dbUser", "$dbPass", [
++	PDO::ATTR_EMULATE_PREPARES => false, 
++	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
++	]); 
++} catch(PDOException $e){
++	// if connection fails, log PDO error. 
++	error_log("Error connecting to mysql: ". $e->getMessage());
++}
+ $type = $_REQUEST['type'];
+ 
+ $types = array(
+@@ -43,10 +53,12 @@ $types = array(
+ );
+ 
+ $type = $types[$type];
++//error_log("type is $type");
+ 
+ if (isset($_REQUEST['ts'])) {
+   // Need EC
+   $tsParts = explode("|", mysql_real_escape_string(hextostr($_REQUEST['ts'])));
++  //$tsParts = explode("|", hextostr($_REQUEST['ts']));
+   $sdate  = $tsParts[0]; 
+   $edate  = $tsParts[1];
+   $stime  = $tsParts[2];
+@@ -55,15 +67,43 @@ if (isset($_REQUEST['ts'])) {
+   $start  = "CONVERT_TZ('$sdate $stime','$offset','+00:00')";
+   $end    = "CONVERT_TZ('$edate $etime','$offset','+00:00')"; 
+   $when   = "event.timestamp BETWEEN $start AND $end";
++  // combine start date and start time for prepared statements
++  $sdatetime = "$sdate $stime";
++  // combine end date and end time for prepared statements
++  $edatetime = "$edate $etime";
+ }
+ 
++// user can specify sensors
+ if (isset($_REQUEST['sensors'])) {
+   $sensors = hextostr($_REQUEST['sensors']);
+   if ($sensors == 'empty') {
+     $sensors = '';
++    $sensorsclean = '';
++    $in = '';
++    $sensor_params = array();
++  } else {
++    // $sensors looks like this:
++    // AND event.sid IN('3','1')
++    // let's clean that up so we can use prepared statements
++    $sensorsclean = ltrim($sensors, 'AND event.sid IN(');  
++    $sensorsclean = rtrim($sensorsclean, ')');
++    $sensorsclean = str_replace("'","", $sensorsclean);
++    // now we need to dynamically build IN for prepared statement based on:
++    // https://phpdelusions.net/pdo#like
++    $ids = explode(",", $sensorsclean);
++    $in = "";
++    foreach ($ids as $i => $item)
++    {
++      $key = ":id".$i;
++      $in .= "$key,";
++      $sensor_params[$key] = $item; // collecting values into key-value array
++    }
++    $in = rtrim($in,","); // :id0,:id1,:id2
++    $sensors = "AND event.sid IN($in)";
+   }
+ }
+ 
++// rt is the queue-only toggle on the left
+ if (isset($_REQUEST['rt'])) {
+   $rt = $_REQUEST['rt'];
+   if ($rt == 1) {
+@@ -78,23 +118,26 @@ if (!$type) {
+ }
+ 
+ function ec() {
+-
+-  global $when, $sensors;
+-
+-  $query = "SELECT COUNT(status) AS count, status
+-    FROM event
+-    LEFT JOIN sensor AS s ON event.sid = s.sid
+-    WHERE $when
+-    $sensors
+-    GROUP BY status";
+-
+-  $result = mysql_query($query);
+-
+-  $rows = array();
+-
+-  while ($row = mysql_fetch_assoc($result)) {
+-    $rows[] = $row;
+-  }
++  // This function returns event count grouped by status.
++  // This is used to populate the numbers in the Classification section on the left side of the Events tab.
++  // This function has been updated to use PDO prepared statements.
++  global $sdatetime, $edatetime, $offset, $sensors, $sensor_params, $dbpdo;
++
++  // build statement
++  $statement = "SELECT COUNT(status) AS count, status FROM event LEFT JOIN sensor AS s ON event.sid = s.sid 
++	WHERE event.timestamp BETWEEN CONVERT_TZ(:sdatetime,:soffset,'+00:00') AND CONVERT_TZ(:edatetime,:eoffset,'+00:00')
++	$sensors
++	GROUP BY status;";
++  // debug
++  //error_log("$statement");
++  // prepare statement
++  $query = $dbpdo->prepare("$statement");
++  // build parameters for prepared statement
++  $params = [":sdatetime" => "$sdatetime", ":edatetime" => "$edatetime", ":soffset" => "$offset", ":eoffset" => "$offset"];
++  // execute the prepared statement and pass it the local params array and the sensor_params array
++  $query->execute(array_merge($params,$sensor_params));
++  // fetch the data and encode to json
++  $rows = $query->fetchAll(PDO::FETCH_ASSOC); 
+   $theJSON = json_encode($rows);
+   echo $theJSON;
+ }
+@@ -169,42 +212,86 @@ function signatures() {
+ }
+ 
+ function level0() {   
+-  global $offset, $when, $sensors, $rt;
+-  $sv = mysql_real_escape_string($_REQUEST['sv']);
++  // This function has been updated to use PDO prepared statements.
++  global $offset, $when, $sensors, $rt, $sdatetime, $edatetime, $sensorsclean, $sensor_params, $dbpdo;
++  // $sv is for sorting.  For example: DESC
++  // this cannot be done via prepared statement, so we use a whitelist approach
++  $sv = mysql_real_escape_string($_REQUEST['sv']) == 'DESC' ? 'DESC' : 'ASC';
+   $filter = hextostr($_REQUEST['filter']);
++  // $filter comes from the filter box in the upper right corner of the Events tab.  Default: empty
+   if ($filter != 'empty') {
+     if (substr($filter, 0,4) == 'cmt ') {
++      // user entered cmt into the filter box
++      // pull their filter out and place it into the prepared statement array
+       $comment = explode('cmt ', $filter);
++      $filtercmt = mysql_real_escape_string($comment[1]);
+       $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
+-	        WHERE history.comment = '" . mysql_real_escape_string($comment[1]) . "'";
++	        WHERE history.comment = :filtercmt";
++      // build parameters for prepared statement
++      $params = [":sdatetime" => "$sdatetime", ":edatetime" => "$edatetime", ":soffset" => "$offset", ":eoffset" => "$offset", ":maxoffset" => "$offset", ":groupoffset" => "$offset", ":filtercmt" => "$filtercmt"];
+     } else {
++      // if the user didn't enter cmt, then they may be using one of the built-in filters
++      // for example, if the user wants to search for alerts with src or dst ip in US:
++      // cc us
++      // we'll then receive the following:
++      // (msrc.cc = 'us' OR mdst.cc = 'us')
++      // the general strategy is to try to match this with one of the built-in filters to ensure validity
++      // then build a prepared statement
+       // this needs to be fixed
+       $filter = str_replace('&lt;','<', $filter);
+       $filter = str_replace('&gt;','>', $filter);
+-      $filter = "AND " . $filter;
+-      $qp2 = "WHERE $when
++      // build parameters for prepared statement
++      $params = [":sdatetime" => "$sdatetime", ":edatetime" => "$edatetime", ":soffset" => "$offset", ":eoffset" => "$offset", ":maxoffset" => "$offset", ":groupoffset" => "$offset"];
++      // find whatever is enclosed in single ticks and replace with $
++      $exploded=explode("'",$filter);
++      $filtervar=$exploded[1];
++      $compfilter = str_replace($filtervar, '$', $filter);
++      // retrieve all valid filters from database
++      $statement="SELECT UNHEX(filter) from filters where type='filter';";
++      $query = $dbpdo->prepare("$statement");
++      $query->execute();
++      $rows = $query->fetchAll(PDO::FETCH_BOTH);
++      // search for user filter in list of valid filters
++      $newfilter = "";
++      foreach ($rows as $row) {
++        if ( "$compfilter" == "$row[0]" ) {
++          $newfilter = $row[0];
++          $i=0;
++          while (strpos($newfilter, "'\$'") !== false) {
++            $newfilter = preg_replace('/\'\$\'/', ":filtervar$i", "$newfilter", 1);
++            $params[":filtervar$i"] = $filtervar;
++            $i++;
++          }
++          $filter = "AND " . $newfilter;
++        }
++      }
++      $qp2 = "WHERE event.timestamp BETWEEN CONVERT_TZ(:sdatetime,:soffset,'+00:00') AND CONVERT_TZ(:edatetime,:eoffset,'+00:00')
+         $sensors
+         $filter
+         $rt";
+     }
+   } else {
+-    $qp2 = "WHERE $when
++    // filter box was empty so we'll just build a prepared statement using sensors and rt values
++    $qp2 = "WHERE event.timestamp BETWEEN CONVERT_TZ(:sdatetime,:soffset,'+00:00') AND CONVERT_TZ(:edatetime,:eoffset,'+00:00')
+       $sensors
+       $rt";
++    // build parameters for prepared statement
++    $params = [":sdatetime" => "$sdatetime", ":edatetime" => "$edatetime", ":soffset" => "$offset", ":eoffset" => "$offset", ":maxoffset" => "$offset", ":groupoffset" => "$offset"];
+   }
+ 
+-  $query = "SELECT COUNT(event.signature) AS f1,
++  // build statement
++  $statement="SELECT COUNT(event.signature) AS f1,
+     event.signature AS f2,
+     event.signature_id AS f3,
+     event.signature_gen AS f4,
+-    MAX(CONVERT_TZ(event.timestamp,'+00:00','$offset')) AS f5,
++    MAX(CONVERT_TZ(event.timestamp,'+00:00',:maxoffset)) AS f5,
+     COUNT(DISTINCT(event.src_ip)) AS f6, 
+     COUNT(DISTINCT(event.dst_ip)) AS f7,
+     event.ip_proto AS f8,
+     GROUP_CONCAT(DISTINCT(event.status)) AS f9,
+     GROUP_CONCAT(DISTINCT(event.sid)) AS f10,
+     GROUP_CONCAT(event.status) AS f11,
+-    GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', '$offset'),12,2)) AS f12,
++    GROUP_CONCAT(SUBSTRING(CONVERT_TZ(event.timestamp, '+00:00', :groupoffset),12,2)) AS f12,
+     event.priority AS f13,
+     GROUP_CONCAT(DISTINCT(src_tag.value)) AS f14,
+     GROUP_CONCAT(DISTINCT(dst_tag.value)) AS f15              
+@@ -216,13 +303,14 @@ function level0() {
+     $qp2
+     GROUP BY f3
+     ORDER BY f5 $sv";
+-
+-  $result = mysql_query($query);
+-  $rows = array();
+-
+-  while ($row = mysql_fetch_assoc($result)) {
+-    $rows[] = $row;
+-  }
++  // debug
++  //error_log("$statement");
++  // prepare statement
++  $query = $dbpdo->prepare("$statement");
++  // execute the prepared statement and pass it the local params array and the sensor_params array
++  $query->execute(array_merge($params,$sensor_params));
++  // fetch the data and encode to json
++  $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+   $theJSON = json_encode($rows);
+   echo $theJSON;
+ }

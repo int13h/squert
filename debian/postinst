@@ -19,27 +19,24 @@ case "$1" in
 		fi
 	fi
 
-	# Originally, Squert had its own authentication.
-	# We've moved to SSO for the Elastic integration.
-	# Two files need to be updated for Squert or SSO auth:
-	LOGIN="/var/www/so/squert/login.php"
-	JS="/var/www/so/squert/.js/squertMain.js"
-	# Default to Squert auth.
-	# If SSO is configured, copy SSO files.
-	# Otherwise, copy Squert auth files.
-	FROM="/var/www/so/squert/.auth/squert"
-	if ! [ -f ${LOGIN} ]; then
-		echo "${LOGIN} does not exist.  Configuring for Squert authentication."
+	# Squert has its own native authentication, but we're moving to SSO for the Elastic integration.
+	# If Apache is configured for SSO, then configure Squert for SSO.
+	# Otherwise, configure Squert for native authentication.
+	AUTH="native"
+	SO="/var/www/so/"
+	SQUERT="${SO}/squert"
+	CONF="/etc/apache2/sites-enabled/securityonion.conf"
+	if ! [ -f ${CONF} ]; then
+		echo "${CONF} does not exist.  Configuring for Squert authentication."
 	else
-		if grep -q PHP_AUTH_USER ${LOGIN} ; then
-			echo "${LOGIN} is configured for SSO authentication.  Updating SSO auth files."
-			FROM="/var/www/so/squert/.auth/sso"
+		if grep -q "<Location /squert>" ${CONF} ; then
+			echo "${CONF} is configured for SSO authentication.  Updating SSO auth files."
+			AUTH="sso"
 		else
-			echo "${LOGIN} is configured for Squert authentication.  Updating Squert auth files."
+			echo "${CONF} is configured for Squert authentication.  Updating Squert auth files."
 		fi
 	fi
-	cp ${FROM}/login.php ${LOGIN} || echo "Error copying ${FROM}/login.php to ${LOGIN}."
-	cp ${FROM}/squertMain.js ${JS} || echo "Error copying ${FROM}/squertMain.js to ${JS}."
+	cp -av /opt/squert/auth/${AUTH}/squert ${SO} || echo "Error copying from /opt/squert/auth/${AUTH}/squert to ${SO}."
 
         apache2ctl restart || echo "Error restarting Apache."
         

@@ -1,3 +1,63 @@
+securityonion-squert (20161212-1ubuntu1securityonion26) trusty; urgency=medium
+
+  * migrate login.php to prepared statements 
+
+ -- Doug Burks <doug.burks@gmail.com>  Sun, 21 Jan 2018 13:33:27 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion25) trusty; urgency=medium
+
+  * allow pivot to ELSA or Elastic 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 19 Jan 2018 16:55:16 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion24) trusty; urgency=medium
+
+  * improve callback.php and grant permission to autocat table 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 19 Jan 2018 16:11:02 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion23) trusty; urgency=medium
+
+  * begin transition to pdo prepared statements 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 05 Jan 2018 18:03:20 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion22) trusty; urgency=medium
+
+  * set version to 1.7.0 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 03 Jan 2018 07:46:38 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion21) trusty; urgency=medium
+
+  * move auth files to /opt/squert 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 03 Jan 2018 06:46:00 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion20) trusty; urgency=medium
+
+  * fix postinst 
+
+ -- Doug Burks <doug.burks@gmail.com>  Tue, 02 Jan 2018 17:45:10 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion19) trusty; urgency=medium
+
+  * improve postinst 
+
+ -- Doug Burks <doug.burks@gmail.com>  Tue, 02 Jan 2018 14:44:58 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion18) trusty; urgency=medium
+
+  * fix install 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 01 Jan 2018 19:26:53 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion17) trusty; urgency=medium
+
+  * improve calls to clicat 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 01 Jan 2018 17:00:23 -0500
+
 securityonion-squert (20161212-1ubuntu1securityonion16) trusty; urgency=medium
 
   * merge and adjust comment 

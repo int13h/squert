@@ -133,6 +133,8 @@ VALUES ('url','','1','4d616c77617265446f6d61696e4c697374','','MDL','687474703a2f
 
 GRANT INSERT,UPDATE,DELETE ON filters TO 'readonly'@'localhost';
 
+GRANT DELETE on autocat to 'readonly'@'localhost';
+
 GRANT DELETE on history to 'readonly'@'localhost';
 
 GRANT UPDATE on user_info TO 'readonly'@'localhost';

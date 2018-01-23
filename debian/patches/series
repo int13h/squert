@@ -15,3 +15,11 @@ Squert:-comment-search-not-working-#1119
 fix-error-in-times-function
 improve-input-validation-and-output-filtering
 merge-and-adjust-comment
+improve-calls-to-clicat
+improve-postinst
+move-auth-to-optsquert
+set-version-to-1.7.0
+begin-transition-to-pdo-prepared-statements
+improve-callback.php-and-grant-permission-to-autocat-table
+allow-pivot-to-elsa-or-elastic
+migrate-login.php-to-prepared-statements
