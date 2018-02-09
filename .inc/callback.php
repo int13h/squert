@@ -619,6 +619,8 @@ function payload() {
   $row = $query->fetchall(PDO::FETCH_ASSOC);
   if (array_key_exists(0, $row)) {
     $rows[] = $row[0];
+    // Add the row again for Bro agent
+    $rows[] = $row[0];
   }
   $theJSON = json_encode($rows);
   echo $theJSON;
