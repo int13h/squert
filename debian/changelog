@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion27) trusty; urgency=medium
+
+  * add row for Bro agent 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 08 Feb 2018 19:57:56 -0500
+
 securityonion-squert (20161212-1ubuntu1securityonion26) trusty; urgency=medium
 
   * migrate login.php to prepared statements 

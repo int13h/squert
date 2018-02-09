@@ -23,3 +23,4 @@ begin-transition-to-pdo-prepared-statements
 improve-callback.php-and-grant-permission-to-autocat-table
 allow-pivot-to-elsa-or-elastic
 migrate-login.php-to-prepared-statements
+add-row-for-Bro-agent
