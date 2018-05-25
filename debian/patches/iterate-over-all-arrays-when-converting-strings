@@ -1,0 +1,38 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion36) xenial; urgency=medium
+ .
+   * iterate over all arrays when converting strings
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.inc/callback.php
++++ securityonion-squert-20161212/.inc/callback.php
+@@ -443,7 +443,9 @@ function level2() {
+   // fetch the data and encode to json
+   $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+   // the frontend expects all values to be strings
+-  $rows[0] = array_map('strval', $rows[0]);
++  for ($i=0;$i<count($rows);$i++) {
++    $rows[0] = array_map('strval', $rows[0]);
++  }
+   $theJSON = json_encode($rows);
+   echo $theJSON;
+ 

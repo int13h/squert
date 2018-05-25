@@ -1,0 +1,161 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion39) xenial; urgency=medium
+ .
+   * remove unnecessary code from ip2c.php
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.inc/ip2c.php
++++ securityonion-squert-20161212/.inc/ip2c.php
+@@ -25,29 +25,22 @@ include_once "functions.php";
+ $db = mysqli_connect($dbHost,$dbUser,$dbPass) or die(mysqli_error($db));
+ mysqli_select_db($db,$dbName) or die(mysqli_error($db));
+ 
+-function IP2C($string,$isCLI) {
++function IP2C($string) {
+ 
+-    if ($isCLI == 'NO') {
+-        // Running from a browser
+-        $when = 'WHERE ' . hextostr($string) . ' AND ';
+-    } else {
+-        // Running from the command line
+-        if ($string == 0) {
+-            $when = "WHERE ";
+-        }
+-
+-        if ($string == 1) {
+-            $startDate = gmdate("Y-m-d");
+-            $startTime = "00:00:00";
+-            $endDate = gmdate("Y-m-d",strtotime($startDate . "+1 day"));
+-            $endTime = "00:00:00";
+-            $when = "WHERE e.timestamp BETWEEN '$startDate $startTime' AND '$endDate $endTime' AND";
+-        }
+-
+-        echo "Performing base queries (this can take a while)..\n\n";
++    if ($string == 0) {
++        $when = "WHERE ";
++    }
+ 
++    if ($string == 1) {
++        $startDate = gmdate("Y-m-d");
++        $startTime = "00:00:00";
++        $endDate = gmdate("Y-m-d",strtotime($startDate . "+1 day"));
++        $endTime = "00:00:00";
++        $when = "WHERE e.timestamp BETWEEN '$startDate $startTime' AND '$endDate $endTime' AND";
+     }
+ 
++    echo "Performing base queries (this can take a while)..\n\n";
++
+     function lookup($list) {
+ 
+ 	global $db;
+@@ -75,13 +68,11 @@ function IP2C($string,$isCLI) {
+         }
+     }
+ 
+-    // DB Connect
+-    global $dbHost, $dbUser, $dbPass, $dbName;
+-    $db = mysqli_connect($dbHost,$dbUser,$dbPass) or die(mysqli_error($db));
+-    mysqli_select_db($db,$dbName) or die(mysqli_error($db));
+-
+     // Start timing
+     $st = microtime(true);
++
++    // DB Connect
++    global $db;
+     $sipList = mysqli_query($db,"SELECT DISTINCT(e.src_ip) FROM event AS e LEFT JOIN mappings AS m ON e.src_ip=m.ip
+                             WHERE (m.ip IS NULL OR m.cc = '01')");
+     $dipList = mysqli_query($db,"SELECT DISTINCT(e.dst_ip) FROM event AS e LEFT JOIN mappings AS m ON e.dst_ip=m.ip
+@@ -109,19 +100,7 @@ function IP2C($string,$isCLI) {
+     $time = $et - $st;
+     $rt = sprintf("%01.3f",$time);
+ 
+-    if ($isCLI == 'NO') {
+-
+-        $html = "\r<table align=left>
+-                 \r<tr><td align=left style=\"font-size: 10px;\"><b>&nbsp;-> Query Time: $rt seconds</b></td></tr>
+-                 \r<tr><td align=left style=\"font-size: 10px;\"><b>&nbsp;-> Source Count: $sipCount</b></td></tr>
+-                 \r<tr><td align=left style=\"font-size: 10px;\"><b>&nbsp;-> Destination Count: $dipCount</b></td>
+-                 \r<tr><td align=left style=\"font-size: 10px;\"><b>&nbsp;-> Total Mapped: $allCount[0]</b></td></tr>
+-                 \r</table>";
+-            
+-        return $html;
+-    }
+-
+-    if ($isCLI == 'YES' && $string == 0) {
++    if ($string == 0) {
+         echo "\n-> Query Time: $rt seconds
+               \r-> Source Count: $sipCount
+               \r-> Destination Count: $dipCount
+@@ -130,30 +109,6 @@ function IP2C($string,$isCLI) {
+ 
+ }
+ 
+-/*
+-
+-Commenting out the following function per
+-https://github.com/int13h/squert/issues/76
+-
+-function TheHTML($string) {
+-
+-    echo "\r<html>
+-          \r<head>
+-          \r<script type=\"text/javascript\" src=\"../.js/squert.js\"></script>
+-          \r<style type=\"text/css\" media=\"screen\">@import \"../.css/squert.css\";</style>
+-          \r</head>
+-          \r<body style=\"background: #ffffff;\">
+-          \r<form id=ip2c method=post action=ip2c.php>
+-          \r<center>          
+-          \r<input class=rb onclick=\"poof('wrkn','yes');\" id=csync name=csync type=\"submit\" value=\"update\">
+-          \r<br><br><span id=\"wrkn\" name=\"wrkn\" style=\"display: none;\"><img src=work.gif></span>
+-          \r<input type=hidden id=qText name=qText value=\"$string\">
+-          \r</center>
+-          \r</body>
+-          \r</html>";
+-}
+-*/
+-
+ if (isset($argc)) {
+ 
+     if ($argc == 1 || $argc > 2 || $argv[1] > 1 || !is_numeric($argv[1])) {
+@@ -164,21 +119,8 @@ if (isset($argc)) {
+           \r1 - Update. This is intended to be called via Cron\n\n";
+     exit;
+     } else {
+-        IP2C($argv[1],'YES');
+-    }
+-
+-} else { 
+-
+-    $html = '';
+-
+-    if(!isset($_REQUEST['qText'])) { $string = $_REQUEST['qp']; } else { $string = $_REQUEST['qText']; }
+-
+-    if (@$_REQUEST['csync']) {
+-        $string = $_REQUEST['qText'];
+-        $html = IP2C($string,'NO');
++        IP2C($argv[1]);
+     }
+ 
+-    TheHTML($string);
+-    echo $html;
+ }
+ ?>

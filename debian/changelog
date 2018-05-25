@@ -1,3 +1,75 @@
+securityonion-squert (20161212-1ubuntu1securityonion39) xenial; urgency=medium
+
+  * remove unnecessary code from ip2c.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Sat, 05 May 2018 06:28:57 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion38) xenial; urgency=medium
+
+  * update mysql function calls in ip2c.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 04 May 2018 17:04:11 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion37) xenial; urgency=medium
+
+  * fix for loop 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 03 May 2018 11:01:09 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion36) xenial; urgency=medium
+
+  * iterate over all arrays when converting strings 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 03 May 2018 10:05:19 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion35) xenial; urgency=medium
+
+  * frontend expects all values to be strings 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 03 May 2018 09:34:58 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion34) xenial; urgency=medium
+
+  * disable mysql strict mode 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 02 May 2018 16:46:37 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion33) xenial; urgency=medium
+
+  * fix auth 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 02 May 2018 14:56:49 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion32) xenial; urgency=medium
+
+  * move files from elastic package 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 02 May 2018 13:42:37 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion31) xenial; urgency=medium
+
+  * force disable autoindex 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 02 May 2018 09:14:41 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion30) xenial; urgency=medium
+
+  * update mysql calls and config 
+
+ -- Doug Burks <doug.burks@gmail.com>  Tue, 01 May 2018 18:04:07 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion29) xenial; urgency=medium
+
+  * change php5 to php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 27 Apr 2018 15:39:16 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion28) trusty; urgency=medium
+
+  * version 1.7.1 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 09 Feb 2018 06:14:16 -0500
+
 securityonion-squert (20161212-1ubuntu1securityonion27) trusty; urgency=medium
 
   * add row for Bro agent 

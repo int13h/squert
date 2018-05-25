@@ -6,7 +6,7 @@ case "$1" in
     configure)
         
 	a2enmod ssl || echo "Error enabling Apache ssl module."
-	a2dismod autoindex || echo "Error disabling Apache autoindex module."
+	a2dismod autoindex -f || echo "Error disabling Apache autoindex module."
 	a2dissite 000-default || echo "Error disabling Apache HTTP listener."
 	a2ensite securityonion || echo "Error enabling Apache securityonion site."
         
@@ -18,25 +18,6 @@ case "$1" in
 			sed -i 's|^Listen 80$||g' $FILE || echo "Error updating $FILE."
 		fi
 	fi
-
-	# Squert has its own native authentication, but we're moving to SSO for the Elastic integration.
-	# If Apache is configured for SSO, then configure Squert for SSO.
-	# Otherwise, configure Squert for native authentication.
-	AUTH="native"
-	SO="/var/www/so/"
-	SQUERT="${SO}/squert"
-	CONF="/etc/apache2/sites-enabled/securityonion.conf"
-	if ! [ -f ${CONF} ]; then
-		echo "${CONF} does not exist.  Configuring for Squert authentication."
-	else
-		if grep -q "<Location /squert>" ${CONF} ; then
-			echo "${CONF} is configured for SSO authentication.  Updating SSO auth files."
-			AUTH="sso"
-		else
-			echo "${CONF} is configured for Squert authentication.  Updating Squert auth files."
-		fi
-	fi
-	cp -av /opt/squert/auth/${AUTH}/squert ${SO} || echo "Error copying from /opt/squert/auth/${AUTH}/squert to ${SO}."
 
         apache2ctl restart || echo "Error restarting Apache."
         

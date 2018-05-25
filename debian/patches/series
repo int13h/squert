@@ -24,3 +24,13 @@ improve-callback.php-and-grant-permission-to-autocat-table
 allow-pivot-to-elsa-or-elastic
 migrate-login.php-to-prepared-statements
 add-row-for-Bro-agent
+version-1.7.1
+update-mysql-calls-and-config
+move-files-from-elastic-package
+fix-auth
+disable-mysql-strict-mode
+frontend-expects-all-values-to-be-strings
+iterate-over-all-arrays-when-converting-strings
+fix-for-loop
+update-mysql-function-calls-in-ip2c.php
+remove-unnecessary-code-from-ip2c.php:wq

@@ -10,6 +10,6 @@ Homepage: http://www.squertproject.org/
 
 Package: securityonion-squert
 Architecture: all
-Depends: ${misc:Depends}, apache2, patch, php5, libapache2-mod-php5, php5-mysql, php5-cli, php5-gd, mysqltcl, mysql-server, mysql-client, graphviz, libtext-csv-perl, tclcurl
+Depends: ${misc:Depends}, apache2, patch, php, libapache2-mod-php, php-mysql, php-cli, php-gd, mysqltcl, mysql-server, mysql-client, graphviz, libtext-csv-perl, tclcurl
 Description: squert
  Squert is a web interface for the Sguil database.
