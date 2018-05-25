@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion40) xenial; urgency=medium
+
+  * Issue 1169: Squert: remove search link from context menu 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 25 May 2018 08:21:46 -0400
+
 securityonion-squert (20161212-1ubuntu1securityonion39) xenial; urgency=medium
 
   * remove unnecessary code from ip2c.php 

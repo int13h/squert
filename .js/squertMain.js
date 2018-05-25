@@ -2013,12 +2013,13 @@ $(document).ready(function(){
     var objhex = s2h(suffix);
     var tbl = '', row = '';
     // Local stuff first 
+    // Commented out SEARCH row to reduce pivot
     switch (prefix[prefix.length - 1]) {
       case "c": 
         row += "<tr class=p_row data-type=l data-alias=cc><td class=pr>:: SRC or DST</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=scc><td class=pr>:: SRC</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=dcc><td class=pr>:: DST</td></tr>";
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "p":
         row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>:: SRC or DST</td></tr>";
@@ -2028,7 +2029,7 @@ $(document).ready(function(){
         if ($('.sigtxt')[0]) {
           row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
         }
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">apply</span>";
@@ -2038,14 +2039,14 @@ $(document).ready(function(){
       case "t":
         row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>:: SRC</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=dpt><td class=pr>:: DST</td></tr>";
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "d":
         row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: SIGNATURE</td></tr>";
         if ($('.sigtxt')[0]) {
           row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
         }
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "l":
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
@@ -2054,7 +2055,7 @@ $(document).ready(function(){
         doexternals = "no";
       break;
       case "z":
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
     }
     

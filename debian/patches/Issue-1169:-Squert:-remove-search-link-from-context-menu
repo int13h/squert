@@ -1,0 +1,88 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion40) xenial; urgency=medium
+ .
+   * Issue 1169: Squert: remove search link from context menu
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.js/squertMain.js
++++ securityonion-squert-20161212/.js/squertMain.js
+@@ -2013,12 +2013,13 @@ $(document).ready(function(){
+     var objhex = s2h(suffix);
+     var tbl = '', row = '';
+     // Local stuff first 
++    // Commented out SEARCH row to reduce pivot
+     switch (prefix[prefix.length - 1]) {
+       case "c": 
+         row += "<tr class=p_row data-type=l data-alias=cc><td class=pr>:: SRC or DST</td></tr>";
+         row += "<tr class=p_row data-type=l data-alias=scc><td class=pr>:: SRC</td></tr>";
+         row += "<tr class=p_row data-type=l data-alias=dcc><td class=pr>:: DST</td></tr>";
+-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
++        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+       break;
+       case "p":
+         row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>:: SRC or DST</td></tr>";
+@@ -2028,7 +2029,7 @@ $(document).ready(function(){
+         if ($('.sigtxt')[0]) {
+           row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
+         }
+-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
++        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
+         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
+         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">apply</span>";
+@@ -2038,14 +2039,14 @@ $(document).ready(function(){
+       case "t":
+         row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>:: SRC</td></tr>";
+         row += "<tr class=p_row data-type=l data-alias=dpt><td class=pr>:: DST</td></tr>";
+-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
++        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+       break;
+       case "d":
+         row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: SIGNATURE</td></tr>";
+         if ($('.sigtxt')[0]) {
+           row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
+         }
+-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
++        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+       break;
+       case "l":
+         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
+@@ -2054,7 +2055,7 @@ $(document).ready(function(){
+         doexternals = "no";
+       break;
+       case "z":
+-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
++        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+       break;
+     }
+     
+--- securityonion-squert-20161212.orig/login.php
++++ securityonion-squert-20161212/login.php
+@@ -150,7 +150,7 @@ Password<br>
+ <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
+ <td class=err><?php echo $err;?></td></tr>
+ </table>
+-<div class=cp>Version 1.7.1<span>&copy;2016 Paul Halliday</span></div>
++<div class=cp>Version 1.8.0<span>&copy;2016 Paul Halliday</span></div>
+ </div>
+ </form>
+ <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>
