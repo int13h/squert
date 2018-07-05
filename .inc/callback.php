@@ -325,6 +325,10 @@ function level0() {
   $query->execute($merged_params);
   // fetch the data and encode to json
   $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+  // the frontend expects all values to be strings
+  for ($i=0;$i<count($rows);$i++) {
+    $rows[$i] = array_map('strval', $rows[$i]);
+  }
   $theJSON = json_encode($rows);
   echo $theJSON;
 }
@@ -385,6 +389,10 @@ function level1() {
   $query->execute($merged_params);
   // fetch the data and encode to json
   $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+  // the frontend expects all values to be strings
+  for ($i=0;$i<count($rows);$i++) {
+    $rows[$i] = array_map('strval', $rows[$i]);
+  }
   $theJSON = json_encode($rows);
   echo $theJSON;
 }

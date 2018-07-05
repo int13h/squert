@@ -36,3 +36,4 @@ update-mysql-function-calls-in-ip2c.php
 remove-unnecessary-code-from-ip2c.php:wq
 Issue-1169:-Squert:-remove-search-link-from-context-menu
 Issue-1259:-Squert:-turning-grouping-off-results-in-no-alerts
+Squert:-Priority-counts-incorrect-#1277
