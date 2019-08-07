@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion43) xenial; urgency=medium
+
+  * securityonion-squert: increase group_concat_max_len Security-Onion-Solutions/security-onion#1602 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 07 Aug 2019 19:39:24 -0400
+
 securityonion-squert (20161212-1ubuntu1securityonion42) xenial; urgency=medium
 
   * Squert: Priority counts incorrect #1277 
