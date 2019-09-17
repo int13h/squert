@@ -1,3 +1,9 @@
+securityonion-squert (20161212-1ubuntu1securityonion44) xenial; urgency=medium
+
+  * Squert: improve consistency of username handling Security-Onion-Solutions/security-onion#1643 
+
+ -- Doug Burks <doug.burks@gmail.com>  Tue, 17 Sep 2019 16:07:37 -0400
+
 securityonion-squert (20161212-1ubuntu1securityonion43) xenial; urgency=medium
 
   * securityonion-squert: increase group_concat_max_len Security-Onion-Solutions/security-onion#1602 

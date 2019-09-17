@@ -82,7 +82,7 @@ function cleanUp($string) {
 	}
 
 	// if $username was found in database, then check password
-        if ( isset($userName) && $username == $userName) {
+        if ( isset($userName) && strtolower($username) == strtolower($userName) ) {
             // The first 2 chars are the salt     
             $theSalt = substr($userHash, 0,2);
 
@@ -150,7 +150,7 @@ Password<br>
 <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
 <td class=err><?php echo $err;?></td></tr>
 </table>
-<div class=cp>Version 1.8.1<span>&copy;2016 Paul Halliday</span></div>
+<div class=cp>Version 1.8.2<span>&copy;2016 Paul Halliday</span></div>
 </div>
 </form>
 <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>

@@ -1,0 +1,45 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion44) xenial; urgency=medium
+ .
+   * Squert: improve consistency of username handling Security-Onion-Solutions/security-onion#1643
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/login.php
++++ securityonion-squert-20161212/login.php
+@@ -82,7 +82,7 @@ function cleanUp($string) {
+ 	}
+ 
+ 	// if $username was found in database, then check password
+-        if ( isset($userName) && $username == $userName) {
++        if ( isset($userName) && strtolower($username) == strtolower($userName) ) {
+             // The first 2 chars are the salt     
+             $theSalt = substr($userHash, 0,2);
+ 
+@@ -150,7 +150,7 @@ Password<br>
+ <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
+ <td class=err><?php echo $err;?></td></tr>
+ </table>
+-<div class=cp>Version 1.8.1<span>&copy;2016 Paul Halliday</span></div>
++<div class=cp>Version 1.8.2<span>&copy;2016 Paul Halliday</span></div>
+ </div>
+ </form>
+ <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>
