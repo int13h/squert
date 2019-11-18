@@ -1,0 +1,75 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion14) trusty; urgency=medium
+ .
+   * fix error in times function
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.inc/callback.php
++++ securityonion-squert-20161212/.inc/callback.php
+@@ -1483,26 +1483,34 @@ function times() {
+   global $offset, $when, $sensors;
+   $filter = hextostr($_REQUEST['filter']);
+   if ($filter != 'empty') {
++    if (substr($filter, 0,4) == 'cmt ') {
++      $comment = explode('cmt ', $filter);
++      $qp2 = "LEFT JOIN history ON event.sid = history.sid AND event.cid = history.cid 
++        WHERE history.comment = '" . mysql_real_escape_string($comment[1]) . "'
++        AND $when $sensors";
++    } else {
++      // this needs to be fixed
+     $filter = str_replace('&lt;','<', $filter);
+     $filter = str_replace('&gt;','>', $filter);
+     $filter = "AND " . $filter;
+     $qp2 = "WHERE $when
+       $sensors
+       $filter";
++    }
+   } else {
+     $qp2 = "WHERE $when
+       $sensors";
+   }
+ 
+   $query = "SELECT
+-    SUBSTRING(CONVERT_TZ(timestamp,'+00:00','$offset'),12,5) AS time,
++    SUBSTRING(CONVERT_TZ(event.timestamp,'+00:00','$offset'),12,5) AS time,
+       COUNT(signature) AS count 
+       FROM event
+       LEFT JOIN mappings AS msrc ON event.src_ip = msrc.ip
+       LEFT JOIN mappings AS mdst ON event.dst_ip = mdst.ip
+       $qp2
+       GROUP BY time 
+-      ORDER BY timestamp";
++      ORDER BY event.timestamp";
+   $result = mysql_query($query);
+   $rows = array();
+   $r = $m = 0;
+--- securityonion-squert-20161212.orig/login.php
++++ securityonion-squert-20161212/login.php
+@@ -130,7 +130,7 @@ Password<br>
+ <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
+ <td class=err><?php echo $err;?></td></tr>
+ </table>
+-<div class=cp>Version 1.6.5<span>&copy;2016 Paul Halliday</span></div>
++<div class=cp>Version 1.6.6<span>&copy;2016 Paul Halliday</span></div>
+ </div>
+ </form>
+ <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>

@@ -1,0 +1,57 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion6) trusty; urgency=medium
+ .
+   * add hash to object_mappings table
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.scripts/securityonion_update.sh
++++ securityonion-squert-20161212/.scripts/securityonion_update.sh
+@@ -44,6 +44,15 @@ if [ -d /var/lib/mysql/securityonion_db/
+                 $MYSQL "UPDATE filters SET type = 'filter' WHERE type IS NULL;;"
+ 	fi
+ 
++	# object_mappings table - hash
++        if $MYSQL "DESCRIBE object_mappings" | grep hash >/dev/null 2>&1 ; then
++		echo "object_mappings table already has hash field."
++	else
++		echo "Adding hash field to object_mappings table."
++                $MYSQL "ALTER TABLE object_mappings ADD hash CHAR(32);"
++                $MYSQL "ALTER TABLE object_mappings DROP PRIMARY KEY , ADD PRIMARY KEY (hash);"
++	fi
++
+ 	# Idempotent operations
+ 	cat /var/www/so/squert/.scripts/securityonion_update.sql | mysql --defaults-file=/etc/mysql/debian.cnf -U securityonion_db > /var/log/nsm/squert_update.log
+ 
+--- securityonion-squert-20161212.orig/.scripts/securityonion_update.sql
++++ securityonion-squert-20161212/.scripts/securityonion_update.sql
+@@ -69,9 +69,10 @@ CREATE TABLE IF NOT EXISTS object_mappin
+   type   VARCHAR(4),
+   object VARCHAR(255),
+   value  VARCHAR(255),
++  hash   CHAR(32),
+   INDEX type (type),
+   INDEX object (object),
+-  PRIMARY KEY (type,object)
++  PRIMARY KEY (hash)
+ );
+ 
+ CREATE TABLE IF NOT EXISTS filters

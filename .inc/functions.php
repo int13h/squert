@@ -56,13 +56,13 @@ function retSD($x) {
 function dbC() {
     if (file_exists('.inc/config.php')) {
         global $dbHost,$dbName,$dbUser,$dbPass;
-        $link = mysql_connect($dbHost,$dbUser,$dbPass);
+        $link = mysqli_connect($dbHost,$dbUser,$dbPass);
 
         if (!$link) {
             die('Connection failed: ' . mysql_error());
         }
 
-        $db = mysql_select_db($dbName,$link);
+        $db = mysqli_select_db($link,$dbName);
 
         if (!$db) {
             die('Database selection failed: ' . mysql_error());

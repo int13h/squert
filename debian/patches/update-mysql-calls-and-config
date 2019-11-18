@@ -1,0 +1,52 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion30) xenial; urgency=medium
+ .
+   * update mysql calls and config
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.inc/functions.php
++++ securityonion-squert-20161212/.inc/functions.php
+@@ -56,13 +56,13 @@ function retSD($x) {
+ function dbC() {
+     if (file_exists('.inc/config.php')) {
+         global $dbHost,$dbName,$dbUser,$dbPass;
+-        $link = mysql_connect($dbHost,$dbUser,$dbPass);
++        $link = mysqli_connect($dbHost,$dbUser,$dbPass);
+ 
+         if (!$link) {
+             die('Connection failed: ' . mysql_error());
+         }
+ 
+-        $db = mysql_select_db($dbName,$link);
++        $db = mysqli_select_db($link,$dbName);
+ 
+         if (!$db) {
+             die('Database selection failed: ' . mysql_error());
+--- securityonion-squert-20161212.orig/.scripts/securityonion-squert.cnf
++++ securityonion-squert-20161212/.scripts/securityonion-squert.cnf
+@@ -1,5 +1,6 @@
+ [mysqld]
+ group_concat_max_len = 100000
++sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+ 
+ [mysqltcl]
+ local-infile=1

@@ -33,9 +33,13 @@ function cleanUp($string) {
     return $string;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $username = $_REQUEST['username'];
-    $password = $_REQUEST['password'];
+//if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+    //$username = $_REQUEST['username'];
+    //$password = $_REQUEST['password'];
+    // sso
+    $username = $_SERVER['PHP_AUTH_USER'];
+    $password = $_SERVER['PHP_AUTH_PW'];
+
     $ua       = $_SERVER['HTTP_USER_AGENT'];
     $rqt      = $_SERVER['REQUEST_TIME'];
     $rqaddr   = $_SERVER['REMOTE_ADDR'];
@@ -45,16 +49,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $ua      .= mt_rand(0,$max);
     $cmpid    = $rqt . $rqaddr . $ua;
     $id       = md5($cmpid);
-    $db = mysql_connect($dbHost,$dbUser,$dbPass);
-    $link = mysql_select_db($dbName, $db);
-    if ($link) {
-        $user = cleanUp($username);
-        $query = "SELECT * FROM user_info WHERE username = '$user'";
-        $result = mysql_query($query);
-        $numRows = mysql_num_rows($result);
+    // PDO prepared statements
+    try {
+        // first connect to database with the PDO object. 
+        $dbpdo = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=latin1", "$dbUser", "$dbPass", [
+        PDO::ATTR_EMULATE_PREPARES => false,
+        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
+    } catch(PDOException $e){
+        // if connection fails, log PDO error. 
+        error_log("Error connecting to mysql: ". $e->getMessage());
+    }
 
-        if ($numRows > 0) {
-            while ($row = mysql_fetch_row($result)) {
+    if (isset($dbpdo)) {
+	// prepare statement
+        $statement = "SELECT * FROM user_info WHERE username = :user";
+	$query = $dbpdo->prepare("$statement");
+	// build parameters for prepared statement
+	$params = [":user" => "$username"];
+	// execute the prepared statement and pass it params
+	$query->execute($params);
+	// fetch the data
+	while ($row = $query->fetch(PDO::FETCH_NUM)) {
                 $userName	= $row[1];
                 $lastLogin	= $row[2];
                 $userHash	= $row[3];
@@ -62,7 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $userType       = $row[5];
                 $userTime       = $row[6];
                 $tzoffset	= $row[7];
-            }
+	}
+
+	// if $username was found in database, then check password
+        if ( isset($userName) && strtolower($username) == strtolower($userName) ) {
             // The first 2 chars are the salt     
             $theSalt = substr($userHash, 0,2);
 
@@ -104,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     } else {
         $err = 'Connection Failed';
     }
-}
+//}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -130,7 +150,7 @@ Password<br>
 <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
 <td class=err><?php echo $err;?></td></tr>
 </table>
-<div class=cp>Version 1.6.0<span>&copy;2015 Paul Halliday</span></div>
+<div class=cp>Version 1.8.2<span>&copy;2016 Paul Halliday</span></div>
 </div>
 </form>
 <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>

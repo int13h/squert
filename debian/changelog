@@ -1,0 +1,263 @@
+securityonion-squert (20161212-1ubuntu1securityonion44) xenial; urgency=medium
+
+  * Squert: improve consistency of username handling Security-Onion-Solutions/security-onion#1643 
+
+ -- Doug Burks <doug.burks@gmail.com>  Tue, 17 Sep 2019 16:07:37 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion43) xenial; urgency=medium
+
+  * securityonion-squert: increase group_concat_max_len Security-Onion-Solutions/security-onion#1602 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 07 Aug 2019 19:39:24 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion42) xenial; urgency=medium
+
+  * Squert: Priority counts incorrect #1277 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 05 Jul 2018 07:06:30 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion41) xenial; urgency=medium
+
+  * Issue 1259: Squert: turning grouping off results in no alerts 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 14 Jun 2018 13:36:43 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion40) xenial; urgency=medium
+
+  * Issue 1169: Squert: remove search link from context menu 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 25 May 2018 08:21:46 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion39) xenial; urgency=medium
+
+  * remove unnecessary code from ip2c.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Sat, 05 May 2018 06:28:57 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion38) xenial; urgency=medium
+
+  * update mysql function calls in ip2c.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 04 May 2018 17:04:11 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion37) xenial; urgency=medium
+
+  * fix for loop 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 03 May 2018 11:01:09 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion36) xenial; urgency=medium
+
+  * iterate over all arrays when converting strings 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 03 May 2018 10:05:19 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion35) xenial; urgency=medium
+
+  * frontend expects all values to be strings 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 03 May 2018 09:34:58 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion34) xenial; urgency=medium
+
+  * disable mysql strict mode 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 02 May 2018 16:46:37 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion33) xenial; urgency=medium
+
+  * fix auth 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 02 May 2018 14:56:49 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion32) xenial; urgency=medium
+
+  * move files from elastic package 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 02 May 2018 13:42:37 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion31) xenial; urgency=medium
+
+  * force disable autoindex 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 02 May 2018 09:14:41 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion30) xenial; urgency=medium
+
+  * update mysql calls and config 
+
+ -- Doug Burks <doug.burks@gmail.com>  Tue, 01 May 2018 18:04:07 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion29) xenial; urgency=medium
+
+  * change php5 to php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 27 Apr 2018 15:39:16 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion28) trusty; urgency=medium
+
+  * version 1.7.1 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 09 Feb 2018 06:14:16 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion27) trusty; urgency=medium
+
+  * add row for Bro agent 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 08 Feb 2018 19:57:56 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion26) trusty; urgency=medium
+
+  * migrate login.php to prepared statements 
+
+ -- Doug Burks <doug.burks@gmail.com>  Sun, 21 Jan 2018 13:33:27 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion25) trusty; urgency=medium
+
+  * allow pivot to ELSA or Elastic 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 19 Jan 2018 16:55:16 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion24) trusty; urgency=medium
+
+  * improve callback.php and grant permission to autocat table 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 19 Jan 2018 16:11:02 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion23) trusty; urgency=medium
+
+  * begin transition to pdo prepared statements 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 05 Jan 2018 18:03:20 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion22) trusty; urgency=medium
+
+  * set version to 1.7.0 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 03 Jan 2018 07:46:38 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion21) trusty; urgency=medium
+
+  * move auth files to /opt/squert 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 03 Jan 2018 06:46:00 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion20) trusty; urgency=medium
+
+  * fix postinst 
+
+ -- Doug Burks <doug.burks@gmail.com>  Tue, 02 Jan 2018 17:45:10 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion19) trusty; urgency=medium
+
+  * improve postinst 
+
+ -- Doug Burks <doug.burks@gmail.com>  Tue, 02 Jan 2018 14:44:58 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion18) trusty; urgency=medium
+
+  * fix install 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 01 Jan 2018 19:26:53 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion17) trusty; urgency=medium
+
+  * improve calls to clicat 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 01 Jan 2018 17:00:23 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion16) trusty; urgency=medium
+
+  * merge and adjust comment 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 21 Dec 2017 06:21:12 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion15) trusty; urgency=medium
+
+  * improve input validation and output filtering 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 20 Dec 2017 15:38:21 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion14) trusty; urgency=medium
+
+  * fix error in times function 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 18 Aug 2017 08:57:12 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion13) trusty; urgency=medium
+
+  * Squert: comment search not working #1119 
+
+ -- Doug Burks <doug.burks@gmail.com>  Thu, 17 Aug 2017 07:26:33 -0400
+
+securityonion-squert (20161212-1ubuntu1securityonion12) trusty; urgency=medium
+
+  * Squert: ip2c avoid hard loop when file unavailable #1067 
+
+ -- Doug Burks <doug.burks@gmail.com>  Sat, 21 Jan 2017 06:59:49 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion11) trusty; urgency=medium
+
+  * bump version to 1.6.4 
+
+ -- Doug Burks <doug.burks@gmail.com>  Sat, 21 Jan 2017 05:18:59 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion10) trusty; urgency=medium
+
+  * Squert: error when removing comment #1066 
+
+ -- Doug Burks <doug.burks@gmail.com>  Sat, 21 Jan 2017 05:06:53 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion9) trusty; urgency=medium
+
+  * initialize srcd, dstd, and alld in callback.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 16 Dec 2016 10:06:58 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion8) trusty; urgency=medium
+
+  * Squert: OSSEC HIDS alerts display NIDS rules #958 
+
+ -- Doug Burks <doug.burks@gmail.com>  Fri, 16 Dec 2016 09:09:13 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion7) trusty; urgency=medium
+
+  * populate empty hash fields 
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 14 Dec 2016 10:53:03 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion6) trusty; urgency=medium
+
+  * add hash to object_mappings table
+
+ -- Doug Burks <doug.burks@gmail.com>  Wed, 14 Dec 2016 09:41:28 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion5) trusty; urgency=medium
+
+  * fix ip2c.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 17:31:29 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion4) trusty; urgency=medium
+
+  * disable ip2c.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 16:45:49 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion3) trusty; urgency=medium
+
+  * update path in clicat.tcl 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 16:35:50 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion2) trusty; urgency=medium
+
+  * add config.php 
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 16:16:31 -0500
+
+securityonion-squert (20161212-1ubuntu1securityonion1) trusty; urgency=low
+
+  * Initial release
+
+ -- Doug Burks <doug.burks@gmail.com>  Mon, 12 Dec 2016 15:49:09 -0500

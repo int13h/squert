@@ -1,0 +1,8 @@
+.css var/www/so/squert/
+.flags var/www/so/squert/
+.inc var/www/so/squert/
+index.php var/www/so/squert/
+login.php var/www/so/squert/
+.js var/www/so/squert/
+.scripts var/www/so/squert/
+.scripts/securityonion-squert.cnf etc/mysql/conf.d/

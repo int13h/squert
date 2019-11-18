@@ -1,0 +1,148 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion8) trusty; urgency=medium
+ .
+   * Squert: OSSEC HIDS alerts display NIDS rules #958
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.inc/callback.php
++++ securityonion-squert-20161212/.inc/callback.php
+@@ -113,61 +113,59 @@ function signatures() {
+   $wasMatched = 0;
+   $dirs = explode("||",$rulePath);
+ 
+-  if ( $gID > 100 ) {
+-    $dc = 0;
+-    $wasMatched = 2;
++  if ( $gID == 10001 ) {
++	$result = array("ruletxt" => "Generator ID $gID. OSSEC rules can be found in /var/ossec/rules/.",
++		"rulefile"  => "n/a",
++		"ruleline"  => "n/a",
++		);
++  } elseif ( $gID != 1 && $gID != 3 ) {
++	$result = array("ruletxt" => "Generator ID $gID. This event belongs to a preprocessor or decoder.",
++		"rulefile"  => "n/a",
++		"ruleline"  => "n/a",
++		);
+   } else { 
+-    $dc = (count($dirs) - 1);
+-  }
+-
+-  for ($i = 0; $i <= $dc; $i++)
+-    if ($ruleDir = opendir($dirs[$i])) {
+-      while (false !== ($ruleFile = readdir($ruleDir))) {
+-        if ($ruleFile != "." && $ruleFile != "..") {
+-          $ruleLines = file("$dirs[$i]/$ruleFile");
+-          $lineNumber = 1;
+-
+-          foreach($ruleLines as $line) {
+-
+-            $searchCount = preg_match("/sid\:\s*$sigID\s*\;/",$line);
+-
+-            if($searchCount > 0) {
+-              $tempMsg = preg_match("/\bmsg\s*:\s*\"(.+?)\"\s*;/i",$line,$ruleMsg);
+-
+-              $line = urlMkr(htmlspecialchars($line));
+-
+-              $result = array("ruletxt"	=> $line,
+-                "rulefile"	=> $ruleFile,
+-                "ruleline"	=> $lineNumber,
+-              );
+-              $wasMatched = 1;
+-              break;
+-            }
+-            $lineNumber++;
+-          }
+-        }
+-      }
+-
+-      closedir($ruleDir);
+-    }
+-
+-  if ($wasMatched == 0) {
+-    $result = array("ruletxt" => "No match for signature ID $sigID",
+-      "rulefile"  => "n/a",
+-      "ruleline"  => "n/a",                 
+-    );
+-  }
+-
+-  if ($wasMatched == 2) {
+-    $result = array("ruletxt" => "Generator ID > 100. This event belongs to a preprocessor or the decoder. <b>Generator ID:</b> $gID ",
+-      "rulefile"  => "n/a",
+-      "ruleline"  => "n/a",
+-    );
++	$dc = (count($dirs) - 1);
++	for ($i = 0; $i <= $dc; $i++)
++		if ($ruleDir = opendir($dirs[$i])) {
++			while (false !== ($ruleFile = readdir($ruleDir))) {
++				if ($ruleFile != "." && $ruleFile != "..") {
++					$ruleLines = file("$dirs[$i]/$ruleFile");
++					$lineNumber = 1;
++
++					foreach($ruleLines as $line) {
++
++						$searchCount = preg_match("/sid\:\s*$sigID\s*\;/",$line);
++
++						if($searchCount > 0) {
++							$tempMsg = preg_match("/\bmsg\s*:\s*\"(.+?)\"\s*;/i",$line,$ruleMsg);
++
++							$line = urlMkr(htmlspecialchars($line));
++
++							$result = array("ruletxt"	=> $line,
++								"rulefile"	=> $ruleFile,
++								"ruleline"	=> $lineNumber,
++								);
++							$wasMatched = 1;
++							break;
++						}
++						$lineNumber++;
++					}
++				}
++			}
++
++			closedir($ruleDir);
++		}
++
++		if ($wasMatched == 0) {
++			$result = array("ruletxt" => "No match for signature ID $sigID",
++				"rulefile"  => "n/a",
++				"ruleline"  => "n/a",                 
++				);
++		}
+   }
+ 
+   $theJSON = json_encode($result);
+   echo $theJSON;
+-
+ }
+ 
+ function level0() {   
+--- securityonion-squert-20161212.orig/login.php
++++ securityonion-squert-20161212/login.php
+@@ -130,7 +130,7 @@ Password<br>
+ <input id=logmein name=logmein class=rb type=submit name=login value=submit><br><br></td>
+ <td class=err><?php echo $err;?></td></tr>
+ </table>
+-<div class=cp>Version 1.6.1<span>&copy;2016 Paul Halliday</span></div>
++<div class=cp>Version 1.6.2<span>&copy;2016 Paul Halliday</span></div>
+ </div>
+ </form>
+ <script type="text/javascript">document.credcheck.<?php echo $focus;?>.focus();</script>

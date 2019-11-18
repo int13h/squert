@@ -1,0 +1,15 @@
+Source: securityonion-squert
+Section: net
+Priority: extra
+Maintainer: Doug Burks <doug.burks@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: http://www.squertproject.org/
+#Vcs-Git: git://git.debian.org/collab-maint/securityonion-squert.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/securityonion-squert.git;a=summary
+
+Package: securityonion-squert
+Architecture: all
+Depends: ${misc:Depends}, apache2, patch, php, libapache2-mod-php, php-mysql, php-cli, php-gd, mysqltcl, mysql-server, mysql-client, graphviz, libtext-csv-perl, tclcurl
+Description: squert
+ Squert is a web interface for the Sguil database.

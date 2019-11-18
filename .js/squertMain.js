@@ -432,7 +432,8 @@ $(document).ready(function(){
 
   // Logout
   $("#logout").click(function(event) {
-    $.get("index.php?id=0", function(){location.reload()});
+    //$.get("/logout.html", function(){location.reload()});
+	location.replace("/logout.html");
   });
 
   // Toggle filters
@@ -1309,11 +1310,23 @@ $(document).ready(function(){
           }
 
           // Transcript link
+	  // original Squert native pivot:
+          //txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
+          //txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
+          //if (src_port != "-" && dst_port != "-") {
+          //  txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
+          //}
+	  // new pivot to CapMe:
           txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
-
-          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
+          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";
           if (src_port != "-" && dst_port != "-") {
-            txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
+                var startDate = new Date(utctimestamp);
+                var start_tz_offset = (startDate.getTimezoneOffset());
+                var stime = startDate.setTime( startDate.getTime()/1000-(start_tz_offset*60) ) - 3600;
+                var endDate = new Date(utctimestamp);
+                var end_tz_offset = (endDate.getTimezoneOffset());
+                var etime = endDate.setTime( endDate.getTime()/1000-(end_tz_offset*60) ) + 3600;
+                txBit = "<td class='sub sub2_capme' title='Get pcap/transcript via capME'> <a href='/capme/?sip=" + src_ip + "&dip=" + dst_ip + "&spt=" + src_port + "&dpt=" + dst_port + "&stime=" + stime + "&etime=" + etime + "&filename=squert' target='_blank'>" + sid + "." + cid + "</a></td>";
           }
 
           row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
@@ -1508,13 +1521,25 @@ $(document).ready(function(){
           var cv = classifications.class[tclass][0].short;
 
           // Transcript link
+	  // original Squert native pivot:
+          //txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
+          //txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
+          //if (src_port != "-" && dst_port != "-") {
+          //  txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
+          //}
+   	  // new pivot to CapMe:
           txdata = "s" + i + "-" + cid + "-" + s2h(sid + "|" + utctimestamp + "|" + src_ip + "|" + src_port + "|" + dst_ip + "|" + dst_port);
-
-          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";   
+          txBit = "<td class=\"sub sub2_inactive\">" + sid + "." + cid + "</div>";
           if (src_port != "-" && dst_port != "-") {
-            txBit = "<td class=\"sub sub2_active\" data-tx=" + txdata + " title='Generate Transcript'>" + sid + "." + cid + "</td>";
+                var startDate = new Date(utctimestamp);
+                var start_tz_offset = (startDate.getTimezoneOffset());
+                var stime = startDate.setTime( startDate.getTime()/1000-(start_tz_offset*60) ) - 3600;
+                var endDate = new Date(utctimestamp);
+                var end_tz_offset = (endDate.getTimezoneOffset());
+                var etime = endDate.setTime( endDate.getTime()/1000-(end_tz_offset*60) ) + 3600;
+                txBit = "<td class='sub sub2_capme' title='Get PCAP/transcript via capME'> <a href='/capme/?sip=" + src_ip + "&dip=" + dst_ip + "&spt=" + src_port + "&dpt=" + dst_port + "&stime=" + stime + "&etime=" + etime + "&filename=squert' target='_blank'>" + sid + "." + cid + "</a></td>";
           }
-   
+
           row += "<tr class=d_row_sub1 id=s" + i + " data-sg=\"" + sg + "\" data-cols=14 data-filter=\"" + eid + "\">";
           row += "<td class=sub><input id=cb_" + i + " class=chk_event "; 
           row += "type=checkbox value=\"" + sid + "." + cid + "\" data-eclass=" + eclass + "></td>";
@@ -1798,9 +1823,7 @@ $(document).ready(function(){
             var tmp = h2s(theData[2].data_payload).split("\n");
             p_ascii = '';
             for (var i in tmp) {
-              var parts = tmp[i].split(":\t");
-              p_ascii += "<div class=\"select key\">" + parts[0] + "</div>";
-              p_ascii += "<div class=\"select val\">" + parts[1] + "</div>";
+              p_ascii += "<div class=\"select val\">" + tmp[i] + "</div>";
             }
              
           }
@@ -1990,12 +2013,13 @@ $(document).ready(function(){
     var objhex = s2h(suffix);
     var tbl = '', row = '';
     // Local stuff first 
+    // Commented out SEARCH row to reduce pivot
     switch (prefix[prefix.length - 1]) {
       case "c": 
         row += "<tr class=p_row data-type=l data-alias=cc><td class=pr>:: SRC or DST</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=scc><td class=pr>:: SRC</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=dcc><td class=pr>:: DST</td></tr>";
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "p":
         row += "<tr class=p_row data-type=l data-alias=ip><td class=pr>:: SRC or DST</td></tr>";
@@ -2005,7 +2029,7 @@ $(document).ready(function(){
         if ($('.sigtxt')[0]) {
           row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
         }
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
         row += "<input id=menucol class=color value=\"" + colour + "\" maxlength=6>";
         row += "<span class=csave data-obtype=" + prefix + " data-object=" + objhex + ">apply</span>";
@@ -2015,14 +2039,14 @@ $(document).ready(function(){
       case "t":
         row += "<tr class=p_row data-type=l data-alias=spt><td class=pr>:: SRC</td></tr>";
         row += "<tr class=p_row data-type=l data-alias=dpt><td class=pr>:: DST</td></tr>";
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "d":
         row += "<tr class=p_row data-type=l data-alias=sid><td class=pr>:: SIGNATURE</td></tr>";
         if ($('.sigtxt')[0]) {
           row += "<tr class=p_row data-type=h data-alias=history><td class=pr>:: HISTORY</td></tr>";
         }
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
       case "l":
         row += "<tr class=n_row data-type=c data-alias=col><td class=pr>:: COLOUR&nbsp;&nbsp;";
@@ -2031,7 +2055,7 @@ $(document).ready(function(){
         doexternals = "no";
       break;
       case "z":
-        row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
+        //row += "<tr class=p_row data-type=s data-alias=search><td class=pr>:: SEARCH</td></tr>";
       break;
     }
     

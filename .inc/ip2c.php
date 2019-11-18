@@ -19,41 +19,38 @@
 //
 //
 
-function IP2C($string,$isCLI) {
+include_once "config.php";
+include_once "functions.php";
 
-    include_once "config.php";
-    include_once "functions.php";
+$db = mysqli_connect($dbHost,$dbUser,$dbPass) or die(mysqli_error($db));
+mysqli_select_db($db,$dbName) or die(mysqli_error($db));
 
-    if ($isCLI == 'NO') {
-        // Running from a browser
-        $when = 'WHERE ' . hextostr($string) . ' AND ';
-    } else {
-        // Running from the command line
-        if ($string == 0) {
-            $when = "WHERE ";
-        }
+function IP2C($string) {
 
-        if ($string == 1) {
-            $startDate = gmdate("Y-m-d");
-            $startTime = "00:00:00";
-            $endDate = gmdate("Y-m-d",strtotime($startDate . "+1 day"));
-            $endTime = "00:00:00";
-            $when = "WHERE e.timestamp BETWEEN '$startDate $startTime' AND '$endDate $endTime' AND";
-        }
-
-        echo "Performing base queries (this can take a while)..\n\n";
-
+    if ($string == 0) {
+        $when = "WHERE ";
     }
+
+    if ($string == 1) {
+        $startDate = gmdate("Y-m-d");
+        $startTime = "00:00:00";
+        $endDate = gmdate("Y-m-d",strtotime($startDate . "+1 day"));
+        $endTime = "00:00:00";
+        $when = "WHERE e.timestamp BETWEEN '$startDate $startTime' AND '$endDate $endTime' AND";
+    }
+
+    echo "Performing base queries (this can take a while)..\n\n";
 
     function lookup($list) {
 
-        while ($row = mysql_fetch_row($list)) {
+	global $db;
+        while ($row = mysqli_fetch_row($list)) {
             $ip  = $row[0];
             $dot = long2ip((float)$ip);
-            $ipLookup = mysql_query("SELECT registry, cc, c_long, type, date, status FROM ip2c WHERE
+            $ipLookup = mysqli_query($db,"SELECT registry, cc, c_long, type, date, status FROM ip2c WHERE
                                      $ip >=start_ip AND $ip <= end_ip LIMIT 1");
 
-            $result = mysql_fetch_array($ipLookup);
+            $result = mysqli_fetch_array($ipLookup);
 
             if ($result) {
                 $registry       = $result[0];
@@ -63,7 +60,7 @@ function IP2C($string,$isCLI) {
                 $date           = $result[4];
                 $status         = $result[5];
 
-                mysql_query("REPLACE INTO mappings (registry,cc,c_long,type,ip,date,status)
+                mysqli_query($db,"REPLACE INTO mappings (registry,cc,c_long,type,ip,date,status)
                              VALUES (\"$registry\",\"$cc\",\"$c_long\",\"$type\",\"$ip\",\"$date\",\"$status\")");
                 echo "-- Mapped $dot ($ip) to $cc ($c_long)\n";
             }
@@ -71,76 +68,45 @@ function IP2C($string,$isCLI) {
         }
     }
 
-    // DB Connect
-    $db = mysql_connect($dbHost,$dbUser,$dbPass) or die(mysql_error());
-    mysql_select_db($dbName,$db) or die(mysql_error());
-
     // Start timing
     $st = microtime(true);
-    $sipList = mysql_query("SELECT DISTINCT(e.src_ip) FROM event AS e LEFT JOIN mappings AS m ON e.src_ip=m.ip
+
+    // DB Connect
+    global $db;
+    $sipList = mysqli_query($db,"SELECT DISTINCT(e.src_ip) FROM event AS e LEFT JOIN mappings AS m ON e.src_ip=m.ip
                             WHERE (m.ip IS NULL OR m.cc = '01')");
-    $dipList = mysql_query("SELECT DISTINCT(e.dst_ip) FROM event AS e LEFT JOIN mappings AS m ON e.dst_ip=m.ip
+    $dipList = mysqli_query($db,"SELECT DISTINCT(e.dst_ip) FROM event AS e LEFT JOIN mappings AS m ON e.dst_ip=m.ip
                             WHERE (m.ip IS NULL OR m.cc = '01')");
     $sipCount = $dipCount = 0;
     if ($sipList) {
-        $sipCount = mysql_num_rows($sipList);
+        $sipCount = mysqli_num_rows($sipList);
         if ($sipCount > 0) {
             lookup($sipList);
         }
     }
 
     if ($dipList) {
-        $dipCount = mysql_num_rows($dipList);
+        $dipCount = mysqli_num_rows($dipList);
         if ($dipCount > 0) {
             lookup($dipList);
         }
     }
 
-    $allRecs = mysql_query("SELECT COUNT(*) FROM mappings");
-    $allCount = mysql_fetch_row($allRecs);
+    $allRecs = mysqli_query($db,"SELECT COUNT(*) FROM mappings");
+    $allCount = mysqli_fetch_row($allRecs);
 
     // Stop Timing
     $et = microtime(true);
     $time = $et - $st;
     $rt = sprintf("%01.3f",$time);
 
-    if ($isCLI == 'NO') {
-
-        $html = "\r<table align=left>
-                 \r<tr><td align=left style=\"font-size: 10px;\"><b>&nbsp;-> Query Time: $rt seconds</b></td></tr>
-                 \r<tr><td align=left style=\"font-size: 10px;\"><b>&nbsp;-> Source Count: $sipCount</b></td></tr>
-                 \r<tr><td align=left style=\"font-size: 10px;\"><b>&nbsp;-> Destination Count: $dipCount</b></td>
-                 \r<tr><td align=left style=\"font-size: 10px;\"><b>&nbsp;-> Total Mapped: $allCount[0]</b></td></tr>
-                 \r</table>";
-            
-        return $html;
-    }
-
-    if ($isCLI == 'YES' && $string == 0) {
+    if ($string == 0) {
         echo "\n-> Query Time: $rt seconds
               \r-> Source Count: $sipCount
               \r-> Destination Count: $dipCount
               \r-> Total Mapped: $allCount[0]\n\n";
     }
 
-}
-
-function TheHTML($string) {
-
-    echo "\r<html>
-          \r<head>
-          \r<script type=\"text/javascript\" src=\"../.js/squert.js\"></script>
-          \r<style type=\"text/css\" media=\"screen\">@import \"../.css/squert.css\";</style>
-          \r</head>
-          \r<body style=\"background: #ffffff;\">
-          \r<form id=ip2c method=post action=ip2c.php>
-          \r<center>          
-          \r<input class=rb onclick=\"poof('wrkn','yes');\" id=csync name=csync type=\"submit\" value=\"update\">
-          \r<br><br><span id=\"wrkn\" name=\"wrkn\" style=\"display: none;\"><img src=work.gif></span>
-          \r<input type=hidden id=qText name=qText value=\"$string\">
-          \r</center>
-          \r</body>
-          \r</html>";
 }
 
 if (isset($argc)) {
@@ -153,21 +119,8 @@ if (isset($argc)) {
           \r1 - Update. This is intended to be called via Cron\n\n";
     exit;
     } else {
-        IP2C($argv[1],'YES');
+        IP2C($argv[1]);
     }
 
-} else { 
-
-    $html = '';
-
-    if(!isset($_REQUEST['qText'])) { $string = $_REQUEST['qp']; } else { $string = $_REQUEST['qText']; }
-
-    if (@$_REQUEST['csync']) {
-        $string = $_REQUEST['qText'];
-        $html = IP2C($string,'NO');
-    }
-
-    TheHTML($string);
-    echo $html;
 }
 ?>

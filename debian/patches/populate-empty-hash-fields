@@ -1,0 +1,35 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion7) trusty; urgency=medium
+ .
+   * populate empty hash fields
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.scripts/securityonion_update.sh
++++ securityonion-squert-20161212/.scripts/securityonion_update.sh
+@@ -50,6 +50,7 @@ if [ -d /var/lib/mysql/securityonion_db/
+ 	else
+ 		echo "Adding hash field to object_mappings table."
+                 $MYSQL "ALTER TABLE object_mappings ADD hash CHAR(32);"
++		$MYSQL "UPDATE object_mappings SET hash=md5(concat(type,object,value)) WHERE hash IS NULL;"
+                 $MYSQL "ALTER TABLE object_mappings DROP PRIMARY KEY , ADD PRIMARY KEY (hash);"
+ 	fi
+ 

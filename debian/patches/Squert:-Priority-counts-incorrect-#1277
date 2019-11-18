@@ -1,0 +1,49 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion42) xenial; urgency=medium
+ .
+   * Squert: Priority counts incorrect #1277
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/.inc/callback.php
++++ securityonion-squert-20161212/.inc/callback.php
+@@ -325,6 +325,10 @@ function level0() {
+   $query->execute($merged_params);
+   // fetch the data and encode to json
+   $rows = $query->fetchAll(PDO::FETCH_ASSOC);
++  // the frontend expects all values to be strings
++  for ($i=0;$i<count($rows);$i++) {
++    $rows[$i] = array_map('strval', $rows[$i]);
++  }
+   $theJSON = json_encode($rows);
+   echo $theJSON;
+ }
+@@ -385,6 +389,10 @@ function level1() {
+   $query->execute($merged_params);
+   // fetch the data and encode to json
+   $rows = $query->fetchAll(PDO::FETCH_ASSOC);
++  // the frontend expects all values to be strings
++  for ($i=0;$i<count($rows);$i++) {
++    $rows[$i] = array_map('strval', $rows[$i]);
++  }
+   $theJSON = json_encode($rows);
+   echo $theJSON;
+ }

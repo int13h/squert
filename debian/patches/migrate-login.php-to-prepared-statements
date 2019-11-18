@@ -1,0 +1,150 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ securityonion-squert (20161212-1ubuntu1securityonion26) trusty; urgency=medium
+ .
+   * migrate login.php to prepared statements
+Author: Doug Burks <doug.burks@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- securityonion-squert-20161212.orig/auth/native/squert/login.php
++++ securityonion-squert-20161212/auth/native/squert/login.php
+@@ -36,6 +36,10 @@ function cleanUp($string) {
+ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+     $username = $_REQUEST['username'];
+     $password = $_REQUEST['password'];
++    // sso
++    //$username = $_SERVER['PHP_AUTH_USER'];
++    //$password = $_SERVER['PHP_AUTH_PW'];
++
+     $ua       = $_SERVER['HTTP_USER_AGENT'];
+     $rqt      = $_SERVER['REQUEST_TIME'];
+     $rqaddr   = $_SERVER['REMOTE_ADDR'];
+@@ -45,16 +49,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
+     $ua      .= mt_rand(0,$max);
+     $cmpid    = $rqt . $rqaddr . $ua;
+     $id       = md5($cmpid);
+-    $db = mysql_connect($dbHost,$dbUser,$dbPass);
+-    $link = mysql_select_db($dbName, $db);
+-    if ($link) {
+-        $user = cleanUp($username);
+-        $query = "SELECT * FROM user_info WHERE username = '$user'";
+-        $result = mysql_query($query);
+-        $numRows = mysql_num_rows($result);
++    // PDO prepared statements
++    try {
++        // first connect to database with the PDO object. 
++        $dbpdo = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=latin1", "$dbUser", "$dbPass", [
++        PDO::ATTR_EMULATE_PREPARES => false,
++        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
++        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
++        ]);
++    } catch(PDOException $e){
++        // if connection fails, log PDO error. 
++        error_log("Error connecting to mysql: ". $e->getMessage());
++    }
+ 
+-        if ($numRows > 0) {
+-            while ($row = mysql_fetch_row($result)) {
++    if (isset($dbpdo)) {
++	// prepare statement
++        $statement = "SELECT * FROM user_info WHERE username = :user";
++	$query = $dbpdo->prepare("$statement");
++	// build parameters for prepared statement
++	$params = [":user" => "$username"];
++	// execute the prepared statement and pass it params
++	$query->execute($params);
++	// fetch the data
++	while ($row = $query->fetch(PDO::FETCH_NUM)) {
+                 $userName	= $row[1];
+                 $lastLogin	= $row[2];
+                 $userHash	= $row[3];
+@@ -62,7 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
+                 $userType       = $row[5];
+                 $userTime       = $row[6];
+                 $tzoffset	= $row[7];
+-            }
++	}
++
++	// if $username was found in database, then check password
++        if ( isset($userName) && $username == $userName) {
+             // The first 2 chars are the salt     
+             $theSalt = substr($userHash, 0,2);
+ 
+--- securityonion-squert-20161212.orig/auth/sso/squert/login.php
++++ securityonion-squert-20161212/auth/sso/squert/login.php
+@@ -36,6 +36,7 @@ function cleanUp($string) {
+ //if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+     //$username = $_REQUEST['username'];
+     //$password = $_REQUEST['password'];
++    // sso
+     $username = $_SERVER['PHP_AUTH_USER'];
+     $password = $_SERVER['PHP_AUTH_PW'];
+ 
+@@ -48,16 +49,29 @@ function cleanUp($string) {
+     $ua      .= mt_rand(0,$max);
+     $cmpid    = $rqt . $rqaddr . $ua;
+     $id       = md5($cmpid);
+-    $db = mysql_connect($dbHost,$dbUser,$dbPass);
+-    $link = mysql_select_db($dbName, $db);
+-    if ($link) {
+-        $user = cleanUp($username);
+-        $query = "SELECT * FROM user_info WHERE username = '$user'";
+-        $result = mysql_query($query);
+-        $numRows = mysql_num_rows($result);
++    // PDO prepared statements
++    try {
++        // first connect to database with the PDO object. 
++        $dbpdo = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=latin1", "$dbUser", "$dbPass", [
++        PDO::ATTR_EMULATE_PREPARES => false,
++        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
++        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
++        ]);
++    } catch(PDOException $e){
++        // if connection fails, log PDO error. 
++        error_log("Error connecting to mysql: ". $e->getMessage());
++    }
+ 
+-        if ($numRows > 0) {
+-            while ($row = mysql_fetch_row($result)) {
++    if (isset($dbpdo)) {
++	// prepare statement
++        $statement = "SELECT * FROM user_info WHERE username = :user";
++	$query = $dbpdo->prepare("$statement");
++	// build parameters for prepared statement
++	$params = [":user" => "$username"];
++	// execute the prepared statement and pass it params
++	$query->execute($params);
++	// fetch the data
++	while ($row = $query->fetch(PDO::FETCH_NUM)) {
+                 $userName	= $row[1];
+                 $lastLogin	= $row[2];
+                 $userHash	= $row[3];
+@@ -65,7 +79,10 @@ function cleanUp($string) {
+                 $userType       = $row[5];
+                 $userTime       = $row[6];
+                 $tzoffset	= $row[7];
+-            }
++	}
++
++	// if $username was found in database, then check password
++        if ( isset($userName) && $username == $userName) {
+             // The first 2 chars are the salt     
+             $theSalt = substr($userHash, 0,2);
+ 
